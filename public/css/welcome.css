@@ -1,0 +1,72 @@
+/* main parallax */
+
+body {
+    height: 700px
+}
+
+.parallax {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 700px;
+    /* 100% breaks parallax */
+    font-size: 125%;
+    -webkit-perspective: 300px;
+    -moz-perspective: 300px;
+    perspective: 300px;
+}
+
+
+/*parallax block */
+
+.parallax-layer {
+    position: relative;
+    height: 300px;
+    -webkit-transition: -webkit-transform 0.25s;
+    -moz-transition: -webkit-transform 0.25s;
+    transition: transform 0.25s;
+}
+
+
+/* parallax levels */
+
+.parallax-1 {
+    z-index: 1;
+    -webkit-transform: translateZ(100px) scale(1);
+    -moz-transform: translateZ(100px) scale(1);
+    transform: translateZ(100px) scale(1);
+}
+
+.parallax-2 {
+    z-index: 4;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.parallax-3 {
+    z-index: 3;
+    -webkit-transform: translateZ(-200px) scale(1.25);
+    -moz-transform: translateZ(-200px) scale(1.25);
+    transform: translateZ(-200px) scale(1.25);
+}
+
+.parallax-4 {
+    z-index: 2;
+    -webkit-transform: translateZ(-400px) scale(1.75);
+    -moz-transform: translateZ(-400px) scale(1.75);
+    transform: translateZ(-400px) scale(1.75);
+}
+
+
+/* text inside each block */
+
+.text {
+    text-align: center;
+    font-family: 'IBM Plex Sans', sans-serif;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
