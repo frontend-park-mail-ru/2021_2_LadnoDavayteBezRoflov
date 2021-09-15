@@ -1,14 +1,14 @@
 /* main parallax */
 
 body {
-    height: 700px
+    height: 100%;
+    margin: 0;
 }
 
 .parallax {
     overflow-x: hidden;
-    overflow-y: auto;
-    height: 700px;
-    /* 100% breaks parallax */
+    overflow-y: visible;
+    height: 100vh;
     font-size: 125%;
     -webkit-perspective: 300px;
     -moz-perspective: 300px;
@@ -30,6 +30,7 @@ body {
 /* parallax levels */
 
 .parallax-1 {
+    margin-top: 5vh;
     z-index: 1;
     -webkit-transform: translateZ(100px) scale(1);
     -moz-transform: translateZ(100px) scale(1);
