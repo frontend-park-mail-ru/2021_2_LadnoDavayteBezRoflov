@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'">
+
+    <!-- for super modern broswers - coloring browser header -->
+    <meta name="theme-color" content="#0096c7">
+    <!-- light blue -->
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <link rel="stylesheet" href="css/refuse.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link rel="stylesheet" href="css/card.css">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;400&display=swap" rel="stylesheet">
+
+    <meta name="Keywords" content="Trello, Трелло">
+    <meta name="geo.region" content="RU">
+    <meta name="geo.placename" content="Moscow">
+
+    <title>TestRello - Card page</title>
+
+</head>
+
+<body>
+
+
+    <div class="page">
+
+        <!--[if !IE]><!-->
+
+        <header id="header-main">
+            <div class="navbar">
+                <div class="navbar-header">
+                    <div class="navbar-title">
+                        <a href="./welcome.html" target="_self" class="navbar-link-title">TestRello</a>
+                    </div>
+                </div>
+
+                <div class="navbar-links">
+                    <a href="./boards.html" target="_self" class="navbar-link">Доски</a>
+                    <a href="./profile.html" target="_self" class="navbar-link">Профиль</a>
+                    <a href="./logout.html" target="_self" class="navbar-link">Выход</a>
+                </div>
+            </div>
+        </header>
+
+        <main id="body-main">
+
+            <div class="card-box">
+
+                <form autocomplete="off">
+                    <h1>Do nothing</h1>
+                    <hr>
+                    <aside class="card-right-menu">
+                        <h4>Добавить к карточке</h4>
+                        <hr>
+                        <ul class="card-right-menu-list">
+                            <li>Срок выполнения</li>
+                            <li>Участник</li>
+                            <li>Вложение</li>
+                            <li>Тэг</li>
+                            <li>Чек-лист</li>
+                        </ul>
+                        <hr>
+                        <h4>Удалить карточку</h4>
+                    </aside>
+
+                    <div id="card-info">
+
+                        <div class="card-upper-block">
+                            <div class="assignees-block">
+                                <h4>Назначены:</h4>
+                                <ul class="assignees">
+                                    <li class="assignee">
+                                        <div class="assignee-avatar-wrapper">
+                                            <img class="assignee-avatar" src="./assets/default_user_picture.png" alt="Username">
+                                        </div>
+                                    </li>
+                                    <li class="assignee">
+                                        <div class="assignee-avatar-wrapper">
+                                            <img class="assignee-avatar" src="./assets/noscript.png" alt="Username">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tags-block">
+                                <h4>Теги:</h4>
+                                <ul class="tags">
+                                    <li class="tag">
+                                        <p>Трелло</p>
+                                    </li>
+                                    <li class="tag">
+                                        <p>Тестовый тег</p>
+                                    </li>
+                                    <li class="tag">
+                                        <p>Фронтенд</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <article>
+                            <p class="description-p"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                            <p class="description-p">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                            <p class="description-p">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </article>
+                    </div>
+                </form>
+
+            </div>
+
+
+        </main>
+
+        <!--<![endif]-->
+
+        <!--[if IE]>
+            <div>
+                <img src="assets/noscript.png " alt="Sad Shiben " width="120 " height="50 ">
+            </div>
+            <div class="refuse-box">
+                <h3 class="refuse-title">Ошибка :с</h3>
+                <p class="refuse-message">К сожалению, ваш браузер не поддерживается.</p>
+            </div>
+        <![endif]-->
+
+        <noscript>
+            <div>
+                <img src="assets/noscript.png " alt="Sad Shiben " width="120 " height="50 ">
+            </div>
+            <div class="refuse-box">
+                <h3 class="refuse-title">Ошибка :с</h3>
+                <p class="refuse-message">К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
+            </div>
+        </noscript>
+
+
+        <footer>
+            <p class="footer-p">TestRello, 2021</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+/* navbar style */
+
+.navbar {
+    height: 50px;
+    width: 100%;
+    position: relative;
+    background-color: #0b798f;
+    font-family: 'Segoe UI';
+}
+
+.navbar-header {
+    display: inline;
+}
+
+.navbar-title {
+    display: inline-block;
+    padding: 10px 10px 10px 10px;
+    color: #ffffff;
+    font-size: 21px;
+}
+
+.navbar-link-title {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: inline;
+    float: right;
+    font-size: 18px;
+}
+
+.navbar-link {
+    display: inline-block;
+    padding: 13px 10px 13px 10px;
+    color: #e5e9f5;
+    text-decoration: none;
+}
+
+.navbar-link:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
