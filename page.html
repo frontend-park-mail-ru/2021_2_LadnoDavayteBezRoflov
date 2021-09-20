@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'">
+
+    <!-- for super modern broswers - coloring browser header -->
+    <meta name="theme-color" content="#0096c7">
+    <!-- light blue -->
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;400&display=swap" rel="stylesheet">
+
+    <meta name="Keywords" content="Trello, Трелло">
+    <meta name="geo.region" content="RU">
+    <meta name="geo.placename" content="Moscow">
+
+    <title>TestRello - Form of card creation</title>
+
+</head>
+
+<body>
+
+
+    <div class="page">
+        <!--[if !IE]><!-->
+
+        <main id="body-main">
+            <div class="parent">
+                <form class="form">
+                    <div>
+                        <input type="text" name="boardName" placeholder="Название доски">
+                    </div>
+                    <div>
+                        <label>Тип доски:
+                            <select>
+                                <option>Приватная</option>
+                                <option>Для рабочего пространства</option>
+                                <option>Публичная</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>Выберите цвет доски:</label>
+                        <input type="color" name="boardColor" list="colorList">
+                        <datalist id="colorList">
+                            <option value="#ff0000" label="Красный">
+                            <option value="#008000" label="Зелёный">
+                            <option value="#0000ff" label="Синий">
+                        </datalist>
+                    </div>
+                    <br>
+                    <div>
+                        <input type="submit" class="form_button" value="Создать доску">
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!--<![endif]-->
+
+        <!--[if IE]>
+            <div class="noscript-message">
+                <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
+            </div>
+            <div class="noscript-message noscript-box">
+                <h3>Ошибка :с</h3>
+                <p>К сожалению, ваш браузер не поддерживается.</p>
+            </div>
+        <![endif]-->
+
+        <noscript>
+            <div class="noscript-message">
+                <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
+            </div>
+            <div class="noscript-message noscript-box">
+                <h3>Ошибка :с</h3>
+                <p>К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
+            </div>
+        </noscript>
+
+        <footer>
+            <p>TestRello, 2021</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
