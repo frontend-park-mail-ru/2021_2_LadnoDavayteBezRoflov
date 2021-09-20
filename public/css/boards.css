@@ -1,0 +1,110 @@
+/* Отключим все эффекты ссылки у ссылок с классом bord-card*/
+a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.bord-card {
+    height: 60px;
+    width: 150px;
+    padding: 10px;
+    background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
+    border-radius: 5px;
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.bord-card:hover {
+    background: linear-gradient(to bottom,var(--light-blue), 60%, var(--dark-blue));
+    box-shadow: 0px 0px 10px dimgray;
+}
+
+.bord-card_header {
+    font-size: 15px;
+    border-bottom: dotted 1px;
+    padding-bottom: 1px;
+
+}
+
+.bord-card_description {
+    font-size: 10px;
+    height: 75%;
+    overflow: hidden;
+	text-overflow: ellipsis;
+    /* Сокрытие лишних строк текста: */
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+}
+
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;  
+    margin-top: 80px;
+}
+
+.teams-container {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    
+}
+
+.team {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.team__card-wrapper {
+    /* @todo: опицонален, можно удалить если не нужен */
+    display: flex;
+    flex-direction: row;
+    padding-top: 5px;
+}
+
+.team__card-holder {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.team__header {
+    padding: 4px 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.team__team-name {
+    font-size: 20px;
+}
+
+
+.line {
+    border-bottom: solid 1px black;
+}
+
+.vertical-line {
+    border-left: solid 2px black;
+    height: 25px;
+}
+
+.btn {
+    height: 25px;
+    font-size: 15px;
+    padding: 0 6px;
+    margin-left: 4px;
+
+    border-radius: 8px;
+    box-shadow: 0 0 4px 0 var(--light-blue) inset, 0 0 4px 1px var(--light-blue);
+    border: solid 2px var(--light-blue);
+    background: transparent;
+    cursor: pointer;
+
+}
