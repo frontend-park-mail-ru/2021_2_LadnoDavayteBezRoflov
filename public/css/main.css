@@ -1,6 +1,10 @@
 body {
+    margin: 0px;
     background-image: url(../assets/background.png);
 }
+
+
+/* noscript style */
 
 .noscript-message h3 {
     font-family: 'Nunito', sans-serif;

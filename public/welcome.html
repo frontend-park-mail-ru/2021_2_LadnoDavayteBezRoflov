@@ -13,9 +13,11 @@
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="css/welcome.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
+
+    <link rel="stylesheet" href="css/welcome.css">
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,17 +38,29 @@
 
 
     <div class="page">
-        <header id="header-main">
-            <!-- fill with js -->
-        </header>
-
         <!--[if !IE]><!-->
+
+        <header id="header-main">
+            <div class="navbar">
+                <div class="navbar-header">
+                    <div class="navbar-title">
+                        TestRello
+                    </div>
+                </div>
+
+                <div class="navbar-links">
+                    <a href="./boards.html" target="_blank">Доски</a>
+                    <a href="./profile.html" target="_blank">Профиль</a>
+                    <a href="./logout.html" target="_blank">Выход</a>
+                </div>
+            </div>
+        </header>
 
         <main id="body-main">
 
             <div class="parallax">
 
-                <div class="parallax-layer parallax-1">
+                <div id="parallax-highest" class="parallax-layer parallax-1">
                     <div class="text">
                         Добро пожаловать в TestRello!
                     </div>
@@ -76,9 +90,9 @@
                     </div>
                 </div>
 
-                <div class="parallax-layer parallax-2">
+                <div id="parallax-lowest" class="parallax-layer parallax-2">
                     <div class="text">
-                        Присоединиться к TestRello!
+                        Присоединиться к TestRello сейчас! <br/> Уже участник? Войти
                     </div>
                 </div>
 
