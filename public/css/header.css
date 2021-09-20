@@ -19,6 +19,11 @@
     font-size: 21px;
 }
 
+.navbar>.navbar-header>.navbar-title>a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
 .navbar>.navbar-links {
     display: inline;
     float: right;
