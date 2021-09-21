@@ -1,0 +1,31 @@
+/* refuse for noscript or IO style */
+
+.refuse-box {
+  height: 120px;
+  width: 350px;
+  margin: 0;
+  background: #d8edf1;
+  position: relative;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(27, 27, 27, 0.322);
+  border-radius: 5px;
+}
+
+.refuse-box__title {
+  font-family: 'Nunito', Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+  text-align: right;
+  margin: 5px 30px 15px 0;
+}
+
+.refuse-box__text {
+  font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 15px 0 0 0;
+}
+
+.refuse-box__image {
+  width: 120px;
+  height: 50px;
+}

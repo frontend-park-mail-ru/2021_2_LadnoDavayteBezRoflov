@@ -1,42 +1,42 @@
 /* navbar style */
 
 .navbar {
-    height: 50px;
-    width: 100%;
-    position: relative;
-    background-color: #0b798f;
-    font-family: 'Segoe UI';
+  height: 50px;
+  width: 100%;
+  position: relative;
+  background-color: #0b798f;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.navbar>.navbar-header {
-    display: inline;
+.navbar-header {
+  display: inline;
 }
 
-.navbar>.navbar-header>.navbar-title {
-    display: inline-block;
-    padding: 10px 10px 10px 10px;
-    color: #ffffff;
-    font-size: 21px;
+.navbar-title {
+  display: inline-block;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 20px;
 }
 
-.navbar>.navbar-header>.navbar-title>a {
-    color: #ffffff;
-    text-decoration: none;
+.navbar-link-title {
+  color: #ffffff;
+  text-decoration: none;
 }
 
-.navbar>.navbar-links {
-    display: inline;
-    float: right;
-    font-size: 18px;
+.navbar-links {
+  display: inline;
+  float: right;
+  font-size: 18px;
 }
 
-.navbar>.navbar-links>a {
-    display: inline-block;
-    padding: 13px 10px 13px 10px;
-    color: #e5e9f5;
-    text-decoration: none;
+.navbar-link {
+  display: inline-block;
+  padding: 13px 10px;
+  color: #e5e9f5;
+  text-decoration: none;
 }
 
-.navbar>.navbar-links>a:hover {
-    background-color: rgba(0, 0, 0, 0.5);
+.navbar-link:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
