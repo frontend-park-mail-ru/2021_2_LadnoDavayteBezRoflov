@@ -1,30 +1,25 @@
-/* Отключим все эффекты ссылки у ссылок с классом bord-card*/
-a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
-    text-decoration: none;
-    color: inherit;
-}
-
 .bord-card {
-    height: 60px;
+    height: 70px;
     width: 150px;
     padding: 10px;
     background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
     border-radius: 5px;
-    position: relative;
     margin-right: 10px;
     margin-bottom: 10px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
 }
 
 .bord-card:hover {
     background: linear-gradient(to bottom,var(--light-blue), 60%, var(--dark-blue));
-    box-shadow: 0px 0px 10px dimgray;
+    box-shadow: 0px 0px 10px var(--shadow-dimgray);
 }
 
 .bord-card_header {
     font-size: 15px;
     border-bottom: dotted 1px;
     padding-bottom: 1px;
-
 }
 
 .bord-card_description {
@@ -32,12 +27,7 @@ a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
     height: 75%;
     overflow: hidden;
 	text-overflow: ellipsis;
-    /* Сокрытие лишних строк текста: */
-	display: -webkit-box;
-	-webkit-line-clamp: 4;
-	-webkit-box-orient: vertical;
 }
-
 
 .main-container {
     display: flex;
@@ -49,8 +39,7 @@ a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
 .teams-container {
     display: flex;
     flex-direction: column;
-    width: 40%;
-    
+    width: 45%;
 }
 
 .team {
@@ -60,7 +49,6 @@ a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
 }
 
 .team__card-wrapper {
-    /* @todo: опицонален, можно удалить если не нужен */
     display: flex;
     flex-direction: row;
     padding-top: 5px;
@@ -85,13 +73,12 @@ a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
     font-size: 20px;
 }
 
-
-.line {
-    border-bottom: solid 1px black;
+.horizontal-line {
+    border-bottom: solid 1px var(--black-lines);
 }
 
 .vertical-line {
-    border-left: solid 2px black;
+    border-left: solid 2px var(--black-lines);
     height: 25px;
 }
 
@@ -100,11 +87,9 @@ a.bord-card, a.bord-card:hover, a.bord-card:focus, a.bord-card:active {
     font-size: 15px;
     padding: 0 6px;
     margin-left: 4px;
-
     border-radius: 8px;
     box-shadow: 0 0 4px 0 var(--light-blue) inset, 0 0 4px 1px var(--light-blue);
     border: solid 2px var(--light-blue);
     background: transparent;
     cursor: pointer;
-
 }
