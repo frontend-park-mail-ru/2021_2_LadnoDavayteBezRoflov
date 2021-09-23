@@ -32,20 +32,20 @@
 </head>
 
 <body>
-
-
     <div class="page">
         <!--[if !IE]><!-->
 
         <main id="body-main">
-            <div class="parent">
+            <div class="form-parent">
                 <form class="form">
                     <div>
-                        <input type="text" name="boardName" placeholder="Название доски">
+                        <label>
+                            <input type="text" class="input-text text" name="boardName" placeholder="Название доски">
+                        </label>
                     </div>
                     <div>
-                        <label>Тип доски:
-                            <select>
+                        <label class="text">Тип доски:
+                            <select class="text">
                                 <option>Приватная</option>
                                 <option>Для рабочего пространства</option>
                                 <option>Публичная</option>
@@ -53,8 +53,10 @@
                         </label>
                     </div>
                     <div>
-                        <label>Выберите цвет доски:</label>
-                        <input type="color" name="boardColor" list="colorList">
+                        <label class="text">Выберите цвет доски:</label>
+                        <label>
+                            <input type="color" name="boardColor" list="colorList">
+                        </label>
                         <datalist id="colorList">
                             <option value="#ff0000" label="Красный">
                             <option value="#008000" label="Зелёный">
@@ -63,7 +65,7 @@
                     </div>
                     <br>
                     <div>
-                        <input type="submit" class="form_button" value="Создать доску">
+                        <input type="submit" class="form_button text" value="Создать доску">
                     </div>
                 </form>
             </div>
@@ -72,30 +74,31 @@
         <!--<![endif]-->
 
         <!--[if IE]>
-            <div class="noscript-message">
+            <div class="noscript-box">
                 <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
             </div>
-            <div class="noscript-message noscript-box">
-                <h3>Ошибка :с</h3>
-                <p>К сожалению, ваш браузер не поддерживается.</p>
+            <div class="noscript-box">
+                <h3 class="noscript-message-h3">Ошибка :с</h3>
+                <p class="noscript-message-p">К сожалению, ваш браузер не поддерживается.</p>
             </div>
         <![endif]-->
 
         <noscript>
-            <div class="noscript-message">
+            <div class="noscript-box">
                 <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
             </div>
-            <div class="noscript-message noscript-box">
-                <h3>Ошибка :с</h3>
-                <p>К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
+            <div class="noscript-box">
+                <h3 class="noscript-message-h3">Ошибка :с</h3>
+                <p class="noscript-message-p">
+                    К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками
+                </p>
             </div>
         </noscript>
 
         <footer>
-            <p>TestRello, 2021</p>
+            <p class="footer_text text">TestRello, 2021</p>
         </footer>
     </div>
-
 </body>
 
 </html>

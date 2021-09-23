@@ -8,7 +8,7 @@ footer {
     margin-bottom: 0px;
 }
 
-footer p {
+.footer_text {
     color: azure;
     font-family: 'IBM Plex Sans', sans-serif;
     text-align: center;
