@@ -11,7 +11,7 @@
 
 .header {
     position: fixed;
-    top: 0px;
+    top: 0;
     z-index: 1;
 
     height: 50px;
@@ -32,7 +32,6 @@
 
 .header__right {
     margin-right: 10px;
-    
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -40,13 +39,11 @@
 
 .header__link {
     margin: 0 5px;
-
     text-decoration-line: underline;
     text-decoration-style: dashed;
     text-align: left;
 }
 
-/* fallback */
 @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -55,7 +52,7 @@
 }
 
 .material-icons {
-    font-family: 'Material Icons';
+    font-family: 'Material Icons', 'Sans serif'; 
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
@@ -76,4 +73,3 @@
     /* Support for IE. */
     font-feature-settings: 'liga';
 }
-
