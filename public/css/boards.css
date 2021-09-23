@@ -13,10 +13,9 @@
 }
 
 .bord-card:hover {
-    background: linear-gradient(to bottom,var(--light-blue), 60%, var(--dark-blue));
-    box-shadow: 0px 0px 10px var(--shadow-dimgray);
+    background: linear-gradient(to bottom, var(--light-blue), 60%, var(--dark-blue));
     transform: scale(1.01, 1.01);
-    box-shadow: 0 0 20px;
+    box-shadow: 0 0 20px var(--shadow-dimgray);
 }
 
 .bord-card__header {
@@ -29,13 +28,13 @@
     font-size: 10px;
     height: 75%;
     overflow: hidden;
-	text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
 
 .main-container {
     display: flex;
     flex-direction: row;
-    justify-content: center;  
+    justify-content: center;
     margin-top: 80px;
 }
 
@@ -85,20 +84,7 @@
     height: 25px;
 }
 
-.btn {
-    height: 25px;
-    font-size: 15px;
-    padding: 0 6px;
-    margin-left: 4px;
-    border-radius: 8px;
-    box-shadow: 0 0 4px 0 var(--light-blue) inset, 0 0 4px 1px var(--light-blue);
-    border: solid 2px var(--light-blue);
-    background: transparent;
-    cursor: pointer;
-}
-
-
-.material-icons_team_header {
+.material-icons_colored {
     position: relative;
     top: 5px;
     font-size: 10px;
@@ -106,8 +92,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.material-icons_team_header:hover {
+.material-icons_colored:hover {
     box-shadow: 10px;
     color: var(--dark-blue);
     text-shadow: 10px black;
+    cursor: pointer;
 }
