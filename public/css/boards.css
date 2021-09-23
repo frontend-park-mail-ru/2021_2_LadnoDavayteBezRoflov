@@ -1,12 +1,12 @@
 :root {
-    --card-description-font-size: 11px;
+    --card-description-font-size: 12px;
     --card-header-font-size: 17px;
-    --team-font-size: 22px;
+    --team-font-size: 25px;
 }
 
 .bord-card {
-    height: 90px;
-    width: 170px;
+    height: 95px;
+    width: 200px;
 
     padding: 10px;
     margin-right: 10px;
@@ -33,28 +33,29 @@
 
 .bord-card__description {
     height: 75%;
+    padding-top: 3px;
     font-size: var(--card-description-font-size);
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .main-container {
-    margin-top: 80px;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-top: 80px;
 }
 
 .teams-container {
-    width: 45%;
+    width: 50%;
     display: flex;
     flex-direction: column;
 }
 
 .team {
-    margin-top: 10px;
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
 }
 
 .team__card-wrapper {
