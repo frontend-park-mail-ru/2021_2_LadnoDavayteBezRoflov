@@ -1,0 +1,24 @@
+{
+  "name": "static-pages",
+  "version": "1.0.0",
+  "description": "Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "static-livereload": "^0.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "static-livereload --path public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/issues"
+  },
+  "homepage": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov#readme"
+}
