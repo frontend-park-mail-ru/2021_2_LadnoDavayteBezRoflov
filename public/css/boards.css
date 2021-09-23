@@ -5,10 +5,10 @@
     padding: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-
-    background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
+    
     border-radius: 5px;
     
+    background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease-in-out;
@@ -36,24 +36,25 @@
 }
 
 .main-container {
+    margin-top: 80px;
+
     display: flex;
     flex-direction: row;
     justify-content: center;
-
-    margin-top: 80px;
 }
 
 .teams-container {
+    width: 45%;
+
     display: flex;
     flex-direction: column;
-    width: 45%;
 }
 
 .team {
+    margin-top: 10px;
+
     display: flex;
     flex-direction: column;
-    
-    margin-top: 10px;
 }
 
 .team__card-wrapper {
@@ -71,12 +72,12 @@
 }
 
 .team__header {
+    padding: 4px 5px;
+
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-
-    padding: 4px 5px;
 }
 
 .team__team-name {
