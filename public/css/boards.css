@@ -103,8 +103,6 @@
 }
 
 .material-icons_colored:hover {
-    box-shadow: 10px;
     color: var(--dark-blue);
-    text-shadow: 10px black;
     cursor: pointer;
 }
