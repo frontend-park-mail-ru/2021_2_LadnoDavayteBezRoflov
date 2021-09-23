@@ -9,20 +9,23 @@
     text-decoration: none;
     color: inherit;
     position: relative;
+    transition: all 0.3s ease-in-out;
 }
 
 .bord-card:hover {
     background: linear-gradient(to bottom,var(--light-blue), 60%, var(--dark-blue));
     box-shadow: 0px 0px 10px var(--shadow-dimgray);
+    transform: scale(1.01, 1.01);
+    box-shadow: 0 0 20px;
 }
 
-.bord-card_header {
+.bord-card__header {
     font-size: 15px;
     border-bottom: dotted 1px;
     padding-bottom: 1px;
 }
 
-.bord-card_description {
+.bord-card__description {
     font-size: 10px;
     height: 75%;
     overflow: hidden;
@@ -92,4 +95,19 @@
     border: solid 2px var(--light-blue);
     background: transparent;
     cursor: pointer;
+}
+
+
+.material-icons_team_header {
+    position: relative;
+    top: 5px;
+    font-size: 10px;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+
+.material-icons_team_header:hover {
+    box-shadow: 10px;
+    color: var(--dark-blue);
+    text-shadow: 10px black;
 }
