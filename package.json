@@ -1,0 +1,29 @@
+{
+    "name": "ladnodavaytebezroflov-frontend",
+    "version": "0.0.1",
+    "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
+    "main": "./server/server.js",
+    "scripts": {
+        "server": "node server/server.js",
+        "start": "npm run server",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov.git"
+    },
+    "keywords": [
+        "trello"
+    ],
+    "author": "LDBR team",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/issues"
+    },
+    "homepage": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov#readme",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "morgan": "^1.9.1"
+    }
+}
