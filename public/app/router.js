@@ -5,7 +5,7 @@ import { constants } from "./constants.js";
 
 class Router {
     /**
-     * Инициализует роутер.
+     * Конструирует роутер.
      */
     constructor() {
         this.root = document.getElementById(constants.elementsID.appRoot);
@@ -44,6 +44,32 @@ class Router {
         return this;
     }
 
+    /**
+     * Обработчик события смены URL'a
+     * @param {string} url 
+     */
+    onURLChanged(url) {
+        console.log(`onURLChanged: ${url}`);
+    }
+
+    /**
+     * Инициализирует роутер: устанавливает обработчики событий, обрабатывает текущий url.
+     */
+    route() {
+        this.root.addEventListener('click', (event) => {
+            const {target} = event;
+            if (target instanceof HTMLAnchorElement) {
+                event.preventDefault();
+                this.onURLChanged(target.href);
+            }
+        });
+
+        window.addEventListener('popstate', (event) => {
+            this.onURLChanged(location.href);
+        });
+
+        this.onURLChanged(location.href);
+    }
 }
 
 export const router = new Router;
