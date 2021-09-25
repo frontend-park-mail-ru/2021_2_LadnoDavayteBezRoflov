@@ -7,13 +7,16 @@ export const constants = {
         appRoot: 'root'
     },
     /* url'ы доступные пользователю: */
-    hrefs: {
-        home: 'home',
-        index: 'index',
-        root: ''
+    urls: {
+        home: '/home',
+        index: '/index',
+        notFound: '/404'
     },
     /* url'ы api */
     api: {
 
-    }
+    },
+    texts: {
+        notFound: 'Page not found! ;]'
+    }    
 }
