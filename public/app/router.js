@@ -2,6 +2,44 @@ import { constants } from "./constants.js";
 
 /* Задача роутера: следить за именением ссылки и вызывать тот или иной метод контроллера */
 
+
+class URLData {    
+    constructor() {
+        this.url = '';
+        this.urlParams = [];
+        this.getParams = {};
+    }
+
+    /**
+     * Парсит переданный url: первое значение за '/' считается url (url), 
+     * остальные значения за '/' - параметры url'a (urlParams), 
+     * также парсит get параметры в объект
+     * @param {string} url на разбор
+     * @returns {URLData} коллекция распаршенных данных
+     */
+    static fromURL(url) {
+        if (url == null) {
+            throw new Error('URLData: передан пустой url');
+        }
+
+        let urlObject = new URL(url);
+        let data = new URLData;
+
+        /* Очищаем path от лиших элементов: */
+        let pathElements = urlObject.pathname.split('/');
+        pathElements = pathElements.slice(1);
+        if (pathElements[pathElements.length - 1] == '') {
+            pathElements.pop();
+        }
+        
+        data.url = pathElements[0];
+        data.urlParams = pathElements.slice(1);
+        data.getParams = Object.fromEntries(urlObject.searchParams);
+        
+        return data;
+    }
+}
+
 class Router {
     /**
      * Конструирует роутер.
@@ -16,7 +54,6 @@ class Router {
 
     /**
      * Регистрация URL'a и соответствующего ему контроллера.
-     * 
      * @param {string} url - url
      * @param {*} controller - контроллер url
      * @returns {Router} Ссылку на this
@@ -48,7 +85,12 @@ class Router {
      * @param {string} url 
      */
     onURLChanged(url) {
+        window.history.pushState(null, '', url);
+        let data = URLData.fromURL(url);
         console.log(`onURLChanged: ${url}`);
+        console.log(`base url: ${data.url}`);
+        console.log(`url params: ${data.urlParams}`);
+        console.log(`get params: ${data.getParams}`);
     }
 
     /**
