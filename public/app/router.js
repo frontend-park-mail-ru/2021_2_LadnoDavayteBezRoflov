@@ -21,7 +21,6 @@ export class URLData {
             throw new Error('URLData: передан пустой url');
         }
 
-        console.log(origin);
         let urlObject = new URL(url, origin);
         let data = new URLData;
 
@@ -79,9 +78,9 @@ export class Router {
     registerUrlAlias(url, alias) {
         let controller = this.routes.get(url);
         if (controller == null) {
-            throw new Error(`Router: ошибка при установке alias'a на <${url}>: контроллер не существует.`)
+            throw new Error(`Router: ошибка при установке alias'a на "${url}": контроллер не существует.`)
         }
-        this.routes[alias] = controller;
+        this.routes.set(alias, controller);
         return this;
     }
 
@@ -121,11 +120,6 @@ export class Router {
         }
 
         controller.work(data);
-        
-        console.log(`onURLChanged: ${url}`);
-        console.log(`base url: ${data.url}`);
-        console.log(`url params: ${data.urlParams}`);
-        console.log(`get params: ${data.getParams}`);
     }
 
     /**
