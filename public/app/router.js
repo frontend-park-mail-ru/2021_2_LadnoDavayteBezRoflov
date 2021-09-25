@@ -1,5 +1,6 @@
 import { constants } from './constants.js';
 import { ControllerInterface } from '../controllers/baseController.js'
+import { NotFoundController } from '../controllers/notFoundController.js';
 
 export class URLData {    
     constructor() {
@@ -11,7 +12,7 @@ export class URLData {
     /**
      * Парсит переданный url: первое значение за '/' считается url (url), 
      * остальные значения за '/' - параметры url'a (urlParams), 
-     * также парсит get параметры в объект (getParams)
+     * также парсит get параметры (getParams)
      * @param {string} url на разбор
      * @returns {URLData} коллекция распаршенных данных
      */
@@ -20,16 +21,12 @@ export class URLData {
             throw new Error('URLData: передан пустой url');
         }
 
-        let urlObject = new URL(url);
+        console.log(origin);
+        let urlObject = new URL(url, origin);
         let data = new URLData;
 
         /* Очищаем path от лишних элементов: */
-        let pathElements = urlObject.pathname.split('/');
-        pathElements = pathElements.slice(1);
-        if (pathElements[pathElements.length - 1] == '') {
-            pathElements.pop();
-        }
-        
+        let pathElements = urlObject.pathname.replace(/^\/|\/\/|\/$/g, '').split('/');
         data.url = '/' + pathElements[0];
         data.urlParams = pathElements.slice(1);
         data.getParams = Object.fromEntries(urlObject.searchParams);
@@ -39,9 +36,9 @@ export class URLData {
 }
 
 /**
- * Роутер отсеживает переход по ссылкам, и вызывает соответствующие им контроллеры
+ * Роутер отсеживает переход по url, и вызывает соответствующие им контроллеры
  */
-class Router {
+export class Router {
     /**
      * Конструирует роутер.
      */
@@ -51,6 +48,7 @@ class Router {
             throw new Error(`Router: не найден корневой элемент с id ${constants.elementsID.appRoot}`);
         }
         this.routes = new Map;
+        this.registerNotFound();
     }
 
     /**
@@ -60,13 +58,13 @@ class Router {
      * @returns {Router} cсылку на this
      */
     registerUrl(url, controller) {
-        if (url.indexOf('/') != 0) {
+        if ((url.match(/\//g) || []).length != 1 || url[0] != '/') {
             throw new Error('Router: регестрируемый url должен соотв. шаблону "/path_name"');
         }
         if (!(controller instanceof ControllerInterface)) {
             throw new Error('Router: контроллер должен реализовывать ControllerInterface');
         }
-        this.routes[url] = controller;
+        this.routes.set(url, controller);
         return this;
     }
 
@@ -112,12 +110,14 @@ class Router {
      */
      toUrl(url) {
         window.history.pushState(null, '', url);
+
         let data = URLData.fromURL(url);
-        
         let controller = this.routes.get(data.url);
+
         if (controller == null) {
-            //@todo показываем 404
-            throw new Error(`Router: не найден контроллер для url'a <${data.url}>`);
+            console.log(`Router: не найден контроллер для url'a <${data.url}>`);
+            this.toUrl(constants.urls.notFound);
+            return;
         }
 
         controller.work(data);
@@ -128,12 +128,25 @@ class Router {
         console.log(`get params: ${data.getParams}`);
     }
 
+    /**
+     * Возврат на предыдущий URL в истории
+     */
     toPrev() {
         window.history.back();
     }
 
+    /**
+     * Переход на следующий URL в истории
+     */
     toNext() {
         window.history.forward();
+    }
+
+    /**
+     * Регестрирует контроллер по умолчанию
+     */
+    registerNotFound() {
+        this.registerUrl(constants.urls.notFound, new NotFoundController);
     }
 
 }
