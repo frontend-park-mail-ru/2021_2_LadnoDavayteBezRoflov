@@ -2,17 +2,17 @@
  * Список констант проекта
  */
 export const constants = {
-    /* id ключевых элементов приложения */
+    /* id ключевых элементов приложения: */
     elementsID: {
-        appRoot: "#root"
+        appRoot: 'root'
     },
-    /* url пользователя */
+    /* url'ы доступные пользователю: */
     hrefs: {
         home: 'home',
         index: 'index',
         root: ''
     },
-    /* API пути */
+    /* url'ы api */
     api: {
 
     }
