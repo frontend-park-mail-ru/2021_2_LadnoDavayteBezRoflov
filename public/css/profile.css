@@ -1,5 +1,5 @@
 body {
-  margin: 0px;
+  margin: 0;
   background-image: url(../assets/background.png);
 }
 
@@ -42,7 +42,6 @@ body {
 }
 
 .profile-box__input {
-  width: 20vw;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -97,7 +96,6 @@ body {
   height: 60px;
   width: 60px;
   margin-right: 15px;
-  display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
   -moz-flex-align: center;
