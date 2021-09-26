@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="/src/pages/register/register.css">
+<link rel="stylesheet" href="/public/css/popups.css">
+
+<header id="header-main"></header>
+
+<form id="register" name="register" novalidate>
+    <div class="container">
+        <h1>Регистрация</h1>
+            <p>Пожалуйста, заполните эту форму,</br>чтобы зарегистрироваться.</p>
+
+            <label for="login"><b>Логин</b></label>
+            <input type="text" placeholder="Введите логин" id="login" name="login" required>
+            <div class="isa_error" id="login-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="login-validation-message"></label>
+            </div>
+
+            <label for="email"><b>Почта</b></label>
+            <input type="email" placeholder="Введите почту" id="email" name="email" required>
+            <div class="isa_error" id="email-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="email-validation-message"></label>
+            </div>
+
+            <label for="psw"><b>Пароль</b></label>
+            <input type="password" placeholder="Введите пароль" id="psw" name="password" required>
+            <div class="isa_error" id="password-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="password-validation-message"></label>
+            </div>
+
+            <label for="psw-repeat"><b>Подтверждение пароля</b></label>
+            <input type="password" placeholder="Повторите пароль" id="psw-repeat" name="confirm-password" required>
+            <div class="isa_error" id="control-password-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="control-password-validation-message"></label>
+            </div>
+
+            <p>Создавая учетную запись, вы соглашаетесь с нашими </br><a href="#">Условиями пользования и </br>Политикой конфиденциальности</a>.</p>
+            <button type="submit" class="registerbtn" id="register-button">Создать аккаунт</button>
+
+    </div>
+</form>
+
+    <div class="container signin">
+        <p>Уже есть аккаунт? <a href="/login">Войти в систему</a>.</p>
+    </div>
+
+<footer id="footer-main"></footer>

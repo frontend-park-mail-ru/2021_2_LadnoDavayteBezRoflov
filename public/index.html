@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self';style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'">
--->
+    <!-- не забыть добавить адрес бэкенда -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:8000/ ;style-src 'self' https://fonts.googleapis.com http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css; font-src https://fonts.gstatic.com http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js">
 
     <!-- for super modern broswers - coloring browser header -->
     <meta name="theme-color" content="#0096c7">
@@ -19,7 +18,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
-    <script defer src="index.js" type="module"></script>
+    <script defer src="/../src/index.js" type="module"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,12 +30,12 @@
     <meta name="geo.region" content="RU">
     <meta name="geo.placename" content="Moscow">
 
-    <title>TestRello - Welcome page</title>
+    <title>TestRello</title>
 </head>
 
 <body>
     <!--[if !IE]><!-->
-    <div id="page">
+    <div id="root">
     </div>
 
     <!--<![endif]-->
