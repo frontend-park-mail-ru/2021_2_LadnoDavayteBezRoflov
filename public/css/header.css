@@ -5,38 +5,38 @@
     width: 100%;
     position: relative;
     background-color: #0b798f;
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-.navbar>.navbar-header {
+  
+.navbar__header {
     display: inline;
 }
-
-.navbar>.navbar-header>.navbar-title {
+  
+.navbar__title {
     display: inline-block;
-    padding: 10px 10px 10px 10px;
+    padding: 10px;
     color: #ffffff;
-    font-size: 21px;
+    font-size: 20px;
 }
-
-.navbar>.navbar-header>.navbar-title>a {
+  
+.navbar__link__title {
     color: #ffffff;
     text-decoration: none;
 }
-
-.navbar>.navbar-links {
+  
+.navbar__links {
     display: inline;
     float: right;
     font-size: 18px;
 }
-
-.navbar>.navbar-links>a {
+  
+.navbar__link {
     display: inline-block;
-    padding: 13px 10px 13px 10px;
+    padding: 13px 10px;
     color: #e5e9f5;
     text-decoration: none;
 }
-
-.navbar>.navbar-links>a:hover {
+  
+.navbar__link:hover {
     background-color: rgba(0, 0, 0, 0.5);
 }

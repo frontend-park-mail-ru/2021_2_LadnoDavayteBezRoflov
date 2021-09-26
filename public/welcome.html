@@ -13,7 +13,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/refuse.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
 
@@ -42,16 +42,16 @@
 
         <header id="header-main">
             <div class="navbar">
-                <div class="navbar-header">
-                    <div class="navbar-title">
-                        <a href="./welcome.html" target="_self">TestRello</a>
+                <div class="navbar__header">
+                    <div class="navbar__title">
+                        <a href="./welcome.html" class="navbar__link__title">TestRello</a>
                     </div>
                 </div>
 
-                <div class="navbar-links">
-                    <a href="./boards.html" target="_self">Доски</a>
-                    <a href="./profile.html" target="_self">Профиль</a>
-                    <a href="./logout.html" target="_self">Выход</a>
+                <div class="navbar__links">
+                    <a href="./boards.html" class="navbar__link">Доски</a>
+                    <a href="./profile.html" class="navbar__link">Профиль</a>
+                    <a href="./logout.html" class="navbar__link">Выход</a>
                 </div>
             </div>
         </header>
@@ -60,7 +60,7 @@
 
             <div class="parallax">
 
-                <div id="parallax-highest" class="parallax-layer parallax-1">
+                <div class="parallax-layer parallax-1 parallax-highest">
                     <div class="text">
                         Добро пожаловать в TestRello!
                     </div>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div id="parallax-lowest" class="parallax-layer parallax-2">
+                <div class="parallax-layer parallax-2 parallax-lowest">
                     <div class="text">
                         Присоединиться к TestRello сейчас! <br/> Уже участник? Войти
                     </div>
@@ -101,32 +101,31 @@
 
         </main>
 
-        <!--<![endif]-->
+	<footer class="footer">
+    	    <p class="footer__text">TestRello, 2021</p>
+	</footer>
 
-        <!--[if IE]>
-            <div class="noscript-message">
-                <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
+        <!--<![endif]-->
+	<!--[if IE]>
+            <div>
+                <img class="refuse-box__image" src="assets/noscript.png" alt="Sad Shiben">
             </div>
-            <div class="noscript-message noscript-box">
-                <h3>Ошибка :с</h3>
-                <p>К сожалению, ваш браузер не поддерживается.</p>
+            <div class="refuse-box">
+                <h3 class="refuse-box__title">Ошибка :с</h3>
+                <p class="refuse-box__text">К сожалению, ваш браузер не поддерживается.</p>
             </div>
         <![endif]-->
 
         <noscript>
-            <div class="noscript-message">
-                <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
+            <div>
+                <img class="refuse-box__image" src="assets/noscript.png" alt="Sad Shiben">
             </div>
-            <div class="noscript-message noscript-box">
-                <h3>Ошибка :с</h3>
-                <p>К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
+            <div class="refuse-box">
+                <h3 class="refuse-box__title">Ошибка :с</h3>
+                <p class="refuse-box__text">К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
             </div>
         </noscript>
 
-
-        <footer>
-            <p>TestRello, 2021</p>
-        </footer>
     </div>
 
 </body>
