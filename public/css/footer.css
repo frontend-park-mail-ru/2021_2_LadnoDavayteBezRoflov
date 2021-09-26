@@ -1,17 +1,17 @@
 /* footer style */
 
 .footer {
-  position: fixed;
-  height: 50px;
-  background-color: #005f73;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-bottom: 0;
+    position: fixed;
+    height: 50px;
+    background-color: #005f73;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
 }
-
+  
 .footer__text {
-  color: azure;
-  font-family: 'IBM Plex Sans', sans-serif;
-  text-align: center;
+    color: azure;
+    font-family: 'IBM Plex Sans', sans-serif;
+    text-align: center;
 }
