@@ -1,0 +1,92 @@
+/* main parallax */
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.parallax {
+    height: 90vh;
+    overflow-x: hidden;
+    overflow-y: visible;
+    -webkit-perspective: 300px;
+    -moz-perspective: 300px;
+    perspective: 300px;
+}
+
+
+/*parallax block */
+
+.parallax-layer {
+    position: relative;
+    height: 250px;
+    -webkit-transition: -webkit-transform 0.25s;
+    -moz-transition: -webkit-transform 0.25s;
+    transition: transform 0.25s;
+}
+
+
+/* parallax levels */
+
+.parallax-highest {
+    background: radial-gradient(ellipse at top, rgba(156, 179, 212, 1) 0%, rgba(205, 232, 255, 0.8883754185267857) 45%, rgba(0, 212, 255, 0) 65%);
+}
+
+.parallax-lowest {
+    background: radial-gradient(ellipse at bottom, rgba(113, 169, 247, 1) 0%, rgba(223, 240, 255, 0.719) 40%, rgba(210, 248, 255, 0.137) 55%);
+}
+
+.parallax-lowest>.text {
+    margin-top: 75px;
+}
+
+.parallax-1 {
+    margin-top: 5vh;
+    z-index: 1;
+    font-size: 125%;
+    background: radial-gradient(ellipse, rgba(156, 179, 212, 1) 0%, rgba(205, 232, 255, 0.8883754185267857) 35%, rgba(0, 212, 255, 0) 45%);
+    -webkit-transform: translateZ(100px) scale(1);
+    -moz-transform: translateZ(100px) scale(1);
+    transform: translateZ(100px) scale(1);
+}
+
+.parallax-2 {
+    z-index: 4;
+    font-size: 125%;
+    background: radial-gradient(ellipse, rgba(113, 169, 247, 1) 0%, rgba(223, 240, 255, 0.719) 40%, rgba(210, 248, 255, 0.137) 55%);
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.parallax-3 {
+    z-index: 3;
+    font-size: 145%;
+    background: radial-gradient(ellipse, rgba(116, 167, 238, 1) 0%, rgba(178, 222, 255, 0.918) 35%, rgba(191, 203, 255, 0.007) 45%);
+    -webkit-transform: translateZ(-200px) scale(1.25);
+    -moz-transform: translateZ(-200px) scale(1.25);
+    transform: translateZ(-200px) scale(1.25);
+}
+
+.parallax-4 {
+    z-index: 2;
+    font-size: 155%;
+    background: radial-gradient(ellipse, rgb(168, 246, 250) 0%, rgba(185, 238, 241, 0.918) 25%, rgba(191, 203, 255, 0.007) 65%);
+    -webkit-transform: translateZ(-400px) scale(1.75);
+    -moz-transform: translateZ(-400px) scale(1.75);
+    transform: translateZ(-400px) scale(1.75);
+}
+
+
+/* text inside each block */
+
+.text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
