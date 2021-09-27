@@ -1,42 +1,39 @@
 'use strict';
 
 // Базовая страница
-import BasePage from '../basePage.js';
+import BasePage from '../BasePage.js';
 
 // Компоненты
-import NavbarComponent from '../../components/navbar/navbar.js';
-import FooterComponent from '../../components/footer/footer.js';
+import NavbarComponent from '../../components/Navbar/Navbar.js';
+import FooterComponent from '../../components/Footer/Footer.js';
 
 // utils
-import userStatus from '../../utils/userStatus/userStatus.js';
-import router from '../../utils/router/router.js';
-import { urls } from '../../utils/constants.js';
+import userStatus from '../../utils/UserStatus/UserStatus.js';
+import router from '../../utils/Router/Router.js';
+import {urls} from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
-import './boards.tmpl.js';
+import './BoardsPage.tmpl.js';
 
 /**
   * Класс, реализующий страницу с досками.
   */
 export default class BoardsPage extends BasePage {
-
   /**
     * Конструктор, создающий конструктор базовой страницы с нужными параметрами
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
   constructor(parent) {
-    super(parent, Handlebars.templates['boards.hbs']);
+    super(parent, Handlebars.templates['BoardsPage.hbs']);
   }
 
   /**
    * Метод, отрисовывающий страницу.
    */
   render(context) {
-
     /* Если пользователь не авторизован, то перебросить его на вход */
     if (!userStatus.getAuthorized()) {
       router.toUrl(urls.login);
-      return;
     }
 
     /* Подготовить данные к отрисовке */
@@ -78,13 +75,8 @@ export default class BoardsPage extends BasePage {
   * @returns {json} готовые к отрисовке данные
   */
   prepareBoards(context) {
-    let data = {
-      teams: {
-
-      }
-    }
-    data.teams = { ...data, ...context};
+    const data = { teams: {} };
+    data.teams = { ...context };
     return data;
   }
-  
 }

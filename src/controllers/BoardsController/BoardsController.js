@@ -1,21 +1,20 @@
 'use strict';
 
 // Интерфейс контроллера
-import ControllerInterface from '../baseController.js';
+import ControllerInterface from '../BaseController.js';
 
 // Страница списка досок
-import BoardsPage from '../../pages/boards/boards.js';
+import BoardsPage from '../../pages/BoardsPage/BoardsPage.js';
 
 // utils
-import network from '../../utils/network/network.js';
-import router from '../../utils/router/router.js';
-import { urls } from '../../utils/constants.js';
+import network from '../../utils/Network/Network.js';
+import router from '../../utils/Router/Router.js';
+import {httpStatusCodes, urls} from '../../utils/constants.js';
 
 /**
  * Класс, реализующий контроллер для страницы списка досок.
  */
 export default class BoardsController extends ControllerInterface {
-    
     /**
      * Конструктор, создающий контроллер для страницы списка досок.
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
@@ -28,7 +27,7 @@ export default class BoardsController extends ControllerInterface {
     async work() {
         const result = await network.getBoards();
         /* result[0]: код статуса, result[1]: список команд пользователя и связанные с ними доски */
-        if (result[0] === 200) {
+        if (result[0] === httpStatusCodes.ok) {
             return this.page.render(result[1]);
         }
         
