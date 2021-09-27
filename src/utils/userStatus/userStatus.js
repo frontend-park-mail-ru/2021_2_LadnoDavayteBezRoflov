@@ -1,7 +1,7 @@
 'use strict';
 
 // utils
-import network from "../network/network.js";
+import network from '../network/network.js';
 
 /**
  * Класс, отвечающий за представление статуса пользователя.

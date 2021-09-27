@@ -12,6 +12,7 @@ import network from '../../utils/network/network.js';
 import userStatus from '../../utils/userStatus/userStatus.js';
 import router from '../../utils/router/router.js';
 import Validator from '../../utils/validator/validate.js';
+import { urls } from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
 import './register.tmpl.js';
@@ -27,6 +28,7 @@ export default class RegisterPage extends BasePage {
     */
   constructor(parent) {
     super(parent, Handlebars.templates['register.hbs']);
+    this.formRegistrationCallback = this.formRegistration.bind(this);
   }
 
   /**
@@ -36,7 +38,7 @@ export default class RegisterPage extends BasePage {
 
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
     if (userStatus.getAuthorized()) {
-      router.toUrl('/boards');
+      router.toUrl(urls.boards);
       return;
     }
 
@@ -59,7 +61,7 @@ export default class RegisterPage extends BasePage {
   * Метод, добавляющий обработчики событий для страницы.
   */
   addEventListeners() {
-    document.getElementById('register').addEventListener('submit', this.formRegistration, this);
+    document.getElementById('register').addEventListener('submit', this.formRegistrationCallback);
   }
 
   /**
@@ -70,6 +72,41 @@ export default class RegisterPage extends BasePage {
     // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
   }
 
+
+  /**
+  * Метод, получающий boxes для валидации из документа.
+  */
+   registerValidationBoxes() {
+    return {
+      loginBox: document.getElementById('login-validation-box'),
+      emailBox: document.getElementById('email-validation-box'),
+      passwordBox: document.getElementById('password-validation-box'),
+      controlPasswordBox: document.getElementById('control-password-validation-box'),
+    }
+  }
+
+  /**
+  * Метод, получающий labels для валидации из документа.
+  */
+  registerValidationLabels() {
+    return {
+      loginLabel: document.getElementById('login-validation-message'),
+      emailLabel: document.getElementById('email-validation-message'),
+      passwordLabel: document.getElementById('password-validation-message'),
+      controlPasswordLabel: document.getElementById('control-password-validation-message'),
+    }
+  }
+
+  /**
+  * Метод, скрывающий boxes валидации.
+  */
+  hideAllValidations(validationBoxes) {
+    validationBoxes.loginBox.hidden = true;
+    validationBoxes.emailBox.hidden = true;
+    validationBoxes.passwordBox.hidden = true;
+    validationBoxes.controlPasswordBox.hidden = true;
+  }
+
   /**
   * Метод, обрабатывающий посылку формы.
   */
@@ -78,21 +115,11 @@ export default class RegisterPage extends BasePage {
     event.preventDefault(); 
 
     /* Получить элементы для отрисовки ошибок */
-    const loginBox = document.getElementById('login-validation-box');
-    const emailBox = document.getElementById('email-validation-box');
-    const passwordBox = document.getElementById('password-validation-box');
-    const controlPasswordBox = document.getElementById('control-password-validation-box');
-
-    const loginLabel = document.getElementById('login-validation-message');
-    const emailLabel = document.getElementById('email-validation-message');
-    const passwordLabel = document.getElementById('password-validation-message');
-    const controlPasswordLabel = document.getElementById('control-password-validation-message');
+    const validationBoxes = this.registerValidationBoxes();
+    const validationLabels = this.registerValidationLabels();
 
     /* Скрыть отображение ошибок */
-    loginBox.hidden = true;
-    emailBox.hidden = true;
-    passwordBox.hidden = true;
-    controlPasswordBox.hidden = true;
+    this.hideAllValidations(validationBoxes);
 
     /* Получить данные из формы */
     const formData = new FormData(event.target);
@@ -111,24 +138,24 @@ export default class RegisterPage extends BasePage {
 
     if (!login['status'] || !password['status'] || !email['status'] || data['confirm-password'] !== data['password']) {
       /* Вывести вообщение, если найдена ошибка */
-      if (login['message'] != '') {
-        loginLabel.innerHTML = login['message'];
-        loginBox.hidden = false;
+      if (login['message'] !== '') {
+        validationLabels.loginLabel.innerHTML = login['message'];
+        validationBoxes.loginBox.hidden = false;
       }
 
-      if (email['message'] != '') {
-        emailLabel.innerHTML = email['message'];
-        emailBox.hidden = false;
+      if (email['message'] !== '') {
+        validationLabels.emailLabel.innerHTML = email['message'];
+        validationBoxes.emailBox.hidden = false;
       }
 
-      if (password['message'] != '') {
-        passwordLabel.innerHTML = password['message'];
-        passwordBox.hidden = false;
+      if (password['message'] !== '') {
+        validationLabels.passwordLabel.innerHTML = password['message'];
+        validationBoxes.passwordBox.hidden = false;
       }
 
       if (data['confirm-password'] !== data['password']) {
-        controlPasswordLabel.innerHTML = 'Пароли не совпадают';
-        controlPasswordBox.hidden = false;
+        validationLabels.controlPasswordLabel.innerHTML = 'Пароли не совпадают';
+        validationBoxes.controlPasswordBox.hidden = false;
       }
       /* Предотвратить отправку запроса */
       return;
@@ -136,19 +163,17 @@ export default class RegisterPage extends BasePage {
 
     const result = await network.sendRegistration(data);
 
-    if (result[0] == 201) {
+    if (result[0] === 201) {
       userStatus.setAuthorized(true);
-      userStatus.setUserName(data["login"]);
+      userStatus.setUserName(data['login']);
       this.removeEventListeners();
-      router.toUrl('/boards');
+      router.toUrl(urls.boards);
       return;
     }
     /* Вывести ошибку */
     if (result[0] === 401) {
       loginLabel.innerHTML = 'Не получилось создать пользователя';
-    
-      loginBox.hidden = false;
-      return;
+      validationBoxes.loginBox.hidden = false;
     }
   }
 }
