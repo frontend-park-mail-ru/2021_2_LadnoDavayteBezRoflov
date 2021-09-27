@@ -1,16 +1,17 @@
 'use strict';
 
+import {uri} from "../constants.js";
+
 /**
   * Класс, реализующий работу с сетью.
   */
 class Network {
-
     /**
      * Конструктор, инициализирующий url и порт бэкенд-сервера.
      */
     constructor() {
-        this.url = 'localhost';
-        this.port = '8000';
+        this.url = uri.url;
+        this.port = uri.port;
     }
 
     /**
@@ -24,7 +25,8 @@ class Network {
             .then((response) => { 
                 return response.json().then((data) => {
                     return [response.status, data];
-                })});
+                })
+            });
     }
 
     /**

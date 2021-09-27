@@ -1,24 +1,23 @@
 'use strict';
 
 // Базовый компонент
-import BaseComponent from '../baseComponent.js'
+import BaseComponent from '../BaseComponent.js'
 
 // Скомпилированный шаблон Handlebars
-import './navbar.tmpl.js';
+import './Footer.tmpl.js';
 
 /**
- * Класс, реализующий компонент Navbar.
+ * Класс, реализующий компонент Footer.
  */
-export default class NavbarComponent extends BaseComponent {
-    
+export default class FooterComponent extends BaseComponent {
     /**
-    * Конструктор, создающий класс компонента Navbar.
+    * Конструктор, создающий класс компонента Footer.
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     * @param {function} context контекст отрисовки шаблона
     */
     constructor(parent, context) {
         super(parent, context);
-        this.renderComponent = Handlebars.templates['navbar.hbs'];
+        this.renderComponent = Handlebars.templates['Footer.hbs'];
     }
 
     /**

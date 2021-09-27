@@ -1,16 +1,15 @@
 'use strict';
 
 // Интерфейс контроллера
-import ControllerInterface from '../baseController.js';
+import ControllerInterface from '../BaseController.js';
 
 // Страница регистрации
-import RegisterPage from '../../pages/register/register.js';
+import RegisterPage from '../../pages/RegisterPage/RegisterPage.js';
 
 /**
  * Класс, реализующий контроллер для страницы регистрации.
  */
 export default class RegisterController extends ControllerInterface {
-    
     /**
      * Конструктор, создающий контроллер для страницы регистрации.
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка

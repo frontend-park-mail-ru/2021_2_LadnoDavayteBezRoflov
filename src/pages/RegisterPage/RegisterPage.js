@@ -1,33 +1,32 @@
 'use strict';
 
 // Базовая страница
-import BasePage from '../basePage.js';
+import BasePage from '../BasePage.js';
 
 // Компоненты
-import NavbarComponent from '../../components/navbar/navbar.js';
-import FooterComponent from '../../components/footer/footer.js';
+import NavbarComponent from '../../components/Navbar/Navbar.js';
+import FooterComponent from '../../components/Footer/Footer.js';
 
 // utils
-import network from '../../utils/network/network.js';
-import userStatus from '../../utils/userStatus/userStatus.js';
-import router from '../../utils/router/router.js';
-import Validator from '../../utils/validator/validate.js';
-import { urls } from '../../utils/constants.js';
+import network from '../../utils/Network/Network.js';
+import userStatus from '../../utils/UserStatus/UserStatus.js';
+import router from '../../utils/Router/Router.js';
+import Validator from '../../utils/Validator/Validator.js';
+import {httpStatusCodes, urls} from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
-import './register.tmpl.js';
+import './RegisterPage.tmpl.js';
 
 /**
   * Класс, реализующий страницу регистрации.
   */
 export default class RegisterPage extends BasePage {
-
   /**
     * Конструктор, создающий конструктор базовой страницы с нужными параметрами
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
   constructor(parent) {
-    super(parent, Handlebars.templates['register.hbs']);
+    super(parent, Handlebars.templates['RegisterPage.hbs']);
     this.formRegistrationCallback = this.formRegistration.bind(this);
   }
 
@@ -72,7 +71,6 @@ export default class RegisterPage extends BasePage {
     // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
   }
 
-
   /**
   * Метод, получающий boxes для валидации из документа.
   */
@@ -107,31 +105,9 @@ export default class RegisterPage extends BasePage {
     validationBoxes.controlPasswordBox.hidden = true;
   }
 
-  /**
-  * Метод, обрабатывающий посылку формы.
-  */
-  async formRegistration(event) {
-    /* Запретить обновление страницы */
-    event.preventDefault(); 
-
-    /* Получить элементы для отрисовки ошибок */
-    const validationBoxes = this.registerValidationBoxes();
-    const validationLabels = this.registerValidationLabels();
-
-    /* Скрыть отображение ошибок */
-    this.hideAllValidations(validationBoxes);
-
-    /* Получить данные из формы */
-    const formData = new FormData(event.target);
-
-    /* Сохранить данные из формы в переменную */
-    const data = {};
-    formData.forEach((value, key) => data[key] = value);
-
-    /* Создать валидатор */
+  validate(data, validationBoxes, validationLabels) {
     const validator = new Validator();
 
-    /* Проверить логин и пароль */
     const login = validator.validateLogin(data['login']);
     const email = validator.validateEMail(data['email']);
     const password = validator.validatePassword(data['password']);
@@ -160,18 +136,43 @@ export default class RegisterPage extends BasePage {
       /* Предотвратить отправку запроса */
       return;
     }
+  }
+
+  /**
+  * Метод, обрабатывающий посылку формы.
+  */
+  async formRegistration(event) {
+    /* Запретить обновление страницы */
+    event.preventDefault(); 
+
+    /* Получить элементы для отрисовки ошибок */
+    const validationBoxes = this.registerValidationBoxes();
+    const validationLabels = this.registerValidationLabels();
+
+    /* Скрыть отображение ошибок */
+    this.hideAllValidations(validationBoxes);
+
+    /* Получить данные из формы */
+    const formData = new FormData(event.target);
+
+    /* Сохранить данные из формы в переменную */
+    const data = {};
+    formData.forEach((value, key) => data[key] = value);
+
+    /* Проверить логин и пароль и отрисовать ошибки на странице */
+    this.validate(data, validationBoxes, validationLabels);
 
     const result = await network.sendRegistration(data);
 
-    if (result[0] === 201) {
+    if (result[0] === httpStatusCodes.created) {
       userStatus.setAuthorized(true);
       userStatus.setUserName(data['login']);
       this.removeEventListeners();
       router.toUrl(urls.boards);
       return;
     }
-    /* Вывести ошибку */
-    if (result[0] === 401) {
+
+    if (result[0] === httpStatusCodes.unauthorized) {
       loginLabel.innerHTML = 'Не получилось создать пользователя';
       validationBoxes.loginBox.hidden = false;
     }

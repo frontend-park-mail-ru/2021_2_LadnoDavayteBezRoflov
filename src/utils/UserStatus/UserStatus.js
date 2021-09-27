@@ -1,13 +1,13 @@
 'use strict';
 
 // utils
-import network from '../network/network.js';
+import {httpStatusCodes} from '../constants.js';
+import network from '../Network/Network.js';
 
 /**
  * Класс, отвечающий за представление статуса пользователя.
  */
 class UserStatus {
-
     /**
      * Конструктор, устанавливающий статус пользователя в 
      * состояние "не авторизован и не определен"
@@ -30,14 +30,12 @@ class UserStatus {
      */
     async init() {
         const result = await network.getUser();
-        if (result[0] === 200) {
+        if (result[0] === httpStatusCodes.ok) {
             this.setUserName(result[1]);
             this.setAuthorized(true);
             return;
         }
-
         this.setUserName(null);
-
         // TODO обработка ошибок
         console.log(result[0]);
     }
@@ -70,7 +68,7 @@ class UserStatus {
     /**
      * Метод-сеттер, устанавливающий имя пользователя в 
      * новое значение.
-     * @param {string} userName новое имя для установки
+     * @param {string | null} userName новое имя для установки
      */
     setUserName(userName) {
         this.userName = userName;
