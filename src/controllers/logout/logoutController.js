@@ -7,6 +7,7 @@ import ControllerInterface from '../baseController.js';
 import network from '../../utils/network/network.js';
 import router from '../../utils/router/router.js';
 import userStatus from '../../utils/userStatus/userStatus.js';
+import { urls } from '../../utils/constants.js';
 
 /**
  * Класс, реализующий контроллер для выхода из аккаунта пользователя.
@@ -34,7 +35,7 @@ export default class LogoutController extends ControllerInterface {
             userStatus.setAuthorized(false);
             userStatus.setUserName(null);
 
-            router.toUrl('/login');
+            router.toUrl(urls.login);
             return;
         }
         // TODO - красивый показ ошибок
