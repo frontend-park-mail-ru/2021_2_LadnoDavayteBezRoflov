@@ -105,6 +105,13 @@ export default class RegisterPage extends BasePage {
     validationBoxes.controlPasswordBox.hidden = true;
   }
 
+  /**
+   * Метод, осуществляющий валидацию данных из формы.
+   * @param {object} data объект, содержащий данные из формы
+   * @param {object} validationBoxes объект, содержащий набор валидационных текстовых блоков
+   * @param {object} validationLabels объект, содержащий набор валидационных текстовых подписей
+   * @returns {boolean} статус валидации
+   */
   validate(data, validationBoxes, validationLabels) {
     const validator = new Validator();
 
@@ -134,8 +141,9 @@ export default class RegisterPage extends BasePage {
         validationBoxes.controlPasswordBox.hidden = false;
       }
       /* Предотвратить отправку запроса */
-      return;
+      return false;
     }
+    return true;
   }
 
   /**
@@ -160,7 +168,9 @@ export default class RegisterPage extends BasePage {
     formData.forEach((value, key) => data[key] = value);
 
     /* Проверить логин и пароль и отрисовать ошибки на странице */
-    this.validate(data, validationBoxes, validationLabels);
+    if (!this.validate(data, validationBoxes, validationLabels)) {
+        return;
+    }
 
     const result = await network.sendRegistration(data);
 
