@@ -1,33 +1,32 @@
 'use strict';
 
 // Базовая страница
-import BasePage from '../basePage.js';
+import BasePage from '../BasePage.js';
 
 // Компоненты
-import NavbarComponent from '../../components/navbar/navbar.js';
-import FooterComponent from '../../components/footer/footer.js';
+import NavbarComponent from '../../components/Navbar/Navbar.js';
+import FooterComponent from '../../components/Footer/Footer.js';
 
 // utils
-import network from '../../utils/network/network.js';
-import userStatus from '../../utils/userStatus/userStatus.js';
-import router from '../../utils/router/router.js';
-import Validator from '../../utils/validator/validate.js';
-import { urls } from '../../utils/constants.js';
+import network from '../../utils/Network/Network.js';
+import userStatus from '../../utils/UserStatus/UserStatus.js';
+import router from '../../utils/Router/Router.js';
+import Validator from '../../utils/Validator/Validator.js';
+import {httpStatusCodes, urls} from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
-import './login.tmpl.js';
+import './LoginPage.tmpl.js';
 
 /**
   * Класс, реализующий страницу с входа.
   */
 export default class LoginPage extends BasePage {
-
   /**
     * Конструктор, создающий конструктор базовой страницы с нужными параметрами
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
   constructor(parent) {
-    super(parent, Handlebars.templates['login.hbs']);
+    super(parent, Handlebars.templates['LoginPage.hbs']);
     this.formAuthorizationCallback = this.formAuthorization.bind(this);
   }
 
@@ -35,11 +34,9 @@ export default class LoginPage extends BasePage {
    * Метод, отрисовывающий страницу.
    */
   render(context) {
-
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
     if (userStatus.getAuthorized()) {
         router.toUrl(urls.boards);
-        return;
     }
 
     /* Отрисовать страницу */
@@ -78,9 +75,7 @@ export default class LoginPage extends BasePage {
   registerValidationBoxes() {
     return {
       loginBox: document.getElementById('login-validation-box'),
-      emailBox: document.getElementById('email-validation-box'),
       passwordBox: document.getElementById('password-validation-box'),
-      controlPasswordBox: document.getElementById('control-password-validation-box'),
     }
   }
 
@@ -105,6 +100,38 @@ export default class LoginPage extends BasePage {
   }
 
   /**
+   * Метод, осуществляющий валидацию данных из формы.
+   * @param {object} data объект, содержащий данные из формы
+   * @param {object} validationBoxes объект, содержащий набор валидационных текстовых блоков
+   * @param {object} validationLabels объект, содержащий набор валидационных текстовых подписей
+   * @returns {boolean} статус валидации
+   */
+  validate(data, validationBoxes, validationLabels) {
+    const validator = new Validator();
+
+    const login = validator.validateLogin(data['login']);
+    const password = validator.validatePassword(data['password']);
+
+    if (!login['status'] || !password['status']) {
+      /* Вывести вообщение, если найдена ошибка */
+      if (login['message'] !== '') {
+        validationLabels.loginLabel.innerHTML = login['message'];
+        validationBoxes.loginBox.hidden = false;
+      }
+
+      if (password['message'] !== '') {
+        validationLabels.passwordLabel.innerHTML = password['message'];
+        validationBoxes.passwordBox.hidden = false;
+      }
+
+      /* Предотвратить отправку запроса */
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
   * Метод, обрабатывающий посылку формы.
   */
   async formAuthorization(event) {
@@ -125,35 +152,16 @@ export default class LoginPage extends BasePage {
     const data = {};
     formData.forEach((value, key) => data[key] = value);
 
-    /* Создать валидатор */
-    const validator = new Validator();
-
-    /* Проверить логин и пароль */
-    const login = validator.validateLogin(data['login']);
-    const password = validator.validatePassword(data['password']);
-
-    if (!login['status'] || !password['status']) {
-      /* Вывести вообщение, если найдена ошибка */
-      if (login['message'] !== '') {
-        
-        validationLabels.loginLabel.innerHTML = login['message'];
-        validationBoxes.loginBox.hidden = false;
-      }
-
-      if (password['message'] !== '') {
-
-        validationLabels.passwordLabel.innerHTML = password['message'];
-        validationBoxes.passwordBox.hidden = false;
-      }
-      /* Предотвратить отправку запроса */
-      return;
+    /* Проверить логин, e-mail и пароли и отрисовать ошибки на странице */
+    if (!this.validate(data, validationBoxes, validationLabels)) {
+        return;
     }
 
     /* Послать запрос на сервер */
     const result = await network.sendAuthorization(data);
 
     /* Установить новое состояние клиента и перенаправить */
-    if (result[0] === 200) {
+    if (result[0] === httpStatusCodes.ok) {
         userStatus.setAuthorized(true);
         userStatus.setUserName(data['login']);
         router.toUrl(urls.boards);
@@ -161,7 +169,7 @@ export default class LoginPage extends BasePage {
     }
 
     /* Вывести ошибку */
-    if (result[0] === 401) {
+    if (result[0] === httpStatusCodes.unauthorized) {
       validationLabels.loginLabel.innerHTML = 'Неверный логин или пароль';
       validationLabels.passwordLabel.innerHTML = 'Неверный логин или пароль';
 

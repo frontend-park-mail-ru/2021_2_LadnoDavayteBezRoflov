@@ -1,19 +1,18 @@
 'use strict';
 
 // Интерфейс контроллера
-import ControllerInterface from '../baseController.js';
+import ControllerInterface from '../BaseController.js';
 
 // utils
-import network from '../../utils/network/network.js';
-import router from '../../utils/router/router.js';
-import userStatus from '../../utils/userStatus/userStatus.js';
-import { urls } from '../../utils/constants.js';
+import network from '../../utils/Network/Network.js';
+import router from '../../utils/Router/Router.js';
+import userStatus from '../../utils/UserStatus/UserStatus.js';
+import {httpStatusCodes, urls} from '../../utils/constants.js';
 
 /**
  * Класс, реализующий контроллер для выхода из аккаунта пользователя.
  */
 export default class LogoutController extends ControllerInterface {
-    
     /**
      * Конструктор, создающий контроллер для выхода из аккаунта.
      */
@@ -31,7 +30,7 @@ export default class LogoutController extends ControllerInterface {
     async work() {
         const result = await network.sendLogout();
         /* result[0]: код статуса */
-        if (result[0] === 200) {
+        if (result[0] === httpStatusCodes.ok) {
             userStatus.setAuthorized(false);
             userStatus.setUserName(null);
 
