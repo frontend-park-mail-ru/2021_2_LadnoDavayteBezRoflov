@@ -12,6 +12,7 @@ import network from '../../utils/network/network.js';
 import userStatus from '../../utils/userStatus/userStatus.js';
 import router from '../../utils/router/router.js';
 import Validator from '../../utils/validator/validate.js';
+import { urls } from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
 import './login.tmpl.js';
@@ -27,6 +28,7 @@ export default class LoginPage extends BasePage {
     */
   constructor(parent) {
     super(parent, Handlebars.templates['login.hbs']);
+    this.formAuthorizationCallback = this.formAuthorization.bind(this);
   }
 
   /**
@@ -36,7 +38,7 @@ export default class LoginPage extends BasePage {
 
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
     if (userStatus.getAuthorized()) {
-        router.toUrl('/boards');
+        router.toUrl(urls.boards);
         return;
     }
 
@@ -59,7 +61,7 @@ export default class LoginPage extends BasePage {
   * Метод, добавляющий обработчики событий для страницы.
   */
   addEventListeners() {
-    document.getElementById('auth').addEventListener('submit', this.formAuth, this);
+    document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
   }
 
   /**
@@ -71,22 +73,50 @@ export default class LoginPage extends BasePage {
   }
 
   /**
+  * Метод, получающий boxes для валидации из документа.
+  */
+  registerValidationBoxes() {
+    return {
+      loginBox: document.getElementById('login-validation-box'),
+      emailBox: document.getElementById('email-validation-box'),
+      passwordBox: document.getElementById('password-validation-box'),
+      controlPasswordBox: document.getElementById('control-password-validation-box'),
+    }
+  }
+
+  /**
+  * Метод, получающий labels для валидации из документа.
+  */
+  registerValidationLabels() {
+    return {
+      loginLabel: document.getElementById('login-validation-message'),
+      passwordLabel: document.getElementById('password-validation-message'),
+    }
+  }
+
+  /**
+   * Метод, переводящий все валидационные дивы в нужный статус.
+   * @param {object} validationBoxes объект с валидационными дивами
+   * @param {*} status статус, в который будут переведены дивы
+   */
+  changeAllValidationBoxes(validationBoxes, status) {
+    validationBoxes.loginBox.hidden = status;
+    validationBoxes.passwordBox.hidden = status;
+  }
+
+  /**
   * Метод, обрабатывающий посылку формы.
   */
-  async formAuth(event) {
+  async formAuthorization(event) {
     /* Запретить обновление страницы */
     event.preventDefault(); 
 
     /* Получить элементы для отрисовки ошибок */
-    const loginBox = document.getElementById('login-validation-box');
-    const passwordBox = document.getElementById('password-validation-box');
-
-    const loginLabel = document.getElementById('login-validation-message');
-    const passwordLabel = document.getElementById('password-validation-message');
+    const validationBoxes = this.registerValidationBoxes();
+    const validationLabels = this.registerValidationLabels();
 
     /* Скрыть отображение ошибок */
-    loginBox.hidden = true;
-    passwordBox.hidden = true;
+    this.changeAllValidationBoxes(validationBoxes, true);
     
     /* Получить данные из формы */
     const formData = new FormData(event.target);
@@ -106,14 +136,14 @@ export default class LoginPage extends BasePage {
       /* Вывести вообщение, если найдена ошибка */
       if (login['message'] !== '') {
         
-        loginLabel.innerHTML = login['message'];
-        loginBox.hidden = false;
+        validationLabels.loginLabel.innerHTML = login['message'];
+        validationBoxes.loginBox.hidden = false;
       }
 
       if (password['message'] !== '') {
 
-        passwordLabel.innerHTML = password['message'];
-        passwordBox.hidden = false;
+        validationLabels.passwordLabel.innerHTML = password['message'];
+        validationBoxes.passwordBox.hidden = false;
       }
       /* Предотвратить отправку запроса */
       return;
@@ -126,18 +156,16 @@ export default class LoginPage extends BasePage {
     if (result[0] === 200) {
         userStatus.setAuthorized(true);
         userStatus.setUserName(data['login']);
-        router.toUrl('/boards'); // to constant
+        router.toUrl(urls.boards);
         return;
     }
 
     /* Вывести ошибку */
     if (result[0] === 401) {
-      loginLabel.innerHTML = 'Неверный логин или пароль';
-      passwordLabel.innerHTML = 'Неверный логин или пароль';
+      validationLabels.loginLabel.innerHTML = 'Неверный логин или пароль';
+      validationLabels.passwordLabel.innerHTML = 'Неверный логин или пароль';
 
-      loginBox.hidden = false;
-      passwordBox.hidden = false;
-      return;
+      this.changeAllValidationBoxes(validationBoxes, false);
     }
   }
 }
