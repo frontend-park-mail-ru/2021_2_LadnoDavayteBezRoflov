@@ -35,51 +35,49 @@
     <div class="page">
         <!--[if !IE]><!-->
 
-        <main id="body-main">
-            <div class="form-parent">
-                <form class="form">
-                    <div>
-                        <label>
-                            <input type="text" class="input-text text" name="boardName" placeholder="Название доски">
-                        </label>
-                    </div>
-                    <div>
-                        <label class="text">Тип доски:
-                            <select class="text">
-                                <option>Приватная</option>
-                                <option>Для рабочего пространства</option>
-                                <option>Публичная</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div>
-                        <label class="text">Выберите цвет доски:</label>
-                        <label>
-                            <input type="color" name="boardColor" list="colorList">
-                        </label>
-                        <datalist id="colorList">
-                            <option value="#ff0000" label="Красный">
-                            <option value="#008000" label="Зелёный">
-                            <option value="#0000ff" label="Синий">
-                        </datalist>
-                    </div>
-                    <br>
-                    <div>
-                        <input type="submit" class="form_button text" value="Создать доску">
-                    </div>
-                </form>
-            </div>
-        </main>
+        <main id="body-main" class="form-parent">
+            <form class="form">
+                <div>
+                    <label>
+                        <input type="text" class="input-text text" name="boardName" placeholder="Название доски">
+                    </label>
+                </div>
+                <div>
+                    <label class="text">Тип доски:
+                        <select class="text">
+                            <option>Приватная</option>
+                            <option>Для рабочего пространства</option>
+                            <option>Публичная</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label class="text">Выберите цвет доски:</label>
+                    <label>
+                        <input type="color" name="boardColor" list="colorList">
+                    </label>
+                    <datalist id="colorList">
+                        <option value="#ff0000" label="Красный">
+                        <option value="#008000" label="Зелёный">
+                        <option value="#0000ff" label="Синий">
+                    </datalist>
+                </div>
+                <br>
+                <div>
+                    <input type="submit" class="form_button text" value="Создать доску">
+                </div>
+            </form>
+         </main>
 
-        <!--<![endif]-->
+         <!--<![endif]-->
 
         <!--[if IE]>
             <div class="noscript-box">
                 <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
             </div>
             <div class="noscript-box">
-                <h3 class="noscript-message-h3">Ошибка :с</h3>
-                <p class="noscript-message-p">К сожалению, ваш браузер не поддерживается.</p>
+                <h3 class="noscript-message-title">Ошибка :с</h3>
+                <p class="noscript-message-text">К сожалению, ваш браузер не поддерживается.</p>
             </div>
         <![endif]-->
 
@@ -88,14 +86,14 @@
                 <img src="assets/noscript.png" alt="Sad Shiben" width="120" height="50">
             </div>
             <div class="noscript-box">
-                <h3 class="noscript-message-h3">Ошибка :с</h3>
-                <p class="noscript-message-p">
+                <h3 class="noscript-message-title">Ошибка :с</h3>
+                <p class="noscript-message-text">
                     К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками
                 </p>
             </div>
         </noscript>
 
-        <footer>
+        <footer class="footer">
             <p class="footer_text text">TestRello, 2021</p>
         </footer>
     </div>

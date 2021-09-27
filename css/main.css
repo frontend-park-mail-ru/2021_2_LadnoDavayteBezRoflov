@@ -7,7 +7,7 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
 }
 
-.noscript-message-h3 {
+.noscript-message-title {
     font-family: 'Nunito', sans-serif;
     text-decoration: underline;
     text-align: right;
@@ -16,18 +16,17 @@ body {
     margin-bottom: 15px;
 }
 
-.noscript-message-p {
+.noscript-message-text {
     font-family: 'IBM Plex Sans', sans-serif;
     text-align: center;
     margin-top: 15px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .noscript-box {
     height: 120px;
     width: 350px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin: 10px 0;
     background: #d8edf1;
     position: relative;
     justify-content: center;
@@ -77,7 +76,7 @@ body {
 }
 
 .input-text {
-    width: 20vw;
+    width: 500px;
     padding: 12px 20px;
     box-sizing: border-box;
     float: left;
