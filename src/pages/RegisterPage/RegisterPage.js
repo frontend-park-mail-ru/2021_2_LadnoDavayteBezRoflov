@@ -169,7 +169,7 @@ export default class RegisterPage extends BasePage {
 
     if (result === HttpStatusCodes.Created) {
       userStatus.setAuthorized(true);
-      userStatus.setUserName(data['login']);
+      userStatus.setUserName(data.login);
       this.removeEventListeners();
       router.toUrl(Urls.Boards);
       return;

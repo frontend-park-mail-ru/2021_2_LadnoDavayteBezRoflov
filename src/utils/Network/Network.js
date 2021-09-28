@@ -20,14 +20,8 @@ class Network {
      * @param {object} options параметры запроса
      * @returns {Promise<Response>} промис запроса
   */
-  httpRequest = (URL, options) => {
-    return fetch(URL, options)
-      .then((response) => { 
-        return response.json().then((data) => {
-          return [response.status, data];
-        })
-      });
-  }
+  httpRequest = (URL, options) => fetch(URL, options)
+    .then((response) => response.json().then((data) => [response.status, data]))
 
   /**
      * Метод, реализующий запрос GET /api/sessions.
@@ -41,10 +35,10 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Origin': 'http://95.163.213.142',
+        Origin: 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
-    }
+    };
     return this.httpRequest(`http://${this.url}:${this.port}/api/sessions`, options);
   }
 
@@ -60,10 +54,10 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Origin': 'http://95.163.213.142',
+        Origin: 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
-    }
+    };
     return this.httpRequest(`http://${this.url}:${this.port}/api/profile`, options);
   }
 
@@ -79,10 +73,10 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Origin': 'http://95.163.213.142',
+        Origin: 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
-    }
+    };
     return this.httpRequest(`http://${this.url}:${this.port}/api/sessions`, options);
   }
 
@@ -92,16 +86,16 @@ class Network {
      * @returns {Promise<Response>} промис запроса
      */
   async getBoards(data) {
-      const options = {
-        method: 'get',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Origin': 'http://95.163.213.142',
-        },
-        body: JSON.stringify(data),
-      }
+    const options = {
+      method: 'get',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'http://95.163.213.142',
+      },
+      body: JSON.stringify(data),
+    };
     return this.httpRequest(`http://${this.url}:${this.port}/api/boards`, options);
   }
 
@@ -111,16 +105,16 @@ class Network {
      * @returns {Promise<Response>} промис запроса
      */
   async sendLogout(data) {
-      const options = {
-        method: 'delete',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Origin': 'http://95.163.213.142',
-        },
-        body: JSON.stringify(data),
-      }
+    const options = {
+      method: 'delete',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'http://95.163.213.142',
+      },
+      body: JSON.stringify(data),
+    };
     return this.httpRequest(`http://${this.url}:${this.port}/api/sessions`, options);
   }
 }
