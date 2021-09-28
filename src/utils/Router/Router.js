@@ -1,7 +1,7 @@
-import { constants } from './constants.js';
-import { ControllerInterface } from '../controllers/baseController.js'
-import { NotFoundController } from '../controllers/notFoundController.js';
-let eventHist = null;
+import ControllerInterface from '../../controllers/BaseController.js';
+import NotFoundController from '../../controllers/NotFound/NotFoundController.js';
+import {Html, Urls} from '../constants.js';
+
 export class URLData {    
     constructor() {
         this.url = '';
@@ -42,9 +42,9 @@ export class Router {
      * Конструирует роутер.
      */
     constructor() {
-        this.root = document.getElementById(constants.elementsID.appRoot);
+        this.root = document.getElementById(Html.Root);
         if (this.root == null) {
-            throw new Error(`Router: не найден корневой элемент с id ${constants.elementsID.appRoot}`);
+            throw new Error(`Router: не найден корневой элемент с id ${Html.Root}`);
         }
         this.routes = new Map;
         this.registerNotFound();
@@ -118,7 +118,7 @@ export class Router {
 
         if (controller == null) {
             console.log(`Router: не найден контроллер для url'a "${data.url}"`);
-            this.toUrl(constants.urls.notFound);
+            this.toUrl(Urls.NotFound);
             return;
         }
 
@@ -143,7 +143,7 @@ export class Router {
      * Регестрирует контроллер по умолчанию
      */
     registerNotFound() {
-        this.registerUrl(constants.urls.notFound, new NotFoundController);
+        this.registerUrl(Urls.NotFound, new NotFoundController);
     }
 
 }
