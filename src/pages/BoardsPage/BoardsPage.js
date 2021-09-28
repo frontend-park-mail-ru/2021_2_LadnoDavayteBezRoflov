@@ -10,7 +10,7 @@ import FooterComponent from '../../components/Footer/Footer.js';
 // utils
 import userStatus from '../../utils/UserStatus/UserStatus.js';
 import router from '../../utils/Router/Router.js';
-import {urls} from '../../utils/constants.js';
+import { Urls } from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
 import './BoardsPage.tmpl.js';
@@ -33,13 +33,11 @@ export default class BoardsPage extends BasePage {
   render(context) {
     /* Если пользователь не авторизован, то перебросить его на вход */
     if (!userStatus.getAuthorized()) {
-      router.toUrl(urls.login);
+      router.toUrl(Urls.Login);
     }
 
-    /* Подготовить данные к отрисовке */
     const data = this.prepareBoards(context);
 
-    /* Отрисовать страницу */
     super.render(data);
 
     /* Создание и отрисовка компонента Navbar */
@@ -50,7 +48,6 @@ export default class BoardsPage extends BasePage {
     this.navbarComponent = new FooterComponent(document.getElementById('footer-main'), userStatus);
     this.navbarComponent.render();
 
-    /* Добавление обработчиков событий */
     this.addEventListeners();
   }
 
