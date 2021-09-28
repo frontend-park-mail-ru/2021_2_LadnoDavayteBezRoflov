@@ -1,7 +1,7 @@
 import { constants } from './constants.js';
 import { ControllerInterface } from '../controllers/baseController.js'
 import { NotFoundController } from '../controllers/notFoundController.js';
-
+let eventHist = null;
 export class URLData {    
     constructor() {
         this.url = '';
@@ -92,15 +92,16 @@ export class Router {
             const {target} = event;
             if (target instanceof HTMLAnchorElement) {
                 event.preventDefault();
-                this.toUrl(target.href);
+                this.toUrl(target.pathname);
             }
         });
 
         window.addEventListener('popstate', (event) => {
-            this.toUrl(location.href);
+            event.preventDefault();
+            this.toUrl(location.pathname);
         });
 
-        this.toUrl(location.href);
+        this.toUrl(location.pathname);
     }
 
     /**
@@ -108,13 +109,15 @@ export class Router {
      * @param {string} url 
      */
      toUrl(url) {
-        window.history.pushState(null, '', url);
-
+        if (location.pathname !== url) {
+            history.pushState(null, null, url);            
+        }
+          
         let data = URLData.fromURL(url);
         let controller = this.routes.get(data.url);
 
         if (controller == null) {
-            console.log(`Router: не найден контроллер для url'a <${data.url}>`);
+            console.log(`Router: не найден контроллер для url'a "${data.url}"`);
             this.toUrl(constants.urls.notFound);
             return;
         }

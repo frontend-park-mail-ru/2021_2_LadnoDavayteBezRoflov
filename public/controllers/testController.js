@@ -11,7 +11,13 @@ export class TestController extends ControllerInterface {
         let message = document.createElement('h1');
         message.innerText = "Hello word!";
         message.style.color = '#8000FF';
+        
+        let link = document.createElement('a');
+        link.href = "/404";
+        link.innerText = 'lin
+        
         this.root.innerHTML = '';
         this.root.appendChild(message);
+        this.root.appendChild(link);
     }
 }
