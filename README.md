@@ -18,5 +18,8 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 ### Backend repository
 [Link to backend repository](https://github.com/go-park-mail-ru/2021_2_LadnoDavayteBezRoflov).
 
+### API
+[Link to API](https://app.swaggerhub.com/apis/DPeshkoff/LadnoDavayteBezRoflov).
+
 ### Deploy
-TBD
+[Link to deploy](http://95.163.213.142).

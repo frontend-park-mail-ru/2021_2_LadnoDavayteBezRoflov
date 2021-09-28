@@ -41,6 +41,7 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
     }
@@ -59,6 +60,7 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
     }
@@ -77,6 +79,7 @@ class Network {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': 'http://95.163.213.142',
       },
       body: JSON.stringify(data),
     }
@@ -95,6 +98,7 @@ class Network {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': 'http://95.163.213.142',
         },
         body: JSON.stringify(data),
       }
@@ -113,6 +117,7 @@ class Network {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': 'http://95.163.213.142',
         },
         body: JSON.stringify(data),
       }
