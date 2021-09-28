@@ -8,6 +8,6 @@ import '../../components/Footer/Footer.tmpl.js';
  * Функция, выполняющая регистрацию компонентов для Handlebars.
  */
 export const registerPartials = () => {
-    Handlebars.registerPartial('NavbarComponent', Handlebars.templates['Navbar.hbs']);
-    Handlebars.registerPartial('FooterComponent', Handlebars.templates['Footer.hbs']);
-}
+  Handlebars.registerPartial('NavbarComponent', Handlebars.templates['Navbar.hbs']);
+  Handlebars.registerPartial('FooterComponent', Handlebars.templates['Footer.hbs']);
+};
