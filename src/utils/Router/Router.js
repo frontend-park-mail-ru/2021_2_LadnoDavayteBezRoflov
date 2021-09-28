@@ -5,7 +5,7 @@ import { Html, Urls } from '../constants.js';
 export class URLData {    
     constructor() {
         this.url = '';
-        this.urlParams = [];
+        this.pathParams = {};
         this.getParams = {};
     }
 
@@ -24,10 +24,8 @@ export class URLData {
         const urlObject = new URL(url, origin);
         const data = new URLData;
 
-        /* Очищаем path от лишних элементов: */
-        const pathElements = urlObject.pathname.replace(/\/{2,}/g, '').replace(/^\/|\/$/g, '').split('/');
-        data.url = '/' + pathElements[0];
-        data.urlParams = pathElements.slice(1);
+        /* Path всегда имеет один "/" в начале и ни одного в конце: */
+        data.url = '/' + urlObject.pathname.replace(/^(\/)+|(\/)+$/g, '');
         data.getParams = Object.fromEntries(urlObject.searchParams);
         
         return data;
@@ -102,7 +100,7 @@ class Router {
         const data = URLData.fromURL(url);
         const controller = this.routes.get(data.url);
 
-        if (controller === null) {
+        if (controller === undefined) {
             console.log(`Router: не найден контроллер для url'a "${data.url}"`);
             this.toUrl(Urls.NotFound);
             return;
