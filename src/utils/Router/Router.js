@@ -127,9 +127,9 @@ class Router {
      * Регестрирует контроллер по умолчанию
      */
     registerNotFound() {
-        this.registerUrl(Urls.NotFound, new NotFoundController);
+        this.registerUrl(Urls.NotFound, new NotFoundController(document.getElementById(Html.Root)));
     }
 
 }
 
-export const router = new Router;
+export default new Router();

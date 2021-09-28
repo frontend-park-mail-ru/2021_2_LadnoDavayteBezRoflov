@@ -4,14 +4,9 @@
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
-        "handlebars": "handlebars.sh",
+        "handlebars": "./handlebars.sh",
         "server": "node server/server.js",
-<<<<<<< HEAD
         "start": "npm run handlebars && npm run server",
-=======
-        "start": "npm run server",
-        "live-reload": "static-livereload --path public",
->>>>>>> 60cadea895cb6231ca9ce583878c8e4cb9250980
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -29,15 +24,9 @@
     "homepage": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov#readme",
     "dependencies": {
         "body-parser": "^1.18.3",
-<<<<<<< HEAD
         "express": "^4.17.1",
         "express-handlebars": "^5.3.4",
         "handlebars": "^4.7.7",
         "morgan": "^1.9.1"
-=======
-        "express": "^4.16.4",
-        "morgan": "^1.9.1",
-        "static-livereload": "^0.1.4"
->>>>>>> 60cadea895cb6231ca9ce583878c8e4cb9250980
     }
 }

@@ -64,7 +64,7 @@ export default class RegisterPage extends BasePage {
   * Метод, удаляющий обработчики событий для страницы.
   */
   removeEventListeners() {
-    document.getElementById('register').removeEventListener('submit');
+    document.getElementById('register').removeEventListener('submit', this.formRegistrationCallback);
     // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
   }
 
@@ -169,7 +169,7 @@ export default class RegisterPage extends BasePage {
 
     if (result === HttpStatusCodes.Created) {
       userStatus.setAuthorized(true);
-      userStatus.setUserName(data.login);
+      userStatus.setUserName(data['login']);
       this.removeEventListeners();
       router.toUrl(Urls.Boards);
       return;

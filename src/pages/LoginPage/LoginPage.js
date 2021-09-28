@@ -133,16 +133,20 @@ export default class LoginPage extends BasePage {
   * Метод, обрабатывающий посылку формы.
   */
   async formAuthorization(event) {
+    /* Запретить обновление страницы */
     event.preventDefault();
 
     /* Получить элементы для отрисовки ошибок */
     const validationBoxes = this.registerValidationBoxes();
     const validationLabels = this.registerValidationLabels();
 
+    /* Скрыть отображение ошибок */
     this.changeAllValidationBoxes(validationBoxes, true);
 
+    /* Получить данные из формы */
     const formData = new FormData(event.target);
 
+    /* Сохранить данные из формы в переменную */
     const data = {};
     formData.forEach((value, key) => data[key] = value);
 
@@ -151,8 +155,10 @@ export default class LoginPage extends BasePage {
       return;
     }
 
+    /* Послать запрос на сервер */
     const [result] = await network.sendAuthorization(data);
 
+    /* Установить новое состояние клиента и перенаправить */
     if (result === HttpStatusCodes.Ok) {
       userStatus.setAuthorized(true);
       userStatus.setUserName(data.login);
@@ -160,6 +166,7 @@ export default class LoginPage extends BasePage {
       return;
     }
 
+    /* Вывести ошибку */
     if (result === HttpStatusCodes.Unauthorized) {
       validationLabels.loginLabel.innerHTML = 'Неверный логин или пароль';
       validationLabels.passwordLabel.innerHTML = 'Неверный логин или пароль';

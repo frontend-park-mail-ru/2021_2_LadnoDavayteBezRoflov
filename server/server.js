@@ -13,7 +13,6 @@ const srcFolder = path.resolve(__dirname, '..', 'src');
 const port = process.env.PORT || 3000;
 /* Цветовая подсветка статусов */
 app.use(morgan('dev'));
-<<<<<<< HEAD
 /* Используем статику */
 app.use(express.static(publicFolder));
 app.use(express.static(srcFolder));
@@ -31,12 +30,6 @@ app.all('/public/css/*', (req, res) => {
 /* Реагируем на любые запросы посылкой index.html */
 app.all('*', (req, res) => {
   res.sendFile(path.resolve(`${publicFolder}/index.html`));
-=======
-app.use(express.static(path.resolve(__dirname, '..', 'src')));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../src/index.html'));
->>>>>>> 60cadea895cb6231ca9ce583878c8e4cb9250980
 });
 
 /* Слушаем указаный порт */
