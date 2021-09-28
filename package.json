@@ -1,6 +1,6 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
@@ -23,16 +23,12 @@
     },
     "homepage": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov#readme",
     "dependencies": {
-        "babel-eslint": "^10.1.0",
         "body-parser": "^1.18.3",
-        "eslint-config-airbnb": "^18.2.1",
-        "eslint-plugin-import": "^2.24.2",
-        "eslint-plugin-jsx-a11y": "^6.4.1",
-        "eslint-plugin-react": "^7.26.0",
+        "eslint": "^7.32.0",
+        "eslint-config-google": "^0.14.0",
         "express": "^4.17.1",
         "express-handlebars": "^5.3.4",
         "handlebars": "^4.7.7",
-        "morgan": "^1.9.1",
-        "eslint": "^7.32.0"
+        "morgan": "^1.9.1"
     }
 }
