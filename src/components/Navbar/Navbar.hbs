@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="/src/components/Navbar/Navbar.css">
+
+<div class="navbar">
+    <div class="navbar__header">
+        <div class="navbar__title">
+            <a href="/" class="navbar__link__title">TestRello</a>
+        </div>
+    </div>
+
+    <div class="navbar__links">
+        <a href="/boards" class="navbar__link">Доски</a>
+        {{#if isAuthorized}}
+            <a href="/profile/{{userName}}" class="navbar__link">Профиль</a>
+            <a href="/logout" class="navbar__link">Выход</a>
+        {{else}}
+            <a href="/login" class="navbar__link">Войти</a>
+            <a href="/register" class="navbar__link">Зарегистрироваться</a>
+        {{/if}}             
+    </div>
+</div>

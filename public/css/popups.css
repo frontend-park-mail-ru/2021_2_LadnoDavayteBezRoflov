@@ -1,0 +1,16 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+ 
+.isa_error {
+    margin: 10px 0;
+    padding:12px;
+}
+
+.isa_error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+}
+.isa_error i {
+    margin: 10px 22px;
+    font-size: 2em;
+    vertical-align: middle;
+}
