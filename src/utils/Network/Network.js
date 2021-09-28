@@ -20,6 +20,7 @@ class Network {
      * @param {object} options параметры запроса
      * @returns {Promise<Response>} промис запроса
   */
+  // eslint-disable-next-line no-use-before-define
   httpRequest = (URL, options) => fetch(URL, options)
     .then((response) => response.json().then((data) => [response.status, data]))
 
