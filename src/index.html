@@ -5,10 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self';style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'">
--->
-
     <!-- for super modern broswers - coloring browser header -->
     <meta name="theme-color" content="#0096c7">
     <!-- light blue -->
@@ -19,7 +15,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
-    <script defer src="index.js" type="module"></script>
+    <script defer src="/index.js" type="module"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,29 +31,18 @@
 </head>
 
 <body>
-    <!--[if !IE]><!-->
     <div id="root">
     </div>
-
-    <!--<![endif]-->
-        <!--[if IE]>
-            <div>
-                <img class="refuse-box__image" src="assets/noscript.png" alt="Sad Shiben">
-            </div>
-            <div class="refuse-box">
-                <h3 class="refuse-box__title">Ошибка :с</h3>
-                <p class="refuse-box__text">К сожалению, ваш браузер не поддерживается.</p>
-            </div>
-        <![endif]-->
-
-        <noscript>
-            <div>
-                <img class="refuse-box__image" src="assets/noscript.png" alt="Sad Shiben">
-            </div>
-            <div class="refuse-box">
-                <h3 class="refuse-box__title">Ошибка :с</h3>
-                <p class="refuse-box__text">К сожалению, ваш браузер не поддерживает JavaScript или его использование запрещено настройками</p>
-            </div>
-        </noscript>
+    <noscript>
+        <div>
+            <img class="refuse-box__image" src="assets/noscript.png" alt="Sad Shiben">
+        </div>
+        <div class="refuse-box">
+            <h3 class="refuse-box__title">Ошибка :с</h3>
+            <p class="refuse-box__text">К сожалению, ваш браузер не поддерживает JavaScript или его использование
+                запрещено настройками</p>
+        </div>
+    </noscript>
 </body>
+
 </html>
