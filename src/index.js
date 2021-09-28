@@ -1,6 +1,6 @@
 'use strict';
 
-import {router} from './utils/Router/Router.js';
+import { router } from './utils/Router/Router.js';
 import TestController from './controllers/TestController.js'
 
 /* Обработчик на загрузку страницы */

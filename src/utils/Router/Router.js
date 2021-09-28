@@ -1,6 +1,6 @@
 import ControllerInterface from '../../controllers/BaseController.js';
 import NotFoundController from '../../controllers/NotFound/NotFoundController.js';
-import {Html, Urls} from '../constants.js';
+import { Html, Urls } from '../constants.js';
 
 export class URLData {    
     constructor() {
@@ -17,15 +17,15 @@ export class URLData {
      * @returns {URLData} коллекция распаршенных данных
      */
     static fromURL(url) {
-        if (url == null) {
+        if (url === null) {
             throw new Error('URLData: передан пустой url');
         }
 
-        let urlObject = new URL(url, origin);
-        let data = new URLData;
+        const urlObject = new URL(url, origin);
+        const data = new URLData;
 
         /* Очищаем path от лишних элементов: */
-        let pathElements = urlObject.pathname.replace(/\/{2,}/g, '').replace(/^\/|\/$/g, '').split('/');
+        const pathElements = urlObject.pathname.replace(/\/{2,}/g, '').replace(/^\/|\/$/g, '').split('/');
         data.url = '/' + pathElements[0];
         data.urlParams = pathElements.slice(1);
         data.getParams = Object.fromEntries(urlObject.searchParams);
@@ -37,7 +37,7 @@ export class URLData {
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им контроллеры
  */
-export class Router {
+class Router {
     /**
      * Конструирует роутер.
      */
@@ -46,6 +46,7 @@ export class Router {
         if (this.root == null) {
             throw new Error(`Router: не найден корневой элемент с id ${Html.Root}`);
         }
+        
         this.routes = new Map;
         this.registerNotFound();
     }
@@ -57,30 +58,15 @@ export class Router {
      * @returns {Router} cсылку на this
      */
     registerUrl(url, controller) {
-        if ((url.match(/\//g) || []).length != 1 || url[0] != '/') {
+        if ((url.match(/\//g) || []).length !== 1 || url[0] !== '/') {
             throw new Error('Router: регестрируемый url должен соотв. шаблону "/path_name"');
         }
+        
         if (!(controller instanceof ControllerInterface)) {
             throw new Error('Router: контроллер должен реализовывать ControllerInterface');
         }
+        
         this.routes.set(url, controller);
-        return this;
-    }
-
-    /**
-     * Добавление alias'a на уже зарегестрированный url. (например '/home' для '/').
-     * Методом можно воспользоваться, что бы не создавать дополнительный объект контроллера.
-     * @param {string} url - ранее
-     * @param {string} alias  - alias на url
-     * @throws Error, если url не был ранее зарегестрирован.
-     * @returns {Router} cсылку на this
-     */
-    registerUrlAlias(url, alias) {
-        let controller = this.routes.get(url);
-        if (controller == null) {
-            throw new Error(`Router: ошибка при установке alias'a на "${url}": контроллер не существует.`)
-        }
-        this.routes.set(alias, controller);
         return this;
     }
 
@@ -112,17 +98,17 @@ export class Router {
         if (location.pathname !== url) {
           history.pushState(null, null, url);            
         }
-        let data = URLData.fromURL(url);
-        let controller = this.routes.get(data.url);
+        
+        const data = URLData.fromURL(url);
+        const controller = this.routes.get(data.url);
 
-        if (controller == null) {
+        if (controller === null) {
             console.log(`Router: не найден контроллер для url'a "${data.url}"`);
             this.toUrl(Urls.NotFound);
             return;
         }
 
         controller.work(data);
-
     }
 
     /**

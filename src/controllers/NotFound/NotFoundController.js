@@ -1,16 +1,15 @@
 'use strict';
 
-// Интерфейс контроллера
+// Интерфейс контроллера.
 import ControllerInterface from '../BaseController.js';
 
-// Скрипт ненайденной страницы
+// Скрипт ненайденной страницы.
 import NotFoundPage from '../../pages/NotFoundPage.js';
 
 /**
  * Класс, реализующий контроллер для страницы с ошибкой 404.
  */
 export default class NotFoundController extends ControllerInterface {
-  
   /**
    * Конструктор, создающий контроллер для страницы-404.
    */

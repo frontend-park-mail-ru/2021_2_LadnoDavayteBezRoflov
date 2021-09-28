@@ -5,7 +5,7 @@ import ControllerInterface from './BaseController.js';
 import { ConstantMessages, Html } from '../utils/constants.js';
 
 /**
- * Класс, реализующий контроллер используемый в целях разработки
+ * Класс, реализующий контроллер используемый в целях разработки.
  */
 export default class TestController extends ControllerInterface {
   constructor() {
