@@ -25,7 +25,7 @@ export class URLData {
         let data = new URLData;
 
         /* Очищаем path от лишних элементов: */
-        let pathElements = urlObject.pathname.replace(/^\/|\/\/|\/$/g, '').split('/');
+        let pathElements = urlObject.pathname.replace(/\/{2,}/g, '').replace(/^\/|\/$/g, '').split('/');
         data.url = '/' + pathElements[0];
         data.urlParams = pathElements.slice(1);
         data.getParams = Object.fromEntries(urlObject.searchParams);
@@ -108,11 +108,10 @@ export class Router {
      * Переход по URL.
      * @param {string} url 
      */
-     toUrl(url) {
+     toUrl(url) {         
         if (location.pathname !== url) {
-            history.pushState(null, null, url);            
+          history.pushState(null, null, url);            
         }
-          
         let data = URLData.fromURL(url);
         let controller = this.routes.get(data.url);
 
@@ -123,6 +122,7 @@ export class Router {
         }
 
         controller.work(data);
+
     }
 
     /**
