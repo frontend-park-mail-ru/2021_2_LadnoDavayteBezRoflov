@@ -2,7 +2,7 @@ body {
     background-image: url(../assets/background.png);
 }
 
-.default_text_style {
+.default_text {
     font-size: large;
     font-family: 'IBM Plex Sans', sans-serif;
 }
