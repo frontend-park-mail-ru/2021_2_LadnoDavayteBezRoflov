@@ -68,9 +68,9 @@ export default class LoginPage extends BasePage {
         // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
     }
 
-    /**
+/**
   * Метод, получающий boxes для валидации из документа.
-  * * @returns {object} боксы для валидации
+  * @returns {object} боксы для валидации
   */
     registerValidationBoxes() {
         return {
@@ -79,9 +79,9 @@ export default class LoginPage extends BasePage {
         };
     }
 
-    /**
+/**
   * Метод, получающий labels для валидации из документа.
-  * * @returns {object} лейблы для валидации
+  * @returns {object} лейблы для валидации
   */
     registerValidationLabels() {
         return {
@@ -134,7 +134,7 @@ export default class LoginPage extends BasePage {
 
     /**
   * Метод, обрабатывающий посылку формы.
-  *
+  * @param {form} event форма
   */
     async formAuthorization(event) {
     /* Запретить обновление страницы */

@@ -84,7 +84,7 @@ export default class RegisterPage extends BasePage {
 
     /**
   * Метод, получающий labels для валидации из документа.
-  * * @returns {object} лейблы для валидации
+  * @returns {object} лейблы для валидации
   */
     registerValidationLabels() {
         return {

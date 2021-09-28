@@ -19,6 +19,7 @@
     "no-var": "error",
     "no-redeclare": "error",
     "no-unused-vars": "warn",
-    "max-len": ["error", { "code": 105 }]
+    "max-len": ["error", { "code": 105 }],
+    "no-irregular-whitespace": "off"
   }
 }
