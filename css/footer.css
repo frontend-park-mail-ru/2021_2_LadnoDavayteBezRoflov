@@ -1,0 +1,17 @@
+.footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 50px;
+    margin-bottom: 0;
+
+    background-color: #005f73;
+}
+
+.footer_text {
+    color: azure;
+    font-family: 'IBM Plex Sans', sans-serif;
+    text-align: center;
+}
