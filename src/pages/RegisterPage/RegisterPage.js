@@ -66,7 +66,7 @@ export default class RegisterPage extends BasePage {
   */
     removeEventListeners() {
         document.getElementById('register').removeEventListener('submit', this.formRegistrationCallback);
-    //TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
+    // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
     }
 
     /**
@@ -84,7 +84,7 @@ export default class RegisterPage extends BasePage {
 
     /**
   * Метод, получающий labels для валидации из документа.
-  * @returns {object} лейблы для валидации
+  * @return {object} лейблы для валидации
   */
     registerValidationLabels() {
         return {

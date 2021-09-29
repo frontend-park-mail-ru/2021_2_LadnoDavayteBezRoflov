@@ -1,12 +1,14 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
         "handlebars": "./handlebars.sh",
         "server": "node server/server.js",
         "start": "npm run handlebars && npm run server",
+        "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint-fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -27,7 +29,6 @@
         "eslint": "^7.32.0",
         "eslint-config-google": "^0.14.0",
         "express": "^4.17.1",
-        "express-handlebars": "^5.3.4",
         "handlebars": "^4.7.7",
         "morgan": "^1.9.1"
     }

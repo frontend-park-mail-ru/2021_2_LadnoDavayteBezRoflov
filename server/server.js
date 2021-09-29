@@ -4,7 +4,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-const Handlebars = require('handlebars');
 /* Создаем приложение */
 const app = express();
 /* Прописываем путь к папке public */
