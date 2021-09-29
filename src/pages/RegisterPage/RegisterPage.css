@@ -36,7 +36,7 @@ input {
 }
 
 input:focus {
-    color: #e0e0e0;
+    color: #303030;
 }
 
 input:invalid:focus {

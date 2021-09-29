@@ -8,7 +8,7 @@
         "server": "node server/server.js",
         "start": "npm run handlebars && npm run server",
         "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-        "lint-fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
+        "lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
