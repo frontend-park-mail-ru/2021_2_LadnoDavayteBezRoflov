@@ -1,0 +1,89 @@
+/* TODO - refactor styles */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-image: url(/assets/background.png);
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+}
+
+.container {
+    padding: 16px;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    float: left;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+input:focus {
+    color: #303030;
+}
+
+input:invalid:focus {
+    box-shadow: 0 0 5px 1px red;
+}
+
+/*input:focus:invalid {*/
+/*    box-shadow: none;*/
+/*}*/
+
+.registerbtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #0071f0;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.registerbtn:focus,
+.registerbtn:hover {
+    background-color: rgba(0, 113, 240, 0.7);
+    /* #4d9cf5 */
+}
+
+/*!* Add a blue text color to links *!*/
+a {
+    color: dodgerblue;
+}
+
+/*!* Set a grey background color and center the text of the "sign in" section *!*/
+.signin {
+    background-color: #f1f1f1;
+    text-align: center;
+    width: 100%
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    font-size: 20px;
+}

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/src/pages/BoardsPage/reset.css">
+<link rel="stylesheet" href="/src/pages/BoardsPage/BoardsPage.css">
+
+<header id="header-main"></header>
+
+<div class="teams-container">
+    {{#each teams}}
+            <div class="team">
+                <div class="team__header">
+                    <div>
+                        <span class="team__team-name">{{this.team_name}}</span>
+                        <span class="material-icons material-icons_colored material-icons_transparent">edit</span>
+                    </div>
+                    <div>
+                        <span class="material-icons material-icons_colored">group_add</span>
+                        <span class="material-icons material-icons_colored">add</span>
+                        <span class="material-icons material-icons_colored">menu</span>
+                    </div>
+                </div>
+                <div class="horizontal-line"></div>
+                <div class="team__card-wrapper">
+                    <div class="team__card-holder">
+                        {{#each this.boards}}
+                        <a href="/board/{{this.id}}" class="bord-card">
+                            <div class="bord-card__header">{{this.board_name}}</div>
+                            <div class="bord-card__description">{{this.description}}</div>
+                        </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+    {{/each}}
+</div>
+
+<footer id="footer-main"></footer>
