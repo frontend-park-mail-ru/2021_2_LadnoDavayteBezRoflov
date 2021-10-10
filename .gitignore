@@ -6,3 +6,6 @@ node_modules/*
 
 #ds store
 .DS_Store
+
+#ide
+.idea

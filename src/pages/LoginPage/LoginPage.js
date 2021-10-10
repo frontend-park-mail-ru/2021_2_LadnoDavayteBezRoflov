@@ -37,7 +37,7 @@ export default class LoginPage extends BasePage {
     render(context) {
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
         if (userStatus.getAuthorized()) {
-            router.toUrl(Urls.Boards);
+            router.go(Urls.Boards);
         }
 
         super.render(context);
@@ -166,7 +166,7 @@ export default class LoginPage extends BasePage {
         if (result === HttpStatusCodes.Ok) {
             userStatus.setAuthorized(true);
             userStatus.setUserName(data.login);
-            router.toUrl(Urls.Boards);
+            router.go(Urls.Boards);
             return;
         }
 
