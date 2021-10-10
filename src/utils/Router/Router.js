@@ -1,6 +1,6 @@
 import ControllerInterface from '../../controllers/BaseController.js';
 import NotFoundController from '../../controllers/NotFound/NotFoundController.js';
-import {Html, Urls} from '../constants.js';
+import {ConstantMessages, Html, Urls} from '../constants.js';
 
 /**
  * Класс URLData, хранящий URL
@@ -61,7 +61,7 @@ class Router {
      * @param {ControllerInterface} controller - контроллер url
      * @return {Router} cсылку на this
      */
-    registerUrl(url, controller) {
+    register(url, controller) {
         if ((url.match(/\//g) || []).length !== 1 || url[0] !== '/') {
             throw new Error('Router: регестрируемый url должен соотв. шаблону "/path_name"');
         }
@@ -77,38 +77,46 @@ class Router {
     /**
      * Инициализирует роутер: устанавливает обработчики событий, обрабатывает текущий url.
      */
-    route() {
+    start() {
         this.root.addEventListener('click', (event) => {
-            const {target} = event;
-            if (target instanceof HTMLAnchorElement) {
+            const link = event.target.closest('a');
+            if (link instanceof HTMLAnchorElement) {
                 event.preventDefault();
-                this.toUrl(target.pathname);
+                this.go(link.pathname);
             }
         });
 
         window.addEventListener('popstate', (event) => {
-            event.preventDefault();
-            this.toUrl(location.pathname);
+            this.go(window.location.pathname);
         });
 
-        this.toUrl(location.pathname);
+        this.go(location.pathname);
     }
 
     /**
      * Переход по URL.
-     * @param {string} url
+     * @param {string} url который следует перейти
      */
-    toUrl(url) {
-        if (location.pathname !== url) {
-            history.pushState(null, null, url);
+    go(url) {
+        /**
+         * Отсекаем добавление записей в историю для случаев:
+         * - Второй раз подряд нажимаем одну и туже ссылку (переходим по URL)
+         * - Сработало событие popstate, и в истоии уже есть актуальная запись
+         *   (иначе же будет добавлена ее копия, а следующий back приведет на текущий URl и т.д.)
+         */
+        if (window.location.pathname !== url) {
+            /**
+             * Добавляет запись в историю и делает ее активной.
+             * Не приводит к срабатыванию popstate.
+             */
+            window.history.pushState(null, null, url);
         }
-
         const data = URLData.fromURL(url);
         const controller = this.routes.get(data.url);
 
         if (controller === undefined) {
             console.log(`Router: не найден контроллер для url'a "${data.url}"`);
-            this.toUrl(Urls.NotFound);
+            this.go(Urls.NotFound);
             return;
         }
 
@@ -118,7 +126,7 @@ class Router {
     /**
      * Возврат на предыдущий URL в истории
      */
-    toPrev() {
+    prev() {
         window.history.back();
     }
 
@@ -133,7 +141,7 @@ class Router {
      * Регестрирует контроллер по умолчанию
      */
     registerNotFound() {
-        this.registerUrl(Urls.NotFound, new NotFoundController(document.getElementById(Html.Root)));
+        this.register(Urls.NotFound, new NotFoundController(document.getElementById(Html.Root)));
     }
 }
 
