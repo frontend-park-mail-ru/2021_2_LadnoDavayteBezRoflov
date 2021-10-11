@@ -15,7 +15,7 @@ import Validator from '../../utils/Validator/Validator.js';
 import {HttpStatusCodes, Urls} from '../../utils/constants.js';
 
 // Скомпилированный шаблон Handlebars
-import './RegisterPage.tmpl.js';
+import '/src/tmpl.js';
 
 /**
   * Класс, реализующий страницу регистрации.
@@ -26,7 +26,7 @@ export default class RegisterPage extends BasePage {
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        super(parent, Handlebars.templates['RegisterPage.hbs']);
+        super(parent, Handlebars.templates['pages/RegisterPage/RegisterPage']);
         this.formRegistrationCallback = this.formRegistration.bind(this);
     }
 

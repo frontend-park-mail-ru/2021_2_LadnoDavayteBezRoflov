@@ -4,7 +4,7 @@
 import BaseComponent from '../BaseComponent.js';
 
 // Скомпилированный шаблон Handlebars
-import './Footer.tmpl.js';
+import '/src/tmpl.js';
 
 /**
  * Класс, реализующий компонент Footer.
@@ -18,7 +18,7 @@ export default class FooterComponent extends BaseComponent {
     */
     constructor(parent, context) {
         super(parent, context);
-        this.renderComponent = Handlebars.templates['Footer.hbs'];
+        this.renderComponent = Handlebars.templates['components/Footer/Footer'];
     }
 
     /**

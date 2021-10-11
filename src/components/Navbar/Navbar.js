@@ -4,7 +4,7 @@
 import BaseComponent from '../BaseComponent.js';
 
 // Скомпилированный шаблон Handlebars
-import './Navbar.tmpl.js';
+import '/src/tmpl.js';
 
 /**
  * Класс, реализующий компонент Navbar.
@@ -18,7 +18,7 @@ export default class NavbarComponent extends BaseComponent {
     */
     constructor(parent, context) {
         super(parent, context);
-        this.renderComponent = Handlebars.templates['Navbar.hbs'];
+        this.renderComponent = Handlebars.templates['components/Navbar/Navbar'];
     }
 
     /**
