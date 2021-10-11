@@ -16,6 +16,7 @@ import LogoutController from './controllers/LogoutController/LogoutController.js
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
+
     const root = document.getElementById(Html.Root);
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
@@ -23,17 +24,17 @@ window.addEventListener('DOMContentLoaded', async () => {
         await userStatus.init();
     }
 
-    /* Регистрация контроллеров для роутера */
-    router.register(Urls.Root, new RegisterController(root)); // placeholder
-    router.register(Urls.Register, new RegisterController(root));
-    router.register(Urls.Logout, new LogoutController());
-    router.register(Urls.Login, new LoginController(root));
-    router.register(Urls.Boards, new BoardsController(root));
-
     try {
+        /* Регистрация контроллеров для роутера */
+        router.register(Urls.Root, new RegisterController(root)); // placeholder
+        router.register(Urls.Register, new RegisterController(root));
+        router.register(Urls.Logout, new LogoutController());
+        router.register(Urls.Login, new LoginController(root));
+        router.register(Urls.Boards, new BoardsController(root));
+
         router.start();
     } catch (error) {
-    // TODO - красивый вывод
+        // TODO - красивый вывод
         console.error(error);
     }
 });
