@@ -5,6 +5,9 @@ import {Html, Urls} from './utils/constants.js';
 import router from './utils/Router/Router.js';
 import userStatus from './utils/UserStatus/UserStatus.js';
 
+// Скомпилированные шаблон Handlebars
+import '/src/tmpl.js';
+
 // Контроллеры
 import RegisterController from './controllers/RegisterController/RegisterController.js';
 import LoginController from './controllers/LoginController/LoginController.js';

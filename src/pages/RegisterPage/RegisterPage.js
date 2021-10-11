@@ -14,9 +14,6 @@ import router from '../../utils/Router/Router.js';
 import Validator from '../../utils/Validator/Validator.js';
 import {HttpStatusCodes, Urls} from '../../utils/constants.js';
 
-// Скомпилированный шаблон Handlebars
-import '/src/tmpl.js';
-
 /**
   * Класс, реализующий страницу регистрации.
   */

@@ -3,9 +3,6 @@
 // Базовый компонент
 import BaseComponent from '../BaseComponent.js';
 
-// Скомпилированный шаблон Handlebars
-import '/src/tmpl.js';
-
 /**
  * Класс, реализующий компонент Navbar.
  */

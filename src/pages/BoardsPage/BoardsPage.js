@@ -12,9 +12,6 @@ import userStatus from '../../utils/UserStatus/UserStatus.js';
 import router from '../../utils/Router/Router.js';
 import {Urls} from '../../utils/constants.js';
 
-// Скомпилированный шаблон Handlebars
-import '/src/tmpl.js';
-
 /**
   * Класс, реализующий страницу с досками.
   */
