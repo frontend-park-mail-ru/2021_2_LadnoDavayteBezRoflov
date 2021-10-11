@@ -14,7 +14,6 @@ import LogoutController from './controllers/LogoutController/LogoutController.js
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
-
     const root = document.getElementById(Html.Root);
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */

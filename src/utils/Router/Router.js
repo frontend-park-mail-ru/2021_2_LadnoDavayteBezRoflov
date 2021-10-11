@@ -1,6 +1,6 @@
 import ControllerInterface from '../../controllers/BaseController.js';
 import NotFoundController from '../../controllers/NotFound/NotFoundController.js';
-import {ConstantMessages, Html, Urls} from '../constants.js';
+import {Html, Urls} from '../constants.js';
 import {URLTemplateValidator, URLProcessor} from './URLProcessor.js';
 
 /**
