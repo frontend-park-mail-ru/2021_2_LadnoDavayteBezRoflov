@@ -53,9 +53,8 @@ class URLTemplateValidator {
      *      Имя переменной может состоять из лат. символов и цифр и не может начинаться с цифры.
      * Пример шаблона: "/boards/show/<str:teamName>/<num:pageNo>", "/profile".
      * @throws {Error} с описанием причины не валидности шаблона
-     * @param {string} template - строка шаблона url
      */
-    validate(template) {
+    validate() {
         this.checkRegex(URLProcessorRegEx.SymbolSet, URLProcessorConstants.ValidateErrors.SymbolSet);
         this.checkRegex(URLProcessorRegEx.AllExceptMoreThanOneSlash,
                         URLProcessorConstants.ValidateErrors.AllExceptMoreThanOneSlash);
@@ -73,7 +72,7 @@ class URLTemplateValidator {
      * @param {string} error - описание проверки
      */
     checkRegex(regex, error) {
-        if (this._template.match(regex)) {
+        if (!this._template.match(regex)) {
             throw new Error(error + ` Шаблон: ${this._template}`);
         }
     }
@@ -167,7 +166,8 @@ class URLProcessor {
      */
     getURLPath(url) {
         const urlObject = new URL(url, URLProcessorConstants.DummyOrigin);
-        return urlObject.pathname.replace(URLProcessorRegEx.ClearPathEnd, '');
+        return urlObject.pathname === '/' ?
+            '/' : urlObject.pathname.replace(URLProcessorRegEx.ClearPathEnd, '');
     }
 
     /**
@@ -177,15 +177,15 @@ class URLProcessor {
      * @return {ProcessedURLTemplate} найденный шаблон
      */
     findTemplate(path) {
-        const template = this._templates.find((template) => {
-            this.isTemplateFit(path, template);
+        const found = this._templates.find((template) => {
+            return this.isTemplateFit(path, template);
         });
 
-        if (!template) {
+        if (!found) {
             throw new Error(`Не найден походящий шаблон к url ${path}`);
         }
 
-        return template;
+        return found;
     }
 
     /**
@@ -265,28 +265,29 @@ class URLProcessor {
 const URLProcessorConstants = {
     DummyOrigin: 'https://developer.mozilla.org/', // Использую в качестве базового адреса в URL
     ValidateErrors: {
-        SymbolSet: 'Шаблон содержит не корректные символы',
-        AllExceptMoreThanOneSlash: 'Шаблон содержит более одного идущего подряд слеша',
-        TemplateStart: 'Шаблон должен начинаться с одного "/"',
+        SymbolSet: 'Шаблон содержит не корректные символы.',
+        AllExceptMoreThanOneSlash: 'Шаблон содержит более одного идущего подряд слеша.',
+        TemplateStart: 'Шаблон должен начинаться с одного "/".',
         PatternPartEnd: 'Неправильное завершение шаблона url.',
     },
     CapturesType: {
         string: 'str',
         number: 'num',
     },
-
 };
 
 const URLProcessorRegEx = {
     ClearPathEnd: /(\/*)$/, // Слеши в конце строки
     SlashCount: /\//g, // Для поиска числа слешей
-    TemplateStart: /^\/[A-za-z0-9]+/, // Начало url: / + адекватные символы
+    TemplateStart: /^\/[A-za-z0-9]*/, // Начало url: / + адекватные символы
     AllExceptMoreThanOneSlash: /^(?!.*\/{2,}).*/, // Все кроме 2х и более слешей
-    SymbolSet: /^[A-za-z0-9\/<:>]+$/,  // Допустимые символы
-    URLName: /^(\/[A-Za-z0-9\/]+)(?:\/<|$)/, // Паттерн имени урла в ранее проверенной строке
+    SymbolSet: /^[A-za-z0-9\/<:>]+$/, // Допустимые символы
+    URLName: /^(\/[A-Za-z0-9\/]*)(?:\/<|$)/, // Паттерн имени урла в ранее проверенной строке
     CapturesPattern: /^<(str|num):([A-Za-z][A-Za-z0-9]+)>$/, // Захватываем тип и имя переменной
     Captures: {
         [URLProcessorConstants.CapturesType.string]: /^[A-Za-z0-9]+$/,
         [URLProcessorConstants.CapturesType.number]: /^[0-9]+$/,
     },
 };
+
+export {UrlData, ProcessedURLTemplate, URLTemplateValidator, URLProcessor};
