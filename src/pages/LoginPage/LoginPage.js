@@ -14,9 +14,6 @@ import router from '../../utils/Router/Router.js';
 import Validator from '../../utils/Validator/Validator.js';
 import {HttpStatusCodes, Urls} from '../../utils/constants.js';
 
-// Скомпилированный шаблон Handlebars
-import './LoginPage.tmpl.js';
-
 /**
   * Класс, реализующий страницу с входа.
   */
@@ -26,7 +23,7 @@ export default class LoginPage extends BasePage {
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        super(parent, Handlebars.templates['LoginPage.hbs']);
+        super(parent, Handlebars.templates['pages/LoginPage/LoginPage']);
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
     }
 

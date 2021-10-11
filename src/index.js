@@ -1,10 +1,12 @@
 'use strict';
 
 // utils
-import {registerPartials} from './utils/Partials/partials.js';
 import {Html, Urls} from './utils/constants.js';
 import router from './utils/Router/Router.js';
 import userStatus from './utils/UserStatus/UserStatus.js';
+
+// Скомпилированные шаблон Handlebars
+import '/src/tmpl.js';
 
 // Контроллеры
 import RegisterController from './controllers/RegisterController/RegisterController.js';
@@ -20,8 +22,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!userStatus.getAuthorized() && userStatus.getUserName() === undefined) {
         await userStatus.init();
     }
-
-    registerPartials();
 
     /* Регистрация контроллеров для роутера */
     router.registerUrl(Urls.Root, new RegisterController(root)); // placeholder

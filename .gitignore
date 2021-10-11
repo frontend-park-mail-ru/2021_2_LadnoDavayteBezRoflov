@@ -1,8 +1,12 @@
 #npm modules
 node_modules/*
 
-#hbs templates
+#hbs compiled templates
+tmpl.js
 *.tmpl.js
 
 #ds store
 .DS_Store
+
+#ide
+.idea

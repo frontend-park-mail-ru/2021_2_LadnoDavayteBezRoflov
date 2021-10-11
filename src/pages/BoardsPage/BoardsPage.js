@@ -12,9 +12,6 @@ import userStatus from '../../utils/UserStatus/UserStatus.js';
 import router from '../../utils/Router/Router.js';
 import {Urls} from '../../utils/constants.js';
 
-// Скомпилированный шаблон Handlebars
-import './BoardsPage.tmpl.js';
-
 /**
   * Класс, реализующий страницу с досками.
   */
@@ -24,7 +21,7 @@ export default class BoardsPage extends BasePage {
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        super(parent, Handlebars.templates['BoardsPage.hbs']);
+        super(parent, Handlebars.templates['pages/BoardsPage/BoardsPage']);
     }
 
     /**

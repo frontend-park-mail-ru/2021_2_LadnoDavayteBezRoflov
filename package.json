@@ -1,10 +1,10 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.0.9",
+    "version": "0.1.0",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
-        "handlebars": "./handlebars.sh",
+        "handlebars": "npx handlebars ./src/ -f ./src/tmpl.js --extension \"hbs\"",
         "server": "node server/server.js",
         "start": "npm run handlebars && npm run server",
         "lint": "npx eslint . --ext .js",
