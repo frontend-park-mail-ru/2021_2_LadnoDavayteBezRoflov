@@ -76,6 +76,10 @@ class Router {
             return;
         }
 
+        if (this._currentController) {
+            this._currentController.onDeactivating();
+        }
+        this._currentController = controller;
         controller.work(urlData);
 
         /**
