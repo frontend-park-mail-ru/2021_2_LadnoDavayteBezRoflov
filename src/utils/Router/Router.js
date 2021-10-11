@@ -1,43 +1,6 @@
 import ControllerInterface from '../../controllers/BaseController.js';
 import NotFoundController from '../../controllers/NotFound/NotFoundController.js';
 import {Html, Urls} from '../constants.js';
-import {URLTemplateValidator, URLProcessor} from './URLProcessor.js';
-
-/**
- * Класс URLData, хранящий URL
- */
-export class URLData {
-    /**
-     * Конструктор класса URLData.
-     */
-    constructor() {
-        this.url = '';
-        this.pathParams = {};
-        this.getParams = {};
-    }
-
-    /**
-     * Парсит переданный url: первое значение за '/' считается url (url),
-     * остальные значения за '/' - параметры url'a (urlParams),
-     * также парсит get параметры (getParams)
-     * @param {string} url на разбор
-     * @return {URLData} коллекция распаршенных данных
-     */
-    static fromURL(url) {
-        if (url === null) {
-            throw new Error('URLData: передан пустой url');
-        }
-
-        const urlObject = new URL(url, origin);
-        const data = new URLData();
-
-        /* Path всегда имеет один "/" в начале и ни одного в конце: */
-        data.url = `/${urlObject.pathname.replace(/^(\/)+|(\/)+$/g, '')}`;
-        data.getParams = Object.fromEntries(urlObject.searchParams);
-
-        return data;
-    }
-}
 
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им контроллеры
@@ -52,8 +15,8 @@ class Router {
             throw new Error(`Router: не найден корневой элемент с id ${Html.Root}`);
         }
 
-        this._routes = new Map();
-        this._urlProcessor = new URLProcessor();
+        this._routes = {};
+        this._currentController = undefined;
         this.registerNotFound();
     }
 
@@ -65,15 +28,15 @@ class Router {
      * @return {Router} - ссылку на объект роутера
      */
     register(template, controller) {
-        const validator = new URLTemplateValidator(template);
-        validator.validate();
-        this._urlProcessor.pushProcessedTemplate(validator.processedTemplate);
-
-        if (!(controller instanceof ControllerInterface)) {
-            throw new Error('Router: контроллер должен реализовывать ControllerInterface');
+        if (!this.isTemplateValid(template)) {
+            return this;
         }
 
-        this._routes.set(validator.processedTemplate.name, controller);
+        if (!(controller instanceof ControllerInterface)) {
+            return this;
+        }
+
+        this._routes[template] = controller;
         return this;
     }
 
@@ -85,15 +48,15 @@ class Router {
             const link = event.target.closest('a');
             if (link instanceof HTMLAnchorElement) {
                 event.preventDefault();
-                this.go(link.pathname);
+                this.go(link.pathname + link.search);
             }
         });
 
         window.addEventListener('popstate', (event) => {
-            this.go(window.location.pathname);
+            this.go(window.location.pathname + window.location.search);
         });
 
-        this.go(window.location.pathname);
+        this.go(window.location.pathname + window.location.search);
     }
 
     /**
@@ -101,18 +64,14 @@ class Router {
      * @param {string} url - url на который следует перейти
      */
     go(url) {
-        let urlData = undefined;
-        try {
-            urlData = this._urlProcessor.process(url);
-        } catch (exception) {
-            console.log(`Router: url ${url} не может быть обработан: "${exception.message}"`);
+        const urlData = this.processURL(url);
+        if (!urlData) {
             this.go(Urls.NotFound);
             return;
         }
 
-        const controller = this._routes.get(urlData.name);
+        const controller = this._routes[urlData.template];
         if (!controller) {
-            console.log(`Router: не найден контроллер для url "${data.url}"`);
             this.go(Urls.NotFound);
             return;
         }
@@ -125,7 +84,7 @@ class Router {
          * - Сработало событие popstate, и в истоии уже есть актуальная запись
          *   (иначе же будет добавлена ее копия, а следующий back приведет на текущий URl и т.д.)
          */
-        if (window.location.pathname !== url) {
+        if (window.location.pathname + window.location.search !== url) {
             /**
              * Добавляет запись в историю и делает ее активной.
              * Не приводит к срабатыванию popstate.
@@ -152,7 +111,95 @@ class Router {
      * Регестрирует контроллер по умолчанию для неизвестных url
      */
     registerNotFound() {
+        if (!this.isTemplateValid(Urls.NotFound)) {
+            throw new Error(`Шаблон ${Urls.NotFound} для NotFoundController не валидный`);
+        }
         this.register(Urls.NotFound, new NotFoundController(document.getElementById(Html.Root)));
+    }
+
+    /**
+     * Проверяет соответствие шаблона минимуму критериев
+     * @param {string} template - проверяемый шаблон
+     * @return {boolean} результат проверки
+     */
+    isTemplateValid(template) {
+        /* Все url стартуют с "/" */
+        return !(!template.startsWith('/') ||
+                /* Не должно быть пустых имен параметров */
+                (template.search('/<>/') !== -1 || template.search('/<>') !== -1) ||
+                /* Шаблон url не заканчивается на "/" */
+                (template !== '/' && template.endsWith('/')));
+    }
+
+    /**
+     * Извлекает из относительного URL path часть. Если присутствет завершающий "/", он будет удален.
+     * @param {string} url - url для обработки
+     * @return {string} - path часть url
+     */
+    getURLPath(url) {
+        const urlObject = new URL(url, window.location.origin);
+        return urlObject.pathname === '/' ? '/' : urlObject.pathname.replace(/\/$/, '');
+    }
+
+    /**
+     * Возвращает объект get параметров, полученних из относительного url
+     * @param {string} url - url
+     * @return {Object} содержащий get параметры
+     */
+    getGetParams(url) {
+        const urlObject = new URL(url, window.location.origin);
+        return Object.fromEntries(urlObject.searchParams);
+    }
+
+    /**
+     * Обрабатывает переданный url (относительный). Извлекает path и get параметры.
+     * @param {string} url
+     * @return {Object|undefined}
+     */
+    processURL(url) {
+        const urlData = {template: undefined, pathParams: undefined, getParams: this.getGetParams(url)};
+        const path = this.getURLPath(url);
+        // eslint-disable-next-line guard-for-in
+        for (const template in this._routes) {
+            urlData.pathParams = this.getPathParams(path, template);
+            /* Найден подходящий шаблон и параметры: */
+            if (urlData.pathParams) {
+                urlData.template = template;
+                return urlData;
+            }
+        }
+        return undefined;
+    }
+
+    /**
+     * Метод пробует применить template к path и извлечь параметры
+     * @param {string} path - path часть url
+     * @param {string} template - шаблон url
+     * @return {Object|undefined} возвращает объект с параметрами,
+     * либо, если path не соотв. template - undefined
+     */
+    getPathParams(path, template) {
+        const pathElements = path.split('/');
+        const templateElements = template.split('/');
+
+        if (pathElements.length !== templateElements.length) {
+            return undefined;
+        }
+
+        const params = {};
+
+        for (let index = 0; index < templateElements.length; index++) {
+            const part = templateElements[index];
+            if (part.startsWith('<') && part.endsWith('>')) {
+                const key = part.slice(1, part.length - 1);
+                const value = pathElements[index];
+                params[key] = Number(value) || value;
+            } else if (part !== pathElements[index]) {
+                return undefined;
+            }
+        }
+
+        return params;
     }
 }
 
