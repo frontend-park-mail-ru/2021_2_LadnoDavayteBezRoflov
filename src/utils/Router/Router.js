@@ -161,18 +161,18 @@ class Router {
      * @return {Object|undefined}
      */
     processURL(url) {
-        const urlData = {template: undefined, pathParams: undefined, getParams: this.getGetParams(url)};
+        const urlData = {getParams: this.getGetParams(url)};
         const path = this.getURLPath(url);
-        // eslint-disable-next-line guard-for-in
-        for (const template in this._routes) {
+
+        return Object.entries(this._routes).every(([template]) => {
             urlData.pathParams = this.getPathParams(path, template);
             /* Найден подходящий шаблон и параметры: */
             if (urlData.pathParams) {
                 urlData.template = template;
-                return urlData;
+                return false;
             }
-        }
-        return undefined;
+            return true;
+        }) ? null : urlData;
     }
 
     /**
@@ -183,27 +183,36 @@ class Router {
      * либо, если path не соотв. template - undefined
      */
     getPathParams(path, template) {
+        /* Разделяем path и template на элементы - подстроки ограниченные "/". */
         const pathElements = path.split('/');
         const templateElements = template.split('/');
 
         if (pathElements.length !== templateElements.length) {
-            return undefined;
+            return null;
         }
 
         const params = {};
 
-        for (let index = 0; index < templateElements.length; index++) {
-            const part = templateElements[index];
+        /* Проверяем каждый "элемент" шаблона и path'a: */
+        return templateElements.every((part, index) => {
+            /**
+             * Если исследуемый part отвечает за захват переменной, то он имеет форму
+             * <varibleName>. Пример: "/home/page/<pageNo>" - щаблон состоит из 3х частей,
+             * 3я часть ("<pageNo>") захватывает переменную pageNo в из подходящего path.
+             * Для path'a "/home/page/100" шаблон определит, что "pageNo = 100".
+             */
             if (part.startsWith('<') && part.endsWith('>')) {
                 const key = part.slice(1, part.length - 1);
                 const value = pathElements[index];
                 params[key] = Number(value) || value;
             } else if (part !== pathElements[index]) {
-                return undefined;
+                /**
+                 * Если же part это обычная часть шаблона (как "home" и "page" части из примера выше),
+                 * то у подходящего под template path'a также должна совпадать соотв. часть.
+                 */
+                return false;
             }
-        }
-
-        return params;
+        }) ? params : null;
     }
 }
 
