@@ -1,4 +1,5 @@
 {
+  "plugins": ["unused-imports"],
   "env": {
     "browser": true,
     "es2021": true
@@ -20,6 +21,7 @@
     "linebreak-style": "off",
     "no-var": "error",
     "no-redeclare": "error",
+    "unused-imports/no-unused-imports": "error",
     "no-unused-vars": "warn",
     "max-len": ["error", { "code": 105 }],
     "no-irregular-whitespace": "off"
