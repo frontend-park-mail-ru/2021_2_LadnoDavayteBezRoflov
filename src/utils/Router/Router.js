@@ -64,14 +64,8 @@ class Router {
      * @param {string} url - url на который следует перейти
      */
     go(url) {
-        const urlData = this.processURL(url);
-        if (!urlData) {
-            this.go(Urls.NotFound);
-            return;
-        }
-
-        const controller = this._routes[urlData.template];
-        if (!controller) {
+        const {urlData, controller} = this.processURL(url) || {};
+        if (!urlData || !controller) {
             this.go(Urls.NotFound);
             return;
         }
@@ -129,10 +123,10 @@ class Router {
     isTemplateValid(template) {
         /* Все url стартуют с "/" */
         return !(!template.startsWith('/') ||
-                /* Не должно быть пустых имен параметров */
-                (template.search('/<>/') !== -1 || template.search('/<>') !== -1) ||
-                /* Шаблон url не заканчивается на "/" */
-                (template !== '/' && template.endsWith('/')));
+            /* Не должно быть пустых имен параметров */
+            (template.search('/<>/') !== -1 || template.search('/<>') !== -1) ||
+            /* Шаблон url не заканчивается на "/" */
+            (template !== '/' && template.endsWith('/')));
     }
 
     /**
@@ -158,28 +152,30 @@ class Router {
     /**
      * Обрабатывает переданный url (относительный). Извлекает path и get параметры.
      * @param {string} url
-     * @return {Object|undefined}
+     * @return {Object|null}
      */
     processURL(url) {
-        const urlData = {getParams: this.getGetParams(url)};
+        const getParams = this.getGetParams(url);
         const path = this.getURLPath(url);
 
-        return Object.entries(this._routes).every(([template]) => {
-            urlData.pathParams = this.getPathParams(path, template);
-            /* Найден подходящий шаблон и параметры: */
-            if (urlData.pathParams) {
-                urlData.template = template;
-                return false;
+        /* eslint-disable-next-line guard-for-in */
+        for (const template in this._routes) {
+            const pathParams = this.getPathParams(path, template);
+            if (pathParams) {
+                /* Найден подходящий шаблон и параметры: */
+                return {'urlData': {url, pathParams, getParams},
+                        'controller': this._routes[template]};
             }
-            return true;
-        }) ? null : urlData;
+        }
+
+        return null;
     }
 
     /**
      * Метод пробует применить template к path и извлечь параметры
      * @param {string} path - path часть url
      * @param {string} template - шаблон url
-     * @return {Object|undefined} возвращает объект с параметрами,
+     * @return {Object|null} возвращает объект с параметрами,
      * либо, если path не соотв. template - undefined
      */
     getPathParams(path, template) {
@@ -195,13 +191,13 @@ class Router {
 
         /* Проверяем каждый "элемент" шаблона и path'a: */
         return templateElements.every((part, index) => {
-            /**
-             * Если исследуемый part отвечает за захват переменной, то он имеет форму
-             * <varibleName>. Пример: "/home/page/<pageNo>" - щаблон состоит из 3х частей,
-             * 3я часть ("<pageNo>") захватывает переменную pageNo в из подходящего path.
-             * Для path'a "/home/page/100" шаблон определит, что "pageNo = 100".
-             */
             if (part.startsWith('<') && part.endsWith('>')) {
+                /**
+                 * Если исследуемый part отвечает за захват переменной, то он имеет форму
+                 * <varibleName>. Пример: "/home/page/<pageNo>" - щаблон состоит из 3х частей,
+                 * 3я часть ("<pageNo>") захватывает переменную pageNo в из подходящего path.
+                 * Для path'a "/home/page/100" шаблон определит, что "pageNo = 100".
+                 */
                 const key = part.slice(1, part.length - 1);
                 const value = pathElements[index];
                 params[key] = Number(value) || value;
