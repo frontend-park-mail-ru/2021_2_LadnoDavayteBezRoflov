@@ -60,7 +60,9 @@ class Router {
     }
 
     /**
-     * Выполняет переход по относительному url
+     * Выполняет переход по относительному url.
+     * Относительный url - это часть url которая следует за именем хоста.
+     * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
      */
     go(url) {
@@ -163,8 +165,10 @@ class Router {
             const pathParams = this.getPathParams(path, template);
             if (pathParams) {
                 /* Найден подходящий шаблон и параметры: */
-                return {'urlData': {url, pathParams, getParams},
-                        'controller': this._routes[template]};
+                return {
+                    urlData: {url, pathParams, getParams},
+                    controller: this._routes[template],
+                };
             }
         }
 

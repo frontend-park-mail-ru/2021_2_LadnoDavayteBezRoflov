@@ -13,6 +13,7 @@
   "rules": {
     "semi": ["error", "always"],
     "quotes": ["error", "single"],
+    "quote-props": ["error", "consistent-as-needed"],
     "indent": ["error", 4, { "CallExpression": {"arguments": "first"}, "ObjectExpression": "first" }],
     "no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
     "no-duplicate-imports": "error",
