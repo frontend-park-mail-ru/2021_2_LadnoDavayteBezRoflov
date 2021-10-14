@@ -23,17 +23,17 @@ window.addEventListener('DOMContentLoaded', async () => {
         await userStatus.init();
     }
 
-    /* Регистрация контроллеров для роутера */
-    router.registerUrl(Urls.Root, new RegisterController(root)); // placeholder
-    router.registerUrl(Urls.Register, new RegisterController(root));
-    router.registerUrl(Urls.Logout, new LogoutController());
-    router.registerUrl(Urls.Login, new LoginController(root));
-    router.registerUrl(Urls.Boards, new BoardsController(root));
-
     try {
-        router.route();
+        /* Регистрация контроллеров для роутера */
+        router.register(Urls.Root, new RegisterController(root)); // placeholder
+        router.register(Urls.Register, new RegisterController(root));
+        router.register(Urls.Logout, new LogoutController());
+        router.register(Urls.Login, new LoginController(root));
+        router.register(Urls.Boards, new BoardsController(root));
+
+        router.start();
     } catch (error) {
-    // TODO - красивый вывод
+        // TODO - красивый вывод
         console.error(error);
     }
 });

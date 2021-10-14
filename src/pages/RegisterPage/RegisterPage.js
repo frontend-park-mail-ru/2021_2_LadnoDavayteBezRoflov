@@ -34,7 +34,7 @@ export default class RegisterPage extends BasePage {
     render(context) {
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
         if (userStatus.getAuthorized()) {
-            router.toUrl(Urls.Boards);
+            router.go(Urls.Boards);
             return;
         }
 
@@ -174,7 +174,7 @@ export default class RegisterPage extends BasePage {
             userStatus.setAuthorized(true);
             userStatus.setUserName(data.login);
             this.removeEventListeners();
-            router.toUrl(Urls.Boards);
+            router.go(Urls.Boards);
             return;
         }
 

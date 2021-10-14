@@ -31,7 +31,7 @@ export default class BoardsPage extends BasePage {
     render(context) {
     /* Если пользователь не авторизован, то перебросить его на вход */
         if (!userStatus.getAuthorized()) {
-            router.toUrl(Urls.Login);
+            router.go(Urls.Login);
         }
 
         const data = this.prepareBoards(context);

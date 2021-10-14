@@ -33,6 +33,6 @@ export default class BoardsController extends ControllerInterface {
         if (result === HttpStatusCodes.Ok) {
             return this.page.render(boards);
         }
-        router.toUrl(Urls.Login);
+        router.go(Urls.Login);
     }
 }

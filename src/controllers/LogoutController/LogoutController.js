@@ -26,7 +26,7 @@ export default class LogoutController extends ControllerInterface {
         if (result === HttpStatusCodes.Ok) {
             userStatus.setAuthorized(false);
             userStatus.setUserName(null);
-            router.toUrl(Urls.Login);
+            router.go(Urls.Login);
             return;
         }
         // TODO - красивый показ ошибок
