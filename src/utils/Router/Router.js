@@ -46,7 +46,7 @@ class Router {
     start() {
         this._root.addEventListener('click', (event) => {
             const link = event.target.closest('a');
-            if (link instanceof HTMLAnchorElement) {
+            if (link) {
                 event.preventDefault();
                 this.go(link.pathname + link.search);
             }
