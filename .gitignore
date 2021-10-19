@@ -2,7 +2,7 @@
 node_modules/*
 
 #hbs compiled templates
-tmpl.js
+src/tmpl.js
 *.tmpl.js
 
 #ds store

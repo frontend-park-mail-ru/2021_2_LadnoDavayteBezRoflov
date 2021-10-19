@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="/src/views/LoginView/LoginView.css">
+<link rel="stylesheet" href="../../../public/css/popups.css">
+
+{{{Navbar}}}
+
+<form id="auth" name="auth" novalidate>
+    <div class="container">
+        <h1>Вход</h1>
+            <p>Пожалуйста, заполните эту форму, чтобы войти.</p>
+
+            <label for="login"><b>Логин</b></label>
+            <input type="text" placeholder="Введите логин" id="login" name="login" required>
+            <div class="isa_error" id="login-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="login-validation-message"></label>
+            </div>
+            
+            <label for="psw"><b>Пароль</b></label>
+            <input type="password" placeholder="Введите пароль" id="psw" name="password" required>
+            <div class="isa_error" id="password-validation-box" hidden>
+                <i class="fa fa-times-circle"></i>
+                <label id="password-validation-message"></label>
+            </div>
+
+            <button type="submit" class="loginbtn" id="login-button">Войти</button> 
+    </div>
+</form>
+    <div class="container signin">
+        <p>Впервые в TestRello? <a href="/register">Создать аккаунт</a>.</p>
+    </div>
+
+{{{Footer}}}

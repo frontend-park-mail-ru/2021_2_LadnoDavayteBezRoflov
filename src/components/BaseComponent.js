@@ -5,22 +5,34 @@
  */
 export default class BaseComponent {
     /**
-    * Конструктор, создающий базовый класс реализации компонента.
-    * @param {Element} parent HTML-элемент, в который будет осуществлена
-    * отрисовка
-    * @param {function} context контекст отрисовки шаблона
+    * @constructor
+    * @param {Object} context контекст отрисовки шаблона
+    * @param {Function} template функция отрисовки шаблона
+    * @param {Element | undefined} parent элемент, в который будет отрисован компонент
     */
-    constructor(parent, context) {
+    constructor(context, template, parent = undefined) {
         this.parent = parent;
+        this.template = template;
         this.context = context;
     }
 
     /**
     * Метод, отрисовывающий HTML компонента.
+    * @return {String} HTML-код компонента
     */
     render() {
-    /* Вставить HTML отрисованного partial
-    непосредственно перед элементом parent */
-        this.parent.insertAdjacentHTML('beforebegin', this.renderPartial());
+        if (this.template !== null) {
+            let html;
+            if (typeof this.template === Function) {
+                html = this.template(this.context);
+            } else {
+                html = this.template({...this.context});
+            }
+
+            if (this.parent === undefined) {
+                return html;
+            }
+            this.parent.innerHTML = html;
+        }
     }
 }

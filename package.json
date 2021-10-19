@@ -1,6 +1,6 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
@@ -28,7 +28,6 @@
         "body-parser": "^1.18.3",
         "eslint": "^7.32.0",
         "eslint-config-google": "^0.14.0",
-        "eslint-plugin-unused-imports": "^1.1.5",
         "express": "^4.17.1",
         "handlebars": "^4.7.7",
         "morgan": "^1.9.1"

@@ -1,39 +1,44 @@
 'use strict';
 
-// utils
-import {Html, Urls} from './utils/constants.js';
-import router from './utils/Router/Router.js';
-import userStatus from './utils/UserStatus/UserStatus.js';
+import actions from './actions/actions.js';
 
-// Скомпилированные шаблон Handlebars
+// Stores
+import UserStore from './stores/UserStore/UserStore.js';
+
+// Modules
+import Router from './modules/Router/Router.js';
+
+// utils
+import {Html, Urls} from './constants/constants.js';
+
+// Скомпилированные шаблоны Handlebars
 import '/src/tmpl.js';
 
-// Контроллеры
-import RegisterController from './controllers/RegisterController/RegisterController.js';
-import LoginController from './controllers/LoginController/LoginController.js';
-import BoardsController from './controllers/BoardsController/BoardsController.js';
-import LogoutController from './controllers/LogoutController/LogoutController.js';
+// Views
+import RegisterView from './views/RegisterView/RegisterView.js';
+import LoginView from './views/LoginView/LoginView.js';
+import LogoutView from './views/LogoutView.js';
+import BoardsView from './views/BoardsView/BoardsView.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
-    if (!userStatus.getAuthorized() && userStatus.getUserName() === undefined) {
-        await userStatus.init();
+    const context = UserStore.getContext();
+    if (!context.isAuthorized && context.userName === undefined) {
+        actions.init();
     }
 
     try {
-        /* Регистрация контроллеров для роутера */
-        router.register(Urls.Root, new RegisterController(root)); // placeholder
-        router.register(Urls.Register, new RegisterController(root));
-        router.register(Urls.Logout, new LogoutController());
-        router.register(Urls.Login, new LoginController(root));
-        router.register(Urls.Boards, new BoardsController(root));
+        Router.register(Urls.Root, new RegisterView(root));
+        Router.register(Urls.Register, new RegisterView(root));
+        Router.register(Urls.Login, new LoginView(root));
+        Router.register(Urls.Logout, new LogoutView());
+        Router.register(Urls.Boards, new BoardsView(root));
 
-        router.start();
+        Router.start();
     } catch (error) {
-        // TODO - красивый вывод
         console.error(error);
     }
 });
