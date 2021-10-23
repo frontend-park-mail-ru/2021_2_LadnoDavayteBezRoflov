@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
     if (UserStore.getContext('isAuthorized') === undefined) {
-        actions.init();
+        actions.fetchUser();
     }
 
     try {

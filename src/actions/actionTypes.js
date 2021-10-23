@@ -4,7 +4,7 @@
  * Константа, содержащая в себе типы действий.
  */
 export const UserActionTypes = {
-    USER_INIT: 'user/init',
+    USER_FETCH: 'user/fetch',
     USER_REGISTER: 'user/register',
     USER_LOGIN: 'user/login',
     USER_LOGOUT: 'user/logout',

@@ -13,9 +13,9 @@ const actions = {
     /**
      * Действие: инициализация пользователя.
      */
-    init() {
+    fetchUser() {
         Dispatcher.dispatch({
-            actionName: UserActionTypes.USER_INIT,
+            actionName: UserActionTypes.USER_FETCH,
         });
     },
 

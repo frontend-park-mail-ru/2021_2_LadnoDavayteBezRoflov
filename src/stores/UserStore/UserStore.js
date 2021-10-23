@@ -39,8 +39,8 @@ class UserStore extends BaseStore {
      */
     async _onDispatch(action) {
         switch (action.actionName) {
-        case UserActionTypes.USER_INIT:
-            await this._init();
+        case UserActionTypes.USER_FETCH:
+            await this._fetchUser();
             this._emitChange(); // +field
             break;
 
@@ -67,7 +67,7 @@ class UserStore extends BaseStore {
     /**
      * Метод, реализующий реакцию на инициализацию.
      */
-    async _init() {
+    async _fetchUser() {
         let payload;
 
         try {
