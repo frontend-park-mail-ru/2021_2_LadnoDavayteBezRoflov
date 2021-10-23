@@ -1,5 +1,3 @@
-'use strict';
-
 // Базовый компонент
 import BaseComponent from '../components/BaseComponent.js';
 
@@ -72,10 +70,12 @@ export default class BaseView extends BaseComponent {
             return {...accumulator, ...{[object[0]]: object[1].render()}};
         }, {}); // TODO - use map or fix dynamic
 
+        const context = Object.fromEntries(this.context);
+
         const html = this.template({
             Navbar: components['Navbar'], // TODO dynamic
             Footer: components['Footer'],
-            ...this.context,
+            ...context,
         });
 
         this.parent.innerHTML = html;

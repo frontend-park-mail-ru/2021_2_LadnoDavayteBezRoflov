@@ -1,13 +1,13 @@
-'use strict';
-
 // Базовая страница
 import BaseView from '../BaseView.js';
 
 import Router from '../../modules/Router/Router.js';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
+import BoardsStore from '../../stores/BoardsStore/BoardsStore.js';
 
 import {Urls} from '../../constants/constants.js';
+import actions from '../../actions/actions.js';
 
 /**
   * Класс, реализующий страницу с досками.
@@ -22,19 +22,22 @@ export default class BoardsView extends BaseView {
         super(context, Handlebars.templates['views/BoardsView/BoardsView'], parent);
 
         this._onRefresh = this._onRefresh.bind(this);
-        UserStore.addListener(this._onRefresh);
+
+        // UserStore.addListener(this._onRefresh);
+        BoardsStore.addListener(this._onRefresh);
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this.context = UserStore.getContext();
+        // if (!this.context.get('isAuthorized')) {
+        //    Router.go(Urls.Login);
+        //    return;
+        // }
 
-        if (!this.context.isAuthorized) {
-            Router.go(Urls.Login);
-            return;
-        }
+
+        this.context = new Map([...UserStore.getContext()].concat([...BoardsStore.getContext()]));
 
         this._setContext(this.context);
         this.render();
@@ -42,33 +45,38 @@ export default class BoardsView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
+     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow() {
+    _onShow(urlData) {
+        this._urlParams = urlData;
 
+        if (!this.context.get('isAuthorized')) {
+            Router.go(Urls.Login);
+            return;
+        }
+
+        actions.getBoards();
+
+        this.render();
     }
 
     /**
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
+        try {
+            this.removeEventListeners();
+        } catch (error) {
 
+        }
     }
 
     /**
    * Метод, отрисовывающий страницу.
    * @param {object} context контекст отрисовки страницы
    */
-    render(context) {
-    /* Если пользователь не авторизован, то перебросить его на вход */
-        if (!this.context.isAuthorized) {
-            Router.go(Urls.Login);
-            return;
-        }
-
-        const data = this.prepareBoards(context);
-
-        super.render(data);
-
+    render() {
+        super.render(this.context);
         this.addEventListeners();
     }
 
@@ -85,16 +93,5 @@ export default class BoardsView extends BaseView {
     removeEventListeners() {
         // placeholder
         // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
-    }
-
-    /**
-  * Метод, подготоваливающий данные о досках к отрисовке.
-  * @param {json} context полученное от бэкенда сообщение
-  * @return {json} готовые к отрисовке данные
-  */
-    prepareBoards(context) {
-        const data = {teams: {}};
-        data.teams = {...context};
-        return data;
     }
 }

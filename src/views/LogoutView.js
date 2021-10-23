@@ -1,5 +1,3 @@
-'use strict';
-
 import actions from '../actions/actions.js';
 import UserStore from '../stores/UserStore/UserStore.js';
 
@@ -22,7 +20,7 @@ export default class LogoutView extends BaseView {
      * Метод, выполняющий логику выхода
      */
     render() {
-        if (!(UserStore.getContext().isAuthorized)) {
+        if (!(UserStore.getContext('isAuthorized'))) {
             Router.go(Urls.Login);
             return;
         }
@@ -34,14 +32,14 @@ export default class LogoutView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-
+        this.render();
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-
+        this.render();
     }
 
     /**

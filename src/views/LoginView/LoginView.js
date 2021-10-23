@@ -1,5 +1,3 @@
-'use strict';
-
 // ! Этот файл нужно будет отрефакторить после утверждения архитектуры
 
 // Базовая страница
@@ -37,16 +35,22 @@ export default class LoginView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
+     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow() {
-
+    _onShow(urlData) {
+        this._urlParams = urlData;
+        this.render();
     }
 
     /**
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
+        try {
+            this.removeEventListeners();
+        } catch (error) {
 
+        }
     }
 
     /**
@@ -54,11 +58,6 @@ export default class LoginView extends BaseView {
      */
     _onRefresh() {
         this.context = UserStore.getContext();
-
-        if (this.context.isAuthorized) {
-            Router.go(Urls.Boards);
-            return;
-        }
 
         this._setContext(this.context);
         this.render();
@@ -74,13 +73,14 @@ export default class LoginView extends BaseView {
      * Метод, отрисовывающий страницу.
      * @param {object} context контекст отрисовки страницы
      */
-    render(context) {
+    render() {
     /* Если пользователь авторизован, то перебросить его на страницу списка досок */
-        // if (userStatus.getAuthorized()) {
-        //    router.toUrl(Urls.Boards);
-        // }
+        if (this.context.get('isAuthorized')) {
+            Router.go(Urls.Boards);
+            return;
+        }
 
-        super.render(context);
+        super.render(this.context);
 
         this.addEventListeners();
     }

@@ -1,5 +1,3 @@
-'use strict';
-
 // ! Этот файл нужно будет отрефакторить после утверждения архитектуры
 
 // Базовая страница
@@ -38,10 +36,24 @@ export default class RegisterView extends BaseView {
     }
 
     /**
+     * Метод, вызывающийся по умолчанию при открытии страницы.
+     * @param {Object|null} urlData параметры, переданные командной строкой
+     */
+    _onShow(urlData) {
+        this._urlParams = urlData;
+        console.log('register am shown');
+        this.render();
+    }
+
+    /**
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
+        try {
+            this.removeEventListeners();
+        } catch (error) {
 
+        }
     }
 
     /**
@@ -50,7 +62,7 @@ export default class RegisterView extends BaseView {
     _onRefresh() {
         this.context = UserStore.getContext();
 
-        if (this.context.isAuthorized) {
+        if (this.context.get('isAuthorized')) {
             Router.go(Urls.Boards);
             return;
         }
@@ -69,13 +81,7 @@ export default class RegisterView extends BaseView {
    * @param {object} context контекст отрисовки страницы
    */
     render(context) {
-    /* Если пользователь авторизован, то перебросить его на страницу списка досок */
-        // if (userStatus.getAuthorized()) {
-        // router.toUrl(Urls.Boards);
-        //    return;
-        // }
         super.render(context);
-
         this.addEventListeners();
     }
 

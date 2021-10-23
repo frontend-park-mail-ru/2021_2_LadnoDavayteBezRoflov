@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Класс, реализующий Диспетчер.
  */
@@ -8,21 +6,23 @@ class Dispatcher {
      * @constructor
      */
     constructor() {
-        this._callbacks = new Map();
+        this._callbacks = [];
         this._isDispatching = false;
-        this._isHandled = new Map();
-        this._isPending = new Map();
+        this._isHandled = [];
+        this._isPending = [];
         this._lastID = 1;
     }
 
     /**
      * Метод, регистрирующий новый коллбек в диспетчере.
      * @param {Function} newCallback функция-коллбек
-     * @return {integer} айди коллбека
+     * @return {String} айди коллбека
      */
     register(newCallback) {
         const id = `ID_${this._lastID++}`;
+        // увеличиваем айди, возвращаем ИД_номер
         this._callbacks[id] = newCallback;
+        // сеттим в коллбеки с нужным ид новый коллбек
         return id;
     }
 
@@ -32,9 +32,11 @@ class Dispatcher {
      */
     unregister(id) {
         if (this._callbacks[id]) {
+            // если есть коллбек - удаляем
             delete this._callbacks[id];
             return;
         }
+        // иначе ошибка
         throw new Error('Dispatcher: не существует запрошенного callback');
     }
 
@@ -43,30 +45,33 @@ class Dispatcher {
      * @param {Array} ids айдишники, которых нужно ожидать
      */
     waitFor(ids) {
-        if (this._isDispatching) {
-            ids.forEach((id) => {
-                if (this._isPending.get(id)) {
-                    if (this._isHandled[id]) {
-                        throw new Error('Dispatcher: кольцевая зависимость в waitFor');
-                    }
-                }
-                if (!this._callbacks[id]) {
-                    throw new Error('Dispatcher: не существует запрошенного callback');
-                }
-
-                this._invokeCallback(id);
-            });
-            return;
+        if (!this.isDispatching()) {
+            throw new Error('Dispatcher: метод waitFor должен быть запущен при включенном Dispatcher');
         }
-        throw new Error('Dispatcher: метод waitFor должен быть запущен при работающем Dispatcher');
+        // на каждый айди из переданных
+        ids.forEach((id) => {
+            // проверяем, обрабатывается ли коллбек
+            if (this._isPending[id]) {
+                if (this._isHandled[id]) {
+                    // если уже обработали - ошибка
+                    throw new Error('Dispatcher: кольцевая зависимость в waitFor');
+                }
+            }
+            if (!this._callbacks[id]) {
+                throw new Error('Dispatcher: не существует запрошенного callback');
+            }
+
+            this._invokeCallback(id);
+        });
+        return;
     }
 
     /**
      * Метод, организующий рассылку.
-     * @param {Object} payload
+     * @param {Object | undefined} payload
      */
-    dispatch(payload) {
-        if (this._isDispatching) {
+    dispatch(payload = undefined) {
+        if (this.isDispatching()) {
             throw new Error('Dispatcher: метод dispatch должен быть запущен при выключенном Dispatcher');
         }
 
@@ -74,6 +79,7 @@ class Dispatcher {
 
         try {
             for (const id in this._callbacks) {
+                // если уже обрабатывается - пропускаем
                 if (this._isPending[id]) {
                     continue;
                 }
@@ -97,8 +103,10 @@ class Dispatcher {
      * @param {int} id идентификатор коллбека
      */
     _invokeCallback(id) {
+        // начинаем обработку - isPending true
         this._isPending[id] = true;
         this._callbacks[id](this._pendingPayload);
+        // прекращаем обработку - _isHandled true
         this._isHandled[id] = true;
     }
 
@@ -109,11 +117,14 @@ class Dispatcher {
     _startDispatching(payload) {
         for (const id in this._callbacks) {
             if (this._callbacks.hasOwnProperty(id)) {
+                // ставим для каждого айди флаг, что он не активен и не обработан
                 this._isPending[id] = false;
                 this._isHandled[id] = false;
             }
         }
+        // устанавливаем новый пейлоад
         this._pendingPayload = payload;
+        // переводим в состояние активности
         this._isDispatching = true;
     }
 
@@ -121,6 +132,7 @@ class Dispatcher {
      * Метод, завершщающий рассылку действий.
      */
     _stopDispatching() {
+        // удаляем полезную нагрузку, которую раздавали, выключаемся
         delete this._pendingPayload;
         this._isDispatching = false;
     }

@@ -1,5 +1,3 @@
-'use strict';
-
 // Базовый компонент
 import BaseComponent from '../BaseComponent.js';
 

@@ -1,11 +1,8 @@
-
 import {Html, Urls} from '../../constants/constants.js';
 
 import NotFoundView from '../../views/NotFoundView.js';
 
 import BaseView from '../../views/BaseView.js';
-
-// ! Требуется исправить изменение адресной строки.
 
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им контроллеры
@@ -21,7 +18,7 @@ class Router {
         }
 
         this._routes = {};
-        this._currentController = undefined;
+        this._currentView = undefined;
         this.registerNotFound();
     }
 
@@ -29,19 +26,19 @@ class Router {
      * Регистрация шаблона URL. Шаблон может содержать path. переменные.
      * Синтаксис строки шаблона url описан в модуле URLProcessor в классе URLTemplateValidator.
      * @param {string} template - шаблон url'a
-     * @param {ControllerInterface} controller - контроллер url
+     * @param {BaseView} view - контроллер url
      * @return {Router} - ссылку на объект роутера
      */
-    register(template, controller) {
+    register(template, view) {
         if (!this.isTemplateValid(template)) {
             return this;
         }
 
-        if (!(controller instanceof BaseView)) {
+        if (!(view instanceof BaseView)) {
             return this;
         }
 
-        this._routes[template] = controller;
+        this._routes[template] = view;
         return this;
     }
 
@@ -71,17 +68,15 @@ class Router {
      * @param {string} url - url на который следует перейти
      */
     go(url) {
-        const {urlData, controller} = this.processURL(url) || {};
-        if (!urlData || !controller) {
+        const {urlData, view} = this.processURL(url) || {};
+        if (!urlData || !view) {
             this.go(Urls.NotFound);
             return;
         }
 
-        if (this._currentController) {
-            this._currentController._onHide();
+        if (this._currentView) {
+            this._currentView._onHide();
         }
-        this._currentController = controller;
-        controller.render(urlData);
 
         /**
          * Отсекаем добавление записей в историю для случаев:
@@ -96,6 +91,9 @@ class Router {
              */
             window.history.pushState(null, null, url);
         }
+
+        this._currentView = view;
+        view._onShow(urlData);
     }
 
     /**
@@ -113,11 +111,11 @@ class Router {
     }
 
     /**
-     * Регестрирует контроллер по умолчанию для неизвестных url
+     * Регестрирует view по умолчанию для неизвестных url
      */
     registerNotFound() {
         if (!this.isTemplateValid(Urls.NotFound)) {
-            throw new Error(`Шаблон ${Urls.NotFound} для NotFoundController не валидный`);
+            throw new Error(`Шаблон ${Urls.NotFound} для NotFoundview не валидный`);
         }
         this.register(Urls.NotFound, new NotFoundView(document.getElementById(Html.Root)));
     }
@@ -172,7 +170,7 @@ class Router {
                 /* Найден подходящий шаблон и параметры: */
                 return {
                     urlData: {url, pathParams, getParams},
-                    controller: this._routes[template],
+                    view: this._routes[template],
                 };
             }
         }

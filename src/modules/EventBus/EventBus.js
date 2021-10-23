@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Класс, реализующий EventBus.
  */
@@ -8,48 +6,65 @@ class EventBus {
      * @constructor
      */
     constructor() {
-        this._listeners = {};
+        this._channels = {};
+    }
+
+    /**
+     * Метод, создающий новый канал.
+     * @param {String} name название канала
+     * @return {String} название канала
+     */
+    addChannel(name) {
+        this._channels[name] = {};
+        return name;
     }
 
     /**
      * Метод, добавляющий слушателя.
-     * @param {*} event
-     * @param {*} callback
+     * @param {String} channel имя канала
+     * @param {String} event имя события
+     * @param {Function} callback коллбек, вызывающийся при получении события
      */
-    addListener(event, callback) {
-        if (!(event in this._listeners)) {
-            this._listeners[event] = [];
+    addListener(channel, event, callback) {
+        if (!this._channels[channel]) {
+            throw new Error('EventBus: указанный канал не сущестует: ', channel);
         }
-        this._listeners[event].push(callback);
+
+        if (!this._channels[channel][event]) {
+            this._channels[channel][event] = [];
+        }
+
+        this._channels[channel][event].push(callback);
     }
 
     /**
      * Метод, убирающий слушателя.
-     * @param {*} event
-     * @param {*} callback
+     * @param {String} channel имя канала
+     * @param {String} event имя события
+     * @param {Function} callback коллбек, вызывающийся при получении события
      */
-    removeListener(event, callback) {
-        this._listeners = this._listeners || {};
-        if (!(event in this._listeners)) {
+    removeListener(channel, event, callback) {
+        if (!this._channels[channel]) {
+            throw new Error('EventBus: указанный канал не сущестует: ', channel);
+        }
+
+        if (!this._channels[channel][event]) {
             return;
         }
-        this._listeners[event].splice(this._listeners[event].indexOf(callback), 1);
+        this._channels[channel][event].splice(this._channels[channel][event].indexOf(callback), 1);
     }
 
     /**
      * Метод, посылающий событие по EventBus.
-     * @param {*} event
-     * @param {*} args
+     * @param {String} channel имя канала
+     * @param {String} event имя события
+     * @param {*} args дополнительные аргументы
      */
-    emit(event, args = null) {
-        console.log('[EventBus] emitted: ', event);
-        if (event in this._listeners) {
-            this._listeners[event].forEach((callback) => {
-                try {
-                    callback(args);
-                } catch (error) {
-                    console.log(error);
-                }
+    emit(channel, event, args = null) {
+        console.log(`[${channel}] emitted: ${event} with args ${args}`);
+        if (this._channels[channel][event]) {
+            this._channels[channel][event].forEach((callback) => {
+                callback(args);
             });
         }
     }

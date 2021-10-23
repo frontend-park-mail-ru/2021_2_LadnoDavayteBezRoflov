@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Базовый класс для реализации компонента.
  */
@@ -22,12 +20,13 @@ export default class BaseComponent {
     */
     render() {
         if (this.template !== null) {
-            let html;
-            if (typeof this.template === Function) {
-                html = this.template(this.context);
-            } else {
-                html = this.template({...this.context});
+            if (this.context instanceof Map) {
+                this.context = Object.fromEntries(this.context);
             }
+
+            const html = (typeof this.template === Function) ?
+                this.template(this.context) :
+                this.template({...this.context});
 
             if (this.parent === undefined) {
                 return html;

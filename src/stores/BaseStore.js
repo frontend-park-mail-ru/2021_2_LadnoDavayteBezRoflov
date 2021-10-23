@@ -1,5 +1,3 @@
-'use strict';
-
 // Modules
 import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 import EventBus from '../modules/EventBus/EventBus.js';
@@ -10,22 +8,26 @@ import EventBus from '../modules/EventBus/EventBus.js';
 export default class BaseStore {
     /**
      * @constructor
+     * @param {String} channelName имя канала EventBus
      */
-    constructor() {
+    constructor(channelName) {
         this._changed = false;
         this._changeEvent = 'change';
         this._invokeOnDispatch = this._invokeOnDispatch.bind(this);
         this._dispatchToken = Dispatcher.register(this._invokeOnDispatch);
+
+        this._channel = EventBus.addChannel(channelName);
 
         // TODO get + set
     }
 
     /**
      * Метод, добавляющий нового слушателя в EventBus.
-     * @param {function} callback
+     * @param {function} callback функция-обработчик
+     * @param {String} changeEvent наименование события
      */
-    addListener(callback) {
-        EventBus.addListener(this._changeEvent, callback);
+    addListener(callback, changeEvent = this._changeEvent) {
+        EventBus.addListener(this._channel, changeEvent, callback);
     }
 
     /**
@@ -69,7 +71,7 @@ export default class BaseStore {
         await this._onDispatch(payload);
 
         if (this.hasChanged()) {
-            EventBus.emit(this._changeEvent);
+            EventBus.emit(this._channel, this._changeEvent);
         }
     }
 

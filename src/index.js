@@ -25,13 +25,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
-    const context = UserStore.getContext();
-    if (!context.isAuthorized && context.userName === undefined) {
+    if (UserStore.getContext('isAuthorized') === undefined) {
         actions.init();
     }
 
     try {
-        Router.register(Urls.Root, new RegisterView(root));
+        Router.register(Urls.Root, new BoardsView(root));
         Router.register(Urls.Register, new RegisterView(root));
         Router.register(Urls.Login, new LoginView(root));
         Router.register(Urls.Logout, new LogoutView());

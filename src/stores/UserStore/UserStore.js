@@ -1,7 +1,5 @@
-'use strict';
-
 import BaseStore from '../BaseStore.js';
-import ActionTypes from '../../actions/actionTypes.js';
+import {UserActionTypes} from '../../actions/ActionTypes.js';
 
 import Network from '../../modules/Network/Network.js';
 import {HttpStatusCodes} from '../../constants/constants.js';
@@ -14,20 +12,25 @@ class UserStore extends BaseStore {
      * @constructor
      */
     constructor() {
-        super();
+        super('User');
 
-        this._isAuthorized = false;
-        this._userName = undefined; // make map
+        this._signature = 'User';
+
+        this._storage = new Map();
+
+        this._storage.set('isAuthorized', undefined);
+        this._storage.set('userName', undefined);
 
         // enum for fields - model
     }
 
     /**
      * Метод, возвращающий текущее состояние (контекст) хранилища.
+     * @param {String} field возвращаемое поле
      * @return {String} контекст хранилища
      */
-    getContext() {
-        return {isAuthorized: this._isAuthorized, userName: this._userName};
+    getContext(field = undefined) {
+        return (field === undefined)? this._storage : this._storage.get(field);
     }
 
     /**
@@ -36,26 +39,29 @@ class UserStore extends BaseStore {
      */
     async _onDispatch(action) {
         switch (action.actionName) {
-        case ActionTypes.USER_INIT:
+        case UserActionTypes.USER_INIT:
             await this._init();
+            this._emitChange(); // +field
             break;
 
-        case ActionTypes.USER_REGISTER:
+        case UserActionTypes.USER_REGISTER:
             await this._register(action.data);
+            this._emitChange(); // +field
             break;
 
-        case ActionTypes.USER_LOGIN:
+        case UserActionTypes.USER_LOGIN:
             await this._login(action.data);
+            this._emitChange(); // +field
             break;
 
-        case ActionTypes.USER_LOGOUT:
-            this._logout();
+        case UserActionTypes.USER_LOGOUT:
+            await this._logout();
+            this._emitChange(); // +field
             break;
 
         default:
             return;
         }
-        this._emitChange(); // +field
     }
 
     /**
@@ -66,23 +72,20 @@ class UserStore extends BaseStore {
 
         try {
             payload = await Network.getUser();
-            if (payload.length > 2) {
-                throw new Error('UserStore: метод _initUser не получил корректного ответа');
-            }
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
 
-        switch (payload[0]) {
+        switch (payload.status) {
         case HttpStatusCodes.Ok:
-            this._userName = payload[1];
-            this._isAuthorized = true;
+            this._storage.set('userName', payload.data);
+            this._storage.set('isAuthorized', true);
             return;
 
         case HttpStatusCodes.Unauthorized:
-            this._userName = null;
-            this._isAuthorized = false;
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
             return;
 
         default:
@@ -95,16 +98,24 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _register(data) {
-        const [statusCode] = await Network.sendRegistration(data);
-        switch (statusCode) {
+        let payload;
+
+        try {
+            payload = await Network.sendRegistration(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
         case HttpStatusCodes.Created:
-            this._userName = data.login;
-            this._isAuthorized = true;
+            this._storage.set('userName', payload.data.login);
+            this._storage.set('isAuthorized', true);
             return;
 
         case HttpStatusCodes.Unauthorized:
-            this._userName = null;
-            this._isAuthorized = false;
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
             return;
 
         default:
@@ -117,19 +128,24 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
-        const [statusCode] = await Network.sendAuthorization(data);
+        let payload;
 
-        console.log(statusCode);
+        try {
+            payload = await Network.sendAuthorization(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
 
-        switch (statusCode) {
+        switch (payload.status) {
         case HttpStatusCodes.Ok:
-            this._userName = data.login;
-            this._isAuthorized = true;
+            this._storage.set('userName', data.login);
+            this._storage.set('isAuthorized', true);
             return;
 
         case HttpStatusCodes.Unauthorized:
-            this._userName = null;
-            this._isAuthorized = false;
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
             return;
 
         default:
@@ -141,18 +157,24 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на выход.
      */
     async _logout() {
-        const [statusCode] = await Network.sendLogout();
+        let payload;
 
-        switch (statusCode) {
+        try {
+            payload = await Network.sendLogout();
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
         case HttpStatusCodes.Ok:
-            this._userName = null;
-            this._isAuthorized = false;
-            this._changed = true;
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
             return;
 
         case HttpStatusCodes.Unauthorized:
-            this._userName = null;
-            this._isAuthorized = false;
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
             return;
 
         default:

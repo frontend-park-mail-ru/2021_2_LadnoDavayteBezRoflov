@@ -1,5 +1,3 @@
-'use strict';
-
 import BaseView from './BaseView.js';
 
 import {ConstantMessages} from '../constants/constants.js';
@@ -31,14 +29,14 @@ export default class NotFoundView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-
+        this.render();
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-
+        this.render();
     }
 
     /**

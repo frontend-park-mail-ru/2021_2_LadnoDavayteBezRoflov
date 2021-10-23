@@ -1,7 +1,7 @@
 'use strict';
 
 // Типы действий
-import ActionTypes from './actionTypes.js';
+import {UserActionTypes, BoardsActionTypes} from './actionTypes.js';
 
 // Modules
 import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
@@ -9,17 +9,15 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 /**
  * Класс, содержащий в себе действия в системе.
  */
-class Actions {
+const actions = {
     /**
      * Действие: инициализация пользователя.
      */
     init() {
         Dispatcher.dispatch({
-            actionName: ActionTypes.USER_INIT,
-            data: {
-            },
+            actionName: UserActionTypes.USER_INIT,
         });
-    }
+    },
 
     /**
      * Действие: регистрация пользователя.
@@ -29,14 +27,14 @@ class Actions {
      */
     register(login, email, password) {
         Dispatcher.dispatch({
-            actionName: ActionTypes.USER_REGISTER,
+            actionName: UserActionTypes.USER_REGISTER,
             data: {
                 login: login,
                 email: email,
                 password: password,
             },
         });
-    }
+    },
 
     /**
      * Действие: вход пользователя.
@@ -45,24 +43,28 @@ class Actions {
      */
     login(login, password) {
         Dispatcher.dispatch({
-            actionName: ActionTypes.USER_LOGIN,
+            actionName: UserActionTypes.USER_LOGIN,
             data: {
                 login: login,
                 password: password,
             },
         });
-    }
+    },
 
     /**
      * Действие: выход из аккаунта пользователя.
      */
     logout() {
         Dispatcher.dispatch({
-            actionName: ActionTypes.USER_LOGOUT,
-            data: {
-            },
+            actionName: UserActionTypes.USER_LOGOUT,
         });
-    }
-}
+    },
 
-export default new Actions();
+    getBoards() {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_GET,
+        });
+    },
+};
+
+export default actions;

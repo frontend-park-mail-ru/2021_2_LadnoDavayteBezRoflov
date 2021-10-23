@@ -1,5 +1,3 @@
-'use strict';
-
 import {SelfAddress, BackendAddress} from '../../constants/constants.js';
 
 /**
@@ -15,6 +13,15 @@ class Network {
 
         this.BackendUrl = BackendAddress.Url;
         this.BackendPort = BackendAddress.Port;
+
+        this._defaultOptions = {
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
+            },
+        };
     }
 
     /**
@@ -26,9 +33,8 @@ class Network {
     httpRequest(URL, options) {
         return fetch(URL, options)
             .then((response) => response.json()
-                .then((data) => [response.status, data])
-                .catch())
-            .catch();
+                .then((data) => Object({status: response.status, data: data})),
+            );
     };
 
     /**
@@ -39,16 +45,10 @@ class Network {
     async getUser(data) {
         const options = {
             method: 'get',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
-            },
             body: JSON.stringify(data),
         };
         return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            options);
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -59,16 +59,10 @@ class Network {
     async sendRegistration(data) {
         const options = {
             method: 'post',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
-            },
             body: JSON.stringify(data),
         };
         return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/profile`,
-            options);
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -79,16 +73,10 @@ class Network {
     async sendAuthorization(data) {
         const options = {
             method: 'post',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
-            },
             body: JSON.stringify(data),
         };
         return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            options);
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -99,16 +87,10 @@ class Network {
     async getBoards(data) {
         const options = {
             method: 'get',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
-            },
             body: JSON.stringify(data),
         };
         return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
-            options);
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -119,16 +101,10 @@ class Network {
     async sendLogout(data) {
         const options = {
             method: 'delete',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
-            },
             body: JSON.stringify(data),
         };
         return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            options);
+            {...options, ...this._defaultOptions});
     }
 }
 
