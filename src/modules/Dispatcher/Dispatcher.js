@@ -16,7 +16,7 @@ class Dispatcher {
      * @param {Function} newCallback функция-коллбек
      */
     register(newCallback) {
-        this._callbacks.set(this._lastId++, {callback: newCallback, isPending: false, isHandled: false});
+        this._callbacks.set(this._lastId++, {callback: newCallback, isPending: false});
     }
 
     /**
@@ -69,7 +69,6 @@ class Dispatcher {
     _invokeCallback(id) {
         this._callbacks.get(id).isPending = true;
         this._callbacks.get(id).callback(this._pendingPayload);
-        this._callbacks.get(id).isHandled = true;
     }
 
     /**
@@ -79,7 +78,6 @@ class Dispatcher {
     _startDispatching(payload) {
         for (const value of this._callbacks.values()) {
             value.isPending = false;
-            value.isHandled = false;
         }
         this._pendingPayload = payload;
         this._isDispatching = true;

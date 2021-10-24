@@ -46,10 +46,7 @@ class EventBus {
             throw new Error('EventBus: указанный канал не сущестует: ', channel);
         }
 
-        if (!this._channels[channel][event]) {
-            return;
-        }
-        this._channels[channel][event].delete(callback);
+        this._channels[channel][event]?.delete(callback);
     }
 
     /**
@@ -60,11 +57,9 @@ class EventBus {
      */
     emit(channel, event, args = null) {
         console.log(`[${channel}] emitted: ${event} with args ${args}`);
-        if (this._channels[channel][event]) {
-            this._channels[channel][event].forEach((callback) => {
-                callback(args);
-            });
-        }
+        this._channels[channel][event]?.forEach((callback) => {
+            callback(args);
+        });
     }
 }
 
