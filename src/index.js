@@ -1,6 +1,6 @@
 'use strict';
 
-import actions from './actions/actions.js';
+import {userActions} from './actions/user.js';
 
 // Stores
 import UserStore from './stores/UserStore/UserStore.js';
@@ -17,7 +17,6 @@ import '/src/tmpl.js';
 // Views
 import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
-import LogoutView from './views/LogoutView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
 
 /* Обработчик на загрузку страницы */
@@ -26,14 +25,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
     if (UserStore.getContext('isAuthorized') === undefined) {
-        actions.fetchUser();
+        userActions.fetchUser();
     }
 
     try {
         Router.register(Urls.Root, new BoardsView(root));
         Router.register(Urls.Register, new RegisterView(root));
         Router.register(Urls.Login, new LoginView(root));
-        Router.register(Urls.Logout, new LogoutView());
         Router.register(Urls.Boards, new BoardsView(root));
 
         Router.start();

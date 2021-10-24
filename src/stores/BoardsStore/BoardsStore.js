@@ -1,8 +1,9 @@
 import BaseStore from '../BaseStore.js';
-import {BoardsActionTypes} from '../../actions/actionTypes.js';
+import {BoardsActionTypes} from '../../actions/boards.js';
 
 import Network from '../../modules/Network/Network.js';
 import {HttpStatusCodes} from '../../constants/constants.js';
+import UserStore from '../UserStore/UserStore.js';
 
 /**
  * Класс, реализующий хранилище списка команд и досок
@@ -14,7 +15,7 @@ class BoardsStore extends BaseStore {
     constructor() {
         super('Boards');
 
-        this._signature = 'Boards';
+        this._channel = 'Boards';
 
         this._storage = new Map();
 
@@ -23,10 +24,10 @@ class BoardsStore extends BaseStore {
 
     /**
      * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String} field возвращаемое поле
+     * @param {String | undefined} field возвращаемое поле
      * @return {String} контекст хранилища
      */
-    getContext(field = undefined) {
+    getContext(field) {
         return (field === undefined)? this._storage : this._storage.get(field);
     }
 
@@ -69,7 +70,7 @@ class BoardsStore extends BaseStore {
             return;
 
         case HttpStatusCodes.Unauthorized:
-            console.log('unauthorized');
+            UserStore.__logout();
             return;
 
         default:

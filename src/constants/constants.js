@@ -49,5 +49,5 @@ export const HttpStatusCodes = {
   * Константа, содержащая в себе сообщения.
   */
 export const ConstantMessages = {
-    NotFound: 'Страница не найдена! ;]',
+    NotFound: '',
 };

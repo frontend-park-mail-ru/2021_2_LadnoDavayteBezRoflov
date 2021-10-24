@@ -1,5 +1,5 @@
 import BaseStore from '../BaseStore.js';
-import {UserActionTypes} from '../../actions/ActionTypes.js';
+import {UserActionTypes} from '../../actions/user.js';
 
 import Network from '../../modules/Network/Network.js';
 import {HttpStatusCodes} from '../../constants/constants.js';
@@ -14,7 +14,7 @@ class UserStore extends BaseStore {
     constructor() {
         super('User');
 
-        this._signature = 'User';
+        this._channel = 'User';
 
         this._storage = new Map();
 
@@ -26,10 +26,10 @@ class UserStore extends BaseStore {
 
     /**
      * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String} field возвращаемое поле
+     * @param {String | undefined} field возвращаемое поле
      * @return {String} контекст хранилища
      */
-    getContext(field = undefined) {
+    getContext(field) {
         return (field === undefined)? this._storage : this._storage.get(field);
     }
 
@@ -180,6 +180,15 @@ class UserStore extends BaseStore {
         default:
             console.log('Undefined error');
         }
+    }
+
+    /**
+     * Метод, переводящий хранилище в состояние "не вошел в аккаунт".
+     */
+    __logout() {
+        this._storage.set('userName', null);
+        this._storage.set('isAuthorized', false);
+        this._emitChange();
     }
 }
 

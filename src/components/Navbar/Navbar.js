@@ -1,5 +1,8 @@
 // Базовый компонент
+import userActions from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+
+import UserStore from '../../stores/UserStore/UserStore.js';
 
 /**
  * Класс, реализующий компонент Navbar.
@@ -11,13 +14,46 @@ export default class NavbarComponent extends BaseComponent {
     */
     constructor(context) {
         super(context, Handlebars.templates['components/Navbar/Navbar']);
+
+        this._onRefresh = this._onRefresh.bind(this);
+        UserStore.addListener(this._onRefresh);
+
+
+        this._logoutCallback = this._logout.bind(this);
     }
 
     /**
-    * Метод, отрисовывающий компонент по заданному шаблону
-    * @return {String} отрисованный код компонента
-    */
-    render() {
-        return super.render();
+     * Метод, вызывающийся по умолчанию при обновлении компонента.
+     */
+    _onRefresh() {
+        this.context = UserStore.getContext();
+    }
+
+    /**
+     * Метод, добавляющий обработчики событий для компонента.
+     */
+    addEventListeners() {
+        if (document.getElementById('logout')) {
+            document.getElementById('logout').addEventListener('click', this._logoutCallback);
+        }
+    }
+
+    /**
+     * Метод, посылающий действие "выход".
+     * @param {*} event
+     */
+    _logout(event) {
+        event.preventDefault();
+
+        userActions.logout();
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для компонента.
+     */
+    removeEventListeners() {
+        if (document.getElementById('logout')) {
+            document.getElementById('logout').removeEventListener('click', this._logoutCallback);
+        }
     }
 }

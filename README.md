@@ -23,3 +23,13 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 
 ### Deploy
 [Link to deploy](http://95.163.213.142).
+
+### Versions
+
+Versions are updated via two ways:
+
+1. Major updates: major changes to server, architecture and modules. Example: transferring to Flux architecture;
+
+2. Minor updates: minor fixes and changes to server and modules. Example: refactoring Network module.
+
+Latest version: `0.2.0`: Transferred to Flux architecture, refactored every module.

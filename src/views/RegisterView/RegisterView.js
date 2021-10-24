@@ -4,7 +4,7 @@
 import BaseView from '../BaseView.js';
 
 // Actions
-import actions from '../../actions/actions.js';
+import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -41,19 +41,7 @@ export default class RegisterView extends BaseView {
      */
     _onShow(urlData) {
         this._urlParams = urlData;
-        console.log('register am shown');
         this.render();
-    }
-
-    /**
-     * Метод, вызывающийся по умолчанию при закрытии страницы.
-     */
-    _onHide() {
-        try {
-            this.removeEventListeners();
-        } catch (error) {
-
-        }
     }
 
     /**
@@ -90,6 +78,10 @@ export default class RegisterView extends BaseView {
   */
     addEventListeners() {
         document.getElementById('register').addEventListener('submit', this.formRegistrationCallback);
+
+        this.subComponents.forEach(([_, component]) => {
+            component.addEventListeners();
+        });
     }
 
     /**
@@ -202,7 +194,6 @@ export default class RegisterView extends BaseView {
             return;
         }
 
-        // debugger;
-        actions.register(data.login, data.email, data.password);
+        userActions.register(data.login, data.email, data.password);
     }
 }

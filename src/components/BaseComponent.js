@@ -8,7 +8,7 @@ export default class BaseComponent {
     * @param {Function} template функция отрисовки шаблона
     * @param {Element | undefined} parent элемент, в который будет отрисован компонент
     */
-    constructor(context, template, parent = undefined) {
+    constructor(context, template, parent) {
         this.parent = parent;
         this.template = template;
         this.context = context;
@@ -19,7 +19,7 @@ export default class BaseComponent {
     * @return {String} HTML-код компонента
     */
     render() {
-        if (this.template !== null) {
+        if (!!this.template) {
             if (this.context instanceof Map) {
                 this.context = Object.fromEntries(this.context);
             }
@@ -33,5 +33,17 @@ export default class BaseComponent {
             }
             this.parent.innerHTML = html;
         }
+    }
+
+    /**
+     * Метод, добавляющий обработчики событий для компонента.
+     */
+    addEventListeners() {
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для компонента.
+     */
+    removeEventListeners() {
     }
 }

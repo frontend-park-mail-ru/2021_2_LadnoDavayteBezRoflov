@@ -1,15 +1,23 @@
 'use strict';
 
-// Типы действий
-import {UserActionTypes, BoardsActionTypes} from './actionTypes.js';
-
 // Modules
 import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 
 /**
+ * Константа, содержащая в себе типы действий.
+ */
+export const UserActionTypes = {
+    USER_FETCH: 'user/fetch',
+    USER_REGISTER: 'user/register',
+    USER_LOGIN: 'user/login',
+    USER_LOGOUT: 'user/logout',
+
+};
+
+/**
  * Класс, содержащий в себе действия в системе.
  */
-const actions = {
+export const userActions = {
     /**
      * Действие: инициализация пользователя.
      */
@@ -60,11 +68,6 @@ const actions = {
         });
     },
 
-    getBoards() {
-        Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_GET,
-        });
-    },
 };
 
-export default actions;
+export default userActions;

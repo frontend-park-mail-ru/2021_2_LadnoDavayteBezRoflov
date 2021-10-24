@@ -4,7 +4,7 @@
 import BaseView from '../BaseView.js';
 
 // Actions
-import actions from '../../actions/actions.js';
+import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -40,17 +40,6 @@ export default class LoginView extends BaseView {
     _onShow(urlData) {
         this._urlParams = urlData;
         this.render();
-    }
-
-    /**
-     * Метод, вызывающийся по умолчанию при закрытии страницы.
-     */
-    _onHide() {
-        try {
-            this.removeEventListeners();
-        } catch (error) {
-
-        }
     }
 
     /**
@@ -90,13 +79,20 @@ export default class LoginView extends BaseView {
   */
     addEventListeners() {
         document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
+
+        this.subComponents.forEach(([_, component]) => {
+            component.addEventListeners();
+        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        document.getElementById('auth').removeEventListener('submit', this.formAuthorizationCallback);
+        if (document.getElementById('auth')) {
+            document.getElementById('auth').removeEventListener('submit',
+                                                                this.formAuthorizationCallback);
+        }
         // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
     }
 
@@ -192,7 +188,7 @@ export default class LoginView extends BaseView {
         }
 
         /* Послать запрос на сервер */
-        actions.login(data.login, data.password);
+        userActions.login(data.login, data.password);
 
         /*         if (result === HttpStatusCodes.Unauthorized) {
             validationLabels.loginLabel.innerHTML = 'Неверный логин или пароль';

@@ -47,8 +47,8 @@ class Network {
             method: 'get',
             body: JSON.stringify(data),
         };
-        return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            {...options, ...this._defaultOptions});
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
+                                {...options, ...this._defaultOptions});
     }
 
     /**
@@ -61,8 +61,8 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/profile`,
-            {...options, ...this._defaultOptions});
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/profile`,
+                                {...options, ...this._defaultOptions});
     }
 
     /**
@@ -75,8 +75,8 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            {...options, ...this._defaultOptions});
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
+                                {...options, ...this._defaultOptions});
     }
 
     /**
@@ -89,8 +89,8 @@ class Network {
             method: 'get',
             body: JSON.stringify(data),
         };
-        return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
-            {...options, ...this._defaultOptions});
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
+                                {...options, ...this._defaultOptions});
     }
 
     /**
@@ -103,8 +103,8 @@ class Network {
             method: 'delete',
             body: JSON.stringify(data),
         };
-        return await this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-            {...options, ...this._defaultOptions});
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
+                                {...options, ...this._defaultOptions});
     }
 }
 

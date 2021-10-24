@@ -12,11 +12,9 @@ class EventBus {
     /**
      * Метод, создающий новый канал.
      * @param {String} name название канала
-     * @return {String} название канала
      */
     addChannel(name) {
         this._channels[name] = {};
-        return name;
     }
 
     /**

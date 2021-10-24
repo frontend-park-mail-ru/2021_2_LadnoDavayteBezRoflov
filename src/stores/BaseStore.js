@@ -16,7 +16,7 @@ export default class BaseStore {
         this._invokeOnDispatch = this._invokeOnDispatch.bind(this);
         this._dispatchToken = Dispatcher.register(this._invokeOnDispatch);
 
-        this._channel = EventBus.addChannel(channelName);
+        EventBus.addChannel(channelName);
 
         // TODO get + set
     }
@@ -24,7 +24,7 @@ export default class BaseStore {
     /**
      * Метод, добавляющий нового слушателя в EventBus.
      * @param {function} callback функция-обработчик
-     * @param {String} changeEvent наименование события
+     * @param {String | undefined} changeEvent наименование события
      */
     addListener(callback, changeEvent = this._changeEvent) {
         EventBus.addListener(this._channel, changeEvent, callback);
@@ -32,7 +32,7 @@ export default class BaseStore {
 
     /**
      * Метод, возвращающий зарегистрированный коллбек.
-     * @return {int} айди коллбека
+     * @return {String} айди коллбека
      */
     getDispatchToken() {
         return this._dispatchToken;

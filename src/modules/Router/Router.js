@@ -1,15 +1,15 @@
 import {Html, Urls} from '../../constants/constants.js';
 
-import NotFoundView from '../../views/NotFoundView.js';
+import NotFoundView from '../../views/NotFoundView/NotFoundView.js';
 
 import BaseView from '../../views/BaseView.js';
 
 /**
- * Роутер отсеживает переход по url, и вызывает соответствующие им контроллеры
+ * Роутер отсеживает переход по url, и вызывает соответствующие им view
  */
 class Router {
     /**
-     * Конструирует роутер.
+     * @constructor
      */
     constructor() {
         this._root = document.getElementById(Html.Root);
@@ -26,7 +26,7 @@ class Router {
      * Регистрация шаблона URL. Шаблон может содержать path. переменные.
      * Синтаксис строки шаблона url описан в модуле URLProcessor в классе URLTemplateValidator.
      * @param {string} template - шаблон url'a
-     * @param {BaseView} view - контроллер url
+     * @param {BaseView} view - view url
      * @return {Router} - ссылку на объект роутера
      */
     register(template, view) {

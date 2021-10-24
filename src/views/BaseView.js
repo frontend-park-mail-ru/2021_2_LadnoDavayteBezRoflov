@@ -21,7 +21,7 @@ export default class BaseView extends BaseComponent {
 
         this.context = context;
 
-        if (this.template !== null) {
+        if (!!this.template) {
             this.subComponents = [];
 
             this.subComponents.push(['Navbar', new NavbarComponent(context)]);
@@ -36,8 +36,8 @@ export default class BaseView extends BaseComponent {
     _setContext(context) {
         this.context = context;
 
-        this.subComponents.forEach((element) => {
-            element[1].context = this.context;
+        this.subComponents.forEach(([_, component]) => {
+            component.context = this.context;
         });
     }
 
@@ -59,7 +59,11 @@ export default class BaseView extends BaseComponent {
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
-        throw new Error('View: метод _onHide должен быть реализован в подклассе');
+        this.removeEventListeners();
+
+        this.subComponents.forEach(([_, component]) => {
+            component.removeEventListeners();
+        });
     }
 
     /**
