@@ -1,7 +1,13 @@
 import BaseStore from '../BaseStore.js';
+
+// Actions
 import {UserActionTypes} from '../../actions/user.js';
 
+// Modules
 import Network from '../../modules/Network/Network.js';
+import Validator from '../../modules/Validator/Validator.js';
+
+// Constants
 import {HttpStatusCodes} from '../../constants/constants.js';
 
 /**
@@ -21,6 +27,12 @@ class UserStore extends BaseStore {
         this._storage.set('isAuthorized', undefined);
         this._storage.set('userName', undefined);
         this._storage.set('status', undefined);
+
+        this._storage.set('validation', new Map());
+        this._storage.get('validation').set('login', undefined);
+        this._storage.get('validation').set('password', undefined);
+
+        this._storage.set('payload', undefined);
     }
 
     /**
@@ -128,6 +140,15 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
+        this._storage.set('payload', data);
+        this._storage.set('status', undefined);
+
+        this._validate(data);
+
+        if (!this.__validationPassed()) {
+            return;
+        }
+
         let payload;
 
         try {
@@ -147,6 +168,7 @@ class UserStore extends BaseStore {
         case HttpStatusCodes.Unauthorized:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
+            this._storage.set('payload', undefined);
             return;
 
         default:
@@ -158,6 +180,8 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на выход.
      */
     async _logout() {
+        this._storage.set('payload', undefined);
+
         let payload;
 
         try {
@@ -192,6 +216,30 @@ class UserStore extends BaseStore {
         this._storage.set('isAuthorized', false);
         this._storage.set('status', HttpStatusCodes.Unauthorized);
         this._emitChange();
+    }
+
+    /**
+     * Метод, осуществляющий валидацию данных.
+     * @param {object} data объект, содержащий данные из формы
+     */
+    _validate(data) {
+        const validator = new Validator();
+
+        this._storage.get('validation').set('login', validator.validateLogin(data.login));
+        this._storage.get('validation').set('password', validator.validatePassword(data.password));
+    }
+
+    /**
+     * Метод, проверяющий, корректны ли все данные (пройдена ли валидация).
+     * @return {boolean} статус валидации
+     */
+    __validationPassed() {
+        for (const value of this._storage.get('validation').values()) {
+            if (!value.status) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
