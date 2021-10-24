@@ -1,32 +1,41 @@
 <link rel="stylesheet" href="/src/views/LoginView/LoginView.css">
-<link rel="stylesheet" href="../../../public/css/popups.css">
 
 {{{Navbar}}}
 
-<form id="auth" name="auth" novalidate>
-    <div class="container">
-        <h1>Вход</h1>
-            <p>Пожалуйста, заполните эту форму, чтобы войти.</p>
+<div class="login__wrapper">
+    <form id="auth" name="auth" novalidate autocomplete="off">
+        <div class="login__container">
+            <h1 class="login__caption">Вход</h1>
+            <p class="login__text">Пожалуйста, заполните эту форму, чтобы войти.</p>
 
-            <label for="login"><b>Логин</b></label>
-            <input type="text" placeholder="Введите логин" id="login" name="login" required>
-            <div class="isa_error" id="login-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="login-validation-message"></label>
-            </div>
-            
-            <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" id="psw" name="password" required>
-            <div class="isa_error" id="password-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="password-validation-message"></label>
+            <div class="login__input__wrapper">
+                <input class="login__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" required>
+                <label class="login__input__caption">Логин</label>
+                <span class="login__input__bar"></span>
+
+                <div class="login__input__error" id="login-validation-box" hidden>
+                    <i class="fa fa-times-circle login__input__error__fa"></i>
+                    <label class="login__input__error-label" id="login-validation-message"></label>
+                </div>
             </div>
 
-            <button type="submit" class="loginbtn" id="login-button">Войти</button> 
+            <div class="login__input__wrapper">
+                <input class="login__input__input" type="password" placeholder=" " id="psw" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" required>
+                <label class="login__input__caption">Пароль</label>
+                <span class="login__input__bar"></span>
+
+                <div class="login__input__error" id="password-validation-box" hidden>
+                    <i class="fa fa-times-circle login__input__error__fa"></i>
+                    <label class="login__input__error-label" id="password-validation-message"></label>
+                </div>
+            </div>
+
+            <button type="submit" class="login__button" id="login-button">Войти</button> 
+        </form>
+        <div class="login__register-message">
+            <p class="login__text">Впервые в Brrrello? <a class="login__register-message__link" href="/register">Создать аккаунт</a></p>
+        </div>
     </div>
-</form>
-    <div class="container signin">
-        <p>Впервые в TestRello? <a href="/register">Создать аккаунт</a>.</p>
-    </div>
+</div>
 
 {{{Footer}}}

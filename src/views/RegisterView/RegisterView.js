@@ -56,6 +56,11 @@ export default class RegisterView extends BaseView {
         }
 
         this._setContext(this.context);
+
+        if (!this.__isOpened()) {
+            return;
+        }
+
         this.render();
 
         /* if (result === HttpStatusCodes.Unauthorized) {

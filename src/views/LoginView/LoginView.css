@@ -1,87 +1,212 @@
+/* Таблица стилей для страницы логина */
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background-image: url(/assets/background.png);
+    background: linear-gradient(45deg, #CFF1F9, #E7F6FE);
+
+    height: 100vh;
+
+    font-family: 'Montserrat', sans-serif;
 }
 
-.page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+/* Таблица стилей для страницы входа */
+
+/* внешняя обертка под контейнер входа */
+.login__wrapper {
+    min-width: 320px;
+    max-width: 600px;
+
+    position: absolute;
+    transform: translate(-50%,-50%);
+
+    top: 50%;
+    left: 50%;
 }
 
-.container {
-    padding: 16px;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+/* контейнер входа */
+.login__container {
+    min-width: 320px;
+    max-width: 600px;
+
+    background: rgba(255,255,255,0.3);
+    padding: 2em;
+
+    border-radius: 24px;
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 24px 24px 40px -8px rgba(0,0,0,0.2);
+
+    text-align: center;
+    transition: all 0.3s ease-in-out;
 }
 
-input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    float: left;
+/* заголовки во всем логине */
+.login__caption{
+    text-align: center;
+}
+
+/* текст во всем логине */
+.login__text {
+    text-align: center;
+    font-size: 18px;
+}
+
+/* внешняя обертка под поля ввода */
+.login__input__wrapper {
     position: relative;
-    margin-top: 5px;
-    margin-bottom: 20px;
+    margin: 2.4em 0 1.5em 1.5em;
 }
 
-input:focus {
-    color: #303030;
+/* заголовок поля ввода  */
+.login__input__caption {
+    position: absolute;
+
+    left: 4%;
+	top: 10px;
+
+    color: #d2d2d2;
+
+    font-size: 15px;
+	font-weight: 300;
+
+    pointer-events: none;
+	transition: all 0.3s ease-in-out;
 }
 
-input:invalid:focus {
-    box-shadow: 0 0 5px 1px red;
-}
-
-input:focus:invalid {
-    box-shadow: none;
-}
-
-.loginbtn {
-    padding: 10px 20px;
+/* само поле ввода  */
+.login__input__input {
+    display: block;
+    outline: none;
     border: none;
+
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid #d2d2d2;
+
+    width: 100%;
+
+    color: #909090;
+
+    font-size: 15px;
+}
+
+/* в случае активации поля ввода заголовок съезжает наверх */
+.login__input__input:focus ~ .login__input__caption,
+.login__input__input:not(:placeholder-shown) ~ .login__input__caption {
+	top: -20px;
+	font-size: 13px;
+	color: #ae5252;
+}
+
+/* в случае валидного ввода перекрашиваем заголовок */
+.login__input__input:valid ~ .login__input__caption,
+.login__input__input:valid:not(:placeholder-shown) ~ .login__input__caption {
+	color: #4fc24f;
+}
+
+/* полоса, подчеркивающая поле ввода  */
+.login__input__bar {
+    position: relative;
+	display: block;
+}
+
+/* удлинняем полосу при активном поле ввода */
+.login__input__input:focus ~ .login__input__bar:before,
+.login__input__input:focus ~ .login__input__bar:after {
+	width: 100%;
+}
+
+/* удлинняем полосу под полем ввода */
+.login__input__bar:after {
+    position: absolute;
+    content: "";
+    
+	height: 2px;
+	bottom: -1px;
+    left: 0;
+    width: 0;
+    right: -50%;
+
+    background: #258085;
+
+	transition: all 0.3s ease-in-out;
+}
+
+/* кнопка входа */
+.login__button {
+    padding: 16px 24px;
+
+    color: #fff;
+    background-color: #258085;
+
+    border: none;
+    outline: none;
     border-radius: 5px;
-    font-family: sans-serif;
+
     letter-spacing: 1px;
     font-size: 16px;
-    color: #fff;
-    background-color: #0071f0;
-    outline: none;
+    
     cursor: pointer;
-    transition: 0.3s;
+
+    transition: all 0.3s ease-in-out;
 }
 
-.loginbtn:focus,
-.loginbtn:hover {
-    background-color: rgba(0, 113, 240, 0.7);
-    /* #4d9cf5 */
+/* в случае активизации кнопки входа */
+.login__button:focus,
+.login__button:hover {
+    background-color: #4d9cf5;
 }
 
-/*!* Add a blue text color to links *!*/
-a {
-    color: dodgerblue;
+/* секция обработки ошибок */
+
+/* контейнер для ошибок */
+.login__input__error {
+    margin: 8px 0;
+    padding: 0.75em 2em;
+
+    border-radius: 16px;
+
+    color: #D8000C;
+    background-color: #FFD2D2;
+
+    transition: all 0.3s ease-in-out;
+}
+
+/* иконка ошибки */
+.login__input__error__fa {
+    margin: 8px 8px;
+    padding: 8px;
+
+    font-size: 2em;
+    vertical-align: middle;
+
+    transition: all 0.3s ease-in-out;
 }
 
 /*!* Set a grey background color and center the text of the "sign in" section *!*/
-.signin {
+.login__register-message {
+    position: relative;
+
+    margin-top: 2em;
+    padding: 2em;
+    height: 8em;
+
     background-color: #f1f1f1;
+
+    border-radius: 16px;
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 24px 24px 40px -8px rgba(0,0,0,0.2);
+
     text-align: center;
-    width: 100%
+    
+    transition: all 0.3s ease-in-out;
 }
 
-h1 {
-    text-align: center;
-}
-
-p {
-    text-align: center;
-    font-size: 20px;
+/* иконка ошибки */
+.login__register-message__link {
+    color: dodgerblue;
 }

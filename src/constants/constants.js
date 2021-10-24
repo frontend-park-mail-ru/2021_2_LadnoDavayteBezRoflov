@@ -44,3 +44,11 @@ export const HttpStatusCodes = {
     Unauthorized: 401,
     InternalServerError: 500,
 };
+
+/**
+  * Константа, содержащая в себе константные сообщения.
+  */
+export const ConstantMessages = {
+    WrongCredentials: 'Неверный логин или пароль',
+    UnableToLogin: 'Не получилось войти',
+};

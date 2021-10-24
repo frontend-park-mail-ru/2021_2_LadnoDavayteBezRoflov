@@ -1,5 +1,3 @@
-// ! Этот файл нужно будет отрефакторить после утверждения архитектуры
-
 // Базовая страница
 import BaseView from '../BaseView.js';
 
@@ -13,15 +11,16 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 import Validator from '../../modules/Validator/Validator.js';
 import Router from '../../modules/Router/Router.js';
 
-import {Urls} from '../../constants/constants.js';
+// Constants
+import {Urls, HttpStatusCodes, ConstantMessages} from '../../constants/constants.js';
 
 /**
   * Класс, реализующий страницу с входа.
   */
 export default class LoginView extends BaseView {
     /**
-    * Конструктор, создающий конструктор базовой страницы с нужными параметрами
-    * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
+     * @constructor
+     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
         const context = UserStore.getContext();
@@ -31,6 +30,8 @@ export default class LoginView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
 
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
+
+        this._validationElements = new Map();
     }
 
     /**
@@ -49,21 +50,39 @@ export default class LoginView extends BaseView {
         this.context = UserStore.getContext();
 
         this._setContext(this.context);
+
+        if (!this.__isOpened()) {
+            return;
+        }
+
         this.render();
 
-        /* if (result === HttpStatusCodes.Unauthorized) {
-            validationLabels.loginLabel.innerHTML = 'Не получилось создать пользователя';
-            validationBoxes.loginBox.hidden = false;
-        } */
+        switch (this.context.get('status')) {
+        case HttpStatusCodes.Unauthorized:
+            this._validationElements.get('labels').login.innerHTML =
+                ConstantMessages.WrongCredentials;
+            this._validationElements.get('labels').password.innerHTML =
+                ConstantMessages.WrongCredentials;
+            this.__changeValidationVisibility(true);
+            break;
+
+        case HttpStatusCodes.InternalServerError:
+            this._validationElements.get('labels').login.innerHTML =
+                ConstantMessages.UnableToLogin;
+            this._validationElements.get('boxes').login.hidden = false;
+            break;
+
+        default:
+            return;
+        }
     }
 
 
     /**
      * Метод, отрисовывающий страницу.
-     * @param {object} context контекст отрисовки страницы
      */
     render() {
-    /* Если пользователь авторизован, то перебросить его на страницу списка досок */
+        /* Если пользователь авторизован, то перебросить его на страницу списка досок */
         if (this.context.get('isAuthorized')) {
             Router.go(Urls.Boards);
             return;
@@ -72,11 +91,13 @@ export default class LoginView extends BaseView {
         super.render(this.context);
 
         this.addEventListeners();
+
+        this.registerValidationElements();
     }
 
     /**
-  * Метод, добавляющий обработчики событий для страницы.
-  */
+     * Метод, добавляющий обработчики событий для страницы.
+     */
     addEventListeners() {
         document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
 
@@ -93,49 +114,44 @@ export default class LoginView extends BaseView {
             document.getElementById('auth').removeEventListener('submit',
                                                                 this.formAuthorizationCallback);
         }
-        // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
     }
 
     /**
-  * Метод, получающий boxes для валидации из документа.
-  * @return {object} боксы для валидации
-  */
-    registerValidationBoxes() {
-        return {
-            loginBox: document.getElementById('login-validation-box'),
-            passwordBox: document.getElementById('password-validation-box'),
-        };
+     * Метод, регистрирующий валидацию в документе.
+     */
+    registerValidationElements() {
+        this._validationElements.set('boxes', {
+            login: document.getElementById('login-validation-box'),
+            password: document.getElementById('password-validation-box'),
+        });
+
+        this._validationElements.set('labels', {
+            login: document.getElementById('login-validation-message'),
+            password: document.getElementById('password-validation-message'),
+        });
     }
 
     /**
-  * Метод, получающий labels для валидации из документа.
-  * @return {object} лейблы для валидации
-  */
-    registerValidationLabels() {
-        return {
-            loginLabel: document.getElementById('login-validation-message'),
-            passwordLabel: document.getElementById('password-validation-message'),
-        };
+     * Метод, меняющий статус областей валидации в документе.
+     * @param {boolean} status статус отображения (true - отобразить, false - скрыть)
+     */
+    __changeValidationVisibility(status) {
+        for (const value of Object.values(this._validationElements.get('boxes'))) {
+            value.hidden = !status;
+        }
+
+        for (const value of Object.values(this._validationElements.get('labels'))) {
+            value.hidden = !status;
+        }
     }
 
-    /**
-   * Метод, переводящий все валидационные дивы в нужный статус.
-   * @param {object} validationBoxes объект с валидационными дивами
-   * @param {boolean} status статус, в который будут переведены дивы
-   */
-    changeAllValidationBoxes(validationBoxes, status) {
-        validationBoxes.loginBox.hidden = status;
-        validationBoxes.passwordBox.hidden = status;
-    }
 
     /**
-   * Метод, осуществляющий валидацию данных из формы.
-   * @param {object} data объект, содержащий данные из формы
-   * @param {object} validationBoxes объект, содержащий набор валидационных текстовых блоков
-   * @param {object} validationLabels объект, содержащий набор валидационных текстовых подписей
-   * @return {boolean} статус валидации
-   */
-    validate(data, validationBoxes, validationLabels) {
+     * Метод, осуществляющий валидацию данных из формы.
+     * @param {object} data объект, содержащий данные из формы
+     * @return {boolean} статус валидации
+     */
+    validate(data) {
         const validator = new Validator();
 
         const login = validator.validateLogin(data.login);
@@ -144,13 +160,15 @@ export default class LoginView extends BaseView {
         if (!login.status || !password.status) {
             /* Вывести вообщение, если найдена ошибка */
             if (login.message !== '') {
-                validationLabels.loginLabel.innerHTML = login.message;
-                validationBoxes.loginBox.hidden = false;
+                this._validationElements.get('labels').login.innerHTML = login.message;
+                this._validationElements.get('labels').login.hidden = false;
+                this._validationElements.get('boxes').login.hidden = false;
             }
 
             if (password.message !== '') {
-                validationLabels.passwordLabel.innerHTML = password.message;
-                validationBoxes.passwordBox.hidden = false;
+                this._validationElements.get('labels').password.innerHTML = password.message;
+                this._validationElements.get('labels').password.hidden = false;
+                this._validationElements.get('boxes').password.hidden = false;
             }
 
             /* Предотвратить отправку запроса */
@@ -161,19 +179,15 @@ export default class LoginView extends BaseView {
     }
 
     /**
-  * Метод, обрабатывающий посылку формы.
-  * @param {form} event форма
-  */
+     * Метод, обрабатывающий посылку формы.
+     * @param {form} event форма
+     */
     async formAuthorization(event) {
-    /* Запретить обновление страницы */
+        /* Запретить обновление страницы */
         event.preventDefault();
 
-        /* Получить элементы для отрисовки ошибок */
-        const validationBoxes = this.registerValidationBoxes();
-        const validationLabels = this.registerValidationLabels();
-
         /* Скрыть отображение ошибок */
-        this.changeAllValidationBoxes(validationBoxes, true);
+        this.__changeValidationVisibility(false);
 
         /* Получить данные из формы */
         const formData = new FormData(event.target);
@@ -183,18 +197,11 @@ export default class LoginView extends BaseView {
         formData.forEach((value, key) => data[key] = value);
 
         /* Проверить логин, e-mail и пароли и отрисовать ошибки на странице */
-        if (!this.validate(data, validationBoxes, validationLabels)) {
+        if (!this.validate(data)) {
             return;
         }
 
         /* Послать запрос на сервер */
         userActions.login(data.login, data.password);
-
-        /*         if (result === HttpStatusCodes.Unauthorized) {
-            validationLabels.loginLabel.innerHTML = 'Неверный логин или пароль';
-            validationLabels.passwordLabel.innerHTML = 'Неверный логин или пароль';
-
-            this.changeAllValidationBoxes(validationBoxes, false);
-        } */
     }
 }

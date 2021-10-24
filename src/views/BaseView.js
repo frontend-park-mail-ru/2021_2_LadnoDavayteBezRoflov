@@ -5,6 +5,8 @@ import BaseComponent from '../components/BaseComponent.js';
 import NavbarComponent from '../../components/Navbar/Navbar.js';
 import FooterComponent from '../../components/Footer/Footer.js';
 
+import Router from '../modules/Router/Router.js';
+
 /**
  * Класс, реализующий базовый view.
  */
@@ -83,5 +85,13 @@ export default class BaseView extends BaseComponent {
         });
 
         this.parent.innerHTML = html;
+    }
+
+    /**
+     * Метод, показывающий, открыта ли страница сейчас.
+     * @return {boolean} статус страницы
+     */
+    __isOpened() {
+        return Router._currentView.template === this.template;
     }
 }

@@ -20,8 +20,7 @@ class UserStore extends BaseStore {
 
         this._storage.set('isAuthorized', undefined);
         this._storage.set('userName', undefined);
-
-        // enum for fields - model
+        this._storage.set('status', undefined);
     }
 
     /**
@@ -106,6 +105,7 @@ class UserStore extends BaseStore {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
+        this._storage.set('status', payload.status);
 
         switch (payload.status) {
         case HttpStatusCodes.Created:
@@ -136,6 +136,7 @@ class UserStore extends BaseStore {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
+        this._storage.set('status', payload.status);
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
@@ -165,6 +166,7 @@ class UserStore extends BaseStore {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
+        this._storage.set('status', payload.status);
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
@@ -188,6 +190,7 @@ class UserStore extends BaseStore {
     __logout() {
         this._storage.set('userName', null);
         this._storage.set('isAuthorized', false);
+        this._storage.set('status', HttpStatusCodes.Unauthorized);
         this._emitChange();
     }
 }
