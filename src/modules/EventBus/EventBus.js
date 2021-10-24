@@ -29,10 +29,10 @@ class EventBus {
         }
 
         if (!this._channels[channel][event]) {
-            this._channels[channel][event] = [];
+            this._channels[channel][event] = new Set();
         }
 
-        this._channels[channel][event].push(callback);
+        this._channels[channel][event].add(callback);
     }
 
     /**
@@ -49,7 +49,7 @@ class EventBus {
         if (!this._channels[channel][event]) {
             return;
         }
-        this._channels[channel][event].splice(this._channels[channel][event].indexOf(callback), 1);
+        this._channels[channel][event].delete(callback);
     }
 
     /**

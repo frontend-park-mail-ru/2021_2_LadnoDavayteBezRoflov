@@ -14,11 +14,9 @@ export default class BaseStore {
         this._changed = false;
         this._changeEvent = 'change';
         this._invokeOnDispatch = this._invokeOnDispatch.bind(this);
-        this._dispatchToken = Dispatcher.register(this._invokeOnDispatch);
+        Dispatcher.register(this._invokeOnDispatch);
 
         EventBus.addChannel(channelName);
-
-        // TODO get + set
     }
 
     /**
@@ -28,14 +26,6 @@ export default class BaseStore {
      */
     addListener(callback, changeEvent = this._changeEvent) {
         EventBus.addListener(this._channel, changeEvent, callback);
-    }
-
-    /**
-     * Метод, возвращающий зарегистрированный коллбек.
-     * @return {String} айди коллбека
-     */
-    getDispatchToken() {
-        return this._dispatchToken;
     }
 
     /**
