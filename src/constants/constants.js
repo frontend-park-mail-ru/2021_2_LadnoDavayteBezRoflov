@@ -23,7 +23,7 @@ export const Html = {
   * Константа, содержащая в себе параметры самого себя.
   */
 export const SelfAddress = {
-    Url: 'localhost',
+    Url: 'http://95.163.213.142',
     Port: '3000',
 };
 
@@ -31,7 +31,7 @@ export const SelfAddress = {
   * Константа, содержащая в себе параметры бэкенда.
   */
 export const BackendAddress = {
-    Url: 'localhost',
+    Url: 'http://95.163.213.142',
     Port: '8000',
 };
 
@@ -43,11 +43,4 @@ export const HttpStatusCodes = {
     Created: 201,
     Unauthorized: 401,
     InternalServerError: 500,
-};
-
-/**
-  * Константа, содержащая в себе сообщения.
-  */
-export const ConstantMessages = {
-    NotFound: '',
 };
