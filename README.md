@@ -65,20 +65,6 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 |  |--stores #Stores & main logic
 |  |--views #Project pages
 |  |-index.js
-|
-|-.eslintignore
-|
-|-.eslintrc.json
-|
-|-LICENSE
-|
-|-.gitignore
-|
-|-package-lock.json
-|
-|-package.json
-|
-|-README.md
 ```
 
 ### Versions
