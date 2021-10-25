@@ -47,12 +47,9 @@ export default class BoardsView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
-     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow(urlData) {
+    _onShow() {
         this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
-
-        this._urlParams = urlData;
 
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login);
@@ -70,7 +67,7 @@ export default class BoardsView extends BaseView {
      * @param {object} context контекст отрисовки страницы
      */
     render() {
-        super.render(this.context);
+        super.render();
         this.addEventListeners();
     }
 

@@ -26,19 +26,30 @@ class UserStore extends BaseStore {
 
         this._storage.set('isAuthorized', undefined);
         this._storage.set('userName', undefined);
-        this._storage.set('status', undefined);
 
-        this._storage.set('validation', Object({
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
-        }));
+        this._storage.set('validation', {
+            userLoginData:
+            {
+                login: undefined,
+                password: undefined,
+            },
+
+            userRegisterData:
+            {
+                login: undefined,
+                email: undefined,
+                password: undefined,
+                passwordRepeat: undefined,
+            },
+        });
+
+        this._storage.set('userLoginData', undefined);
+        this._storage.set('userRegisterData', undefined);
     }
 
     /**
      * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String | undefined} field возвращаемое поле
+     * @param {String?} field возвращаемое поле
      * @return {String} контекст хранилища
      */
     getContext(field) {
@@ -80,18 +91,18 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на инициализацию.
      */
     async _fetchUser() {
-        let payload;
+        let response;
 
         try {
-            payload = await Network.getUser();
+            response = await Network.getUser();
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
 
-        switch (payload.status) {
+        switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', payload.data);
+            this._storage.set('userName', response.data);
             this._storage.set('isAuthorized', true);
             return;
 
@@ -110,44 +121,44 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _register(data) {
-        this._storage.set('status', null);
+        this._storage.set('userRegisterData', data);
+        this._validate(data, 'userRegisterData');
 
-        this._validate(data);
-
-        if (!this.__validationPassed()) {
+        if (!this.__validationPassed('userRegisterData')) {
             return;
         }
 
-        let payload;
+        let response;
 
         try {
-            payload = await Network.sendRegistration(data);
+            response = await Network.sendRegistration(data);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
-        this._storage.set('status', payload.status);
 
-        switch (payload.status) {
+        switch (response.status) {
         case HttpStatusCodes.Created:
-            this._storage.set('userName', payload.data.login);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 
         case HttpStatusCodes.Unauthorized:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
-            this._storage.get('validation')['login'] = {error: true,
-                                                        message: ConstantMessages.UnableToRegister};
-            this._storage.get('validation')['email'] = {error: false};
-            this._storage.get('validation')['password'] = {error: false};
-            this._storage.get('validation')['passwordRepeat'] = {error: false};
+            this._storage.set('userRegisterData', undefined);
+
+            this._storage.get('validation').userRegisterData ={
+                login: ConstantMessages.UnableToRegister,
+                email: null,
+                password: null,
+                passwordRepeat: null,
+            };
             return;
 
         default:
             console.log('Undefined error');
-            this._storage.get('validation')['login'] = {error: true,
-                                                        message: ConstantMessages.UnableToRegister};
+            this._storage.get('validation').userRegisterData.login = ConstantMessages.UnableToRegister;
         }
     }
 
@@ -156,25 +167,24 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
-        this._storage.set('status', null);
+        this._storage.set('userLoginData', data);
 
-        this._validate(data);
+        this._validate(data, 'userLoginData');
 
-        if (!this.__validationPassed()) {
+        if (!this.__validationPassed('userLoginData')) {
             return;
         }
 
-        let payload;
+        let response;
 
         try {
-            payload = await Network.sendAuthorization(data);
+            response = await Network.sendAuthorization(data);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
-        this._storage.set('status', payload.status);
 
-        switch (payload.status) {
+        switch (response.status) {
         case HttpStatusCodes.Ok:
             this._storage.set('userName', data.login);
             this._storage.set('isAuthorized', true);
@@ -183,17 +193,18 @@ class UserStore extends BaseStore {
         case HttpStatusCodes.Unauthorized:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
-            this._storage.set('userLoginInput', undefined);
-            this._storage.get('validation')['login'] = {error: true,
-                                                        message: ConstantMessages.WrongCredentials};
-            this._storage.get('validation')['password'] = {error: true,
-                                                           message: ConstantMessages.WrongCredentials};
+            this._storage.set('userLoginData', undefined);
+
+            this._storage.get('validation').userLoginData = {
+                login: ConstantMessages.WrongCredentials,
+                password: ConstantMessages.WrongCredentials,
+            };
+
             return;
 
         default:
             console.log('Undefined error');
-            this._storage.get('validation')['login'] = {error: true,
-                                                        message: ConstantMessages.UnableToLogin};
+            this._storage.get('validation').userLoginData.login = ConstantMessages.UnableToLogin;
         }
     }
 
@@ -201,17 +212,16 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на выход.
      */
     async _logout() {
-        let payload;
+        let response;
 
         try {
-            payload = await Network.sendLogout();
+            response = await Network.sendLogout();
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
-        this._storage.set('status', payload.status);
 
-        switch (payload.status) {
+        switch (response.status) {
         case HttpStatusCodes.Ok:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
@@ -233,40 +243,51 @@ class UserStore extends BaseStore {
     __logout() {
         this._storage.set('userName', null);
         this._storage.set('isAuthorized', false);
-        this._storage.set('status', HttpStatusCodes.Unauthorized);
         this._emitChange();
     }
 
     /**
      * Метод, осуществляющий валидацию данных.
      * @param {object} data объект, содержащий данные из формы
+     * @param {String} form обрабатываемая форма
      */
-    _validate(data) {
+    _validate(data, form) {
         const validator = new Validator();
 
-        this._storage.get('validation')['login'] = validator.validateLogin(data.login);
-        this._storage.get('validation')['password'] = validator.validatePassword(data.password);
+        const validation = this._storage.get('validation')[form];
+
+        validation.login = validator.validateLogin(data.login);
+        if (!!validation.login) {
+            this._storage.get(form).login = '';
+        }
+
+        validation.password = validator.validatePassword(data.password);
+        if (!!validation.password) {
+            this._storage.get(form).password = '';
+        }
 
         if (data.hasOwnProperty('email')) {
-            this._storage.get('validation')['email'] = validator.validateEMail(data.email);
+            validation.email = validator.validateEMail(data.email);
+            if (!!validation.email) {
+                this._storage.get(form).email = '';
+            }
         }
 
         if (data.hasOwnProperty('passwordRepeat') && (data.password !== data.passwordRepeat)) {
-            this._storage.get('validation')['passwordRepeat'] = {
-                error: true,
-                message: ConstantMessages.NonMatchingPasswords,
-            };
+            validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
+            this._storage.get(form).passwordRepeat = '';
         }
     }
 
     /**
      * Метод, проверяющий, корректны ли все данные (пройдена ли валидация).
+     * @param {String} form обрабатываемая форма
      * @return {boolean} статус валидации
      */
-    __validationPassed() {
+    __validationPassed(form) {
         let isValid = true;
-        Object.values(this._storage.get('validation')).forEach((element) => {
-            if (!!element && element.error) {
+        Object.values(this._storage.get('validation')[form]).forEach((element) => {
+            if (element) {
                 isValid = false;
             }
         });

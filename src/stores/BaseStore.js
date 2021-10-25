@@ -22,7 +22,7 @@ export default class BaseStore {
     /**
      * Метод, добавляющий нового слушателя в EventBus.
      * @param {function} callback функция-обработчик
-     * @param {String | undefined} changeEvent наименование события
+     * @param {String?} changeEvent наименование события
      */
     addListener(callback, changeEvent = this._changeEvent) {
         EventBus.addListener(this._channel, changeEvent, callback);

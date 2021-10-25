@@ -20,8 +20,6 @@ export default class BaseView extends BaseComponent {
     constructor(context, template, parent) {
         super(context, template, parent);
 
-        this.context = context;
-
         if (!!this.template) {
             this.subComponents = [];
 

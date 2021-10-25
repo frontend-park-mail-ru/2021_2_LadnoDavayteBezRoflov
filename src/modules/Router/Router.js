@@ -157,7 +157,7 @@ class Router {
     /**
      * Обрабатывает переданный url (относительный). Извлекает path и get параметры.
      * @param {string} url
-     * @return {Object|null}
+     * @return {Object?}
      */
     processURL(url) {
         const getParams = this.getGetParams(url);
@@ -182,7 +182,7 @@ class Router {
      * Метод пробует применить template к path и извлечь параметры
      * @param {string} path - path часть url
      * @param {string} template - шаблон url
-     * @return {Object|null} возвращает объект с параметрами,
+     * @return {Object?} возвращает объект с параметрами,
      * либо, если path не соотв. template - undefined
      */
     getPathParams(path, template) {

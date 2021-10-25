@@ -41,10 +41,8 @@ export default class RegisterView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
-     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow(urlData) {
-        this._urlParams = urlData;
+    _onShow() {
         this.render();
         this._isActive = true;
     }
@@ -95,10 +93,8 @@ export default class RegisterView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        if (document.getElementById('register')) {
-            document.getElementById('register').removeEventListener('register',
-                                                                    this.formAuthorizationCallback);
-        }
+        document.getElementById('register')?.removeEventListener('register',
+                                                                 this.formAuthorizationCallback);
     }
 
     /**
@@ -115,7 +111,7 @@ export default class RegisterView extends BaseView {
      * Метод, обрабатывающий посылку формы.
      * @param {form} event форма
      */
-    async formRegistration(event) {
+    formRegistration(event) {
         event.preventDefault();
 
         const data = {

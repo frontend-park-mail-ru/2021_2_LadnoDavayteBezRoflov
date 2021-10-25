@@ -9,53 +9,53 @@
             <p class="register__text">Пожалуйста, заполните эту форму,</br>чтобы зарегистрироваться.</p>
 
             <div class="register__input__wrapper">
-                <input class="register__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{validation.login.value}}" required>
+                <input class="register__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userRegisterData.login}}" required>
                 <label class="register__input__caption">Логин</label>
                 <span class="register__input__bar"></span>
 
-                {{#if validation.login.error}}
+                {{#if validation.userRegisterData.login}}
                 <div class="register__input__error" id="login-validation-box">
                     <i class="fa fa-times-circle register__input__error__fa"></i>
-                    <label class="register__input__error-label" id="login-validation-message">{{validation.login.message}}</label>
+                    <label class="register__input__error-label" id="login-validation-message">{{validation.userRegisterData.login}}</label>
                 </div>
                 {{/if}}
             </div>
 
             <div class="register__input__wrapper">
-                <input class="register__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{validation.email.value}}" required>
+                <input class="register__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{userRegisterData.email}}" required>
                 <label class="register__input__caption">Почта</label>
                 <span class="register__input__bar"></span>
 
-                {{#if validation.email.error}}
+                {{#if validation.userRegisterData.email}}
                 <div class="register__input__error">
                     <i class="fa fa-times-circle register__input__error__fa"></i>
-                    <label class="register__input__error-label">{{validation.email.message}}</label>
+                    <label class="register__input__error-label">{{validation.userRegisterData.email}}</label>
                 </div>
                 {{/if}}
             </div>
 
             <div class="register__input__wrapper">
-                <input class="register__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{validation.password.value}}" required>
+                <input class="register__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.password}}" required>
                 <label class="register__input__caption">Пароль</label>
                 <span class="register__input__bar"></span>
 
-                {{#if validation.password.error}}
+                {{#if validation.userRegisterData.password}}
                 <div class="register__input__error">
                     <i class="fa fa-times-circle register__input__error__fa"></i>
-                    <label class="register__input__error-label">{{validation.password.message}}</label>
+                    <label class="register__input__error-label">{{validation.userRegisterData.password}}</label>
                 </div>
                 {{/if}}
             </div>
 
             <div class="register__input__wrapper">
-                <input class="register__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{validation.passwordRepeat.value}}" required>
+                <input class="register__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.passwordRepeat}}" required>
                 <label class="register__input__caption">Подтверждение пароля</label>
                 <span class="register__input__bar"></span>
 
-                {{#if validation.passwordRepeat.error}}
+                {{#if validation.userRegisterData.passwordRepeat}}
                 <div class="register__input__error">
                     <i class="fa fa-times-circle register__input__error__fa"></i>
-                    <label class="register__input__error-label">{{validation.passwordRepeat.message}}</label>
+                    <label class="register__input__error-label">{{validation.userRegisterData.passwordRepeat}}</label>
                 </div>
                 {{/if}}
             </div>
