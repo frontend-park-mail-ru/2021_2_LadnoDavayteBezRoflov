@@ -28,7 +28,7 @@ class BoardsStore extends BaseStore {
      * @return {String} контекст хранилища
      */
     getContext(field) {
-        return !field ? this._storage : this._storage.get(field);
+        return field ? this._storage.get(field) : this._storage;
     }
 
     /**
