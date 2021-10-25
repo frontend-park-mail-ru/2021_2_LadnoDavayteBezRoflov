@@ -51,4 +51,6 @@ export const HttpStatusCodes = {
 export const ConstantMessages = {
     WrongCredentials: 'Неверный логин или пароль',
     UnableToLogin: 'Не получилось войти',
+    UnableToRegister: 'Не получилось зарегистрироваться',
+    NonMatchingPasswords: 'Пароли не совпадают',
 };

@@ -28,9 +28,12 @@ class UserStore extends BaseStore {
         this._storage.set('userName', undefined);
         this._storage.set('status', undefined);
 
-        this._storage.set('validation', Object({login: undefined, password: undefined}));
-
-        this._storage.set('userLoginInput', undefined);
+        this._storage.set('validation', Object({
+            login: undefined,
+            email: undefined,
+            password: undefined,
+            passwordRepeat: undefined,
+        }));
     }
 
     /**
@@ -39,7 +42,7 @@ class UserStore extends BaseStore {
      * @return {String} контекст хранилища
      */
     getContext(field) {
-        return (field === undefined)? this._storage : this._storage.get(field);
+        return field ? this._storage.get(field) : this._storage;
     }
 
     /**
@@ -107,6 +110,14 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _register(data) {
+        this._storage.set('status', null);
+
+        this._validate(data);
+
+        if (!this.__validationPassed()) {
+            return;
+        }
+
         let payload;
 
         try {
@@ -126,10 +137,17 @@ class UserStore extends BaseStore {
         case HttpStatusCodes.Unauthorized:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
+            this._storage.get('validation')['login'] = {error: true,
+                                                        message: ConstantMessages.UnableToRegister};
+            this._storage.get('validation')['email'] = {error: false};
+            this._storage.get('validation')['password'] = {error: false};
+            this._storage.get('validation')['passwordRepeat'] = {error: false};
             return;
 
         default:
             console.log('Undefined error');
+            this._storage.get('validation')['login'] = {error: true,
+                                                        message: ConstantMessages.UnableToRegister};
         }
     }
 
@@ -138,7 +156,6 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
-        this._storage.set('userLoginInput', data);
         this._storage.set('status', null);
 
         this._validate(data);
@@ -229,6 +246,17 @@ class UserStore extends BaseStore {
 
         this._storage.get('validation')['login'] = validator.validateLogin(data.login);
         this._storage.get('validation')['password'] = validator.validatePassword(data.password);
+
+        if (data.hasOwnProperty('email')) {
+            this._storage.get('validation')['email'] = validator.validateEMail(data.email);
+        }
+
+        if (data.hasOwnProperty('passwordRepeat') && (data.password !== data.passwordRepeat)) {
+            this._storage.get('validation')['passwordRepeat'] = {
+                error: true,
+                message: ConstantMessages.NonMatchingPasswords,
+            };
+        }
     }
 
     /**
@@ -238,7 +266,7 @@ class UserStore extends BaseStore {
     __validationPassed() {
         let isValid = true;
         Object.values(this._storage.get('validation')).forEach((element) => {
-            if (element.error) {
+            if (!!element && element.error) {
                 isValid = false;
             }
         });

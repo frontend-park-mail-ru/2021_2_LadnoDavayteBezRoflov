@@ -9,7 +9,7 @@ export default class Validator {
      * и полем сообщением ошибки message
      */
     validateEMail(source) {
-        const email = /@/;
+        const email = /^.*[@]+.*$/;
         if (!(email).test(source)) {
             return {error: true, message: 'Введите корректный e-mail', value: ''};
         }
