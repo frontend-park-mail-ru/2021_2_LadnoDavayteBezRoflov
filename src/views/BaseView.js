@@ -5,7 +5,6 @@ import BaseComponent from '../components/BaseComponent.js';
 import NavbarComponent from '../../components/Navbar/Navbar.js';
 import FooterComponent from '../../components/Footer/Footer.js';
 
-import Router from '../modules/Router/Router.js';
 
 /**
  * Класс, реализующий базовый view.
@@ -29,6 +28,8 @@ export default class BaseView extends BaseComponent {
             this.subComponents.push(['Navbar', new NavbarComponent(context)]);
             this.subComponents.push(['Footer', new FooterComponent(context)]);
         }
+
+        this._isActive = false;
     }
 
     /**
@@ -66,6 +67,8 @@ export default class BaseView extends BaseComponent {
         this.subComponents.forEach(([_, component]) => {
             component.removeEventListeners();
         });
+
+        this._isActive = false;
     }
 
     /**
@@ -85,13 +88,5 @@ export default class BaseView extends BaseComponent {
         });
 
         this.parent.innerHTML = html;
-    }
-
-    /**
-     * Метод, показывающий, открыта ли страница сейчас.
-     * @return {boolean} статус страницы
-     */
-    __isOpened() {
-        return Router._currentView.template === this.template;
     }
 }

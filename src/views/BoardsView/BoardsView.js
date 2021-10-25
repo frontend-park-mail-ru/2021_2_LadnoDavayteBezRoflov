@@ -31,11 +31,9 @@ export default class BoardsView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this.context = new Map([...UserStore.getContext(), ...BoardsStore.getContext()]);
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
-        this._setContext(this.context);
-
-        if (!this.__isOpened()) {
+        if (!this._isActive) {
             return;
         }
 
@@ -52,7 +50,7 @@ export default class BoardsView extends BaseView {
      * @param {Object|null} urlData параметры, переданные командной строкой
      */
     _onShow(urlData) {
-        this.context = new Map([...UserStore.getContext(), ...BoardsStore.getContext()]);
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
         this._urlParams = urlData;
 
@@ -63,9 +61,8 @@ export default class BoardsView extends BaseView {
 
         boardsActions.getBoards();
 
-        this.context = new Map([...UserStore.getContext(), ...BoardsStore.getContext()]);
-
         this.render();
+        this._isActive = true;
     }
 
     /**

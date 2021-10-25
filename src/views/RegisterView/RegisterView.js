@@ -42,6 +42,7 @@ export default class RegisterView extends BaseView {
     _onShow(urlData) {
         this._urlParams = urlData;
         this.render();
+        this._isActive = true;
     }
 
     /**
@@ -57,7 +58,7 @@ export default class RegisterView extends BaseView {
 
         this._setContext(this.context);
 
-        if (!this.__isOpened()) {
+        if (!this._isActive) {
             return;
         }
 

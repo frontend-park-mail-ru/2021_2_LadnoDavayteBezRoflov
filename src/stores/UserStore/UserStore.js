@@ -8,7 +8,7 @@ import Network from '../../modules/Network/Network.js';
 import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
-import {HttpStatusCodes} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 
 /**
  * Класс, реализующий хранилище пользователя
@@ -28,11 +28,9 @@ class UserStore extends BaseStore {
         this._storage.set('userName', undefined);
         this._storage.set('status', undefined);
 
-        this._storage.set('validation', new Map());
-        this._storage.get('validation').set('login', undefined);
-        this._storage.get('validation').set('password', undefined);
+        this._storage.set('validation', Object({login: undefined, password: undefined}));
 
-        this._storage.set('payload', undefined);
+        this._storage.set('userLoginInput', undefined);
     }
 
     /**
@@ -140,8 +138,8 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
-        this._storage.set('payload', data);
-        this._storage.set('status', undefined);
+        this._storage.set('userLoginInput', data);
+        this._storage.set('status', null);
 
         this._validate(data);
 
@@ -168,11 +166,17 @@ class UserStore extends BaseStore {
         case HttpStatusCodes.Unauthorized:
             this._storage.set('userName', null);
             this._storage.set('isAuthorized', false);
-            this._storage.set('payload', undefined);
+            this._storage.set('userLoginInput', undefined);
+            this._storage.get('validation')['login'] = {error: true,
+                                                        message: ConstantMessages.WrongCredentials};
+            this._storage.get('validation')['password'] = {error: true,
+                                                           message: ConstantMessages.WrongCredentials};
             return;
 
         default:
             console.log('Undefined error');
+            this._storage.get('validation')['login'] = {error: true,
+                                                        message: ConstantMessages.UnableToLogin};
         }
     }
 
@@ -180,8 +184,6 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на выход.
      */
     async _logout() {
-        this._storage.set('payload', undefined);
-
         let payload;
 
         try {
@@ -225,8 +227,8 @@ class UserStore extends BaseStore {
     _validate(data) {
         const validator = new Validator();
 
-        this._storage.get('validation').set('login', validator.validateLogin(data.login));
-        this._storage.get('validation').set('password', validator.validatePassword(data.password));
+        this._storage.get('validation')['login'] = validator.validateLogin(data.login);
+        this._storage.get('validation')['password'] = validator.validatePassword(data.password);
     }
 
     /**
@@ -234,12 +236,13 @@ class UserStore extends BaseStore {
      * @return {boolean} статус валидации
      */
     __validationPassed() {
-        for (const value of this._storage.get('validation').values()) {
-            if (!value.status) {
-                return false;
+        let isValid = true;
+        Object.values(this._storage.get('validation')).forEach((element) => {
+            if (element.error) {
+                isValid = false;
             }
-        }
-        return true;
+        });
+        return isValid;
     }
 }
 

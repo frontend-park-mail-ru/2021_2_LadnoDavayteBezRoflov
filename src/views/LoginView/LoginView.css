@@ -2,23 +2,45 @@
 
 * {
     box-sizing: border-box;
+
+    /* TODO вынести в нормальное место */
+    --primary-bg-color: rgb(207, 241, 249);
+    --secondary-bg-color: rgb(231, 246, 254);
+
+    --main-theme-color: rgb(37, 128, 133);
+    --main-theme-color__focus: rgb(77, 156, 245);
+
+    --transparent-bg-color: rgba(255, 255, 255, 0.3);
+    --default-box-shadow-color: rgba(0,0,0,0.2);
+
+    --error-color: rgb(216, 0, 12);
+    --error-bg-color: rgb(255, 210, 210);
+
+    --light-white-color: rgb(241, 241, 241);
+    --input-color: rgb(210, 210, 210);
+
+    --input__input-color: rgb(144, 144, 144);
+
 }
 
 body {
     margin: 0;
-    background: linear-gradient(45deg, #CFF1F9, #E7F6FE);
+    background: linear-gradient(45deg, var(--primary-bg-color), var(--secondary-bg-color));
 
     height: 100vh;
 
     font-family: 'Montserrat', sans-serif;
+
+    --login__min-width: 320px;
+    --login__max-width: 600px;
 }
 
 /* Таблица стилей для страницы входа */
 
 /* внешняя обертка под контейнер входа */
 .login__wrapper {
-    min-width: 320px;
-    max-width: 600px;
+    min-width: var(--login__min-width);
+    max-width: var(--login__max-width);
 
     position: absolute;
     transform: translate(-50%,-50%);
@@ -29,16 +51,16 @@ body {
 
 /* контейнер входа */
 .login__container {
-    min-width: 320px;
-    max-width: 600px;
+    min-width: var(--login__min-width);
+    max-width: var(--login__max-width);
 
-    background: rgba(255,255,255,0.3);
+    background: var(--transparent-bg-color);
     padding: 2em;
 
     border-radius: 24px;
-    border-left: 1px solid rgba(255,255,255,0.3);
-    border-top: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 24px 24px 40px -8px rgba(0,0,0,0.2);
+    border-left: 1px solid var(--transparent-bg-color);
+    border-top: 1px solid var(--transparent-bg-color);
+    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
 
     text-align: center;
     transition: all 0.3s ease-in-out;
@@ -66,15 +88,15 @@ body {
     position: absolute;
 
     left: 4%;
-	top: 10px;
+    top: 10px;
 
-    color: #d2d2d2;
+    color: var(--input-color);
 
     font-size: 15px;
-	font-weight: 300;
+    font-weight: 300;
 
     pointer-events: none;
-	transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 /* само поле ввода  */
@@ -84,11 +106,11 @@ body {
     border: none;
 
     padding: 10px 0 10px 0;
-    border-bottom: 1px solid #d2d2d2;
+    border-bottom: 1px solid rgb(209, 209, 209);
 
     width: 100%;
 
-    color: #909090;
+    color: var(--input__input-color);
 
     font-size: 15px;
 }
@@ -96,27 +118,27 @@ body {
 /* в случае активации поля ввода заголовок съезжает наверх */
 .login__input__input:focus ~ .login__input__caption,
 .login__input__input:not(:placeholder-shown) ~ .login__input__caption {
-	top: -20px;
-	font-size: 13px;
-	color: #ae5252;
+    top: -20px;
+    font-size: 13px;
+    color: rgb(174, 82, 82);
 }
 
 /* в случае валидного ввода перекрашиваем заголовок */
 .login__input__input:valid ~ .login__input__caption,
 .login__input__input:valid:not(:placeholder-shown) ~ .login__input__caption {
-	color: #4fc24f;
+    color: rgb(79, 194, 79);
 }
 
 /* полоса, подчеркивающая поле ввода  */
 .login__input__bar {
     position: relative;
-	display: block;
+    display: block;
 }
 
 /* удлинняем полосу при активном поле ввода */
 .login__input__input:focus ~ .login__input__bar:before,
 .login__input__input:focus ~ .login__input__bar:after {
-	width: 100%;
+    width: 100%;
 }
 
 /* удлинняем полосу под полем ввода */
@@ -124,23 +146,23 @@ body {
     position: absolute;
     content: "";
     
-	height: 2px;
-	bottom: -1px;
+    height: 2px;
+    bottom: -1px;
     left: 0;
     width: 0;
     right: -50%;
 
-    background: #258085;
+    background: var(--main-theme-color);
 
-	transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 /* кнопка входа */
 .login__button {
     padding: 16px 24px;
 
-    color: #fff;
-    background-color: #258085;
+    color: rgb(255, 255, 255);
+    background-color: var(--main-theme-color);
 
     border: none;
     outline: none;
@@ -157,7 +179,7 @@ body {
 /* в случае активизации кнопки входа */
 .login__button:focus,
 .login__button:hover {
-    background-color: #4d9cf5;
+    background-color: var(--main-theme-color__focus);
 }
 
 /* секция обработки ошибок */
@@ -169,8 +191,8 @@ body {
 
     border-radius: 16px;
 
-    color: #D8000C;
-    background-color: #FFD2D2;
+    color: var(--error-color);
+    background-color: var(--error-bg-color);
 
     transition: all 0.3s ease-in-out;
 }
@@ -186,7 +208,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-/*!* Set a grey background color and center the text of the "sign in" section *!*/
+/* сообщение о регистрации */
 .login__register-message {
     position: relative;
 
@@ -194,12 +216,12 @@ body {
     padding: 2em;
     height: 8em;
 
-    background-color: #f1f1f1;
+    background-color: var(--light-white-color);
 
     border-radius: 16px;
-    border-left: 1px solid rgba(255,255,255,0.3);
-    border-top: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 24px 24px 40px -8px rgba(0,0,0,0.2);
+    border-left: 1px solid var(--transparent-bg-color);
+    border-top: 1px solid var(--transparent-bg-color);
+    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
 
     text-align: center;
     
@@ -208,5 +230,5 @@ body {
 
 /* иконка ошибки */
 .login__register-message__link {
-    color: dodgerblue;
+    color: var(--main-theme-color__focus);
 }
