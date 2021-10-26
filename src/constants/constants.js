@@ -44,3 +44,25 @@ export const HttpStatusCodes = {
     Unauthorized: 401,
     InternalServerError: 500,
 };
+
+/**
+  * Константа, содержащая в себе константные сообщения.
+  */
+export const ConstantMessages = {
+    WrongCredentials: 'Неверный логин или пароль',
+    UnableToLogin: 'Не получилось войти',
+    UnableToRegister: 'Не получилось зарегистрироваться',
+    NonMatchingPasswords: 'Пароли не совпадают',
+
+    EnterCorrectEmail: 'Введите корректный e-mail',
+
+    WrongLoginLength: 'Введите логин длиной от 3 до 20 символов',
+    UseOnlyLatinLettersLogin: 'Введите логин, содержащий только латинские буквы',
+
+    WrongPasswordLength: 'Введите пароль длиной от 6 до 25 символов',
+    NotBeginningWithNumberPassword: 'Введите пароль, не начинающийся с цифры',
+    NoSpecialSymbolsPassword: 'Введите пароль, не содержащий специальных символов',
+    UseOnlyLatinLettersPassword: 'Введите пароль, содержащий только латинские буквы',
+
+
+};

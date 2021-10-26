@@ -1,49 +1,74 @@
 <link rel="stylesheet" href="/src/views/RegisterView/RegisterView.css">
-<link rel="stylesheet" href="/public/css/popups.css">
 
 {{{Navbar}}}
 
-<form id="register" name="register" novalidate>
-    <div class="container">
-        <h1>Регистрация</h1>
-            <p>Пожалуйста, заполните эту форму,</br>чтобы зарегистрироваться.</p>
+<div class="register__wrapper">
+    <form id="register" name="register" novalidate autocomplete="off">
+        <div class="register__container">
+            <h1 class="register__caption">Регистрация</h1>
+            <p class="register__text">Пожалуйста, заполните эту форму,</br>чтобы зарегистрироваться.</p>
 
-            <label for="login"><b>Логин</b></label>
-            <input type="text" placeholder="Введите логин" id="login" name="login" required>
-            <div class="isa_error" id="login-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="login-validation-message"></label>
+            <div class="register__input__wrapper">
+                <input class="register__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userRegisterData.login}}" required>
+                <label class="register__input__caption">Логин</label>
+                <span class="register__input__bar"></span>
+
+                {{#if validation.userRegisterData.login}}
+                <div class="register__input__error" id="login-validation-box">
+                    <i class="fa fa-times-circle register__input__error__fa"></i>
+                    <label class="register__input__error-label" id="login-validation-message">{{validation.userRegisterData.login}}</label>
+                </div>
+                {{/if}}
             </div>
 
-            <label for="email"><b>Почта</b></label>
-            <input type="email" placeholder="Введите почту" id="email" name="email" required>
-            <div class="isa_error" id="email-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="email-validation-message"></label>
+            <div class="register__input__wrapper">
+                <input class="register__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{userRegisterData.email}}" required>
+                <label class="register__input__caption">Почта</label>
+                <span class="register__input__bar"></span>
+
+                {{#if validation.userRegisterData.email}}
+                <div class="register__input__error">
+                    <i class="fa fa-times-circle register__input__error__fa"></i>
+                    <label class="register__input__error-label">{{validation.userRegisterData.email}}</label>
+                </div>
+                {{/if}}
             </div>
 
-            <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" id="psw" name="password" required>
-            <div class="isa_error" id="password-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="password-validation-message"></label>
+            <div class="register__input__wrapper">
+                <input class="register__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.password}}" required>
+                <label class="register__input__caption">Пароль</label>
+                <span class="register__input__bar"></span>
+
+                {{#if validation.userRegisterData.password}}
+                <div class="register__input__error">
+                    <i class="fa fa-times-circle register__input__error__fa"></i>
+                    <label class="register__input__error-label">{{validation.userRegisterData.password}}</label>
+                </div>
+                {{/if}}
             </div>
 
-            <label for="psw-repeat"><b>Подтверждение пароля</b></label>
-            <input type="password" placeholder="Повторите пароль" id="psw-repeat" name="confirm-password" required>
-            <div class="isa_error" id="control-password-validation-box" hidden>
-                <i class="fa fa-times-circle"></i>
-                <label id="control-password-validation-message"></label>
+            <div class="register__input__wrapper">
+                <input class="register__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.passwordRepeat}}" required>
+                <label class="register__input__caption">Подтверждение пароля</label>
+                <span class="register__input__bar"></span>
+
+                {{#if validation.userRegisterData.passwordRepeat}}
+                <div class="register__input__error">
+                    <i class="fa fa-times-circle register__input__error__fa"></i>
+                    <label class="register__input__error-label">{{validation.userRegisterData.passwordRepeat}}</label>
+                </div>
+                {{/if}}
             </div>
 
-            <p>Создавая учетную запись, вы соглашаетесь с нашими </br><a href="#">Условиями пользования и </br>Политикой конфиденциальности</a>.</p>
-            <button type="submit" class="registerbtn" id="register-button">Создать аккаунт</button>
+            <p class="register__text">Создавая учетную запись, вы соглашаетесь с нашими </br><a class="register__link" href="#">Условиями пользования и </br>Политикой конфиденциальности</a>.</p>
 
-    </div>
-</form>
-
-    <div class="container signin">
-        <p>Уже есть аккаунт? <a href="/login">Войти в систему</a>.</p>
-    </div>
+            <button type="submit" class="register__button" id="register-button">Зарегистрироваться</button> 
+        
+            <div class="register__login-message">
+                <p class="register__text">Уже есть аккаунт? <a class="register__link" href="/login">Войти в систему</a></p>
+            </div>
+        </div>
+    </form>
+</div>
 
 {{{Footer}}}

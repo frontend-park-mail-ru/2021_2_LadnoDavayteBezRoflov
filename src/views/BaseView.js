@@ -5,6 +5,7 @@ import BaseComponent from '../components/BaseComponent.js';
 import NavbarComponent from '../../components/Navbar/Navbar.js';
 import FooterComponent from '../../components/Footer/Footer.js';
 
+
 /**
  * Класс, реализующий базовый view.
  */
@@ -19,14 +20,14 @@ export default class BaseView extends BaseComponent {
     constructor(context, template, parent) {
         super(context, template, parent);
 
-        this.context = context;
-
         if (!!this.template) {
             this.subComponents = [];
 
             this.subComponents.push(['Navbar', new NavbarComponent(context)]);
             this.subComponents.push(['Footer', new FooterComponent(context)]);
         }
+
+        this._isActive = false;
     }
 
     /**
@@ -64,6 +65,8 @@ export default class BaseView extends BaseComponent {
         this.subComponents.forEach(([_, component]) => {
             component.removeEventListeners();
         });
+
+        this._isActive = false;
     }
 
     /**

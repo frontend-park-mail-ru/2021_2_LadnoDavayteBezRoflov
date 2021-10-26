@@ -34,14 +34,13 @@ export default class NotFoundView extends BaseView {
      */
     _onShow() {
         this.render();
+        this._isActive = true;
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this.context = UserStore.getContext();
-
-        this._setContext(this.context);
+        this._setContext(UserStore.getContext());
     }
 }

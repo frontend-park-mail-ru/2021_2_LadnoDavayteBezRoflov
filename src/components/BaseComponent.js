@@ -6,7 +6,7 @@ export default class BaseComponent {
     * @constructor
     * @param {Object} context контекст отрисовки шаблона
     * @param {Function} template функция отрисовки шаблона
-    * @param {Element | undefined} parent элемент, в который будет отрисован компонент
+    * @param {Element?} parent элемент, в который будет отрисован компонент
     */
     constructor(context, template, parent) {
         this.parent = parent;

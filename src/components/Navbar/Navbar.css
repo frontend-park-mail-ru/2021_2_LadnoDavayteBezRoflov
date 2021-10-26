@@ -1,12 +1,14 @@
 /* navbar style */
 
 .navbar__wrapper {
+    z-index: 5;
     background-color: #258085;
     border-bottom: 1px solid #C3C3C3;
     user-select: none;
 }
 
 .navbar {
+    z-index: inherit;
     height: 56px;
     max-width: 1680px;
     position: relative;

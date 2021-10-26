@@ -31,25 +31,25 @@ export default class BoardsView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this.context = new Map([...UserStore.getContext(), ...BoardsStore.getContext()]);
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
-        this._setContext(this.context);
+        if (!this._isActive) {
+            return;
+        }
 
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login);
             return;
         }
+
         this.render();
     }
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
-     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow(urlData) {
-        this.context = new Map([...UserStore.getContext(), ...BoardsStore.getContext()]);
-
-        this._urlParams = urlData;
+    _onShow() {
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login);
@@ -59,6 +59,7 @@ export default class BoardsView extends BaseView {
         boardsActions.getBoards();
 
         this.render();
+        this._isActive = true;
     }
 
     /**
@@ -66,7 +67,7 @@ export default class BoardsView extends BaseView {
      * @param {object} context контекст отрисовки страницы
      */
     render() {
-        super.render(this.context);
+        super.render();
         this.addEventListeners();
     }
 

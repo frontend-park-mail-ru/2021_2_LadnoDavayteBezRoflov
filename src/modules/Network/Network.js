@@ -33,7 +33,7 @@ class Network {
     httpRequest(URL, options) {
         return fetch(URL, options)
             .then((response) => response.json()
-                .then((data) => Object({status: response.status, data: data})),
+                .then((data) => ({status: response.status, data: data})),
             );
     };
 

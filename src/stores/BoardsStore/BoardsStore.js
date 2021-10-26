@@ -24,7 +24,7 @@ class BoardsStore extends BaseStore {
 
     /**
      * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String | undefined} field возвращаемое поле
+     * @param {String?} field возвращаемое поле
      * @return {String} контекст хранилища
      */
     getContext(field) {

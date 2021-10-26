@@ -53,7 +53,7 @@ class EventBus {
      * Метод, посылающий событие по EventBus.
      * @param {String} channel имя канала
      * @param {String} event имя события
-     * @param {*} args дополнительные аргументы
+     * @param {*?} args дополнительные аргументы
      */
     emit(channel, event, args = null) {
         console.log(`[${channel}] emitted: ${event} with args ${args}`);

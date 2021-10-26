@@ -33,7 +33,7 @@ class Dispatcher {
 
     /**
      * Метод, организующий рассылку.
-     * @param {Object | undefined} payload
+     * @param {Object?} payload
      */
     dispatch(payload) {
         if (this.isDispatching()) {
