@@ -103,7 +103,7 @@ export default class LoginView extends BaseView {
 
     /**
      * Метод, обрабатывающий посылку формы.
-     * @param {form} event форма
+     * @param {object} event событие
      */
     formAuthorization(event) {
         event.preventDefault();

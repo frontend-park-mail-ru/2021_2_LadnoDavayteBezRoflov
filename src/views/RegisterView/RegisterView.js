@@ -62,7 +62,6 @@ export default class RegisterView extends BaseView {
 
     /**
      * Метод, отрисовывающий страницу.
-     * @param {object} context контекст отрисовки страницы
      */
     render() {
         /* Если пользователь авторизован, то перебросить его на страницу списка досок */
@@ -109,7 +108,7 @@ export default class RegisterView extends BaseView {
 
     /**
      * Метод, обрабатывающий посылку формы.
-     * @param {form} event форма
+     * @param {object} event событие
      */
     formRegistration(event) {
         event.preventDefault();
