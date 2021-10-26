@@ -33,9 +33,7 @@ export default class NavbarComponent extends BaseComponent {
      * Метод, добавляющий обработчики событий для компонента.
      */
     addEventListeners() {
-        if (document.getElementById('logout')) {
-            document.getElementById('logout').addEventListener('click', this._logoutCallback);
-        }
+        document.getElementById('logout')?.addEventListener('click', this._logoutCallback);
     }
 
     /**
@@ -52,8 +50,6 @@ export default class NavbarComponent extends BaseComponent {
      * Метод, удаляющий обработчики событий для компонента.
      */
     removeEventListeners() {
-        if (document.getElementById('logout')) {
-            document.getElementById('logout').removeEventListener('click', this._logoutCallback);
-        }
+        document.getElementById('logout')?.removeEventListener('click', this._logoutCallback);
     }
 }

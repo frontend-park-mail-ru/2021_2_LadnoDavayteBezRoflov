@@ -32,14 +32,16 @@ export const userActions = {
      * @param {String} login
      * @param {String} email
      * @param {String} password
+     * @param {String} passwordRepeat
      */
-    register(login, email, password) {
+    register(login, email, password, passwordRepeat) {
         Dispatcher.dispatch({
             actionName: UserActionTypes.USER_REGISTER,
             data: {
                 login: login,
                 email: email,
                 password: password,
+                passwordRepeat: passwordRepeat,
             },
         });
     },

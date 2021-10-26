@@ -38,10 +38,8 @@ export default class LoginView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
-     * @param {Object|null} urlData параметры, переданные командной строкой
      */
-    _onShow(urlData) {
-        this._urlParams = urlData;
+    _onShow() {
         this.render();
         this._isActive = true;
     }
@@ -69,7 +67,7 @@ export default class LoginView extends BaseView {
             return;
         }
 
-        super.render(this.context);
+        super.render();
 
         this.addEventListeners();
 
@@ -91,10 +89,8 @@ export default class LoginView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        if (document.getElementById('auth')) {
-            document.getElementById('auth').removeEventListener('submit',
-                                                                this.formAuthorizationCallback);
-        }
+        document.getElementById('auth')?.removeEventListener('submit',
+                                                             this.formAuthorizationCallback);
     }
 
     /**
@@ -109,7 +105,7 @@ export default class LoginView extends BaseView {
      * Метод, обрабатывающий посылку формы.
      * @param {form} event форма
      */
-    async formAuthorization(event) {
+    formAuthorization(event) {
         event.preventDefault();
 
         const data = {

@@ -9,27 +9,27 @@
             <p class="login__text">Пожалуйста, заполните эту форму, чтобы войти.</p>
 
             <div class="login__input__wrapper">
-                <input class="login__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{validation.login.value}}" required>
+                <input class="login__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userLoginData.login}}" required>
                 <label class="login__input__caption">Логин</label>
                 <span class="login__input__bar"></span>
 
-                {{#if validation.login.error}}
+                {{#if validation.userLoginData.login}}
                 <div class="login__input__error" id="login-validation-box">
                     <i class="fa fa-times-circle login__input__error__fa"></i>
-                    <label class="login__input__error-label" id="login-validation-message">{{validation.login.message}}</label>
+                    <label class="login__input__error-label" id="login-validation-message">{{validation.userLoginData.login}}</label>
                 </div>
                 {{/if}}
             </div>
 
             <div class="login__input__wrapper">
-                <input class="login__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{validation.password.value}}" required>
+                <input class="login__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userLoginData.password}}" required>
                 <label class="login__input__caption">Пароль</label>
                 <span class="login__input__bar"></span>
 
-                {{#if validation.password.error}}
+                {{#if validation.userLoginData.password}}
                 <div class="login__input__error" id="password-validation-box">
                     <i class="fa fa-times-circle login__input__error__fa"></i>
-                    <label class="login__input__error-label" id="password-validation-message">{{validation.password.message}}</label>
+                    <label class="login__input__error-label" id="password-validation-message">{{validation.userLoginData.password}}</label>
                 </div>
                 {{/if}}
             </div>
