@@ -14,21 +14,7 @@ class BoardsStore extends BaseStore {
      */
     constructor() {
         super('Boards');
-
-        this._channel = 'Boards';
-
-        this._storage = new Map();
-
         this._storage.set('teams', undefined);
-    }
-
-    /**
-     * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String?} field возвращаемое поле
-     * @return {String} контекст хранилища
-     */
-    getContext(field) {
-        return field ? this._storage.get(field) : this._storage;
     }
 
     /**

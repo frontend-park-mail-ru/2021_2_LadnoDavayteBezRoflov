@@ -8,7 +8,8 @@ export const Urls = {
     Boards: '/boards',
     Login: '/login',
     Register: '/register',
-    Logout: '/logout',
+    Board: '/board/<id>',
+    Card: '/card/<id>',
     NotFound: '/404',
 };
 
@@ -23,7 +24,7 @@ export const Html = {
   * Константа, содержащая в себе параметры самого себя.
   */
 export const SelfAddress = {
-    Url: 'http://95.163.213.142',
+    Url: 'localhost',
     Port: '3000',
 };
 
@@ -31,7 +32,7 @@ export const SelfAddress = {
   * Константа, содержащая в себе параметры бэкенда.
   */
 export const BackendAddress = {
-    Url: 'http://95.163.213.142',
+    Url: 'localhost',
     Port: '8000',
 };
 

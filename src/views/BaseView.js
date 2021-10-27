@@ -74,17 +74,22 @@ export default class BaseView extends BaseComponent {
     */
     render() {
         const components = this.subComponents.reduce(function(accumulator, object) {
+            console.log(object)
             return {...accumulator, ...{[object[0]]: object[1].render()}};
-        }, {}); // TODO - use map or fix dynamic
+        }, {});
 
-        const context = Object.fromEntries(this.context);
+        
 
-        const html = this.template({
-            Navbar: components['Navbar'], // TODO dynamic
-            Footer: components['Footer'],
-            ...context,
-        });
+        const context = {...components, ...Object.fromEntries(this.context)};
 
-        this.parent.innerHTML = html;
+        console.log('context', context)
+
+        this.parent.innerHTML = this.template(context);
+    }
+
+    addComponent(name, component) {
+        if (typeof this.subComponents !== 'undefined') {
+            this.subComponents.push([name, component]);
+        }
     }
 }

@@ -10,7 +10,7 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 export default class NavbarComponent extends BaseComponent {
     /**
     * Конструктор, создающий класс компонента Navbar.
-    * @param {function} context контекст отрисовки шаблона
+    * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
         super(context, Handlebars.templates['components/Navbar/Navbar']);

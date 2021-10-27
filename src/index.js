@@ -18,6 +18,9 @@ import '/src/tmpl.js';
 import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
+import CardComponent from './components/Card/Card.js';
+import BoardView from './views/BoardView/BoardView.js';
+import CardListComponent from './components/CardList/CardList.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -28,11 +31,16 @@ window.addEventListener('DOMContentLoaded', async () => {
         userActions.fetchUser();
     }
 
+    //Handlebars.registerPartial('Cardlist', new CardListComponent().template);
+    //Handlebars.registerPartial('Card', new CardComponent().template);
+
     try {
         Router.register(Urls.Root, new BoardsView(root));
         Router.register(Urls.Register, new RegisterView(root));
         Router.register(Urls.Login, new LoginView(root));
+        Router.register(Urls.Card, new CardComponent());
         Router.register(Urls.Boards, new BoardsView(root));
+        Router.register(Urls.Board, new BoardView(root));
 
         Router.start();
     } catch (error) {

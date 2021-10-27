@@ -19,11 +19,6 @@ class UserStore extends BaseStore {
      */
     constructor() {
         super('User');
-
-        this._channel = 'User';
-
-        this._storage = new Map();
-
         this._storage.set('isAuthorized', undefined);
         this._storage.set('userName', undefined);
 
@@ -45,15 +40,6 @@ class UserStore extends BaseStore {
 
         this._storage.set('userLoginData', undefined);
         this._storage.set('userRegisterData', undefined);
-    }
-
-    /**
-     * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String?} field возвращаемое поле
-     * @return {String} контекст хранилища
-     */
-    getContext(field) {
-        return field ? this._storage.get(field) : this._storage;
     }
 
     /**

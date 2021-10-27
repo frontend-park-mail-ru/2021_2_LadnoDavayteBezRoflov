@@ -6,49 +6,56 @@ import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
+import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
 
 // Constants
 import {Urls} from '../../constants/constants.js';
+import boardsActions from '../../actions/boards.js';
+import CardListComponent from '../../components/CardList/CardList.js';
 
 /**
-  * Класс, реализующий страницу с входа.
+  * Класс, реализующий страницу доски.
   */
-export default class LoginView extends BaseView {
+export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        const context = UserStore.getContext();
-        super(context, Handlebars.templates['views/LoginView/LoginView'], parent);
+        const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
+        super(context, Handlebars.templates['views/BoardView/BoardView'], parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh); // + field
+        BoardStore.addListener(this._onRefresh);
 
-        this.formAuthorizationCallback = this.formAuthorization.bind(this);
+        //this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            password: undefined,
+            title: undefined,
+            description: undefined,
         };
+
+        this._cardlists = [];
     }
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
-    _onShow() {
+    _onShow(urlData) {
+        this.urlData = urlData;
+        boardsActions.getBoard(urlData.pathParams.id);
         this.render();
-        this._isActive = true;
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this._setContext(UserStore.getContext());
+        this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
 
         if (!this._isActive) {
             return;
@@ -61,11 +68,24 @@ export default class LoginView extends BaseView {
      * Метод, отрисовывающий страницу.
      */
     render() {
-        /* Если пользователь авторизован, то перебросить его туда, где он был */
-        if (this.context.get('isAuthorized')) {
-            Router.prev();
+        /* Если пользователь авторизован, то перебросить его на страницу входа */
+        if (!this.context.get('isAuthorized')) {
+            Router.go(Urls.Login);
             return;
         }
+        this._isActive = true;
+
+        this._cardlists = [];
+
+        Object.values(this.context.get('cardlists')).forEach((cardlist) => {
+            this._cardlists.push(new CardListComponent(cardlist).render());
+        });
+
+        this._setContext(this.context.set('_cardlists', this._cardlists));
+
+        //this.addComponent('cardlists', this._cardlists)
+
+        console.log('context_here', this.context)
 
         super.render();
 
@@ -78,7 +98,7 @@ export default class LoginView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
+        //document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
 
         this.subComponents.forEach(([_, component]) => {
             component.addEventListeners();
@@ -89,16 +109,16 @@ export default class LoginView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        document.getElementById('auth')?.removeEventListener('submit',
-                                                             this.formAuthorizationCallback);
+        //document.getElementById('auth')?.removeEventListener('submit',
+        //                                                     this.formAuthorizationCallback);
     }
 
     /**
      * Метод, регистрирующий поля ввода в документе.
      */
     registerInputElements() {
-        this._inputElements.login = document.getElementById('login');
-        this._inputElements.password = document.getElementById('password');
+        this._inputElements.title = document.getElementById('title');
+        this._inputElements.description = document.getElementById('description');
     }
 
     /**

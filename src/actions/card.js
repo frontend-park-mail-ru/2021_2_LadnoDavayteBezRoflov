@@ -6,32 +6,25 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 /**
  * Константа, содержащая в себе типы действий для списка досок.
  */
-export const BoardsActionTypes = {
-    BOARDS_GET: 'boards/get',
-    BOARD_GET: 'board/get',
+export const CardActionTypes = {
+    CARD_GET: 'cards/get',
 };
 
 /**
  * Класс, содержащий в себе действия в системе.
  */
-export const boardsActions = {
+export const cardActions = {
     /**
      * Действие: запрос списка досок.
      */
-    getBoards() {
+    getCard(id) {
         Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_GET,
-        });
-    },
-
-    getBoard(id) {
-        Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARD_GET,
+            actionName: CardActionTypes.CARD_GET,
             data: {
                 id: id,
-            }
+            },
         });
-    }
+    },
 };
 
-export default boardsActions;
+export default cardActions;

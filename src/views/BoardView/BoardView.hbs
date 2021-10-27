@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/src/views/BoardView/BoardView.css">
+
+{{{Navbar}}}
+
+<div class="board__wrapper">
+    <div class="login__container">
+            <p class="board__text">{{team}}</p>
+            <h1 class="board__caption">{{title}}</h1>
+            <p class="board__text">{{description}}</p>
+    </div>
+
+    {{#each _cardlists}}
+        <li>{{{this}}}</li>
+    {{/each}}
+</div>
+
+{{{Footer}}}

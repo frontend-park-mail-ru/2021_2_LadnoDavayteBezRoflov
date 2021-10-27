@@ -10,7 +10,7 @@ const app = express();
 const publicFolder = path.resolve(__dirname, '..', 'public');
 const srcFolder = path.resolve(__dirname, '..', 'src');
 /* Определяем текущий порт */
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 /* Цветовая подсветка статусов */
 app.use(morgan('dev'));
 /* Используем статику */
