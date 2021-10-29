@@ -48,15 +48,6 @@ class UserStore extends BaseStore {
     }
 
     /**
-     * Метод, возвращающий текущее состояние (контекст) хранилища.
-     * @param {String?} field возвращаемое поле
-     * @return {String} контекст хранилища
-     */
-    getContext(field) {
-        return field ? this._storage.get(field) : this._storage;
-    }
-
-    /**
      * Метод, реализующий реакцию на рассылку Диспетчера.
      * @param {Action} action действие, которое будет обработано
      */

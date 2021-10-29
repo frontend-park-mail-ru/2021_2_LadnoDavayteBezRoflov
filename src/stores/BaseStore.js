@@ -20,6 +20,15 @@ export default class BaseStore {
     }
 
     /**
+     * Метод, возвращающий текущее состояние (контекст) хранилища.
+     * @param {String?} field возвращаемое поле
+     * @return {String} контекст хранилища
+     */
+    getContext(field) {
+        return field ? this._storage.get(field) : this._storage;
+    }
+
+    /**
      * Метод, добавляющий нового слушателя в EventBus.
      * @param {function} callback функция-обработчик
      * @param {String?} changeEvent наименование события

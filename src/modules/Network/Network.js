@@ -14,6 +14,12 @@ class Network {
         this.BackendUrl = BackendAddress.Url;
         this.BackendPort = BackendAddress.Port;
 
+        this._endpoints = {
+            sessions: 'api/sessions',
+            profile: 'api/profile',
+            board: 'api/boards',
+        };
+
         this._defaultOptions = {
             mode: 'cors',
             credentials: 'include',
@@ -47,8 +53,23 @@ class Network {
             method: 'get',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-                                {...options, ...this._defaultOptions});
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
+            {...options, ...this._defaultOptions});
+    }
+
+    /**
+     * Метод, реализующий запрос GET /api/profile.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async getSettings(data) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}/${data.userName}`,
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -61,8 +82,24 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/profile`,
-                                {...options, ...this._defaultOptions});
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}`,
+            {...options, ...this._defaultOptions});
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/profile.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async putSettings(data) {
+        const options = {
+            method: 'put',
+            body: data,
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}/${data.userName}`,
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -75,8 +112,9 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-                                {...options, ...this._defaultOptions});
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -89,8 +127,9 @@ class Network {
             method: 'get',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
-                                {...options, ...this._defaultOptions});
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
+            {...options, ...this._defaultOptions});
     }
 
     /**
@@ -103,8 +142,9 @@ class Network {
             method: 'delete',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/sessions`,
-                                {...options, ...this._defaultOptions});
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
+            {...options, ...this._defaultOptions});
     }
 }
 

@@ -9,6 +9,7 @@ export const Urls = {
     Login: '/login',
     Register: '/register',
     Logout: '/logout',
+    Profile: '/profile',
     NotFound: '/404',
 };
 
@@ -41,6 +42,8 @@ export const BackendAddress = {
 export const HttpStatusCodes = {
     Ok: 200,
     Created: 201,
+    NotMofidied: 304,
+    BadRequest: 400,
     Unauthorized: 401,
     InternalServerError: 500,
 };
@@ -49,6 +52,8 @@ export const HttpStatusCodes = {
   * Константа, содержащая в себе константные сообщения.
   */
 export const ConstantMessages = {
+    NotModified: 'Вы ничего не поменяли',
+    BadRequest: 'Не получилось отправить запрос',
     WrongCredentials: 'Неверный логин или пароль',
     UnableToLogin: 'Не получилось войти',
     UnableToRegister: 'Не получилось зарегистрироваться',
