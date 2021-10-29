@@ -1,26 +1,50 @@
-const webpack = require('webpack');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CSPWebpackPlugin = require('csp-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
-const FRONTEND_ADDRESS = process.env.NODE_ENV === 'production' ? 'http://95.163.213.142:8000' :
-    'http://localhost:8000/';
-const BACKEND_HOST = process.env.NODE_ENV === 'production' ? '95.163.213.142' : 'localhost';
-const BACKEND_PORT = 3000;
+const SERVER_IP = '95.163.213.142';
+const confConst = {
+    LOCAL_HOST: 'localhost',
+    BACKEND_RELEASE: process.env.BACKEND_RELEASE ? process.env.BACKEND_RELEASE : SERVER_IP,
+    BACKEND_PORT_RELEASE: 8000,
+    BACKEND_PORT_DEBUG: 8000,
+    FRONTEND_RELEASE: process.env.FRONTEND_RELEASE ? process.env.BACKEND_RELEASE : SERVER_IP,
+    FRONTEND_PORT_RELEASE: 3000,
+    FRONTEND_PORT_DEBUG: 3000,
+    DEBUG: process.env.NODE_ENV !== 'production',
+    PROTOCOL: process.env.PROTOCOL === 'secure' ? 'https' : 'http',
+};
+
+const confDefs = {
+    FRONTEND_ADDRESS
+    FRONTEND_PORT
+    BACKEND_ADDRESS
+    BACKEND_PORT
+
+    FRONTEND_ADDRESS: JSON.stringify(confConst.DEBUG ? `${confConst.PROTOCOL}://` +
+        `${confConst.LOCAL_HOST}` : `${confConst.PROTOCOL}://${confConst.FRONTEND_RELEASE}`), // origin
+    BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ?
+        `${confConst.PROTOCOL}://${confConst.LOCAL_HOST}:${confConst.BACKEND_PORT_DEBUG}` :
+        `${confConst.PROTOCOL}://${confConst.BACKEND_RELEASE}:${confConst.BACKEND_PORT_RELEASE}`), // CSP
+    BACKEND_HOST: JSON.stringify(confConst.DEBUG ?
+        confConst.LOCAL_HOST : confConst.BACKEND_RELEASE), // Constants
+    BACKEND_PORT: JSON.stringify(confConst.DEBUG ?
+        confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_PORT_RELEASE), // Constants
+};
 
 const config = {
+
     entry: './src/index.js',
     output: {
-        path: path.resolve(__dirname, path.join('public', 'dist')),
+        path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
     },
     module: {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -41,25 +65,16 @@ const config = {
     plugins: [
         new MiniCssExtractPlugin({filename: 'style.css'}),
         new HtmlWebpackPlugin({
+            backendAddress: JSON.parse(confDefs.BACKEND_ADDRESS),
+            scriptLoading: 'module',
             filename: 'index.html',
-            template: 'public/index.html',
+            template: 'public/index_template.html',
         }),
-        new CSPWebpackPlugin({
-            'default-src': ['\'self\'', FRONTEND_ADDRESS],
-            'style-src': ['\'self\'', 'https://fonts.googleapis.com', 'http://maxcdn.bootstrapcdn.com/' +
-            'font-awesome/4.7.0/css/font-awesome.min.css'],
-            'font-src': ['https://fonts.gstatic.com',
-                'http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/'],
-            'script-src': ['\'self\'',
-                'https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js'],
-            'object-src': '\'none\'',
-        }),
-        new DefinePlugin({
-            FRONTEND_ADDRESS: JSON.stringify(DEPLOY_ADDRESS),
-            BACKEND_HOST: JSON.stringify(BACKEND_HOST),
-            BACKEND_PORT: JSON.stringify(BACKEND_PORT),
-        })],
-    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+        new DefinePlugin(confDefs),
+    ],
+    mode: confConst.DEBUG ? 'development' : 'production',
+    devtool: confConst.DEBUG ? 'source-map' : undefined,
+    devtool: 'source-map',
 };
 
 module.exports = config;

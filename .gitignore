@@ -10,3 +10,6 @@ src/tmpl.js
 
 #ide
 .idea
+
+#artifacts
+dist/*

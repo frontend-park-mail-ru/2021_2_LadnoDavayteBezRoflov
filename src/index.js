@@ -14,6 +14,9 @@ import {Html, Urls} from './constants/constants.js';
 // Скомпилированные шаблоны Handlebars
 import '/src/tmpl.js';
 
+// Файл стилей
+import '../public/scss/Base.scss';
+
 // Views
 import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';

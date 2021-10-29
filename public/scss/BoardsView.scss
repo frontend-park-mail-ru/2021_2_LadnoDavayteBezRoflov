@@ -20,7 +20,7 @@ body {
     padding: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    
+
     border-radius: 5px;
     background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
     text-decoration: none;
@@ -99,4 +99,25 @@ body {
 .vertical-line {
     height: 25px;
     border-left: solid 2px var(--black-lines);
+}
+
+.material-icons_colored {
+    position: relative;
+    top: 5px;
+
+    font-size: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.material-icons_transparent {
+    opacity: 0.2;
+}
+
+.material-icons_transparent:hover {
+    opacity: 1;
+}
+
+.material-icons_colored:hover {
+    color: var(--dark-blue);
+    cursor: pointer;
 }

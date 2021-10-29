@@ -12,6 +12,9 @@ import Router from '../../modules/Router/Router.js';
 
 import {Urls} from '../../constants/constants.js';
 
+// Стили
+import '../../../public/scss/RegisterView.scss';
+
 /**
   * Класс, реализующий страницу регистрации.
   */

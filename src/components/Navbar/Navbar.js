@@ -1,6 +1,8 @@
 // Базовый компонент
 import userActions from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+// Стили
+import '../../../public/scss/Navbar.scss';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
 

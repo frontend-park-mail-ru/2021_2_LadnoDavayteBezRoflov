@@ -13,6 +13,9 @@ import Router from '../../modules/Router/Router.js';
 // Constants
 import {Urls} from '../../constants/constants.js';
 
+// Стили
+import '../../../public/scss/LoginView.scss';
+
 /**
   * Класс, реализующий страницу с входа.
   */

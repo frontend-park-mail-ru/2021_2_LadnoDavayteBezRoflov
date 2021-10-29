@@ -1,5 +1,7 @@
 // Базовый компонент
 import BaseComponent from '../BaseComponent.js';
+// Стили
+import '../../../public/scss/Footer.scss';
 
 /**
  * Класс, реализующий компонент Footer.

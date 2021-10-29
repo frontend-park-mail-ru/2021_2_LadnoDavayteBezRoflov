@@ -9,6 +9,9 @@ import BoardsStore from '../../stores/BoardsStore/BoardsStore.js';
 import {Urls} from '../../constants/constants.js';
 import {boardsActions} from '../../actions/boards.js';
 
+// Стили:
+import '../../../public/scss/BoardsView.scss';
+
 /**
   * Класс, реализующий страницу с досками.
   */
