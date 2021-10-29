@@ -74,16 +74,9 @@ export default class ProfileView extends BaseView {
             return;
         }
 
-        if (this.context.get('userSettingsData') !== undefined &&
-            !!this.context.get('userSettingsData').avatar) {
-            this.context.set('avatar', this.context.get('userSettingsData').avatar);
-        }
-
         super.render();
 
         this.addEventListeners();
-
-        this._avatar = document.getElementById('avatar-img');
     }
 
     /**
@@ -114,8 +107,7 @@ export default class ProfileView extends BaseView {
      */
     formUpdate(event) {
         event.preventDefault();
-        const data = new FormData(document.getElementById('profile'));
-        settingsActions.putSettings(data);
+        settingsActions.putSettings(new FormData(document.getElementById('profile')));
     }
 
     /**
@@ -123,13 +115,6 @@ export default class ProfileView extends BaseView {
      * @param {object} event
      */
     onAvatarChange(event) {
-        if (event.target.files[0].size > 500 * 1024) {
-            document.getElementById('avatar-validation-box').hidden = false;
-            document.getElementById('avatar-validation-message').innerHTML =
-            'Размер аватарки превышает 500КиБ';
-            return;
-        }
-        this._avatar.src = URL.createObjectURL(event.target.files[0]);
-        document.getElementById('avatar-validation-box').hidden = true;
+        settingsActions.uploadAvatar(event.target.files[0]);
     }
 }

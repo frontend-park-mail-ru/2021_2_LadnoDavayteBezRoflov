@@ -2,14 +2,14 @@ import BaseStore from '../BaseStore.js';
 
 // Actions
 import {SettingsActionTypes} from '../../actions/settings.js';
-import userActions from '../../actions/user.js';
+import {userActions} from '../../actions/user.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
 import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
-import {HttpStatusCodes} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 
 /**
  * Класс, реализующий хранилище настроек.
@@ -26,13 +26,20 @@ class SettingsStore extends BaseStore {
         this._storage = new Map();
 
         this._storage.set('validation', {
+            login: null,
+            email: null,
+            password: null,
+            passwordRepeat: null,
+            avatar: null,
+        });
+
+        this._storage.set('userSettingsData', {
             login: undefined,
             email: undefined,
             password: undefined,
             passwordRepeat: undefined,
+            avatar: undefined,
         });
-
-        this._storage.set('userSettingsData', undefined);
     }
 
     /**
@@ -48,6 +55,11 @@ class SettingsStore extends BaseStore {
 
         case SettingsActionTypes.SETTINGS_UPDATE:
             await this._put(action.data);
+            this._emitChange();
+            break;
+
+        case SettingsActionTypes.AVATAR_UPLOAD:
+            await this._uploadAvatar(action.data);
             this._emitChange();
             break;
 
@@ -92,41 +104,34 @@ class SettingsStore extends BaseStore {
 
     /**
      * Метод, реализующий реакцию на обновление настроек.
-     * @param {Object} data данные запроса.
+     * @param {FormData} data данные запроса.
      */
     async _put(data) {
+        const formdata = data;
+
         this._storage.set('userSettingsData', {
             login: data.get('login'),
             email: data.get('email'),
             password: data.get('password'),
             passwordRepeat: data.get('passwordRepeat'),
-            avatar: undefined,
+            avatar: data.get('avatar'),
         });
-
-        if (data.get('avatar').size > 500 * 1024 ) {
-            this._storage.get('validation').avatar = 'SettingsStore: аватарка слишком большая';
-        }
-
-        if (data.get('avatar').size !== 0) {
-            if (typeof data.get('avatar') !== File) {
-                const avatarBlob = data.get('avatar');
-                data.set('avatar', new File([avatarBlob], 'avatar'));
-                this._storage.get('userSettingsData').avatar = avatarBlob;
-            } else {
-                this._storage.get('userSettingsData').avatar = URL.createObjectURL(data.get('avatar'));
-            }
-        }
 
         this._validate(data);
 
+        formdata.set('avatar', this.__setAvatar(data.get('avatar')));
+
+        console.log(formdata.get('avatar'));
+
         if (!this.__validationPassed()) {
+            console.log('here');
             return;
         }
 
         let payload;
 
         try {
-            payload = await Network.putSettings(data);
+            payload = await Network.putSettings(formdata);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
@@ -142,7 +147,7 @@ class SettingsStore extends BaseStore {
 
         case HttpStatusCodes.NotMofidied:
             this._storage.set('validation', {
-                login: ConstantMessages.BadRequest,
+                login: ConstantMessages.NotModified,
                 email: null,
                 password: null,
                 passwordRepeat: null,
@@ -170,8 +175,30 @@ class SettingsStore extends BaseStore {
     }
 
     /**
+     * Метод, реализующий реакцию на загрузку аватара.
+     * @param {Object} data данные запроса.
+     */
+    async _uploadAvatar(data) {
+        const validator = new Validator();
+
+        if (data.avatar instanceof File) {
+            if (data.avatar.size === 0) {
+                throw new Error('SettingsStore: Ошибка загрузки аватара');
+            }
+
+            this._storage.get('validation').avatar = validator.validateAvatar(data.avatar);
+            if (!!this._storage.get('validation').avatar) {
+                this._storage.get('userSettingsData').avatar = '';
+                return;
+            }
+        }
+
+        this._storage.set('avatar', this.__setAvatar(data.avatar));
+    }
+
+    /**
      * Метод, осуществляющий валидацию данных.
-     * @param {object} data объект, содержащий данные из формы
+     * @param {FormData} data FormData, содержащая данные из формы
      */
     _validate(data) {
         const validator = new Validator();
@@ -193,9 +220,14 @@ class SettingsStore extends BaseStore {
             this._storage.get('userSettingsData').email = '';
         }
 
-        if (data.password !== data.passwordRepeat) {
+        if (data.get('password') !== data.get('passwordRepeat')) {
             validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
             this._storage.get('userSettingsData').passwordRepeat = '';
+        }
+
+        validation.avatar = validator.validateAvatar(data.get('avatar'));
+        if (!!validation.avatar) {
+            this._storage.get('userSettingsData').avatar = '';
         }
     }
 
@@ -204,13 +236,29 @@ class SettingsStore extends BaseStore {
      * @return {boolean} статус валидации
      */
     __validationPassed() {
-        let isValid = true;
-        Object.values(this._storage.get('validation')).forEach((element) => {
-            if (element) {
-                isValid = false;
-            }
+        return Object.values(this._storage.get('validation')).every((element) => {
+            return element === null;
         });
-        return isValid;
+    }
+
+    /**
+     * Метод, проверяющий тип аватара:
+     * File при загрузке или String на блоб, если файл уже был загружен
+     * @param {String|File} avatar
+     * @return {File|String} файл или адрес blob
+     */
+    __setAvatar(avatar) {
+        console.log(avatar);
+        if (avatar instanceof File) {
+            if (avatar.size === 0) {
+                return this._storage.get('avatar');
+            }
+            const avatarUrl = URL.createObjectURL(avatar);
+            this._storage.get('userSettingsData').avatar = avatarUrl;
+            return avatarUrl;
+        }
+        this._storage.get('userSettingsData').avatar = avatar;
+        return new File([avatar], 'avatar');
     }
 }
 

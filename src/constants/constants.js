@@ -69,5 +69,5 @@ export const ConstantMessages = {
     NoSpecialSymbolsPassword: 'Введите пароль, не содержащий специальных символов',
     UseOnlyLatinLettersPassword: 'Введите пароль, содержащий только латинские буквы',
 
-
+    AvatarTooBig: 'Аватар не должен превышать 500 МиБ',
 };

@@ -14,10 +14,12 @@
                         <span class="profile-box__upload-button-text">Выберите файл</span>
                     </label>
 
-                    <div class="profile__input__error" id="avatar-validation-box" hidden>
+                    {{#if validation.avatar}}
+                    <div class="profile__input__error" id="avatar-validation-box">
                         <i class="fa fa-times-circle profile__input__error__fa"></i>
                         <label class="profile__input__error-label" id="avatar-validation-message">{{validation.avatar}}</label>
                     </div>
+                    {{/if}}
                 </div>
             </div>
 

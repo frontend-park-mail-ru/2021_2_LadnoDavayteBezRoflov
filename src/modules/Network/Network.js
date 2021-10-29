@@ -37,7 +37,7 @@ class Network {
      * @return {Promise<Response>} промис запроса
     */
     httpRequest(URL, options) {
-        return fetch(URL, options)
+        return fetch(URL, {...this._defaultOptions, ...options})
             .then((response) => response.json()
                 .then((data) => ({status: response.status, data: data})),
             );
@@ -55,7 +55,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 
     /**
@@ -69,7 +69,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}/${data.userName}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 
     /**
@@ -84,7 +84,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 
     /**
@@ -98,8 +98,9 @@ class Network {
             body: data,
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}/${data.userName}`,
-            {...options, ...this._defaultOptions});
+            `http://${this.BackendUrl}:${this.BackendPort}/` +
+            `${this._endpoints.profile}/${data.get('login')}`,
+            options);
     }
 
     /**
@@ -114,7 +115,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 
     /**
@@ -129,7 +130,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 
     /**
@@ -144,7 +145,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
-            {...options, ...this._defaultOptions});
+            options);
     }
 }
 

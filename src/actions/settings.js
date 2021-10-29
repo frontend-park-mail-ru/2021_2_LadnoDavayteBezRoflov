@@ -9,6 +9,7 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 export const SettingsActionTypes = {
     SETTINGS_GET: 'settings/get',
     SETTINGS_UPDATE: 'settings/put',
+    AVATAR_UPLOAD: 'avatar/post',
 };
 
 /**
@@ -38,6 +39,17 @@ export const settingsActions = {
             data: data,
         });
     },
-};
 
-export default settingsActions;
+    /**
+     * Действие: загрузка новой аватарки пользователя.
+     * @param {File|String} avatar аватар (файл или ссылка на блоб)
+     */
+    uploadAvatar(avatar) {
+        Dispatcher.dispatch({
+            actionName: SettingsActionTypes.AVATAR_UPLOAD,
+            data: {
+                avatar: avatar,
+            },
+        });
+    },
+};

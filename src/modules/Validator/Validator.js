@@ -5,6 +5,13 @@ import {ConstantMessages} from '../../constants/constants.js';
   */
 export default class Validator {
     /**
+     * @constructor
+     */
+    constructor() {
+        this.maxImageSize = 500 * 1024; // 500 MB
+    }
+
+    /**
      * Метод, валидирующий e-mail.
      * @param {String} source e-mail для валидации
      * @return {String | null} сообщение об ошибке
@@ -59,6 +66,18 @@ export default class Validator {
             return ConstantMessages.UseOnlyLatinLettersPassword;
         }
 
+        return null;
+    }
+
+    /**
+     * Метод, валидирующий размер аватара;
+     * @param {File} source аватар
+     * @return {String | null} сообщение об ошибке
+     */
+    validateAvatar(source) {
+        if (source.size > this.maxImageSize) {
+            return ConstantMessages.AvatarTooBig;
+        }
         return null;
     }
 }

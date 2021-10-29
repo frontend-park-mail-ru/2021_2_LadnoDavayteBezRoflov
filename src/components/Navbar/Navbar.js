@@ -1,5 +1,5 @@
 // Базовый компонент
-import userActions from '../../actions/user.js';
+import {userActions} from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
