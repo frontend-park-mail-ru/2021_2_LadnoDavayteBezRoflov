@@ -52,8 +52,8 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.password}}" required>
-                        <label class="profile__input__caption">Пароль</label>
+                        <input class="profile__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.password}}">
+                        <label class="profile__input__caption">Новый пароль</label>
                         <span class="profile__input__bar"></span>
 
                         {{#if validation.password}}
@@ -65,14 +65,27 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.passwordRepeat}}" required>
-                        <label class="profile__input__caption">Повтор пароля</label>
+                        <input class="profile__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.passwordRepeat}}">
+                        <label class="profile__input__caption">Повторите пароль</label>
                         <span class="profile__input__bar"></span>
 
                         {{#if validation.passwordRepeat}}
                         <div class="profile__input__error">
                             <i class="fa fa-times-circle profile__input__error__fa"></i>
                             <label class="profile__input__error-label">{{validation.passwordRepeat}}</label>
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="profile__input__wrapper">
+                        <input class="profile__input__input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.oldPassword}}" required>
+                        <label class="profile__input__caption">Старый пароль</label>
+                        <span class="profile__input__bar"></span>
+
+                        {{#if validation.oldPassword}}
+                        <div class="profile__input__error">
+                            <i class="fa fa-times-circle profile__input__error__fa"></i>
+                            <label class="profile__input__error-label">{{validation.oldPassword}}</label>
                         </div>
                         {{/if}}
                     </div>

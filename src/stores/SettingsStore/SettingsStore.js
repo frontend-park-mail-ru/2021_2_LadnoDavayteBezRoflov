@@ -114,6 +114,7 @@ class SettingsStore extends BaseStore {
             email: data.get('email'),
             password: data.get('password'),
             passwordRepeat: data.get('passwordRepeat'),
+            oldPassword: data.get('oldPassword'),
             avatar: data.get('avatar'),
         });
 
@@ -148,6 +149,7 @@ class SettingsStore extends BaseStore {
                 email: null,
                 password: null,
                 passwordRepeat: null,
+                oldPassword: null,
             });
             this._emitChange();
             return;
@@ -158,6 +160,7 @@ class SettingsStore extends BaseStore {
                 email: null,
                 password: null,
                 passwordRepeat: null,
+                oldPassword: null,
             });
             this._emitChange();
             return;
@@ -207,9 +210,16 @@ class SettingsStore extends BaseStore {
             this._storage.get('userSettingsData').login = '';
         }
 
-        validation.password = validator.validatePassword(data.get('password'));
-        if (!!validation.password) {
-            this._storage.get('userSettingsData').password = '';
+        validation.oldPassword = validator.validatePassword(data.get('oldPassword'));
+        if (!!validation.oldPassword) {
+            this._storage.get('userSettingsData').oldPassword = '';
+        }
+
+        if (!!data.get('password')) {
+            validation.password = validator.validatePassword(data.get('password'));
+            if (!!validation.password) {
+                this._storage.get('userSettingsData').password = '';
+            }
         }
 
         validation.email = validator.validateEMail(data.get('email'));
@@ -217,9 +227,11 @@ class SettingsStore extends BaseStore {
             this._storage.get('userSettingsData').email = '';
         }
 
-        if (data.get('password') !== data.get('passwordRepeat')) {
-            validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
-            this._storage.get('userSettingsData').passwordRepeat = '';
+        if (!!data.get('password')) {
+            if (data.get('password') !== data.get('passwordRepeat')) {
+                validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
+                this._storage.get('userSettingsData').passwordRepeat = '';
+            }
         }
 
         validation.avatar = validator.validateAvatar(data.get('avatar'));
