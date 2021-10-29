@@ -1,26 +1,49 @@
-'use strict';
-
 /**
  * Базовый класс для реализации компонента.
  */
 export default class BaseComponent {
     /**
-    * Конструктор, создающий базовый класс реализации компонента.
-    * @param {Element} parent HTML-элемент, в который будет осуществлена
-    * отрисовка
-    * @param {function} context контекст отрисовки шаблона
+    * @constructor
+    * @param {Object} context контекст отрисовки шаблона
+    * @param {Function} template функция отрисовки шаблона
+    * @param {Element?} parent элемент, в который будет отрисован компонент
     */
-    constructor(parent, context) {
+    constructor(context, template, parent) {
         this.parent = parent;
+        this.template = template;
         this.context = context;
     }
 
     /**
     * Метод, отрисовывающий HTML компонента.
+    * @return {String} HTML-код компонента
     */
     render() {
-    /* Вставить HTML отрисованного partial
-    непосредственно перед элементом parent */
-        this.parent.insertAdjacentHTML('beforebegin', this.renderPartial());
+        if (!!this.template) {
+            if (this.context instanceof Map) {
+                this.context = Object.fromEntries(this.context);
+            }
+
+            const html = (typeof this.template === Function) ?
+                this.template(this.context) :
+                this.template({...this.context});
+
+            if (this.parent === undefined) {
+                return html;
+            }
+            this.parent.innerHTML = html;
+        }
+    }
+
+    /**
+     * Метод, добавляющий обработчики событий для компонента.
+     */
+    addEventListeners() {
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для компонента.
+     */
+    removeEventListeners() {
     }
 }

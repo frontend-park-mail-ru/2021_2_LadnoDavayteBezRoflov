@@ -1,7 +1,8 @@
-'use strict';
-
 // Базовый компонент
+import userActions from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+
+import UserStore from '../../stores/UserStore/UserStore.js';
 
 /**
  * Класс, реализующий компонент Navbar.
@@ -9,21 +10,46 @@ import BaseComponent from '../BaseComponent.js';
 export default class NavbarComponent extends BaseComponent {
     /**
     * Конструктор, создающий класс компонента Navbar.
-    * @param {Element} parent HTML-элемент, в который
-    * будет осуществлена отрисовка
     * @param {function} context контекст отрисовки шаблона
     */
-    constructor(parent, context) {
-        super(parent, context);
-        this.renderComponent = Handlebars.templates['components/Navbar/Navbar'];
+    constructor(context) {
+        super(context, Handlebars.templates['components/Navbar/Navbar']);
+
+        this._onRefresh = this._onRefresh.bind(this);
+        UserStore.addListener(this._onRefresh);
+
+
+        this._logoutCallback = this._logout.bind(this);
     }
 
     /**
-    * Метод, отрисовывающий компонент по заданному шаблону
-    * renderComponent и контексту this.context.
-    * @return {string} отрисованный код компонента
-    */
-    renderPartial() {
-        return this.renderComponent(this.context);
+     * Метод, вызывающийся по умолчанию при обновлении компонента.
+     */
+    _onRefresh() {
+        this.context = UserStore.getContext();
+    }
+
+    /**
+     * Метод, добавляющий обработчики событий для компонента.
+     */
+    addEventListeners() {
+        document.getElementById('logout')?.addEventListener('click', this._logoutCallback);
+    }
+
+    /**
+     * Метод, посылающий действие "выход".
+     * @param {*} event
+     */
+    _logout(event) {
+        event.preventDefault();
+
+        userActions.logout();
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для компонента.
+     */
+    removeEventListeners() {
+        document.getElementById('logout')?.removeEventListener('click', this._logoutCallback);
     }
 }
