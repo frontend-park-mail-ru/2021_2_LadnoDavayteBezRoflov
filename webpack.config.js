@@ -74,7 +74,6 @@ const config = {
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
-    devtool: 'source-map',
 };
 
 module.exports = config;
