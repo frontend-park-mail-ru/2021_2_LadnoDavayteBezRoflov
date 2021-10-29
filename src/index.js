@@ -15,7 +15,7 @@ import {Html, Urls} from './constants/constants.js';
 import '/src/tmpl.js';
 
 // Файл стилей
-import '../public/scss/Base.scss';
+import '../public/scss/Common.scss';
 
 // Views
 import RegisterView from './views/RegisterView/RegisterView.js';

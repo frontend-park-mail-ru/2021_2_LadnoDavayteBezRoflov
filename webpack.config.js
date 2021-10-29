@@ -1,43 +1,34 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
+const DEPLOY_DIR = 'dist';
 const SERVER_IP = '95.163.213.142';
 const confConst = {
     LOCAL_HOST: 'localhost',
-    BACKEND_RELEASE: process.env.BACKEND_RELEASE ? process.env.BACKEND_RELEASE : SERVER_IP,
-    BACKEND_PORT_RELEASE: 8000,
-    BACKEND_PORT_DEBUG: 8000,
-    FRONTEND_RELEASE: process.env.FRONTEND_RELEASE ? process.env.BACKEND_RELEASE : SERVER_IP,
-    FRONTEND_PORT_RELEASE: 3000,
-    FRONTEND_PORT_DEBUG: 3000,
+    BACKEND_RELEASE: process.env.BACKEND_RELEASE || SERVER_IP,
+    BACKEND_PORT: process.env.BACKEND_PORT || 8000,
+    FRONTEND_RELEASE: process.env.FRONTEND_RELEASE || SERVER_IP,
+    FRONTEND_PORT: process.env.FRONTEND_PORT || 3000,
     DEBUG: process.env.NODE_ENV !== 'production',
-    PROTOCOL: process.env.PROTOCOL === 'secure' ? 'https' : 'http',
+    PROTOCOL: process.env.PROTOCOL || 'http',
 };
 
 const confDefs = {
-    FRONTEND_ADDRESS
-    FRONTEND_PORT
-    BACKEND_ADDRESS
-    BACKEND_PORT
-
-    FRONTEND_ADDRESS: JSON.stringify(confConst.DEBUG ? `${confConst.PROTOCOL}://` +
-        `${confConst.LOCAL_HOST}` : `${confConst.PROTOCOL}://${confConst.FRONTEND_RELEASE}`), // origin
-    BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ?
-        `${confConst.PROTOCOL}://${confConst.LOCAL_HOST}:${confConst.BACKEND_PORT_DEBUG}` :
-        `${confConst.PROTOCOL}://${confConst.BACKEND_RELEASE}:${confConst.BACKEND_PORT_RELEASE}`), // CSP
-    BACKEND_HOST: JSON.stringify(confConst.DEBUG ?
-        confConst.LOCAL_HOST : confConst.BACKEND_RELEASE), // Constants
-    BACKEND_PORT: JSON.stringify(confConst.DEBUG ?
-        confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_PORT_RELEASE), // Constants
+    FRONTEND_ADDRESS: JSON.stringify(`${confConst.PROTOCOL}://` +
+        `${confConst.DEBUG ? confConst.LOCAL_HOST : confConst.FRONTEND_RELEASE}`),
+    FRONTEND_PORT: confConst.FRONTEND_PORT,
+    BACKEND_ADDRESS: JSON.stringify(`${confConst.PROTOCOL}://` +
+        `${confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE}`),
+    BACKEND_PORT: confConst.BACKEND_PORT,
 };
 
 const config = {
-
     entry: './src/index.js',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, DEPLOY_DIR),
         filename: 'bundle.js',
     },
     module: {
@@ -66,11 +57,18 @@ const config = {
         new MiniCssExtractPlugin({filename: 'style.css'}),
         new HtmlWebpackPlugin({
             backendAddress: JSON.parse(confDefs.BACKEND_ADDRESS),
+            backendPort: JSON.parse(confDefs.BACKEND_PORT),
             scriptLoading: 'module',
             filename: 'index.html',
             template: 'public/index_template.html',
         }),
         new DefinePlugin(confDefs),
+        new CopyPlugin([
+            {
+                from: path.resolve(__dirname, 'public', 'assets'),
+                to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
+            },
+        ]),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,

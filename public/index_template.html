@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' <%= htmlWebpackPlugin.options.backendAddress %>; style-src 'self'; font-src 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' <%= htmlWebpackPlugin.options.backendAddress %>:<%= htmlWebpackPlugin.options.backendPort %>; style-src 'self'; font-src 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js">
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <!-- for super modern broswers - coloring browser header -->
     <meta name="theme-color" content="#258085">

@@ -6,15 +6,13 @@ const morgan = require('morgan');
 const path = require('path');
 /* Создаем приложение */
 const app = express();
-/* Прописываем путь к папке public и */
-const publicFolder = path.resolve(__dirname, '..', 'public');
+/* Директория со статикой */
 const distFolder = path.resolve(__dirname, '..', 'dist');
 /* Определяем текущий порт */
 const port = process.env.PORT || 80;
 /* Цветовая подсветка статусов */
 app.use(morgan('dev'));
 /* Используем статику */
-app.use(express.static(publicFolder));
 app.use(express.static(distFolder));
 
 
