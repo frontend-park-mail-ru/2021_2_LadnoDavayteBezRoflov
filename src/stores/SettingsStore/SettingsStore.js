@@ -121,10 +121,7 @@ class SettingsStore extends BaseStore {
 
         formdata.set('avatar', this.__setAvatar(data.get('avatar')));
 
-        console.log(formdata.get('avatar'));
-
         if (!this.__validationPassed()) {
-            console.log('here');
             return;
         }
 
@@ -248,7 +245,6 @@ class SettingsStore extends BaseStore {
      * @return {File|String} файл или адрес blob
      */
     __setAvatar(avatar) {
-        console.log(avatar);
         if (avatar instanceof File) {
             if (avatar.size === 0) {
                 return this._storage.get('avatar');
