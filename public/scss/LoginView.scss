@@ -1,28 +1,13 @@
-/* Таблица стилей для страницы логина */
-
-* {
-    box-sizing: border-box;
-}
+@import 'Constants';
 $login__min-width: 320px;
 $login__max-width: 600px;
-
-body {
-    margin: 0;
-    background: linear-gradient(45deg, var(--primary-bg-color), var(--secondary-bg-color));
-
-    height: 100vh;
-
-    font-family: 'Montserrat', sans-serif;
-
-
-}
 
 /* Таблица стилей для страницы входа */
 
 /* внешняя обертка под контейнер входа */
 .login__wrapper {
-    min-width: var(--login__min-width);
-    max-width: var(--login__max-width);
+    min-width: $login__min-width;
+    max-width: $login__max-width;
 
     position: absolute;
     transform: translate(-50%,-25%);
@@ -33,16 +18,16 @@ body {
 
 /* контейнер входа */
 .login__container {
-    min-width: var(--login__min-width);
-    max-width: var(--login__max-width);
+    min-width: $login__min-width;
+    max-width: $login__max-width;
 
-    background: var(--transparent-bg-color);
+    background: $transparent-bg-color;
     padding: 2em;
 
     border-radius: 24px;
-    border-left: 1px solid var(--transparent-bg-color);
-    border-top: 1px solid var(--transparent-bg-color);
-    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
 
     text-align: center;
     transition: all 0.3s ease-in-out;
@@ -72,7 +57,7 @@ body {
     left: 4%;
     top: 10px;
 
-    color: var(--input-color);
+    color: $input-color;
 
     font-size: 15px;
     font-weight: 300;
@@ -92,7 +77,7 @@ body {
 
     width: 100%;
 
-    color: var(--input__input-color);
+    color: $input__input-color;
 
     font-size: 15px;
 }
@@ -134,7 +119,7 @@ body {
     width: 0;
     right: -50%;
 
-    background: var(--main-theme-color);
+    background: $main-theme-color;
 
     transition: all 0.3s ease-in-out;
 }
@@ -144,7 +129,7 @@ body {
     padding: 16px 24px;
 
     color: rgb(255, 255, 255);
-    background-color: var(--main-theme-color);
+    background-color: $main-theme-color;
 
     border: none;
     outline: none;
@@ -161,7 +146,7 @@ body {
 /* в случае активизации кнопки входа */
 .login__button:focus,
 .login__button:hover {
-    background-color: var(--main-theme-color__focus);
+    background-color: $main-theme-color__focus;
 }
 
 /* секция обработки ошибок */
@@ -173,8 +158,8 @@ body {
 
     border-radius: 16px;
 
-    color: var(--error-color);
-    background-color: var(--error-bg-color);
+    color: $error-color;
+    background-color: $error-bg-color;
 
     transition: all 0.3s ease-in-out;
 }
@@ -198,12 +183,12 @@ body {
     padding: 2em;
     height: 8em;
 
-    background-color: var(--light-white-color);
+    background-color: $light-white-color;
 
     border-radius: 16px;
-    border-left: 1px solid var(--transparent-bg-color);
-    border-top: 1px solid var(--transparent-bg-color);
-    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
 
     text-align: center;
 
@@ -212,5 +197,5 @@ body {
 
 /* иконка ошибки */
 .login__register-message__link {
-    color: var(--main-theme-color__focus);
+    color: $main-theme-color__focus;
 }

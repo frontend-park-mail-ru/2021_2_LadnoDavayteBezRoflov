@@ -1,17 +1,8 @@
-* {
-    box-sizing: border-box;
-}
+@import 'Constants';
 
-body {
-    margin: 0;
-    background-image: url(/assets/background.webp);
-}
-
-:root {
-    --card-description-font-size: 12px;
-    --card-header-font-size: 17px;
-    --team-font-size: 25px;
-}
+$card-description-font-size: 12px;
+$card-header-font-size: 17px;
+$team-font-size: 25px;
 
 .bord-card {
     height: 95px;
@@ -22,7 +13,7 @@ body {
     margin-bottom: 10px;
 
     border-radius: 5px;
-    background: linear-gradient(to bottom, var(--light-blue), 90%, var(--dark-blue));
+    background: linear-gradient(to bottom, $tertiary-bg-color, 90%, $main-theme-color);
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease-in-out;
@@ -30,20 +21,20 @@ body {
 
 .bord-card:hover {
     transform: scale(1.01, 1.01);
-    background: linear-gradient(to bottom, var(--light-blue), 60%, var(--dark-blue));
-    box-shadow: 0 0 20px var(--shadow-dimgray);
+    background: linear-gradient(to bottom, $tertiary-bg-color, 60%, $main-theme-color);
+    box-shadow: 0 0 20px $default-box-shadow-color;
 }
 
 .bord-card__header {
     padding-bottom: 1px;
-    font-size: var(--card-header-font-size);
+    font-size: $card-header-font-size;
     border-bottom: dotted 1px;
 }
 
 .bord-card__description {
     height: 75%;
     padding-top: 3px;
-    font-size: var(--card-description-font-size);
+    font-size: $card-description-font-size;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -89,16 +80,19 @@ body {
 }
 
 .team__team-name {
-    font-size: var(--team-font-size);
+    font-size: $team-font-size;
 }
 
 .horizontal-line {
-    border-bottom: solid 1px var(--black-lines);
+    border-bottom: solid 2px $tertiary-bg-color;
+    margin: 5px;
 }
 
 .vertical-line {
     height: 25px;
-    border-left: solid 2px var(--black-lines);
+    border-left: solid 2px $tertiary-bg-color;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .material-icons_colored {
@@ -118,6 +112,6 @@ body {
 }
 
 .material-icons_colored:hover {
-    color: var(--dark-blue);
+    color: $dark-blue;
     cursor: pointer;
 }
