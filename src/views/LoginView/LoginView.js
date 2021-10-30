@@ -15,6 +15,8 @@ import {Urls} from '../../constants/constants.js';
 
 // Стили
 import '../../../public/scss/LoginView.scss';
+// Шаблон
+import template from './LoginView.hbs';
 
 /**
   * Класс, реализующий страницу с входа.
@@ -26,7 +28,7 @@ export default class LoginView extends BaseView {
     */
     constructor(parent) {
         const context = UserStore.getContext();
-        super(context, Handlebars.templates['views/LoginView/LoginView'], parent);
+        super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh); // + field

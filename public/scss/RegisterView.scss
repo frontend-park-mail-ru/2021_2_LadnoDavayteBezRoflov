@@ -52,6 +52,8 @@ $login__max-height: 800px;
 .register__text {
     text-align: center;
     font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* внешняя обертка под поля регистрации */
@@ -191,7 +193,7 @@ $login__max-height: 800px;
 
     margin-top: 2em;
     padding: 2em;
-    height: 8em;
+    height: 5em;
 
     background-color: $light-white-color;
 

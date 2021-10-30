@@ -9,8 +9,10 @@ import BoardsStore from '../../stores/BoardsStore/BoardsStore.js';
 import {Urls} from '../../constants/constants.js';
 import {boardsActions} from '../../actions/boards.js';
 
-// Стили:
+// Стили
 import '../../../public/scss/BoardsView.scss';
+// Шаблон
+import template from './BoardsView.hbs';
 
 /**
   * Класс, реализующий страницу с досками.
@@ -22,7 +24,7 @@ export default class BoardsView extends BaseView {
      */
     constructor(parent) {
         const context = UserStore.getContext();
-        super(context, Handlebars.templates['views/BoardsView/BoardsView'], parent);
+        super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
 

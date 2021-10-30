@@ -9,13 +9,11 @@
         "lint": "npx eslint . --ext .js",
         "lint:fix": "npx eslint . --ext .js --fix",
         "test": "echo \"Error: no test specified\" && exit 1",
-
-        "build-dev": "npm run handlebars && npx webpack serve",
+        "build-dev": "npx webpack",
         "server-dev-express": "PORT=3000 node server/server.js",
         "server-dev": "npx webpack serve",
         "start-dev": "npm run build-dev && npm run server-dev",
-
-        "build": "npm run handlebars && NODE_ENV='production' npx webpack",
+        "build": "NODE_ENV='production' npx webpack",
         "server": "node server/server.js",
         "start": "npm run build && npm run server"
     },
@@ -39,6 +37,7 @@
         "eslint-plugin-unused-imports": "^1.1.5",
         "express": "^4.17.1",
         "handlebars": "^4.7.7",
+        "handlebars-loader": "^1.7.1",
         "morgan": "^1.9.1"
     },
     "devDependencies": {

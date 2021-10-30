@@ -17,11 +17,10 @@ const confConst = {
 };
 
 const confDefs = {
-    FRONTEND_ADDRESS: JSON.stringify(`${confConst.PROTOCOL}://` +
-        `${confConst.DEBUG ? confConst.LOCAL_HOST : confConst.FRONTEND_RELEASE}`),
+    FRONTEND_ADDRESS: JSON.stringify(confConst.DEBUG ?
+        confConst.LOCAL_HOST : confConst.FRONTEND_RELEASE),
     FRONTEND_PORT: confConst.FRONTEND_PORT,
-    BACKEND_ADDRESS: JSON.stringify(`${confConst.PROTOCOL}://` +
-        `${confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE}`),
+    BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE),
     BACKEND_PORT: confConst.BACKEND_PORT,
 };
 
@@ -64,11 +63,16 @@ const config = {
                     'sass-loader',
                 ],
             },
+            {
+                test: /\.hbs$/,
+                loader: 'handlebars-loader',
+            },
         ],
     },
     plugins: [
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
         new HtmlWebpackPlugin({
+            protocol: confConst.PROTOCOL,
             backendAddress: JSON.parse(confDefs.BACKEND_ADDRESS),
             backendPort: JSON.parse(confDefs.BACKEND_PORT),
             scriptLoading: 'module',

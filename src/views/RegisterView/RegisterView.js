@@ -14,6 +14,8 @@ import {Urls} from '../../constants/constants.js';
 
 // Стили
 import '../../../public/scss/RegisterView.scss';
+// Шаблон
+import template from './RegisterView.hbs';
 
 /**
   * Класс, реализующий страницу регистрации.
@@ -26,7 +28,7 @@ export default class RegisterView extends BaseView {
     constructor(parent) {
         const context = UserStore.getContext();
 
-        super(context, Handlebars.templates['views/RegisterView/RegisterView'], parent);
+        super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
 
