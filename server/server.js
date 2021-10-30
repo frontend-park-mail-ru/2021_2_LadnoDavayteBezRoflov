@@ -14,7 +14,18 @@ const port = process.env.PORT || 80;
 app.use(morgan('dev'));
 /* Используем статику */
 app.use(express.static(distFolder));
-
+/* Время кэширования ответов, в сек */
+const cacheTime = 256 * 24 * 60 * 60;
+/* middleware для кэширования бандлов */
+const cacheMW = (req, res, next) => {
+    if (req.url === 'bundle.js' || req.url === 'style.css') {
+        res.set('Cache-control', `public, max-age=${cacheTime}`);
+    } else {
+        res.set('Cache-control', 'no-store');
+    }
+    next();
+};
+app.use(cacheMW);
 
 /* Реагируем на любые запросы посылкой index.html */
 app.all('*', (req, res) => {

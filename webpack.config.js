@@ -37,7 +37,7 @@ const config = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, DEPLOY_DIR),
-        filename: 'bundle.js',
+        filename: 'bundle.[contenthash].js',
     },
     module: {
         rules: [
@@ -67,7 +67,7 @@ const config = {
         ],
     },
     plugins: [
-        new MiniCssExtractPlugin({filename: 'style.css'}),
+        new MiniCssExtractPlugin({filename: 'style.[contenthash].css'}),
         new HtmlWebpackPlugin({
             backendAddress: JSON.parse(confDefs.BACKEND_ADDRESS),
             backendPort: JSON.parse(confDefs.BACKEND_PORT),
