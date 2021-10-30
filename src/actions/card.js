@@ -8,6 +8,9 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  */
 export const CardActionTypes = {
     CARD_GET: 'cards/get',
+    CARD_CREATE: 'cards/get',
+    CARD_UPDATE: 'card/update',
+    CARD_DELETE: 'card/delete',
 };
 
 /**
@@ -25,6 +28,58 @@ export const cardActions = {
             },
         });
     },
-};
 
-export default cardActions;
+    createCard(id, clid, position, title, description, deadline, checklist, assignees, tags, attachments) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_CREATE,
+            data: {
+                id: id,
+                clid: clid,
+                position: position,
+                title: title,
+                description: description,
+                deadline: deadline,
+                checklist: checklist,
+                assignees: assignees,
+                tags: tags,
+                attachments: attachments,
+            },
+        });
+    },
+
+    updateCard(id, clid, position, title, description, deadline, checklist, assignees, tags, attachments) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_UPDATE,
+            data: {
+                id: id,
+                clid: clid,
+                position: position,
+                title: title,
+                description: description,
+                deadline: deadline,
+                checklist: checklist,
+                assignees: assignees,
+                tags: tags,
+                attachments: attachments,
+            },
+        });
+    },
+
+    deleteCard(id) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_DELETE,
+            data: {
+                id: id,
+                clid: clid,
+                position: position,
+                title: title,
+                description: description,
+                deadline: deadline,
+                checklist: checklist,
+                assignees: assignees,
+                tags: tags,
+                attachments: attachments,
+            },
+        });
+    },
+};

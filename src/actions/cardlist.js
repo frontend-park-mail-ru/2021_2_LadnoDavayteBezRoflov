@@ -8,6 +8,9 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  */
 export const CardListActionTypes = {
     CARDLIST_GET: 'cardlists/get',
+    CARDLIST_CREATE: 'cardlists/create',
+    CARDLIST_UPDATE: 'cardlists/update',
+    CARDLIST_DELETE: 'cardlists/delete',
 };
 
 /**
@@ -26,5 +29,3 @@ export const cardListActions = {
         });
     },
 };
-
-export default cardListActions;

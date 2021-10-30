@@ -10,9 +10,6 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 // Modules
 import Router from '../../modules/Router/Router.js';
 
-// Constants
-import {Urls} from '../../constants/constants.js';
-
 /**
   * Класс, реализующий страницу с входа.
   */

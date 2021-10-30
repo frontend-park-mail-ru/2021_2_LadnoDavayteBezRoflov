@@ -5,7 +5,6 @@ import BaseComponent from '../components/BaseComponent.js';
 import NavbarComponent from '../../components/Navbar/Navbar.js';
 import FooterComponent from '../../components/Footer/Footer.js';
 
-
 /**
  * Класс, реализующий базовый view.
  */
@@ -74,19 +73,17 @@ export default class BaseView extends BaseComponent {
     */
     render() {
         const components = this.subComponents.reduce(function(accumulator, object) {
-            console.log(object)
             return {...accumulator, ...{[object[0]]: object[1].render()}};
         }, {});
 
-        
-
-        const context = {...components, ...Object.fromEntries(this.context)};
-
-        console.log('context', context)
-
-        this.parent.innerHTML = this.template(context);
+        this.parent.innerHTML = this.template({...components, ...Object.fromEntries(this.context)});
     }
 
+    /**
+     * Метод, добавляющий новый компонент.
+     * @param {String} name имя компонента
+     * @param {Object} component компонент
+     */
     addComponent(name, component) {
         if (typeof this.subComponents !== 'undefined') {
             this.subComponents.push([name, component]);

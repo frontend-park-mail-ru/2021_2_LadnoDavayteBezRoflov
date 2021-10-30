@@ -20,7 +20,6 @@ import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
 import CardComponent from './components/Card/Card.js';
 import BoardView from './views/BoardView/BoardView.js';
-import CardListComponent from './components/CardList/CardList.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -29,10 +28,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     /* Сверка требуемого состояния пользователя с состоянием на сервере */
     if (UserStore.getContext('isAuthorized') === undefined) {
         userActions.fetchUser();
-    }
 
-    //Handlebars.registerPartial('Cardlist', new CardListComponent().template);
-    //Handlebars.registerPartial('Card', new CardComponent().template);
+        const promise = new Promise(function waitForFetchUser(resolve, reject) {
+            if (UserStore.getContext('isAuthorized') === undefined) {
+                setTimeout(waitForFetchUser.bind(this, resolve, reject), 30);
+            }
+            resolve();
+        });
+        await promise;
+    }
 
     try {
         Router.register(Urls.Root, new BoardsView(root));

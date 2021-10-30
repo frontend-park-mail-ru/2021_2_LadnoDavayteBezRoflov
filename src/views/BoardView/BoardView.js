@@ -3,6 +3,10 @@ import BaseView from '../BaseView.js';
 
 // Actions
 import {userActions} from '../../actions/user.js';
+import {boardsActions} from '../../actions/boards.js';
+
+// Components
+import CardListComponent from '../../components/CardList/CardList.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -13,8 +17,6 @@ import Router from '../../modules/Router/Router.js';
 
 // Constants
 import {Urls} from '../../constants/constants.js';
-import boardsActions from '../../actions/boards.js';
-import CardListComponent from '../../components/CardList/CardList.js';
 
 /**
   * Класс, реализующий страницу доски.
@@ -32,7 +34,7 @@ export default class BoardView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
-        //this.formAuthorizationCallback = this.formAuthorization.bind(this);
+        // this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
             title: undefined,
@@ -61,6 +63,13 @@ export default class BoardView extends BaseView {
             return;
         }
 
+        this._cardlists = [];
+        Object.values(this.context.get('content')).forEach((cardlist) => {
+            this._cardlists.push(new CardListComponent(cardlist).render());
+        });
+
+        this._setContext(this.context.set('_cardlists', this._cardlists));
+
         this.render();
     }
 
@@ -75,18 +84,6 @@ export default class BoardView extends BaseView {
         }
         this._isActive = true;
 
-        this._cardlists = [];
-
-        Object.values(this.context.get('cardlists')).forEach((cardlist) => {
-            this._cardlists.push(new CardListComponent(cardlist).render());
-        });
-
-        this._setContext(this.context.set('_cardlists', this._cardlists));
-
-        //this.addComponent('cardlists', this._cardlists)
-
-        console.log('context_here', this.context)
-
         super.render();
 
         this.addEventListeners();
@@ -98,7 +95,7 @@ export default class BoardView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        //document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
+        // document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
 
         this.subComponents.forEach(([_, component]) => {
             component.addEventListeners();
@@ -109,7 +106,7 @@ export default class BoardView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        //document.getElementById('auth')?.removeEventListener('submit',
+        // document.getElementById('auth')?.removeEventListener('submit',
         //                                                     this.formAuthorizationCallback);
     }
 

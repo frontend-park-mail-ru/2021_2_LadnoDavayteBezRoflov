@@ -2,16 +2,26 @@
 
 {{{Navbar}}}
 
-<div class="board__wrapper">
-    <div class="login__container">
-            <p class="board__text">{{team}}</p>
-            <h1 class="board__caption">{{title}}</h1>
-            <p class="board__text">{{description}}</p>
-    </div>
-
-    {{#each _cardlists}}
-        <li>{{{this}}}</li>
-    {{/each}}
+<div class="board">
+    <div class="board-header">
+        <div class="board-header__name">{{title}}</div>
+            <div class="vertical-line"></div>
+                <div class="board-header__members">
+                    {{#each members}}
+                        <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}"/>
+                    {{/each}}
+                    <div class="button button_small" id="addMember">Пригласить</div>
+                </div>
+            <div class="vertical-line"></div>
+            <div class="button button_small" id="addCardList">Добавить колонку</div>
+            <div class="vertical-line"></div>
+            <div class="button button_small" id="updateBoardSettings">Настройки</div>
+        </div>
+        <div class="columns custom-scroll">
+            {{#each _cardlists}}
+                {{{this}}}
+            {{/each}}
+        </div>
 </div>
 
 {{{Footer}}}

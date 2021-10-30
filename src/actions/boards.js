@@ -9,6 +9,9 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
     BOARD_GET: 'board/get',
+    BOARD_CREATE: 'board/create',
+    BOARD_UPDATE: 'board/update',
+    BOARD_DELETE: 'board/delete',
 };
 
 /**
@@ -29,9 +32,7 @@ export const boardsActions = {
             actionName: BoardsActionTypes.BOARD_GET,
             data: {
                 id: id,
-            }
+            },
         });
-    }
+    },
 };
-
-export default boardsActions;

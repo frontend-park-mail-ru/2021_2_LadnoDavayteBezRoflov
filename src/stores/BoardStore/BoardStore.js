@@ -4,9 +4,7 @@ import {BoardsActionTypes} from '../../actions/boards.js';
 import Network from '../../modules/Network/Network.js';
 import {HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
-import cardActions, { CardActionTypes } from '../../actions/card.js';
-import cardListActions from '../../actions/cardlist.js';
-import CardListComponent from '../../components/CardList/CardList.js';
+import {CardActionTypes} from '../../actions/card.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -17,13 +15,6 @@ class BoardStore extends BaseStore {
      */
     constructor() {
         super('Board');
-
-        this._cardlists = new Map();
-        this._cards = new Map();
-
-        this._currentCard = undefined;
-
-        this._get(0);
     }
 
     /**
@@ -38,7 +29,22 @@ class BoardStore extends BaseStore {
             break;
 
         case CardActionTypes.CARD_GET:
-            await this._getCard(action.data);
+            await this._get(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_CREATE:
+            await this._get(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_UPDATE:
+            await this._get(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_DELETE:
+            await this._get(action.data);
             this._emitChange();
             break;
 
@@ -47,29 +53,39 @@ class BoardStore extends BaseStore {
         }
     }
 
-    getCardContext(cid) {
-        return this.getContext('cards')[cid];
+    /**
+     * Метод, возвращающий карточку по ее айди.
+     * @param {Int} cid айди карточки
+     * @return {Object} данные карточки
+     */
+    getCardByCID(cid) {
+        let cardByCID;
+        (Object.values(this.getContext('content'))
+            .filter((cardlist) => {
+                (Object.values(cardlist.cards)
+                    .filter((card) => {
+                        if (card.cid === cid) {
+                            cardByCID = card;
+                        }
+                    }));
+            },
+            )
+        );
+        return cardByCID;
     }
 
     getBoardByCID(CID) {
-        console.log(this.getContext('cards')[CID].bid)
-        return this.getContext('cards')[CID].bid;
-    }
-
-    async _getCard(data) {
-        console.log(this._storage.get('cards')[data.id])
-        this._storage.set('_currentCard', this._storage.get('cards')[data.id]);
+        return this.getContext('content')[CID].bid;
     }
 
     /**
      * Метод, реализующий реакцию на инициализацию.
      */
     async _get(data) {
-
         this._storage.set('id', data.id);
-        this._storage.set('title', `${data.id}_Board`);
+        this._storage.set('title', `${data.id}`);
         this._storage.set('team', 'testTeam');
-        this._storage.set('cardlists', {
+        this._storage.set('content', {
             1: {
                 title: 'in progress',
                 position: 0,
@@ -77,20 +93,51 @@ class BoardStore extends BaseStore {
                 bid: 0,
                 cards: {
                     1: {
-                        title: 'card1',
                         cid: 1,
+                        title: 'card1',
+                        tags: [
+                            {
+                                name: 'Frontend',
+                            },
+                        ],
                         clid: 1,
                         bid: 0,
                         description: 'desc1',
                         deadline: '1.11.2021',
+                        attachments: [],
+                        checklist: null,
+                        assignees: [
+                            {
+                                userName: 'SomeBody',
+                                avatar: '/public/assets/default_user_picture.webp',
+                            },
+                        ],
+
                     },
                     2: {
-                        title: 'card2',
                         cid: 2,
+                        title: 'card2',
+                        tags: [
+                            {
+                                name: 'Backend',
+                            },
+                        ],
                         clid: 1,
                         bid: 0,
-                        description: 'desc2',
-                        deadline: '2.11.2021',
+                        description: null,
+                        deadline: null,
+                        attachments: [],
+                        checklist: 'here',
+                        assignees: [
+                            {
+                                userName: 'SomeBody',
+                                avatar: '/public/assets/default_user_picture.webp',
+                            },
+                            {
+                                userName: 'NotJustAnybody',
+                                avatar: '/public/assets/default_user_picture.webp',
+                            },
+                        ],
                     },
                 },
             },
@@ -120,62 +167,14 @@ class BoardStore extends BaseStore {
             },
         });
 
-        this._storage.set('cards', {
-            1: {
-                title: 'card1',
-                cid: 1,
-                clid: 1,
-                bid: 0,
-                description: 'desc1',
-                deadline: '1.11.2021',
-            },
-            2: {
-                title: 'card2',
-                cid: 2,
-                clid: 1,
-                bid: 0,
-                description: 'desc2',
-                deadline: '2.11.2021',
-            },
-            25: {
-                title: 'card25',
-                cid: 25,
-                clid: 2,
-                bid: 0,
-                description: 'desc25',
-                deadline: '1.11.2021',
-            },
-            26: {
-                title: 'card26',
-                cid: 26,
-                clid: 2,
-                bid: 0,
-                description: 'desc26',
-                deadline: '2.11.2021',
-            },
-        })
         this._storage.set('description', `coolboard ${data.id}_Board`);
-
-        //for (let cardlist in this._storage.get('cardlists')) {
-        //    this._cardlists.set(cardlist, new CardListComponent());
-            //cardListActions.getCardList(cardlist);
-        //}
-        /* for (let cardlist_ of this._cardlists) {
-            console.log(cardlist_[1]._storage)
-
-            cardlist_[1]._storage.cards.forEach(element => {
-                console.log(element)
-            }); */
-
-            //cardListActions.getCardList(cardlist);
-        //}
 
         return;
 
         let payload;
 
         try {
-            payload = await Network.getBoards();
+            payload = await Network.getBoard(data);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
@@ -183,11 +182,11 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-
-            this._storage.set('teams', payload.data.sort(
-                (first, second) => (first.id > second.id) ?
-                    1 : ((second.id > first.id) ? -1 : 0)),
-            );
+            this._storage.set('id', response.data.id);
+            this._storage.set('title', response.data.title);
+            this._storage.set('team', response.data.team);
+            this._storage.set('description', response.data.description);
+            this._storage.set('content', response.data.content);
             return;
 
         case HttpStatusCodes.Unauthorized:

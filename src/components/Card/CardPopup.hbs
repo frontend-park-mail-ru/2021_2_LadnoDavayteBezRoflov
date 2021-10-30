@@ -1,8 +1,25 @@
 <link rel="stylesheet" href="/src/components/Card/CardPopup.css">
 
 <div class="popup">
-    <p>{{title}}</p>
-    <p>{{description}}</p>
-    <p>{{deadline}}</p>
-    <p><a id="back">go back</a></p>
+    <div class="login__input__wrapper">
+        <input class="login__input__input" type="text" placeholder=" " id="title" name="title" pattern="^[a-zA-Z\d]{3,20}$" value="{{title}}" required>
+        <label class="login__input__caption">Название карточки</label>
+        <span class="login__input__bar"></span>
+    </div>
+        <div class="login__input__wrapper">
+        <textarea class="popup__textarea" type="text" placeholder=" " id="description" name="description">{{description}}</textarea>
+        <label class="login__input__caption">Описание карточки</label>
+        <span class="login__input__bar"></span>
+    </div>
+
+    <div class="login__input__wrapper">
+        <input class="login__input__input" type="text" placeholder=" " id="deadline" name="deadline" value="{{deadline}}">
+        <label class="login__input__caption">Срок выполнения карточки</label>
+        <span class="login__input__bar"></span>
+    </div>
+
+    <div class="login__input__wrapper">
+    <button class="login__button" id="login-button"><a id="back">Назад</a></button> 
+    <button class="login__button" id="login-button"><a id="back">Обновить</a></button> 
+    </div>
 </div>

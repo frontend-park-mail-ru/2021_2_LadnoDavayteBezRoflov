@@ -1,2 +1,32 @@
+<link rel="stylesheet" href="/src/components/Card/Card.css">
 
-<p><a href="/card/{{cid}}" id="href" type="text/popup">{{title}}</a></p>
+<a class="card" href="/card/{{cid}}" type="text/popup">
+    <div class="card__tags-container">
+        {{#each tags}}
+            <div class="card-tag">{{this.name}}</div>
+        {{/each}}
+    </div>
+    <div class="card__header">{{title}}</div>
+    <div class="card__badges">
+        {{#if deadline}}
+        <div class="badge-due-date-wrapper">
+            <div class="material-icons badge-due-date__icon"></div>
+            <div class="badge-due-date__text">{{deadline}}</div>
+        </div>
+        {{/if}}
+        {{#if description}}
+            <div class="material-icons badge-description"></div>
+        {{/if}}
+        {{#if attachments}}
+            <div class="material-icons badge-attachments"></div>
+        {{/if}}
+        {{#if checklist}}
+            <div class="material-icons badge-checklist"></div>
+        {{/if}}
+        <div class="card__assignees">
+            {{#each assignees}}
+                <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}"/>
+            {{/each}}
+        </div>
+    </div>
+</a>
