@@ -1,7 +1,7 @@
 // Базовый компонент
 import BaseComponent from '../BaseComponent.js';
 // Стили
-import '../../../public/scss/Footer.scss';
+import './Footer.scss';
 // Шаблон
 import template from './Footer.hbs';
 

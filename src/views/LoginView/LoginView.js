@@ -14,7 +14,7 @@ import Router from '../../modules/Router/Router.js';
 import {Urls} from '../../constants/constants.js';
 
 // Стили
-import '../../../public/scss/LoginView.scss';
+import './LoginView.scss';
 // Шаблон
 import template from './LoginView.hbs';
 

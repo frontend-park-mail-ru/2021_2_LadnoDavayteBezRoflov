@@ -28,7 +28,7 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 
 > Starting the server from the scratch: `npm start` or `npm start-dev` (development configuration)
 
-> Build server: `npm run build` or `npm run build-dev` (development configuration)
+> Build: `npm run build` or `npm run build-dev` (development configuration)
 
 > Starting server after build: `npm run server` or `npm run server-dev` (auto-reloading server)
 

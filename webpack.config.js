@@ -72,9 +72,8 @@ const config = {
     plugins: [
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
         new HtmlWebpackPlugin({
-            protocol: confConst.PROTOCOL,
-            backendAddress: JSON.parse(confDefs.BACKEND_ADDRESS),
-            backendPort: JSON.parse(confDefs.BACKEND_PORT),
+            backend: `${confConst.PROTOCOL}://${JSON.parse(confDefs.BACKEND_ADDRESS)}` +
+                `:${JSON.parse(confDefs.BACKEND_PORT)}`,
             scriptLoading: 'module',
             filename: 'index.html',
             template: 'public/index_template.html',

@@ -1,13 +1,20 @@
-@import 'Constants';
+@import 'public/scss/Constants';
+
 $login__min-width: 320px;
 $login__max-width: 600px;
 
-/* Таблица стилей для страницы входа */
+$login__min-height: 500px;
+$login__max-height: 800px;
 
-/* внешняя обертка под контейнер входа */
-.login__wrapper {
+/* Таблица стилей для страницы регистрации */
+/* Таблица стилей для страницы регистрации */
+
+/* внешняя обертка под контейнер регистрации */
+.register__wrapper {
     min-width: $login__min-width;
     max-width: $login__max-width;
+
+    min-height: $login__min-height;
 
     position: absolute;
     transform: translate(-50%,-25%);
@@ -16,13 +23,16 @@ $login__max-width: 600px;
     left: 50%;
 }
 
-/* контейнер входа */
-.login__container {
+/* контейнер регистрации */
+.register__container {
     min-width: $login__min-width;
     max-width: $login__max-width;
 
+    min-height: $login__min-height;
+
     background: $transparent-bg-color;
     padding: 2em;
+    margin: 4em 0;
 
     border-radius: 24px;
     border-left: 1px solid $transparent-bg-color;
@@ -33,25 +43,27 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* заголовки во всем логине */
-.login__caption{
+/* заголовки во всей регистрации */
+.register__caption{
     text-align: center;
 }
 
-/* текст во всем логине */
-.login__text {
+/* текст во всем регистрации */
+.register__text {
     text-align: center;
     font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-/* внешняя обертка под поля ввода */
-.login__input__wrapper {
+/* внешняя обертка под поля регистрации */
+.register__input__wrapper {
     position: relative;
     margin: 2.4em 0 1.5em 1.5em;
 }
 
-/* заголовок поля ввода  */
-.login__input__caption {
+/* заголовок поля регистрации  */
+.register__input__caption {
     position: absolute;
 
     left: 4%;
@@ -66,8 +78,8 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* само поле ввода  */
-.login__input__input {
+/* само поле регистрации */
+.register__input__input {
     display: block;
     outline: none;
     border: none;
@@ -83,33 +95,33 @@ $login__max-width: 600px;
 }
 
 /* в случае активации поля ввода заголовок съезжает наверх */
-.login__input__input:focus ~ .login__input__caption,
-.login__input__input:not(:placeholder-shown) ~ .login__input__caption {
+.register__input__input:focus ~ .register__input__caption,
+.register__input__input:not(:placeholder-shown) ~ .register__input__caption {
     top: -20px;
     font-size: 13px;
     color: rgb(174, 82, 82);
 }
 
 /* в случае валидного ввода перекрашиваем заголовок */
-.login__input__input:valid ~ .login__input__caption,
-.login__input__input:valid:not(:placeholder-shown) ~ .login__input__caption {
+.register__input__input:valid ~ .register__input__caption,
+.register__input__input:valid:not(:placeholder-shown) ~ .register__input__caption {
     color: rgb(79, 194, 79);
 }
 
-/* полоса, подчеркивающая поле ввода  */
-.login__input__bar {
+/* полоса, подчеркивающая поле ввода */
+.register__input__bar {
     position: relative;
     display: block;
 }
 
 /* удлинняем полосу при активном поле ввода */
-.login__input__input:focus ~ .login__input__bar:before,
-.login__input__input:focus ~ .login__input__bar:after {
+.register__input__input:focus ~ .register__input__bar:before,
+.register__input__input:focus ~ .register__input__bar:after {
     width: 100%;
 }
 
 /* удлинняем полосу под полем ввода */
-.login__input__bar:after {
+.register__input__bar:after {
     position: absolute;
     content: "";
 
@@ -124,8 +136,8 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* кнопка входа */
-.login__button {
+/* кнопка регистрации */
+.register__button {
     padding: 16px 24px;
 
     color: rgb(255, 255, 255);
@@ -143,16 +155,16 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* в случае активизации кнопки входа */
-.login__button:focus,
-.login__button:hover {
+/* в случае активизации кнопки регистрации */
+.register__button:focus,
+.register__button:hover {
     background-color: $main-theme-color__focus;
 }
 
 /* секция обработки ошибок */
 
 /* контейнер для ошибок */
-.login__input__error {
+.register__input__error {
     margin: 8px 0;
     padding: 1em 2em;
 
@@ -165,7 +177,7 @@ $login__max-width: 600px;
 }
 
 /* иконка ошибки */
-.login__input__error__fa {
+.register__input__error__fa {
     margin: 8px 8px;
     padding: 8px;
 
@@ -175,8 +187,8 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* сообщение о регистрации */
-.login__register-message {
+/* сообщение о входе */
+.register__login-message {
     position: relative;
 
     margin-top: 2em;
@@ -195,7 +207,7 @@ $login__max-width: 600px;
     transition: all 0.3s ease-in-out;
 }
 
-/* иконка ошибки */
-.login__register-message__link {
+/* ссылка */
+.register__link {
     color: $main-theme-color__focus;
 }

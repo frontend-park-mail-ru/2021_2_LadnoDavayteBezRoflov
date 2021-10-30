@@ -10,7 +10,7 @@ import {Urls} from '../../constants/constants.js';
 import {boardsActions} from '../../actions/boards.js';
 
 // Стили
-import '../../../public/scss/BoardsView.scss';
+import './BoardsView.scss';
 // Шаблон
 import template from './BoardsView.hbs';
 
