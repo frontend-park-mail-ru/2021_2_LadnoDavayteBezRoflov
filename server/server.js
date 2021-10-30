@@ -6,26 +6,25 @@ const morgan = require('morgan');
 const path = require('path');
 /* Создаем приложение */
 const app = express();
-/* Директория со статикой */
-const distFolder = path.resolve(__dirname, '..', 'dist');
 /* Определяем текущий порт */
 const port = process.env.PORT || 80;
+
 /* Цветовая подсветка статусов */
 app.use(morgan('dev'));
-/* Используем статику */
-app.use(express.static(distFolder));
+
 /* Время кэширования ответов, в сек */
 const cacheTime = 256 * 24 * 60 * 60;
 /* middleware для кэширования бандлов */
 const cacheMW = (req, res, next) => {
-    if (req.url === 'bundle.js' || req.url === 'style.css') {
-        res.set('Cache-control', `public, max-age=${cacheTime}`);
-    } else {
-        res.set('Cache-control', 'no-store');
-    }
+    res.set('Cache-control', `public, max-age=${cacheTime}`);
     next();
 };
-app.use(cacheMW);
+app.use([/\/bundle\.[A-Za-z0-9]*\.js/, /\/style\.[A-Za-z0-9]*\.css/], cacheMW);
+
+/* Директория со статикой */
+const distFolder = path.resolve(__dirname, '..', 'dist');
+/* Используем статику */
+app.use(express.static(distFolder));
 
 /* Реагируем на любые запросы посылкой index.html */
 app.all('*', (req, res) => {
