@@ -3,6 +3,7 @@ import {Html, Urls} from '../../constants/constants.js';
 import NotFoundView from '../../views/NotFoundView/NotFoundView.js';
 
 import BaseView from '../../views/BaseView.js';
+import BaseComponent from '../../components/BaseComponent.js';
 
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им view
@@ -34,7 +35,7 @@ class Router {
             return this;
         }
 
-        if (!(view instanceof BaseView)) {
+        if (!(view instanceof BaseView) && !(view instanceof BaseComponent)) {
             return this;
         }
 
@@ -50,7 +51,7 @@ class Router {
             const link = event.target.closest('a');
             if (link) {
                 event.preventDefault();
-                this.go(link.pathname + link.search);
+                this.go(link.pathname + link.search, link.type === 'text/popup');
             }
         });
 
@@ -67,14 +68,14 @@ class Router {
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
      */
-    go(url) {
+    go(url, popup = false) {
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
             this.go(Urls.NotFound);
             return;
         }
 
-        if (this._currentView) {
+        if (this._currentView && !popup) {
             this._currentView._onHide();
         }
 
@@ -93,7 +94,7 @@ class Router {
         }
 
         this._currentView = view;
-        view._onShow(urlData);
+        popup ? view._onPopup(urlData) : view._onShow(urlData);
     }
 
     /**

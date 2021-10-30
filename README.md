@@ -79,7 +79,7 @@ Latest version: `0.2.0`: *Transferred to Flux architecture, refactored every mod
 
 ### Code style
 The project is written using slightly modified [Google ESling config](https://github.com/google/eslint-config-google). Code style changes:
-
+  
 * **Semicolons** at the end of statements are **required**;
 * Use of **single quotes** wherever possible is **required**;
 * **4-space** indentation is **required**;

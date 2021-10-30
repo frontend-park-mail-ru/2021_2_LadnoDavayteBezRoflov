@@ -10,11 +10,9 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 // Modules
 import Router from '../../modules/Router/Router.js';
 
-// Constants
-import {Urls} from '../../constants/constants.js';
-
 // Стили
 import './LoginView.scss';
+
 // Шаблон
 import template from './LoginView.hbs';
 
@@ -66,9 +64,9 @@ export default class LoginView extends BaseView {
      * Метод, отрисовывающий страницу.
      */
     render() {
-        /* Если пользователь авторизован, то перебросить его на страницу списка досок */
+        /* Если пользователь авторизован, то перебросить его туда, где он был */
         if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+            Router.prev();
             return;
         }
 

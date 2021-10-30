@@ -1,10 +1,12 @@
 // Базовый компонент
-import userActions from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+
 // Стили
 import './Navbar.scss';
 
+import {userActions} from '../../actions/user.js';
 import UserStore from '../../stores/UserStore/UserStore.js';
+
 // Шаблон
 import template from './Navbar.hbs';
 

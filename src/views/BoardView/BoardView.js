@@ -3,65 +3,72 @@ import BaseView from '../BaseView.js';
 
 // Actions
 import {userActions} from '../../actions/user.js';
+import {boardsActions} from '../../actions/boards.js';
+
+// Components
+import CardListComponent from '../../components/CardList/CardList.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
+import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
 
+// Constants
 import {Urls} from '../../constants/constants.js';
 
-// Стили
-import './RegisterView.scss';
-
-// Шаблон
-import template from './RegisterView.hbs';
-
 /**
-  * Класс, реализующий страницу регистрации.
+  * Класс, реализующий страницу доски.
   */
-export default class RegisterView extends BaseView {
+export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-     */
+    */
     constructor(parent) {
-        const context = UserStore.getContext();
-
-        super(context, template, parent);
+        const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
+        super(context, Handlebars.templates['views/BoardView/BoardView'], parent);
 
         this._onRefresh = this._onRefresh.bind(this);
+        UserStore.addListener(this._onRefresh); // + field
+        BoardStore.addListener(this._onRefresh);
 
-        UserStore.addListener(this._onRefresh);
-
-        this.formRegistrationCallback = this.formRegistration.bind(this);
+        // this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
+            title: undefined,
+            description: undefined,
         };
+
+        this._cardlists = [];
     }
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
-    _onShow() {
+    _onShow(urlData) {
+        this.urlData = urlData;
+        boardsActions.getBoard(urlData.pathParams.id);
         this.render();
-        this._isActive = true;
     }
 
     /**
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this._setContext(UserStore.getContext());
+        this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
 
         if (!this._isActive) {
             return;
         }
+
+        this._cardlists = [];
+        Object.values(this.context.get('content')).forEach((cardlist) => {
+            this._cardlists.push(new CardListComponent(cardlist).render());
+        });
+
+        this._setContext(this.context.set('_cardlists', this._cardlists));
 
         this.render();
     }
@@ -70,11 +77,12 @@ export default class RegisterView extends BaseView {
      * Метод, отрисовывающий страницу.
      */
     render() {
-        /* Если пользователь авторизован, то перебросить его на страницу списка досок */
-        if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+        /* Если пользователь авторизован, то перебросить его на страницу входа */
+        if (!this.context.get('isAuthorized')) {
+            Router.go(Urls.Login);
             return;
         }
+        this._isActive = true;
 
         super.render();
 
@@ -87,7 +95,7 @@ export default class RegisterView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        document.getElementById('register').addEventListener('submit', this.formRegistrationCallback);
+        // document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
 
         this.subComponents.forEach(([_, component]) => {
             component.addEventListeners();
@@ -98,34 +106,30 @@ export default class RegisterView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        document.getElementById('register')?.removeEventListener('register',
-                                                                 this.formAuthorizationCallback);
+        // document.getElementById('auth')?.removeEventListener('submit',
+        //                                                     this.formAuthorizationCallback);
     }
 
     /**
      * Метод, регистрирующий поля ввода в документе.
      */
     registerInputElements() {
-        this._inputElements.login = document.getElementById('login');
-        this._inputElements.email = document.getElementById('email');
-        this._inputElements.password = document.getElementById('password');
-        this._inputElements.passwordRepeat = document.getElementById('passwordRepeat');
+        this._inputElements.title = document.getElementById('title');
+        this._inputElements.description = document.getElementById('description');
     }
 
     /**
      * Метод, обрабатывающий посылку формы.
      * @param {object} event событие
      */
-    formRegistration(event) {
+    formAuthorization(event) {
         event.preventDefault();
 
         const data = {
             login: this._inputElements.login.value,
-            email: this._inputElements.email.value,
             password: this._inputElements.password.value,
-            passwordRepeat: this._inputElements.passwordRepeat.value,
         };
 
-        userActions.register(data.login, data.email, data.password, data.passwordRepeat);
+        userActions.login(data.login, data.password);
     }
 }

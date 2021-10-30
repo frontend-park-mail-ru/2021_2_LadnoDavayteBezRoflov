@@ -11,7 +11,6 @@ export const UserActionTypes = {
     USER_REGISTER: 'user/register',
     USER_LOGIN: 'user/login',
     USER_LOGOUT: 'user/logout',
-
 };
 
 /**
@@ -71,5 +70,3 @@ export const userActions = {
     },
 
 };
-
-export default userActions;

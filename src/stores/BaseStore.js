@@ -13,6 +13,8 @@ export default class BaseStore {
     constructor(channelName) {
         this._changed = false;
         this._changeEvent = 'change';
+        this._storage = new Map();
+
         this._invokeOnDispatch = this._invokeOnDispatch.bind(this);
         Dispatcher.register(this._invokeOnDispatch);
 

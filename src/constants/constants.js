@@ -8,7 +8,8 @@ export const Urls = {
     Boards: '/boards',
     Login: '/login',
     Register: '/register',
-    Logout: '/logout',
+    Board: '/board/<id>',
+    Card: '/card/<id>',
     NotFound: '/404',
 };
 

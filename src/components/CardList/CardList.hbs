@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="/src/components/CardList/CardList.css">
+
+<div class="column">
+    <div class="column__header">
+        <div class="column__title">{{title}}</div>
+        <a class="column__add material-icons" href="#"></a>
+        <a class="column__edit material-icons" href="#"></a>
+        <a class="column__delete material-icons" href="#"></a>
+    </div>
+    <div class="horizontal-line"></div>
+    <div class="column__content custom-scroll">
+        {{#each _cards}}
+            {{{this}}}
+        {{/each}}
+    </div>
+</div>

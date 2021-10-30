@@ -11,6 +11,7 @@ import {boardsActions} from '../../actions/boards.js';
 
 // Стили
 import './BoardsView.scss';
+
 // Шаблон
 import template from './BoardsView.hbs';
 
