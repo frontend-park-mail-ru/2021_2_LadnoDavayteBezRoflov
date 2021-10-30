@@ -25,6 +25,14 @@ const confDefs = {
     BACKEND_PORT: confConst.BACKEND_PORT,
 };
 
+
+const devServer = {
+    port: JSON.parse(confDefs.FRONTEND_PORT),
+    hot: true,
+    static: [DEPLOY_DIR],
+    historyApiFallback: true, // Для работы роута на 404
+};
+
 const config = {
     entry: './src/index.js',
     output: {
@@ -35,7 +43,7 @@ const config = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules/,
+                exclude: path.resolve(__dirname, 'node_modules/'),
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -44,6 +52,11 @@ const config = {
                 },
             },
             {
+                exclude: [
+                    path.resolve(__dirname, 'node_modules/'),
+                    path.resolve(__dirname, 'src/'),
+                    path.resolve(__dirname, 'server/'),
+                ],
                 test: /\.(s*)css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
@@ -72,6 +85,7 @@ const config = {
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
+    devServer: confConst.DEBUG ? devServer : undefined,
 };
 
 module.exports = config;
