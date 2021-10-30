@@ -25,7 +25,6 @@ const confDefs = {
     BACKEND_PORT: confConst.BACKEND_PORT,
 };
 
-
 const devServer = {
     port: JSON.parse(confDefs.FRONTEND_PORT),
     hot: true,
@@ -52,9 +51,10 @@ const config = {
                 },
             },
             {
-                exclude: [
-                    path.resolve(__dirname, 'node_modules/'),
-                    path.resolve(__dirname, 'server/'),
+                include: [
+                    path.resolve(__dirname, 'src/components/'),
+                    path.resolve(__dirname, 'src/views/'),
+                    path.resolve(__dirname, 'src/styles/'),
                 ],
                 test: /\.(s*)css$/,
                 use: [
@@ -64,6 +64,10 @@ const config = {
                 ],
             },
             {
+                include: [
+                    path.resolve(__dirname, 'src/components/'),
+                    path.resolve(__dirname, 'src/views/'),
+                ],
                 test: /\.hbs$/,
                 loader: 'handlebars-loader',
             },
@@ -77,7 +81,7 @@ const config = {
                 `:${JSON.parse(confDefs.BACKEND_PORT)}`,
             scriptLoading: 'module',
             filename: 'index.html',
-            template: 'public/index_template.html',
+            template: 'src/index_template.html',
         }),
         new DefinePlugin(confDefs),
         new CopyPlugin([

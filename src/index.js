@@ -13,7 +13,7 @@ import {Html, Urls} from './constants/constants.js';
 
 
 // Файл стилей
-import '../public/scss/Common.scss';
+import './styles/scss/Common.scss';
 
 // Views
 import RegisterView from './views/RegisterView/RegisterView.js';
