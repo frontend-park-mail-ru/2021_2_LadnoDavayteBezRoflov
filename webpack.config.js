@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
 const DEPLOY_DIR = 'dist';
@@ -53,7 +54,6 @@ const config = {
             {
                 exclude: [
                     path.resolve(__dirname, 'node_modules/'),
-                    path.resolve(__dirname, 'src/'),
                     path.resolve(__dirname, 'server/'),
                 ],
                 test: /\.(s*)css$/,
@@ -70,6 +70,7 @@ const config = {
         ],
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
         new HtmlWebpackPlugin({
             backend: `${confConst.PROTOCOL}://${JSON.parse(confDefs.BACKEND_ADDRESS)}` +
