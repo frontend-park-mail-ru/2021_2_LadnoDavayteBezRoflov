@@ -1,52 +1,20 @@
+@import '../../styles/scss/Constants';
+
+$login__min-width: 320px;
+$login__max-width: 600px;
+
+$login__min-height: 500px;
+$login__max-height: 800px;
+
 /* Таблица стилей для страницы регистрации */
-
-* {
-    box-sizing: border-box;
-
-    /* TODO вынести в нормальное место */
-    --primary-bg-color: rgb(207, 241, 249);
-    --secondary-bg-color: rgb(231, 246, 254);
-
-    --main-theme-color: rgb(37, 128, 133);
-    --main-theme-color__focus: rgb(77, 156, 245);
-
-    --transparent-bg-color: rgba(255, 255, 255, 0.3);
-    --default-box-shadow-color: rgba(0,0,0,0.2);
-
-    --error-color: rgb(216, 0, 12);
-    --error-bg-color: rgb(255, 210, 210);
-
-    --light-white-color: rgb(241, 241, 241);
-    --input-color: rgb(210, 210, 210);
-
-    --input__input-color: rgb(144, 144, 144);
-
-}
-
-body {
-    margin: 0;
-
-    background: linear-gradient(45deg, var(--primary-bg-color), var(--secondary-bg-color));
-
-    height: 100%;
-
-    font-family: 'Montserrat', sans-serif;
-
-    --login__min-width: 320px;
-    --login__max-width: 600px;
-
-    --login__min-height: 500px;
-    --login__max-height: 800px;
-}
-
 /* Таблица стилей для страницы регистрации */
 
 /* внешняя обертка под контейнер регистрации */
 .register__wrapper {
-    min-width: var(--login__min-width);
-    max-width: var(--login__max-width);
+    min-width: $login__min-width;
+    max-width: $login__max-width;
 
-    min-height: var(--login__min-height);
+    min-height: $login__min-height;
 
     position: absolute;
     transform: translate(-50%,-25%);
@@ -57,19 +25,19 @@ body {
 
 /* контейнер регистрации */
 .register__container {
-    min-width: var(--login__min-width);
-    max-width: var(--login__max-width);
+    min-width: $login__min-width;
+    max-width: $login__max-width;
 
-    min-height: var(--login__min-height);
+    min-height: $login__min-height;
 
-    background: var(--transparent-bg-color);
+    background: $transparent-bg-color;
     padding: 2em;
     margin: 4em 0;
 
     border-radius: 24px;
-    border-left: 1px solid var(--transparent-bg-color);
-    border-top: 1px solid var(--transparent-bg-color);
-    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
 
     text-align: center;
     transition: all 0.3s ease-in-out;
@@ -84,6 +52,8 @@ body {
 .register__text {
     text-align: center;
     font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* внешняя обертка под поля регистрации */
@@ -99,7 +69,7 @@ body {
     left: 4%;
     top: 10px;
 
-    color: var(--input-color);
+    color: $input-color;
 
     font-size: 15px;
     font-weight: 300;
@@ -119,7 +89,7 @@ body {
 
     width: 100%;
 
-    color: var(--input__input-color);
+    color: $input__input-color;
 
     font-size: 15px;
 }
@@ -154,14 +124,14 @@ body {
 .register__input__bar:after {
     position: absolute;
     content: "";
-    
+
     height: 2px;
     bottom: -1px;
     left: 0;
     width: 0;
     right: -50%;
 
-    background: var(--main-theme-color);
+    background: $main-theme-color;
 
     transition: all 0.3s ease-in-out;
 }
@@ -171,7 +141,7 @@ body {
     padding: 16px 24px;
 
     color: rgb(255, 255, 255);
-    background-color: var(--main-theme-color);
+    background-color: $main-theme-color;
 
     border: none;
     outline: none;
@@ -179,7 +149,7 @@ body {
 
     letter-spacing: 1px;
     font-size: 16px;
-    
+
     cursor: pointer;
 
     transition: all 0.3s ease-in-out;
@@ -188,7 +158,7 @@ body {
 /* в случае активизации кнопки регистрации */
 .register__button:focus,
 .register__button:hover {
-    background-color: var(--main-theme-color__focus);
+    background-color: $main-theme-color__focus;
 }
 
 /* секция обработки ошибок */
@@ -200,8 +170,8 @@ body {
 
     border-radius: 16px;
 
-    color: var(--error-color);
-    background-color: var(--error-bg-color);
+    color: $error-color;
+    background-color: $error-bg-color;
 
     transition: all 0.3s ease-in-out;
 }
@@ -223,21 +193,21 @@ body {
 
     margin-top: 2em;
     padding: 2em;
-    height: 8em;
+    height: 5em;
 
-    background-color: var(--light-white-color);
+    background-color: $light-white-color;
 
     border-radius: 16px;
-    border-left: 1px solid var(--transparent-bg-color);
-    border-top: 1px solid var(--transparent-bg-color);
-    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
 
     text-align: center;
-    
+
     transition: all 0.3s ease-in-out;
 }
 
 /* ссылка */
 .register__link {
-    color: var(--main-theme-color__focus);
+    color: $main-theme-color__focus;
 }

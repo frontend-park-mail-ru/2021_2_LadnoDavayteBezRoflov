@@ -2,8 +2,8 @@
 import BaseComponent from '../components/BaseComponent.js';
 
 // Компоненты по умолчанию
-import NavbarComponent from '../../components/Navbar/Navbar.js';
-import FooterComponent from '../../components/Footer/Footer.js';
+import NavbarComponent from '../components/Navbar/Navbar.js';
+import FooterComponent from '../components/Footer/Footer.js';
 
 
 /**

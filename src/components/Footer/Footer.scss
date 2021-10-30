@@ -8,10 +8,14 @@
     left: 0;
     right: 0;
     margin-bottom: 0;
-}
-  
-.footer__text {
-    color: azure;
-    font-family: 'IBM Plex Sans', sans-serif;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+
+    &__text {
+        color: azure;
+        font-family: 'IBM Plex Sans', sans-serif;
+        text-align: center;
+    }
 }

@@ -1,8 +1,8 @@
 import BaseView from '../BaseView.js';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
-
-import '/src/tmpl.js';
+// Шаблон
+import template from './NotFoundView.hbs';
 
 /**
  * Класс, реализующий страницу "не найдено".
@@ -14,7 +14,7 @@ export default class NotFoundView extends BaseView {
      */
     constructor(parent) {
         const context = UserStore.getContext();
-        super(context, Handlebars.templates['views/NotFoundView/NotFoundView'], parent);
+        super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
