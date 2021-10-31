@@ -30,6 +30,9 @@ export default class BoardsView extends BaseView {
 
         UserStore.addListener(this._onRefresh);
         BoardsStore.addListener(this._onRefresh);
+
+        this._showCreateBoardModalCallBack = this._showCreateBoardModal.bind(this);
+        this._hideCreateBoardModalCallBack = this._hideCreateBoardModal.bind(this);
     }
 
     /**
@@ -83,13 +86,59 @@ export default class BoardsView extends BaseView {
         this.subComponents.forEach(([_, component]) => {
             component.addEventListeners();
         });
+        this._addListenersCreateBoardModal();
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        // placeholder
         // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
+        this._removeListenersCreateBoardModal();
+    }
+
+    /**
+     * Метод, добавляющий обработчики формы создания доски
+     * @private
+     */
+    _addListenersCreateBoardModal() {
+        document.querySelectorAll('.add-board')?.forEach((item) => {
+            item.addEventListener('click', this._showCreateBoardModalCallBack);
+        });
+        this.closeModalButton = document.getElementById('close-modal');
+        this.closeModalButton?.addEventListener('click', this._hideCreateBoardModalCallBack);
+        window.addEventListener('click', this._hideCreateBoardModalCallBack);
+    }
+
+    /**
+     * Метод, удаляющий обработчики формы создания доски
+     * @private
+     */
+    _removeListenersCreateBoardModal() {
+        document.querySelectorAll('.add-board')?.forEach((item) => {
+            item.removeEventListener('click', this._showCreateBoardModalCallBack);
+        });
+        window.removeEventListener('click', this._hideCreateBoardModalCallBack);
+    }
+
+    /**
+     * Делает видимым модальное окно создания доски
+     * @private
+     */
+    _showCreateBoardModal() {
+        this.createBoardModal = document.getElementById('create-board-modal-wrapper');
+        this.createBoardModal.style.display = 'block';
+    }
+
+    /**
+     * Скрывает модальное окно создания доски
+     * @param {Event} event - оюъект собыбия клика
+     * @private
+     */
+    _hideCreateBoardModal(event) {
+        if (event.target !== this.createBoardModal && event.target !== this.closeModalButton) {
+            return;
+        }
+        this.createBoardModal.style.display = 'none';
     }
 }
