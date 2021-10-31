@@ -1,32 +1,65 @@
 {{{Navbar}}}
 
-<div class="teams-container">
-    {{#each teams}}
+<div class="main-container">
+    <div class="teams-container">
+        {{#each teams}}
             <div class="team">
                 <div class="team__header">
                     <div>
                         <span class="team__team-name">{{this.team_name}}</span>
-                        <span class="material-icons material-icons_colored material-icons_transparent">edit</span>
+                        <span class="material-icons material-icons-colored material-icons-colored_disabled">edit</span>
                     </div>
                     <div>
-                        <span class="material-icons material-icons_colored">group_add</span>
-                        <span class="material-icons material-icons_colored">add</span>
-                        <span class="material-icons material-icons_colored">menu</span>
+                        <span class="material-icons material-icons-colored material-icons-colored_disabled">group_add</span>
+                        <span class="material-icons material-icons-colored">add</span>
+                        <span class="material-icons material-icons-colored material-icons-colored_disabled">menu</span>
                     </div>
                 </div>
                 <div class="horizontal-line"></div>
                 <div class="team__card-wrapper">
                     <div class="team__card-holder">
                         {{#each this.boards}}
-                        <a href="/board/{{this.id}}" class="bord-card">
-                            <div class="bord-card__header">{{this.board_name}}</div>
-                            <div class="bord-card__description">{{this.description}}</div>
-                        </a>
+                            <a href="/board/{{this.id}}" class="bord-card">
+                                <div class="bord-card__header">{{this.board_name}}</div>
+                                <div class="bord-card__description">{{this.description}}</div>
+                            </a>
                         {{/each}}
                     </div>
                 </div>
             </div>
-    {{/each}}
+        {{/each}}
+    </div>
+</div>
+
+<div id="create-board-modal-wrapper">
+    <div class="create-board-modal">
+        <form class="create-board-form">
+            <div class="create-board-form__header">
+                Добавить доску
+            </div>
+            <div class="horizontal-line"></div>
+            <div class="create-board-form__elements-wrapper">
+                <div>
+                    <label for="board-name" class>Название доски:</label>
+                    <input class="simple-form-element" type="text" id="board-name" name="board-name" autofocus
+                           pattern="^[a-zA-Z\d]{1,40}$" required>
+                </div>
+                <div>
+                    <label for="team-select">Команда:</label>
+                    <select class="simple-form-element" name="team-select">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
+                </div>
+                <button type="submit" class="button">Создать</button>
+            </div>
+        </form>
+        <div class="close-button"></div>
+
+    </div>
+
 </div>
 
 {{{Footer}}}

@@ -1,0 +1,84 @@
+@import 'Constants';
+@import 'Fonts';
+
+/* внешняя обертка под поля ввода */
+.input__wrapper {
+    position: relative;
+    margin: 2.4em 0 1.5em 1.5em;
+}
+
+/* заголовок поля ввода  */
+.input__caption {
+    position: absolute;
+
+    left: 4%;
+    top: 10px;
+
+    color: $input-color;
+
+    font-size: 15px;
+    font-weight: 300;
+
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* само поле ввода  */
+.input__input {
+    display: block;
+    outline: none;
+    border: none;
+
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid rgb(209, 209, 209);
+
+    width: 100%;
+
+    color: $input__input-color;
+
+    font-size: 15px;
+}
+
+/* в случае активации поля ввода заголовок съезжает наверх */
+.input__input:focus ~ .input__caption,
+.input__input:not(:placeholder-shown) ~ .input__caption {
+    top: -20px;
+    font-size: 13px;
+    color: rgb(174, 82, 82);
+}
+
+/* в случае валидного ввода перекрашиваем заголовок */
+.input__input:valid ~ .input__caption,
+.input__input:valid:not(:placeholder-shown) ~ .input__caption {
+    color: rgb(79, 194, 79);
+}
+
+/* полоса, подчеркивающая поле ввода  */
+.input__bar {
+    position: relative;
+    display: block;
+}
+
+/* удлинняем полосу при активном поле ввода */
+.input__input:focus ~ .input__bar:before,
+.input__input:focus ~ .input__bar:after {
+    width: 100%;
+}
+
+/* удлинняем полосу под полем ввода */
+.input__bar:after {
+    position: absolute;
+    content: "";
+
+    height: 2px;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    right: -50%;
+
+    background: $main-theme-color;
+
+    transition: all 0.3s ease-in-out;
+}
+
+
