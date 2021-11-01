@@ -33,13 +33,11 @@ class SettingsStore extends BaseStore {
             avatar: null,
         });
 
-        this._storage.set('userSettingsData', {
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
-            avatar: undefined,
-        });
+        this._storage.set('login', undefined);
+        this._storage.set('email', undefined);
+        this._storage.set('password', undefined);
+        this._storage.set('passwordRepeat', undefined);
+        this._storage.set('avatar', undefined);
     }
 
     /**
@@ -109,18 +107,13 @@ class SettingsStore extends BaseStore {
     async _put(data) {
         const formdata = data;
 
-        this._storage.set('userSettingsData', {
-            login: data.get('login'),
-            email: data.get('email'),
-            password: data.get('password'),
-            passwordRepeat: data.get('passwordRepeat'),
-            oldPassword: data.get('oldPassword'),
-            avatar: data.get('avatar'),
-        });
+        this._storage.set('login', data.get('login'));
+        this._storage.set('email', data.get('email'));
+        this._storage.set('password', undefined);
+        this._storage.set('passwordRepeat', undefined);
+        formdata.set('avatar', this._storage.get('avatar'));
 
         this._validate(data);
-
-        formdata.set('avatar', this.__setAvatar(data.get('avatar')));
 
         if (!this.__validationPassed()) {
             return;
@@ -137,10 +130,8 @@ class SettingsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('login', data.get('login'));
-            this._storage.set('email', data.get('email'));
-            this._storage.set('avatar', payload.data.avatar);
-            this._emitChange();
+            console.log('oks');
+            // this._emitChange();
             return;
 
         case HttpStatusCodes.NotMofidied:
@@ -188,7 +179,7 @@ class SettingsStore extends BaseStore {
 
             this._storage.get('validation').avatar = validator.validateAvatar(data.avatar);
             if (!!this._storage.get('validation').avatar) {
-                this._storage.get('userSettingsData').avatar = '';
+                this._storage.set('avatar', null);
                 return;
             }
         }
@@ -206,37 +197,30 @@ class SettingsStore extends BaseStore {
         const validation = this._storage.get('validation');
 
         validation.login = validator.validateLogin(data.get('login'));
-        if (!!validation.login) {
-            this._storage.get('userSettingsData').login = '';
+        if (validation.login) {
+            this._storage.set('login', '');
         }
 
         validation.oldPassword = validator.validatePassword(data.get('oldPassword'));
-        if (!!validation.oldPassword) {
-            this._storage.get('userSettingsData').oldPassword = '';
-        }
 
         if (!!data.get('password')) {
             validation.password = validator.validatePassword(data.get('password'));
-            if (!!validation.password) {
-                this._storage.get('userSettingsData').password = '';
-            }
         }
 
         validation.email = validator.validateEMail(data.get('email'));
-        if (!!validation.email) {
-            this._storage.get('userSettingsData').email = '';
+        if (validation.email) {
+            this._storage.set('email', '');
         }
 
         if (!!data.get('password')) {
             if (data.get('password') !== data.get('passwordRepeat')) {
                 validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
-                this._storage.get('userSettingsData').passwordRepeat = '';
             }
         }
 
         validation.avatar = validator.validateAvatar(data.get('avatar'));
-        if (!!validation.avatar) {
-            this._storage.get('userSettingsData').avatar = '';
+        if (validation.avatar) {
+            this._storage.set('avatar', '');
         }
     }
 
@@ -254,18 +238,16 @@ class SettingsStore extends BaseStore {
      * Метод, проверяющий тип аватара:
      * File при загрузке или String на блоб, если файл уже был загружен
      * @param {String|File} avatar
-     * @return {File|String} файл или адрес blob
+     * @return {File|String|null} файл или адрес blob
      */
     __setAvatar(avatar) {
         if (avatar instanceof File) {
             if (avatar.size === 0) {
-                return this._storage.get('avatar');
+                return null;
             }
             const avatarUrl = URL.createObjectURL(avatar);
-            this._storage.get('userSettingsData').avatar = avatarUrl;
             return avatarUrl;
         }
-        this._storage.get('userSettingsData').avatar = avatar;
         return new File([avatar], 'avatar');
     }
 }

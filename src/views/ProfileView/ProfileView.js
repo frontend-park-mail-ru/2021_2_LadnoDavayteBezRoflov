@@ -37,7 +37,6 @@ export default class ProfileView extends BaseView {
             email: undefined,
             password: undefined,
             passwordRepeat: undefined,
-            avatar: undefined,
         };
     }
 
