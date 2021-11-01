@@ -24,16 +24,16 @@ export const Html = {
   * Константа, содержащая в себе параметры самого себя.
   */
 export const SelfAddress = {
-    Url: 'http://95.163.213.142',
-    Port: '3000',
+    Url: FRONTEND_ADDRESS,
+    Port: FRONTEND_PORT,
 };
 
 /**
   * Константа, содержащая в себе параметры бэкенда.
   */
 export const BackendAddress = {
-    Url: 'http://95.163.213.142',
-    Port: '8000',
+    Url: BACKEND_ADDRESS,
+    Port: BACKEND_PORT,
 };
 
 /**

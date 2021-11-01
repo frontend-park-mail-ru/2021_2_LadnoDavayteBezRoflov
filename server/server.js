@@ -6,30 +6,29 @@ const morgan = require('morgan');
 const path = require('path');
 /* Создаем приложение */
 const app = express();
-/* Прописываем путь к папке public */
-const publicFolder = path.resolve(__dirname, '..', 'public');
-const srcFolder = path.resolve(__dirname, '..', 'src');
 /* Определяем текущий порт */
 const port = process.env.PORT || 80;
+
 /* Цветовая подсветка статусов */
 app.use(morgan('dev'));
+
+/* Время кэширования ответов, в сек */
+const cacheTime = 256 * 24 * 60 * 60;
+/* middleware для кэширования бандлов */
+const cacheMW = (req, res, next) => {
+    res.set('Cache-control', `public, max-age=${cacheTime}`);
+    next();
+};
+app.use([/\/bundle\.[A-Za-z0-9]*\.js/, /\/style\.[A-Za-z0-9]*\.css/], cacheMW);
+
+/* Директория со статикой */
+const distFolder = path.resolve(__dirname, '..', 'dist');
 /* Используем статику */
-app.use(express.static(publicFolder));
-app.use(express.static(srcFolder));
-
-/* фикс выдачи скриптов */
-app.all('/src/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, `..${req.url}`));
-});
-
-/* фикс выдачи скриптов */
-app.all('/public/css/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, `..${req.url}`));
-});
+app.use(express.static(distFolder));
 
 /* Реагируем на любые запросы посылкой index.html */
 app.all('*', (req, res) => {
-    res.sendFile(path.resolve(`${publicFolder}/index.html`));
+    res.sendFile(path.resolve(distFolder, 'index.html'));
 });
 
 /* Слушаем указаный порт */

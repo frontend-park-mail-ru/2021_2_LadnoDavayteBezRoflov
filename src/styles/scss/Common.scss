@@ -1,0 +1,17 @@
+@import 'Font-awesome.min';
+@import 'Fonts';
+@import 'Popups';
+@import 'Refuse';
+@import 'Reset';
+@import 'Constants';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}

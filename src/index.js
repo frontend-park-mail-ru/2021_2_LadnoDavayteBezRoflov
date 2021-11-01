@@ -11,8 +11,9 @@ import Router from './modules/Router/Router.js';
 // utils
 import {Html, Urls} from './constants/constants.js';
 
-// Скомпилированные шаблоны Handlebars
-import '/src/tmpl.js';
+
+// Файл стилей
+import './styles/scss/Common.scss';
 
 // Views
 import RegisterView from './views/RegisterView/RegisterView.js';

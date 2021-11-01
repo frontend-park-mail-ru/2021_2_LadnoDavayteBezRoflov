@@ -1,8 +1,12 @@
 // Базовый компонент
 import {userActions} from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+// Стили
+import './Navbar.scss';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
+// Шаблон
+import template from './Navbar.hbs';
 
 /**
  * Класс, реализующий компонент Navbar.
@@ -13,7 +17,7 @@ export default class NavbarComponent extends BaseComponent {
     * @param {function} context контекст отрисовки шаблона
     */
     constructor(context) {
-        super(context, Handlebars.templates['components/Navbar/Navbar']);
+        super(context, template);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);

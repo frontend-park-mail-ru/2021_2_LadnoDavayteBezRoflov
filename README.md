@@ -26,11 +26,11 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 
 ### Usage
 
-> Starting the server from the scratch: `npm start`
+> Starting the server from the scratch: `npm start` or `npm start-dev` (development configuration)
 
-> Compiling Handlebars templates: `npm run handlebars`
+> Build: `npm run build` or `npm run build-dev` (development configuration)
 
-> Running server without template compilation: `npm run server`
+> Starting server after build: `npm run server` or `npm run server-dev` (auto-reloading server)
 
 > Running linter: `npm run lint`
 
@@ -79,7 +79,7 @@ Latest version: `0.2.0`: *Transferred to Flux architecture, refactored every mod
 
 ### Code style
 The project is written using slightly modified [Google ESling config](https://github.com/google/eslint-config-google). Code style changes:
-  
+
 * **Semicolons** at the end of statements are **required**;
 * Use of **single quotes** wherever possible is **required**;
 * **4-space** indentation is **required**;

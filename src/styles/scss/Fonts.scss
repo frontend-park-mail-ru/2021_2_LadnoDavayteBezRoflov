@@ -1,6 +1,8 @@
-@font-face {  
+@import 'Font-awesome.min';
+
+@font-face {
     font-family: 'Montserrat';
-    src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
+    src: url('../../../public/fonts/Montserrat-Regular.ttf') format('truetype');
 }
 
 .material-icons_colored {
@@ -28,11 +30,11 @@
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url('../fonts/materialicons-webfont.woff2') format('woff2');
+    src: url('../../../public/fonts/materialicons-webfont.woff2') format('woff2');
 }
 
 .material-icons {
-    font-family: 'Material Icons', sans-serif; 
+    font-family: 'Material Icons', sans-serif;
     font-weight: normal;
     font-style: normal;
     font-size: 22px;
