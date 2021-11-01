@@ -11,7 +11,7 @@
                     </div>
                     <div>
                         <span class="material-icons material-icons-colored material-icons-colored_disabled">group_add</span>
-                        <span class="material-icons material-icons-colored add-board">add</span>
+                        <span class="material-icons material-icons-colored add-board" data-id="{{this.id}}">add</span>
                         <span class="material-icons material-icons-colored material-icons-colored_disabled">menu</span>
                     </div>
                 </div>
@@ -52,6 +52,9 @@
                         {{/each}}
                     </select>
                 </div>
+                {{#if modal-errors}}
+                <div class=""> {{modal-errors}}</div>
+                {{/if}}
                 <button type="submit" class="button" id="create-submit">Создать</button>
             </div>
         </form>

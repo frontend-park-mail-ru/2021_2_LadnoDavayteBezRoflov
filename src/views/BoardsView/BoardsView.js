@@ -77,6 +77,7 @@ export default class BoardsView extends BaseView {
         super.render();
         this._findCreateBoardModal();
         this.addEventListeners();
+        this._showModalIfErrors();
     }
 
     /**
@@ -95,6 +96,16 @@ export default class BoardsView extends BaseView {
     removeEventListeners() {
         // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
         this._removeListenersCreateModal();
+    }
+
+    /**
+     * Делает видимым модальное окно, если создание доски закончилось ошибкой
+     * @private
+     */
+    _showModalIfErrors() {
+        if (this.context.get('modal-errors')) {
+            this._createModal.modalWrapper.style.display = 'none';
+        }
     }
 
     /**
@@ -154,9 +165,16 @@ export default class BoardsView extends BaseView {
     // Callbacks
     /**
      * Делает видимым модальное окно создания доски
+     * @param {Object} event
      * @private
      */
-    _showCreateBoardModal() {
+    _showCreateBoardModal(event) {
+        const teamID = event.target.dataset.id;
+        const activeOption = Array.from(this._createModal.boardTeam.getElementsByTagName('option'))
+            .find((option) => {
+                return option.value === teamID;
+            });
+        activeOption.selected = true;
         this._createModal.modalWrapper.style.display = 'block';
     }
 
