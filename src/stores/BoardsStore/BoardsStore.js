@@ -47,7 +47,6 @@ class BoardsStore extends BaseStore {
             this._emitChange();
             break;
         case BoardsActionTypes.BOARDS_MODAL_SHOW:
-            console.log('show');
             this._showModal(action.data);
             this._emitChange();
             break;
