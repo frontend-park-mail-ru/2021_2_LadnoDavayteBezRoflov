@@ -64,6 +64,12 @@ body {
   }
 }
 
+.button:focus,
+.button:hover {
+  background-color: $main-theme-color__focus;
+}
+
+
 $simple-form-radius: 10px;
 
 .simple-form-element {
@@ -88,27 +94,15 @@ $simple-form-radius: 10px;
   border: 2px solid $error-color;
   background: $error-bg-color;
   color: $error-color;
-  line-height: 20px;
-
-  transition: all 0.3s ease-in-out;
 
   &::before {
-    display: inline;
     @extend .material-icons;
     content: 'close';
+    font-size: 30px;
+    display: inline;
     position: relative;
-    border: 2px solid $error-color;
+    color: $error-bg-color;
+    background-color: $error-color;
     border-radius: 100%;
   }
-}
-
-/* иконка ошибки */
-.register__input__error__fa {
-  margin: 8px 8px;
-  padding: 8px;
-
-  font-size: 2em;
-  vertical-align: middle;
-
-  transition: all 0.3s ease-in-out;
 }
