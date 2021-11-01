@@ -1,8 +1,8 @@
 import {ConstantMessages} from '../../constants/constants.js';
 
 /**
-  * Класс, реализующий валидацию форм.
-  */
+ * Класс, реализующий валидацию форм.
+ */
 export default class Validator {
     /**
      * @constructor
@@ -77,6 +77,18 @@ export default class Validator {
     validateAvatar(source) {
         if (source.size > this.maxImageSize) {
             return ConstantMessages.AvatarTooBig;
+        }
+        return null;
+    }
+
+    /**
+     * Метод, валидирующий название доски
+     * @param {String} title
+     * @return {String | null}
+     */
+    validateBoardTitle(title) {
+        if (title.length < 1 || title.length > 60) {
+            return ConstantMessages.BoardTitleTooLong;
         }
         return null;
     }

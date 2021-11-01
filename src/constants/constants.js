@@ -70,4 +70,7 @@ export const ConstantMessages = {
     UseOnlyLatinLettersPassword: 'Введите пароль, содержащий только латинские буквы',
 
     AvatarTooBig: 'Аватар не должен превышать 500 МиБ',
+
+    BoardTitleTooLong: 'Название доски превышает 60 символов',
+    BoardErrorOnServer: 'Не удалось создать доску, попробуйте позднее',
 };

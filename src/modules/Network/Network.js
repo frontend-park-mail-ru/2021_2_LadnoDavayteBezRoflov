@@ -143,7 +143,7 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/board`,
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
                                 {...options, ...this._defaultOptions});
     }
 
