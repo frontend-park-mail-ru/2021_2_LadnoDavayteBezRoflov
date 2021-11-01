@@ -14,6 +14,7 @@ body {
   background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
   height: 100%;
   font-family: 'Montserrat', sans-serif;
+  min-width: 400px;
 }
 
 .horizontal-line {
@@ -77,4 +78,37 @@ $simple-form-radius: 10px;
     box-shadow: 0 0 10px 2px $default-box-shadow-color;
     outline: none;
   }
+}
+
+/* контейнер для ошибок */
+.error {
+  padding: 5px 10px;
+  border-radius: 16px;
+
+  border: 2px solid $error-color;
+  background: $error-bg-color;
+  color: $error-color;
+  line-height: 20px;
+
+  transition: all 0.3s ease-in-out;
+
+  &::before {
+    display: inline;
+    @extend .material-icons;
+    content: 'close';
+    position: relative;
+    border: 2px solid $error-color;
+    border-radius: 100%;
+  }
+}
+
+/* иконка ошибки */
+.register__input__error__fa {
+  margin: 8px 8px;
+  padding: 8px;
+
+  font-size: 2em;
+  vertical-align: middle;
+
+  transition: all 0.3s ease-in-out;
 }

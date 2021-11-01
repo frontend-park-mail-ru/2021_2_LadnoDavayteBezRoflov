@@ -104,7 +104,7 @@ export default class BoardsView extends BaseView {
      */
     _showModalIfErrors() {
         if (this.context.get('modal-errors')) {
-            this._createModal.modalWrapper.style.display = 'none';
+            this._createModal.modalWrapper.style.display = 'block';
         }
     }
 

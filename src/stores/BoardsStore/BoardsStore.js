@@ -82,6 +82,8 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _create(data) {
+        this._storage.set('modal-errors', undefined);
+
         const validator = new Validator();
         const validatorStatus = validator.validateBoardTitle(data.name);
         if (validatorStatus) {

@@ -72,5 +72,6 @@ export const ConstantMessages = {
     AvatarTooBig: 'Аватар не должен превышать 500 МиБ',
 
     BoardTitleTooLong: 'Название доски превышает 60 символов',
+    BoardTitleTooShort: 'Название доски слишком короткое',
     BoardErrorOnServer: 'Не удалось создать доску, попробуйте позднее',
 };

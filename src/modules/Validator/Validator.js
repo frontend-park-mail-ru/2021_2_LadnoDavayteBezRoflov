@@ -87,7 +87,10 @@ export default class Validator {
      * @return {String | null}
      */
     validateBoardTitle(title) {
-        if (title.length < 1 || title.length > 60) {
+        if (title.length < 1) {
+            return ConstantMessages.BoardTitleTooShort;
+        }
+        if (title.length > 60) {
             return ConstantMessages.BoardTitleTooLong;
         }
         return null;
