@@ -13,6 +13,7 @@ import {boardsActions} from '../../actions/boards.js';
 import './BoardsView.scss';
 // Шаблон
 import template from './BoardsView.hbs';
+import IsEqualHelper from './IsEqualHelper';
 
 /**
  * Класс, реализующий страницу с досками.
@@ -77,6 +78,7 @@ export default class BoardsView extends BaseView {
         super.render();
         this._findCreateModalElements();
         this.addEventListeners();
+        this._toggleModal();
     }
 
     /**
@@ -108,19 +110,30 @@ export default class BoardsView extends BaseView {
     }
 
     /**
+     * Переключает видимость модального окна в зависимости от контекста из стора
+     * @private
+     */
+    _toggleModal() {
+        console.log(this.context.get('modal'));
+        if (this.context.get('modal').visible) {
+            this._createModal.modalWrapper.style.display = 'block';
+            return;
+        }
+        this._createModal.modalWrapper.style.display = 'none';
+    }
+
+    /**
      * Метод сохраняет элементы DOM связанные с формой создания доски
      * @private
      */
     _findCreateModalElements() {
         this._createModal = {};
         this._createModal.addBoardBtns = document.querySelectorAll('.add-board');
-        if (this.context.get('modal').visible) {
-            this._createModal.closeModalBtn = document.getElementById('close-modal');
-            this._createModal.modalWrapper = document.getElementById('create-board-modal-wrapper');
-            this._createModal.boardName = document.getElementById('board-name');
-            this._createModal.boardTeam = document.getElementById('board-team');
-            this._createModal.submitBtn = document.getElementById('create-submit');
-        }
+        this._createModal.closeModalBtn = document.getElementById('close-modal');
+        this._createModal.modalWrapper = document.getElementById('create-board-modal-wrapper');
+        this._createModal.boardName = document.getElementById('board-name');
+        this._createModal.boardTeam = document.getElementById('board-team');
+        this._createModal.submitBtn = document.getElementById('create-submit');
     }
 
     /**
@@ -132,12 +145,10 @@ export default class BoardsView extends BaseView {
             item.addEventListener('click', this._showCreateBoardModalCallBack);
         });
 
-        if (this.context.get('modal').visible) {
-            this._createModal.closeModalBtn.addEventListener('click',
-                                                             this._hideCreateBoardModalCallBack);
-            window.addEventListener('click', this._hideCreateBoardModalCallBack);
-            this._createModal.submitBtn.addEventListener('click', this._submitCreateBoardCallBack);
-        }
+        this._createModal.closeModalBtn.addEventListener('click',
+                                                         this._hideCreateBoardModalCallBack);
+        window.addEventListener('click', this._hideCreateBoardModalCallBack);
+        this._createModal.submitBtn.addEventListener('click', this._submitCreateBoardCallBack);
     }
 
     /**
@@ -145,14 +156,11 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _removeListenersCreateModal() {
-        if (!this._isActive) {
-            return;
-        }
-        this._createModal.addBoardBtns?.forEach((item) => {
+        this._createModal?.addBoardBtns?.forEach((item) => {
             item.removeEventListener('click', this._showCreateBoardModalCallBack);
         });
-        this._createModal.closeModalBtn.removeEventListener('click',
-                                                            this._hideCreateBoardModalCallBack);
+        this._createModal?.closeModalBtn.removeEventListener('click',
+                                                             this._hideCreateBoardModalCallBack);
         document.removeEventListener('click', this._hideCreateBoardModalCallBack);
     }
 
@@ -169,10 +177,14 @@ export default class BoardsView extends BaseView {
 
     /**
      * Скрывает модальное окно создания доски
+     * @param {Event} event объект события
      * @private
      */
-    _hideCreateBoardModal() {
-        boardsActions.hideModal();
+    _hideCreateBoardModal(event) {
+        if (event.target === this._createModal.closeModalBtn ||
+        event.target === this._createModal.modalWrapper) {
+            boardsActions.hideModal();
+        }
     }
 
     /**

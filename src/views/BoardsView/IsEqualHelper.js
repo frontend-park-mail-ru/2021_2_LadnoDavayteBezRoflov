@@ -6,5 +6,5 @@
  * @constructor
  */
 export default function IsEqualHelper(lhs, rhs) {
-    return lhs === rhs;
+    return parseInt(lhs) === parseInt(rhs);
 };
