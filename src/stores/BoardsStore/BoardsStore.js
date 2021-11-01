@@ -102,6 +102,7 @@ class BoardsStore extends BaseStore {
         if (validatorStatus) {
             return;
         }
+        this._hideModal();
 
         let payload;
 
@@ -130,6 +131,7 @@ class BoardsStore extends BaseStore {
             return;
 
         case HttpStatusCodes.InternalServerError:
+            this._showModal(data);
             this._storage.get('modal').errors = ConstantMessages.BoardErrorOnServer;
             return;
 
