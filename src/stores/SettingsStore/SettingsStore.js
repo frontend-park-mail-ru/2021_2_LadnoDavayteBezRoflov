@@ -230,7 +230,7 @@ class SettingsStore extends BaseStore {
      */
     __validationPassed() {
         return Object.values(this._storage.get('validation')).every((element) => {
-            return element === null;
+            return !element;
         });
     }
 
