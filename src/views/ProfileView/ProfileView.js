@@ -33,10 +33,10 @@ export default class ProfileView extends BaseView {
         this.onAvatarChange = this.onAvatarChange.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
+            login: null,
+            email: null,
+            password: null,
+            passwordRepeat: null,
         };
     }
 

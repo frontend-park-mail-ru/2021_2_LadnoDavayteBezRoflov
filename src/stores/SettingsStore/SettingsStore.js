@@ -33,11 +33,11 @@ class SettingsStore extends BaseStore {
             avatar: null,
         });
 
-        this._storage.set('login', undefined);
-        this._storage.set('email', undefined);
-        this._storage.set('password', undefined);
-        this._storage.set('passwordRepeat', undefined);
-        this._storage.set('avatar', undefined);
+        this._storage.set('login', null);
+        this._storage.set('email', null);
+        this._storage.set('password', null);
+        this._storage.set('passwordRepeat', null);
+        this._storage.set('avatar', null);
     }
 
     /**
@@ -71,7 +71,7 @@ class SettingsStore extends BaseStore {
      * @param {Object} data данные запроса.
      */
     async _get(data) {
-        if (data.userName === undefined) {
+        if (!data.userName) {
             return;
         }
 
@@ -109,8 +109,8 @@ class SettingsStore extends BaseStore {
 
         this._storage.set('login', data.get('login'));
         this._storage.set('email', data.get('email'));
-        this._storage.set('password', undefined);
-        this._storage.set('passwordRepeat', undefined);
+        this._storage.delete('password');
+        this._storage.delete('passwordRepeat');
         formdata.set('avatar', this._storage.get('avatar'));
 
         this._validate(data);
@@ -130,8 +130,8 @@ class SettingsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            console.log('oks');
-            // this._emitChange();
+            this._storage.set('avatar', payload.data.avatar);
+            this._emitChange();
             return;
 
         case HttpStatusCodes.NotMofidied:
@@ -173,12 +173,12 @@ class SettingsStore extends BaseStore {
         const validator = new Validator();
 
         if (data.avatar instanceof File) {
-            if (data.avatar.size === 0) {
+            if (!data.avatar.size) {
                 throw new Error('SettingsStore: Ошибка загрузки аватара');
             }
 
             this._storage.get('validation').avatar = validator.validateAvatar(data.avatar);
-            if (!!this._storage.get('validation').avatar) {
+            if (this._storage.get('validation').avatar) {
                 this._storage.set('avatar', null);
                 return;
             }
@@ -203,7 +203,7 @@ class SettingsStore extends BaseStore {
 
         validation.oldPassword = validator.validatePassword(data.get('oldPassword'));
 
-        if (!!data.get('password')) {
+        if (data.get('password')) {
             validation.password = validator.validatePassword(data.get('password'));
         }
 
@@ -212,7 +212,7 @@ class SettingsStore extends BaseStore {
             this._storage.set('email', '');
         }
 
-        if (!!data.get('password')) {
+        if (data.get('password')) {
             if (data.get('password') !== data.get('passwordRepeat')) {
                 validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
             }
@@ -242,7 +242,7 @@ class SettingsStore extends BaseStore {
      */
     __setAvatar(avatar) {
         if (avatar instanceof File) {
-            if (avatar.size === 0) {
+            if (!avatar.size) {
                 return null;
             }
             const avatarUrl = URL.createObjectURL(avatar);
