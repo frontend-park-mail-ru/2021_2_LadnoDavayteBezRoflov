@@ -11,7 +11,7 @@
         <div class="navbar__links">
             <a href="/boards" class="navbar__link">Доски</a>
             {{#if isAuthorized}}
-                <a href="/profile/{{userName}}" class="navbar__link">Профиль</a>
+                <a href="/profile" class="navbar__link">Профиль</a>
                 <a id="logout" class="navbar__link">Выход</a>
             {{else}}
                 <a href="/login" class="navbar__link">Войти</a>

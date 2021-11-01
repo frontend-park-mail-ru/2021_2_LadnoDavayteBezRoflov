@@ -23,5 +23,3 @@ export const boardsActions = {
         });
     },
 };
-
-export default boardsActions;

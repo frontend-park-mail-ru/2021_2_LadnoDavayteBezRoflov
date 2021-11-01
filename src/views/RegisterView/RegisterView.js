@@ -97,7 +97,7 @@ export default class RegisterView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        document.getElementById('register')?.removeEventListener('register',
+        document.getElementById('register')?.removeEventListener('submit',
                                                                  this.formAuthorizationCallback);
     }
 

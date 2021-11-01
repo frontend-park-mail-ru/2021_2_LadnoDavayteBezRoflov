@@ -71,5 +71,3 @@ export const userActions = {
     },
 
 };
-
-export default userActions;

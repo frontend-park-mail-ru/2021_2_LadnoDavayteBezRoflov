@@ -19,6 +19,7 @@ import './styles/scss/Common.scss';
 import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
+import ProfileView from './views/ProfileView/ProfileView.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -34,6 +35,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         Router.register(Urls.Register, new RegisterView(root));
         Router.register(Urls.Login, new LoginView(root));
         Router.register(Urls.Boards, new BoardsView(root));
+        Router.register(Urls.Profile, new ProfileView(root));
 
         Router.start();
     } catch (error) {
