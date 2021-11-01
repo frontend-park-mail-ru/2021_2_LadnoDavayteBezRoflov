@@ -6,7 +6,7 @@
             <div class="profile-box__column-left">
                 <div class="profile-container">
                     <img class="profile-box__user-picture" src="{{avatar}}" alt="User Picture" id="avatar-img">
-                    <input type="file" name="avatar" id="avatar" class="profile-box__user-avatar" accept="image/*" value="{{userSettingsData.avatar}}">
+                    <input type="file" name="avatar" id="avatar" class="profile-box__user-avatar" accept="image/*" value="{{avatar}}">
                     <label for="avatar" class="profile-box__upload-button">
                         <span class="profile-box__upload-icon-wrapper"><img class="profile-box__upload-icon" src="assets/icons/upload.webp" alt="Выбрать файл" width="25"></span>
                         <span class="profile-box__upload-button-text">Выберите файл</span>
@@ -24,7 +24,7 @@
             <div class="profile-box__column-right">
                 <div class="profile-box__container">
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userSettingsData.login}}" required>
+                        <input class="profile__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{login}}" required>
                         <label class="profile__input__caption">Логин</label>
                         <span class="profile__input__bar"></span>
 
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{userSettingsData.email}}" required>
+                        <input class="profile__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{email}}" required>
                         <label class="profile__input__caption">Почта</label>
                         <span class="profile__input__bar"></span>
 
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.password}}">
+                        <input class="profile__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{password}}">
                         <label class="profile__input__caption">Новый пароль</label>
                         <span class="profile__input__bar"></span>
 
@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.passwordRepeat}}">
+                        <input class="profile__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{passwordRepeat}}">
                         <label class="profile__input__caption">Повторите пароль</label>
                         <span class="profile__input__bar"></span>
 
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userSettingsData.oldPassword}}" required>
+                        <input class="profile__input__input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{oldPassword}}" required>
                         <label class="profile__input__caption">Старый пароль</label>
                         <span class="profile__input__bar"></span>
 
