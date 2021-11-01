@@ -144,7 +144,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/boards`,
-                                {...options, ...this._defaultOptions});
+                                options);
     }
 
     /**

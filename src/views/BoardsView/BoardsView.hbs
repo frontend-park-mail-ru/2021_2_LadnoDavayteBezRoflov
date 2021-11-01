@@ -31,35 +31,41 @@
     </div>
 </div>
 
-<div id="create-board-modal-wrapper">
-    <div class="create-board-modal">
-        <form class="create-board-form">
-            <div class="create-board-form__header">
-                Добавить доску
-            </div>
-            <div class="horizontal-line"></div>
-            <div class="create-board-form__elements-wrapper">
-                <div>
-                    <label for="board-name" class>Название доски:</label>
-                    <input class="simple-form-element" type="text" id="board-name" name="board-name" autofocus
-                           pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+{{#if modal.visible}}
+    <div id="create-board-modal-wrapper">
+        <div class="create-board-modal">
+            <form class="create-board-form">
+                <div class="create-board-form__header">
+                    Добавить доску
                 </div>
-                <div>
-                    <label for="team-select">Команда:</label>
-                    <select class="simple-form-element" id="board-team" name="team-select" required>
-                        {{#each teams}}
-                            <option value="{{this.id}}">{{this.team_name}}</option>
-                        {{/each}}
-                    </select>
+                <div class="horizontal-line"></div>
+                <div class="create-board-form__elements-wrapper">
+                    <div>
+                        <label for="board-name" class>Название доски:</label>
+                        <input class="simple-form-element" type="text" id="board-name" name="board-name" autofocus
+                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label for="team-select">Команда:</label>
+                        <select class="simple-form-element" id="board-team" name="team-select" required>
+                            {{#each teams}}
+                                {{#if (IsEqualHelper this.id modal.teamID) }}
+                                    <option value="{{this.id}}">{{this.team_name}} selected</option>
+                                {{else}}
+                                    <option value="{{this.id}}">{{this.team_name}}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{#if modal.errors}}
+                        <div class="error"> {{modal.errors}}</div>
+                    {{/if}}
+                    <button type="submit" class="button" id="create-submit">Создать</button>
                 </div>
-                {{#if modal-errors}}
-                <div class="error"> {{modal-errors}}</div>
-                {{/if}}
-                <button type="submit" class="button" id="create-submit">Создать</button>
-            </div>
-        </form>
-        <div class="close-button" id="close-modal"></div>
+            </form>
+            <div class="close-button" id="close-modal"></div>
+        </div>
     </div>
-</div>
+{{/if}}
 
 {{{Footer}}}

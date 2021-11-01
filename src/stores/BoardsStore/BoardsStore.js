@@ -21,7 +21,11 @@ class BoardsStore extends BaseStore {
         this._storage = new Map();
 
         this._storage.set('teams', undefined);
-        this._storage.set('modal-errors', undefined);
+        this._storage.set('modal', {
+            visible: false,
+            teamID: undefined,
+            errors: undefined,
+        });
     }
 
     /**
@@ -34,8 +38,17 @@ class BoardsStore extends BaseStore {
             await this._get();
             this._emitChange();
             break;
-        case BoardsActionTypes.BOARDS_POST:
+        case BoardsActionTypes.BOARDS_CREATE:
             await this._create(action.data);
+            this._emitChange();
+            break;
+        case BoardsActionTypes.BOARDS_MODAL_HIDE:
+            this._hideModal();
+            this._emitChange();
+            break;
+        case BoardsActionTypes.BOARDS_MODAL_SHOW:
+            console.log('show');
+            this._showModal(action.data);
             this._emitChange();
             break;
         default:
@@ -82,12 +95,11 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _create(data) {
-        this._storage.set('modal-errors', undefined);
-
         const validator = new Validator();
+
         const validatorStatus = validator.validateBoardTitle(data.name);
+        this._storage.get('modal').errors = validatorStatus;
         if (validatorStatus) {
-            this._storage.set('modal-errors', validatorStatus);
             return;
         }
 
@@ -118,12 +130,37 @@ class BoardsStore extends BaseStore {
             return;
 
         case HttpStatusCodes.InternalServerError:
-            this._storage.set('modal-errors', ConstantMessages.BoardErrorOnServer);
+            this._storage.get('modal').errors = ConstantMessages.BoardErrorOnServer;
             return;
 
         default:
             console.log('Undefined error');
         }
+    }
+
+    /**
+     * Устанавливает состояние скрытого модального окна
+     * @private
+     */
+    _hideModal() {
+        this._storage.set('modal', {
+            visible: false,
+            teamID: undefined,
+            errors: undefined,
+        });
+    }
+
+    /**
+     * Устанавливает состояние видимого модального окна
+     * @param {Object} data
+     * @private
+     */
+    _showModal(data) {
+        this._storage.set('modal', {
+            visible: true,
+            teamID: data.teamID,
+            errors: undefined,
+        });
     }
 }
 

@@ -75,9 +75,8 @@ export default class BoardsView extends BaseView {
      */
     render() {
         super.render();
-        this._findCreateBoardModal();
+        this._findCreateModalElements();
         this.addEventListeners();
-        this._showModalIfErrors();
     }
 
     /**
@@ -99,16 +98,6 @@ export default class BoardsView extends BaseView {
     }
 
     /**
-     * Делает видимым модальное окно, если создание доски закончилось ошибкой
-     * @private
-     */
-    _showModalIfErrors() {
-        if (this.context.get('modal-errors')) {
-            this._createModal.modalWrapper.style.display = 'block';
-        }
-    }
-
-    /**
      * Метод биндит контекст this к calllback'ам
      * @private
      */
@@ -122,14 +111,16 @@ export default class BoardsView extends BaseView {
      * Метод сохраняет элементы DOM связанные с формой создания доски
      * @private
      */
-    _findCreateBoardModal() {
+    _findCreateModalElements() {
         this._createModal = {};
-        this._createModal.closeModalBtn = document.getElementById('close-modal');
-        this._createModal.modalWrapper = document.getElementById('create-board-modal-wrapper');
         this._createModal.addBoardBtns = document.querySelectorAll('.add-board');
-        this._createModal.boardName = document.getElementById('board-name');
-        this._createModal.boardTeam = document.getElementById('board-team');
-        this._createModal.submitBtn = document.getElementById('create-submit');
+        if (this.context.get('modal').visible) {
+            this._createModal.closeModalBtn = document.getElementById('close-modal');
+            this._createModal.modalWrapper = document.getElementById('create-board-modal-wrapper');
+            this._createModal.boardName = document.getElementById('board-name');
+            this._createModal.boardTeam = document.getElementById('board-team');
+            this._createModal.submitBtn = document.getElementById('create-submit');
+        }
     }
 
     /**
@@ -137,13 +128,16 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _addListenersCreateModal() {
-        this._createModal.addBoardBtns.forEach((item) => {
+        this._createModal.addBoardBtns?.forEach((item) => {
             item.addEventListener('click', this._showCreateBoardModalCallBack);
         });
-        this._createModal.closeModalBtn.addEventListener('click',
-                                                         this._hideCreateBoardModalCallBack);
-        window.addEventListener('click', this._hideCreateBoardModalCallBack);
-        this._createModal.submitBtn.addEventListener('click', this._submitCreateBoardCallBack);
+
+        if (this.context.get('modal').visible) {
+            this._createModal.closeModalBtn.addEventListener('click',
+                                                             this._hideCreateBoardModalCallBack);
+            window.addEventListener('click', this._hideCreateBoardModalCallBack);
+            this._createModal.submitBtn.addEventListener('click', this._submitCreateBoardCallBack);
+        }
     }
 
     /**
@@ -151,15 +145,15 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _removeListenersCreateModal() {
-        if (!this._createModal) {
+        if (!this._isActive) {
             return;
         }
-        this._createModal.addBoardBtns.forEach((item) => {
+        this._createModal.addBoardBtns?.forEach((item) => {
             item.removeEventListener('click', this._showCreateBoardModalCallBack);
         });
         this._createModal.closeModalBtn.removeEventListener('click',
                                                             this._hideCreateBoardModalCallBack);
-        window.removeEventListener('click', this._hideCreateBoardModalCallBack);
+        document.removeEventListener('click', this._hideCreateBoardModalCallBack);
     }
 
     // Callbacks
@@ -170,25 +164,15 @@ export default class BoardsView extends BaseView {
      */
     _showCreateBoardModal(event) {
         const teamID = event.target.dataset.id;
-        const activeOption = Array.from(this._createModal.boardTeam.getElementsByTagName('option'))
-            .find((option) => {
-                return option.value === teamID;
-            });
-        activeOption.selected = true;
-        this._createModal.modalWrapper.style.display = 'block';
+        boardsActions.showModal(teamID);
     }
 
     /**
      * Скрывает модальное окно создания доски
-     * @param {Event} event - оюъект собыбия клика
      * @private
      */
-    _hideCreateBoardModal(event) {
-        if (event.target !== this._createModal.modalWrapper &&
-            event.target !== this._createModal.closeModalBtn) {
-            return;
-        }
-        this._createModal.modalWrapper.style.display = 'none';
+    _hideCreateBoardModal() {
+        boardsActions.hideModal();
     }
 
     /**
