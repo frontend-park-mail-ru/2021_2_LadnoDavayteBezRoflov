@@ -1,8 +1,8 @@
 import {SelfAddress, BackendAddress} from '../../constants/constants.js';
 
 /**
-  * Класс, реализующий работу с сетью.
-  */
+ * Класс, реализующий работу с сетью.
+ */
 class Network {
     /**
      * Конструктор, инициализирующий BackendUrl и порт бэкенд-сервера.
@@ -35,7 +35,7 @@ class Network {
      * @param {String} URL адрес, на который будет посылаться запрос
      * @param {object} options параметры запроса
      * @return {Promise<Response>} промис запроса
-    */
+     */
     httpRequest(URL, options) {
         return fetch(URL, {...this._defaultOptions, ...options})
             .then((response) => response.json()
@@ -131,6 +131,20 @@ class Network {
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
             options);
+    }
+
+    /**
+     * Метод, реализующий запрос POST /api/board.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async createBoard(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}/api/board`,
+                                {...options, ...this._defaultOptions});
     }
 
     /**

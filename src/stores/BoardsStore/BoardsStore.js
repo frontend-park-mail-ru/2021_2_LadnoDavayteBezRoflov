@@ -32,7 +32,10 @@ class BoardsStore extends BaseStore {
             await this._get();
             this._emitChange();
             break;
-
+        case BoardsActionTypes.BOARDS_POST:
+            await this._post(action.data);
+            this._emitChange(); // or router go
+            break;
         default:
             return;
         }
@@ -58,6 +61,38 @@ class BoardsStore extends BaseStore {
                 (first, second) => (first.id > second.id) ?
                     1 : ((second.id > first.id) ? -1 : 0)),
             );
+            return;
+
+        case HttpStatusCodes.Unauthorized:
+            UserStore.__logout();
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
+    }
+
+    /**
+     * Метод, обрабатывающий запрос на создание доски
+     * @param {Object} data - информация о новой доске
+     * @return {Promise<void>}
+     * @private
+     */
+    async _post(data) {
+        let payload;
+
+        try {
+            payload = await Network.createBoard({
+                board_name: data.name,
+                tid: data.teamID,
+            });
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
             return;
 
         case HttpStatusCodes.Unauthorized:

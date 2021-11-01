@@ -8,6 +8,7 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  */
 export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
+    BOARDS_POST: 'boards/post',
 };
 
 /**
@@ -20,6 +21,17 @@ export const boardsActions = {
     getBoards() {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_GET,
+        });
+    },
+
+
+    createBoard(name, teamID) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_POST,
+            data: {
+                name,
+                teamID,
+            },
         });
     },
 };
