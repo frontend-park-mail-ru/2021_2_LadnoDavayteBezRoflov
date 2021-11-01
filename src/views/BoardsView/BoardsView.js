@@ -13,7 +13,6 @@ import {boardsActions} from '../../actions/boards.js';
 import './BoardsView.scss';
 // Шаблон
 import template from './BoardsView.hbs';
-import IsEqualHelper from './IsEqualHelper';
 
 /**
  * Класс, реализующий страницу с досками.
