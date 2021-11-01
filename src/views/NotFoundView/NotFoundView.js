@@ -1,6 +1,6 @@
 import BaseView from '../BaseView.js';
 
-import UserStore from '../../stores/UserStore/UserStore.js'; 
+import UserStore from '../../stores/UserStore/UserStore.js';
 
 // Шаблон
 import template from './NotFoundView.hbs';

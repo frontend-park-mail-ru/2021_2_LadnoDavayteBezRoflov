@@ -18,6 +18,9 @@ import Router from '../../modules/Router/Router.js';
 // Constants
 import {Urls} from '../../constants/constants.js';
 
+// Шаблон
+import template from './BoardView.hbs';
+
 /**
   * Класс, реализующий страницу доски.
   */
@@ -28,7 +31,7 @@ export default class BoardView extends BaseView {
     */
     constructor(parent) {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
-        super(context, Handlebars.templates['views/BoardView/BoardView'], parent);
+        super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh); // + field

@@ -3,11 +3,11 @@
  */
 export default class BaseComponent {
     /**
-    * @constructor
-    * @param {Object} context контекст отрисовки шаблона
-    * @param {Function} template функция отрисовки шаблона
-    * @param {Element?} parent элемент, в который будет отрисован компонент
-    */
+     * @constructor
+     * @param {Object} context контекст отрисовки шаблона
+     * @param {Function} template функция отрисовки шаблона
+     * @param {Element?} parent элемент, в который будет отрисован компонент
+     */
     constructor(context, template, parent) {
         this.parent = parent;
         this.template = template;
@@ -15,9 +15,9 @@ export default class BaseComponent {
     }
 
     /**
-    * Метод, отрисовывающий HTML компонента.
-    * @return {String} HTML-код компонента
-    */
+     * Метод, отрисовывающий HTML компонента.
+     * @return {String} HTML-код компонента
+     */
     render() {
         if (!!this.template) {
             if (this.context instanceof Map) {

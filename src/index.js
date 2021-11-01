@@ -18,6 +18,8 @@ import './styles/scss/Common.scss';
 import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
+import BoardView from './views/BoardView/BoardView.js';
+import CardComponent from './components/Card/Card.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -29,6 +31,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         const promise = new Promise(function waitForFetchUser(resolve, reject) {
             if (UserStore.getContext('isAuthorized') === undefined) {
+                // eslint-disable-next-line no-invalid-this
                 setTimeout(waitForFetchUser.bind(this, resolve, reject), 30);
             }
             resolve();

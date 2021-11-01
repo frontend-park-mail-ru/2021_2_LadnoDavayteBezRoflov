@@ -7,29 +7,34 @@ import Router from '../../modules/Router/Router.js';
 // Stores
 import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
+// Шаблон
+import template from './Card.hbs';
+
+// Шаблон
+import templatePopup from './CardPopup.hbs';
 
 /**
  * Класс, реализующий компонент Card.
  */
 export default class CardComponent extends BaseComponent {
     /**
-    * @constructor
-    * @param {Object} context контекст отрисовки шаблона
-    */
+     * @constructor
+     * @param {Object} context контекст отрисовки шаблона
+     */
     constructor(context) {
-        super(context, Handlebars.templates['components/Card/Card']);
+        super(context, template);
 
         this._onRefresh = this._onRefresh.bind(this);
         BoardStore.addListener(this._onRefresh);
 
         this._backCallback = this._back.bind(this);
 
-        this._popupTemplate = Handlebars.templates['components/Card/CardPopup'];
+        this._popupTemplate = templatePopup;
     }
 
     /**
-     * Description
-     * @return {any}
+     * Метод, вызывающийся при обновлении карточки.
+     * @return {html} код компонента
      */
     _onRefresh() {
         this.context = BoardStore.getCardByCID(this._cid);
@@ -37,7 +42,7 @@ export default class CardComponent extends BaseComponent {
     }
 
     /**
-     * Description
+     * Метод, рендерящий попап.
      * @param {any} pathParams
      * @return {any}
      */
@@ -59,7 +64,7 @@ export default class CardComponent extends BaseComponent {
     }
 
     /**
-     * Description
+     * Метод, вызывающийся при переходе на карточку через роутер с режимом попапа.
      * @param {any} urlData
      */
     _onPopup(urlData) {
@@ -68,7 +73,7 @@ export default class CardComponent extends BaseComponent {
     }
 
     /**
-     * Description
+     * Метод, вызывающийся при сокрытии карточки.
      */
     _onHide() {
         document.getElementById('popup').innerHTML = null;
@@ -81,7 +86,7 @@ export default class CardComponent extends BaseComponent {
     }
 
     /**
-     * Description
+     * Метод, вызывающийся при выходе из попапа карточки.
      * @param {any} event
      */
     _back(event) {
