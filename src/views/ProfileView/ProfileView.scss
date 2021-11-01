@@ -1,30 +1,9 @@
-* {
-    box-sizing: border-box;
-
-    /* TODO вынести в нормальное место */
-    --primary-bg-color: rgb(207, 241, 249);
-    --secondary-bg-color: rgb(231, 246, 254);
-
-    --main-theme-color: rgb(37, 128, 133);
-    --main-theme-color__focus: rgb(77, 156, 245);
-
-    --transparent-bg-color: rgba(255, 255, 255, 0.3);
-    --default-box-shadow-color: rgba(0,0,0,0.2);
-
-    --error-color: rgb(216, 0, 12);
-    --error-bg-color: rgb(255, 210, 210);
-
-    --light-white-color: rgb(241, 241, 241);
-    --input-color: rgb(210, 210, 210);
-
-    --input__input-color: rgb(144, 144, 144);
-
-}
+@import '../../styles/scss/Constants';
 
 body {
     margin: 0;
 
-    background: linear-gradient(45deg, var(--primary-bg-color), var(--secondary-bg-color));
+    background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
 
     height: 100%;
 
@@ -32,16 +11,13 @@ body {
 
     --profile__min-width: 320px;
     --profile__max-width: 600px;
-
-    --login__min-height: 500px;
-    --login__max-height: 800px;
 }
   
 /* profile box style */
 
 .wrapper {
-    min-width: var(--profile__min-width);
-    max-width: var(--profile__max-width);
+    min-width: var(profile__min-width);
+    max-width: var(profile__max-width);
 
     position: absolute;
     transform: translate(-50%,-25%);
@@ -57,12 +33,12 @@ body {
     width: 100vw;
     height: max-content;
     max-width: 600px;
-    background: var(--transparent-bg-color);
+    background: $transparent-bg-color;
     padding: 2em;
     border-radius: 24px;
-    border-left: 1px solid var(--transparent-bg-color);
-    border-top: 1px solid var(--transparent-bg-color);
-    box-shadow: 24px 24px 40px -8px var(--default-box-shadow-color);
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
     text-align: center;
     transition: all 0.3s ease-in-out;
 }
@@ -87,7 +63,7 @@ body {
 
 .profile-box__button:focus,
 .profile-box__button:hover {
-    background-color: var(--main-theme-color__focus);
+    background-color: $main-theme-color__focus;
 }
   
 .profile-box__user-picture {
@@ -122,7 +98,7 @@ body {
     height: 60px;
     position: relative;
     left: 5%;
-    background: var(--main-theme-color);
+    background: $main-theme-color;
     color: rgb(255, 255, 255);
     font-size: 0.75rem;
     font-weight: 500;
@@ -135,7 +111,7 @@ body {
 }
 
 .profile-box__upload-button:hover {
-    background: var(--main-theme-color__focus);
+    background: $main-theme-color__focus;
     transition: all 0.3s ease-in-out;
 }
 
@@ -163,7 +139,7 @@ body {
     left: 4%;
     top: 10px;
 
-    color: var(--input-color);
+    color: $input-color;
 
     font-size: 15px;
     font-weight: 300;
@@ -183,7 +159,7 @@ body {
 
     width: 100%;
 
-    color: var(--input__input-color);
+    color: $input__input-color;
 
     font-size: 15px;
 }
@@ -225,7 +201,7 @@ body {
     width: 0;
     right: -50%;
 
-    background: var(--main-theme-color);
+    background: $main-theme-color;
 
     transition: all 0.3s ease-in-out;
 }
@@ -235,7 +211,7 @@ body {
     padding: 16px 24px;
 
     color: rgb(255, 255, 255);
-    background-color: var(--main-theme-color);
+    background-color: $main-theme-color;
 
     border: none;
     outline: none;
@@ -252,7 +228,7 @@ body {
 /* в случае активизации кнопки регистрации */
 .profile-box__button:focus,
 .profile-box__button:hover {
-    background-color: var(--main-theme-color__focus);
+    background-color: $main-theme-color__focus;
 }
 
 /* секция обработки ошибок */
@@ -264,8 +240,8 @@ body {
 
     border-radius: 16px;
 
-    color: var(--error-color);
-    background-color: var(--error-bg-color);
+    color: $error-color;
+    background-color: $error-bg-color;
 
     transition: all 0.3s ease-in-out;
 }
