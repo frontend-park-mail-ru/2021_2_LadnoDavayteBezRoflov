@@ -27,6 +27,11 @@ export const boardsActions = {
         });
     },
 
+    /**
+     * Действие: запрос доски с определенным id.
+     * @param {any} id
+     * @returns {any}
+     */
     getBoard(id) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARD_GET,

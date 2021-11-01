@@ -20,6 +20,7 @@ import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
+import ProfileView from './views/ProfileView/ProfileView.js';
 
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
@@ -46,6 +47,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         Router.register(Urls.Card, new CardComponent());
         Router.register(Urls.Boards, new BoardsView(root));
         Router.register(Urls.Board, new BoardView(root));
+        Router.register(Urls.Profile, new ProfileView(root));
 
         Router.start();
     } catch (error) {

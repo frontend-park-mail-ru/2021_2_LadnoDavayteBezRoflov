@@ -1,4 +1,5 @@
 // Базовый компонент
+import {userActions} from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
 
 // Стили
@@ -48,7 +49,6 @@ export default class NavbarComponent extends BaseComponent {
      */
     _logout(event) {
         event.preventDefault();
-
         userActions.logout();
     }
 
