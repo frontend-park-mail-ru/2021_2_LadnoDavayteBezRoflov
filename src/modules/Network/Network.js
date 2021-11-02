@@ -19,6 +19,7 @@ class Network {
             profile: 'api/profile',
             board: 'api/boards',
             card: 'api/cards',
+            cardlist: 'api/cardlists',
         };
 
         this._defaultOptions = {
@@ -219,6 +220,59 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            options);
+    }
+    /**
+     * Метод, реализующий запрос POST /api/cardlists.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _createCard(data) {
+        const options = {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/cardlists.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _updateCardList(data) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/cardlists.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _deleteCardList(data) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
             options);
     }
 

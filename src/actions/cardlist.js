@@ -7,7 +7,6 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  * Константа, содержащая в себе типы действий для списка досок.
  */
 export const CardListActionTypes = {
-    CARDLIST_GET: 'cardlists/get',
     CARDLIST_CREATE: 'cardlists/create',
     CARDLIST_UPDATE: 'cardlists/update',
     CARDLIST_DELETE: 'cardlists/delete',
@@ -18,18 +17,43 @@ export const CardListActionTypes = {
  */
 export const cardListActions = {
     /**
-     * Действие: запрос списка досок.
-     * @param {int} id - айди списка досок
+     * Действие: создание списка карточек.
+     * @param {String} title - название списка карточек
      */
-    getCardList(id) {
+    createCardList(title) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARDLIST_CREATE,
             data: {
-                id: id,
+                title: title,
             },
         });
     },
 
-    // TODO cardlist: create, update, delete
+    /**
+     * Действие: обновление списка карточек.
+     * @param {String} title - название списка карточек
+     * @param {int} position - позиция на доске
+     */
+    updateCardList(title) {
+        Dispatcher.dispatch({
+            actionName: CardListActionTypes.CARDLIST_UPDATE,
+            data: {
+                title: title,
+                position: position,
+            },
+        });
+    },
 
+    /**
+     * Действие: удаление списка карточек.
+     * @param {int} clid - айди списка карточек
+     */
+    deleteCardList(clid) {
+        Dispatcher.dispatch({
+            actionName: CardListActionTypes.CARDLIST_CREATE,
+            data: {
+                clid: clid,
+            },
+        });
+    },
 };
