@@ -133,7 +133,7 @@ export default class BoardsView extends BaseView {
 
         this._createModal.closeModalBtn.addEventListener('click',
                                                          this._hideCreateBoardModalCallBack);
-        window.addEventListener('click', this._hideCreateBoardModalCallBack);
+        document.addEventListener('click', this._hideCreateBoardModalCallBack);
         this._createModal.submitBtn.addEventListener('click', this._submitCreateBoardCallBack);
     }
 
