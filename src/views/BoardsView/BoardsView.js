@@ -149,7 +149,7 @@ export default class BoardsView extends BaseView {
         this._createModal?.closeModalBtn.removeEventListener('click',
                                                              this._hideCreateBoardModalCallBack);
         document.removeEventListener('click', this._hideCreateBoardModalCallBack);
-        this._createModal.submitBtn?.removeEventListener('click', this._submitCreateBoardCallBack);
+        this._createModal?.submitBtn?.removeEventListener('click', this._submitCreateBoardCallBack);
     }
 
     // Callbacks
@@ -159,8 +159,8 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _showCreateBoardModal(event) {
-        const teamID = event.target.dataset.id;
-        boardsActions.showModal(teamID);
+        this.teamID = event.target.dataset.id;
+        boardsActions.showModal(this.teamID);
     }
 
     /**
@@ -183,6 +183,7 @@ export default class BoardsView extends BaseView {
     _submitCreateBoard(event) {
         event.preventDefault();
         boardsActions.createBoard(this._createModal.boardName.value,
-                                  this._createModal.boardTeam.value);
+                                  this.teamID);
+                                  //this._createModal.boardTeam.value
     }
 }

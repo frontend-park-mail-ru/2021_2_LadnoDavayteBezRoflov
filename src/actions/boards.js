@@ -44,8 +44,8 @@ export const boardsActions = {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_CREATE,
             data: {
-                name,
-                teamID,
+                name: name,
+                teamID: teamID,
             },
         });
     },
