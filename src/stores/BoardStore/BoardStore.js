@@ -195,7 +195,7 @@ class BoardStore extends BaseStore {
                         assignees: [
                             {
                                 userName: 'SomeBody',
-                                avatar: '/public/assets/default_user_picture.webp',
+                                avatar: '/assets/default_user_picture.webp',
                             },
                         ],
 
@@ -217,11 +217,11 @@ class BoardStore extends BaseStore {
                         assignees: [
                             {
                                 userName: 'SomeBody',
-                                avatar: '/public/assets/default_user_picture.webp',
+                                avatar: '/assets/default_user_picture.webp',
                             },
                             {
                                 userName: 'NotJustAnybody',
-                                avatar: '/public/assets/default_user_picture.webp',
+                                avatar: '/assets/default_user_picture.webp',
                             },
                         ],
                     },
