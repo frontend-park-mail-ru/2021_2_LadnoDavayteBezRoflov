@@ -14,4 +14,95 @@ body {
   background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
   height: 100%;
   font-family: 'Montserrat', sans-serif;
+  min-width: 400px;
+}
+
+.horizontal-line {
+  border-bottom: solid 2px $tertiary-bg-color;
+  margin: 5px;
+}
+
+.vertical-line {
+  height: 25px;
+  border-left: solid 2px $tertiary-bg-color;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.close-button {
+  @extend .material-icons;
+  opacity: 0.8;
+
+  &::before {
+    content: 'close';
+  }
+  &:hover {
+    opacity: 1.0;
+    cursor: pointer;
+  }
+}
+
+.button {
+  padding: 16px 24px;
+
+  color: rgb(255, 255, 255);
+  background-color: $main-theme-color;
+
+  border: none;
+  outline: none;
+  border-radius: 5px;
+
+  letter-spacing: 1px;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease-in-out;
+
+  &_small {
+    padding: 8px 12px;
+  }
+}
+
+.button:focus,
+.button:hover {
+  background-color: $main-theme-color__focus;
+}
+
+
+$simple-form-radius: 10px;
+
+.simple-form-element {
+  font: inherit;
+  font-size: 24px;
+  width: 100%;
+  border-radius: $simple-form-radius;
+  background-color: $secondary-bg-color;
+  border: 4px solid $tertiary-bg-color;
+  padding: 2px 10px;
+  &:focus {
+    box-shadow: 0 0 10px 2px $default-box-shadow-color;
+    outline: none;
+  }
+}
+
+/* контейнер для ошибок */
+.error {
+  padding: 5px 10px;
+  border-radius: 16px;
+
+  border: 2px solid $error-color;
+  background: $error-bg-color;
+  color: $error-color;
+
+  &::before {
+    @extend .material-icons;
+    content: 'close';
+    font-size: 30px;
+    display: inline;
+    position: relative;
+    color: $error-bg-color;
+    background-color: $error-color;
+    border-radius: 100%;
+  }
 }
