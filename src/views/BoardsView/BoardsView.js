@@ -184,6 +184,6 @@ export default class BoardsView extends BaseView {
         event.preventDefault();
         boardsActions.createBoard(this._createModal.boardName.value,
                                   this.teamID);
-                                  //this._createModal.boardTeam.value
+        // this._createModal.boardTeam.value
     }
 }
