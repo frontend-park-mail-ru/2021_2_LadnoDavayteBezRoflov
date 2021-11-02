@@ -18,8 +18,12 @@ import Router from '../../modules/Router/Router.js';
 // Constants
 import {Urls} from '../../constants/constants.js';
 
+// Стили
+import './board.scss';
+
 // Шаблон
 import template from './BoardView.hbs';
+
 
 /**
   * Класс, реализующий страницу доски.

@@ -1,0 +1,99 @@
+@import 'Constants';
+@import 'Fonts';
+@import 'Common';
+
+$card-max-height: 500px;
+$card-min-height: 100px;
+$card-width: 250px;
+$card-shadow: rgba(0, 0, 0, 0.4);
+$card-due-date-overrun: coral;
+$card-due-date-done: forestgreen;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: $card-width;
+  //min-height: auto;
+  //max-height: $card-max-height;
+  text-decoration: none;
+  color: inherit;
+  padding: 7px;
+  background: $primary-bg-color;
+  border-radius: 10px;
+
+  box-shadow: 0 0 4px 2px $card-shadow;
+}
+
+.card:hover {
+  transition: all 0.3s ease-in-out;
+  background: $tertiary-bg-color;
+}
+
+/* Due-date */
+.badge-due-date-wrapper {
+  border: 2px solid;
+  border-radius: 10px;
+  width: min-content;
+  display: flex;
+  flex-direction: row;
+  padding-right: 5px;
+  background: $secondary-bg-color;
+}
+
+.badge-due-date__icon::before {
+  content: 'query_builder';
+}
+
+.badge-due-date__text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: normal;
+}
+
+.badge-due-date-wrapper_overdue {
+  background: $card-due-date-overrun;
+}
+
+.badge-due-date-wrapper_done {
+  background: $card-due-date-done;
+}
+
+/* Остальные badges: */
+.badge-description::before {
+  content: 'segment';
+}
+
+.badge-attachments::before {
+  content: 'attach_file';
+}
+
+.badge-checklist::before {
+  content: 'checklist';
+}
+
+.card__badges {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 5px;
+}
+
+/* Assignees: */
+.card__assignees {
+  margin-left: auto; // Выравнивание аватарок по левому краю
+  display: flex;
+  flex-direction: row;
+  align-self: start;
+  gap: 3px;
+}
+
+.card__tags-container {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  flex-wrap: wrap;
+}

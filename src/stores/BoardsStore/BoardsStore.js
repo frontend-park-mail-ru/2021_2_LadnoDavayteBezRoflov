@@ -108,7 +108,7 @@ class BoardsStore extends BaseStore {
         try {
             payload = await Network.createBoard({
                 board_name: data.name,
-                tid: data.teamID,
+                tid: parseInt(data.teamID, 10),
             });
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty

@@ -170,6 +170,24 @@ class Network {
     }
 
     /**
+     * Метод, реализующий запрос GET /api/board/.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+     async getBoard(data, bid) {
+        const options = {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            //body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
      * Метод, реализующий запрос POST /api/cards.
      * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
