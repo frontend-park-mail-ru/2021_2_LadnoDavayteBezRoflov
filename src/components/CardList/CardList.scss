@@ -1,0 +1,99 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Fonts';
+
+/* Стили списков карточек: */
+.columns {
+    //background: darkred;
+    flex-grow: 1;
+    max-height: $max-height-politic;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.column {
+    background: forestgreen;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    //gap: 5px;
+    max-height: $max-height-politic;
+    background: $primary-bg-color;
+    box-shadow: 0 0 2px $main-theme-color;
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        justify-items: flex-end;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    &__title {
+        font-size: 20px;
+        margin-right: auto;
+
+    }
+
+    a:empty {
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease-in-out;
+        &:focus,
+        &:hover {
+            box-shadow: 0 0 2px $main-theme-color;
+        }
+    }
+
+    &__delete {
+        &::before {
+            content: 'delete';
+        }
+    }
+
+    &__edit {
+        &::before {
+            content: 'edit';
+        }
+    }
+
+    &__add {
+        &::before {
+            content: 'add';
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        flex-grow: 1;
+        max-height: 75vh;
+        padding: 10px;
+    }
+}
+
+.custom-scroll {
+    &::-webkit-scrollbar {
+        width: 15px;               /* width of the entire scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 20px;
+        background: $transparent-bg-color;        /* color of the tracking area */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $main-theme-color;    /* color of the scroll thumb */
+        border-radius: 20px;       /* roundness of the scroll thumb */
+        border: 3px solid $secondary-bg-color;  /* creates padding around scroll thumb */
+    }
+}
