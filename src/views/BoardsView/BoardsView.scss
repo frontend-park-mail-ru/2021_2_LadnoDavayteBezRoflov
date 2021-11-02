@@ -1,4 +1,6 @@
 @import '../../styles/scss/Constants';
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
 
 $card-description-font-size: 12px;
 $card-header-font-size: 17px;
@@ -17,33 +19,35 @@ $team-font-size: 25px;
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.01, 1.01);
+        background: linear-gradient(to bottom, $tertiary-bg-color, 60%, $main-theme-color);
+        box-shadow: 0 0 20px $default-box-shadow-color;
+    }
+
+    &__header {
+        padding-bottom: 1px;
+        font-size: $card-header-font-size;
+        border-bottom: dotted 1px;
+    }
+
+    &__description {
+        height: 75%;
+        padding-top: 3px;
+        font-size: $card-description-font-size;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
-.bord-card:hover {
-    transform: scale(1.01, 1.01);
-    background: linear-gradient(to bottom, $tertiary-bg-color, 60%, $main-theme-color);
-    box-shadow: 0 0 20px $default-box-shadow-color;
-}
-
-.bord-card__header {
-    padding-bottom: 1px;
-    font-size: $card-header-font-size;
-    border-bottom: dotted 1px;
-}
-
-.bord-card__description {
-    height: 75%;
-    padding-top: 3px;
-    font-size: $card-description-font-size;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 .main-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 80px;
+    margin-top: 20px;
+    margin-bottom: $footer-size;
 }
 
 .teams-container {
@@ -56,62 +60,104 @@ $team-font-size: 25px;
     display: flex;
     flex-direction: column;
     margin-top: 10px;
+
+    &__card-wrapper {
+        display: flex;
+        flex-direction: row;
+        padding-top: 5px;
+    }
+
+    &__card-holder {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 4px 5px;
+    }
+
+    &__team-name {
+        font-size: $team-font-size;
+    }
 }
 
-.team__card-wrapper {
-    display: flex;
-    flex-direction: row;
-    padding-top: 5px;
-}
-
-.team__card-holder {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
-.team__header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 4px 5px;
-}
-
-.team__team-name {
-    font-size: $team-font-size;
-}
-
-.horizontal-line {
-    border-bottom: solid 2px $tertiary-bg-color;
-    margin: 5px;
-}
-
-.vertical-line {
-    height: 25px;
-    border-left: solid 2px $tertiary-bg-color;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.material-icons_colored {
+.material-icons-colored {
     position: relative;
     top: 5px;
 
-    font-size: 10px;
+    font-size: 20px;
     transition: all 0.3s ease-in-out;
+
+    &:hover {
+        color: $main-theme-color__focus;
+        cursor: pointer;
+    }
+
+    &_disabled {
+        opacity: 0.3;
+
+        &:hover {
+            color: black;
+        }
+    }
 }
 
 .material-icons_transparent {
     opacity: 0.2;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
-.material-icons_transparent:hover {
-    opacity: 1;
+#create-board-modal-wrapper {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+
 }
 
-.material-icons_colored:hover {
-    color: $main-theme-color__focus;
-    cursor: pointer;
+.create-board-modal {
+    background-color: $primary-bg-color;
+    padding: 20px;
+    border: 2px solid $tertiary-bg-color;
+    border-radius: 16px;
+    width: 35%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: 0 0 10px 10px $default-box-shadow-color;
+    min-width: 300px;
+}
+
+.create-board-form {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    padding: 10px 0;
+
+    &__header {
+        margin-left: 20px;
+        font-size: 30px;
+    }
+
+    &__elements-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 30px 0;
+    }
 }

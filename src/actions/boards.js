@@ -9,6 +9,9 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
     BOARD_GET: 'board/get',
+    BOARDS_CREATE: 'boards/create',
+    BOARDS_MODAL_SHOW: 'boards/modal/show',
+    BOARDS_MODAL_HIDE: 'boards/modal/hide',
 };
 
 /**
@@ -34,6 +37,31 @@ export const boardsActions = {
             data: {
                 id: id,
             },
+        });
+    },
+
+    createBoard(name, teamID) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_CREATE,
+            data: {
+                name,
+                teamID,
+            },
+        });
+    },
+
+    showModal(teamID) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_MODAL_SHOW,
+            data: {
+                teamID,
+            },
+        });
+    },
+
+    hideModal() {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_MODAL_HIDE,
         });
     },
 };

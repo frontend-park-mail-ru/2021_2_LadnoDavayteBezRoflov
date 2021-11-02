@@ -5,7 +5,7 @@
     src: url('../../../public/fonts/Montserrat-Regular.ttf') format('truetype');
 }
 
-.material-icons_colored {
+.material-icons-colored {
     position: relative;
     top: 5px;
 
@@ -21,7 +21,7 @@
     opacity: 1;
 }
 
-.material-icons_colored:hover {
+.material-icons-colored:hover {
     color: var(--dark-blue);
     cursor: pointer;
 }

@@ -99,7 +99,7 @@ export default class RegisterView extends BaseView {
      */
     removeEventListeners() {
         document.getElementById('register')?.removeEventListener('submit',
-                                                                 this.formAuthorizationCallback);
+                                                                 this.formRegistrationCallback);
     }
 
     /**

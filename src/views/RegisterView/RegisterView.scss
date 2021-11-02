@@ -136,31 +136,6 @@ $login__max-height: 800px;
     transition: all 0.3s ease-in-out;
 }
 
-/* кнопка регистрации */
-.register__button {
-    padding: 16px 24px;
-
-    color: rgb(255, 255, 255);
-    background-color: $main-theme-color;
-
-    border: none;
-    outline: none;
-    border-radius: 5px;
-
-    letter-spacing: 1px;
-    font-size: 16px;
-
-    cursor: pointer;
-
-    transition: all 0.3s ease-in-out;
-}
-
-/* в случае активизации кнопки регистрации */
-.register__button:focus,
-.register__button:hover {
-    background-color: $main-theme-color__focus;
-}
-
 /* секция обработки ошибок */
 
 /* контейнер для ошибок */
@@ -193,7 +168,7 @@ $login__max-height: 800px;
 
     margin-top: 2em;
     padding: 2em;
-    height: 5em;
+    height: 6em;
 
     background-color: $light-white-color;
 
