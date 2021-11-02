@@ -148,7 +148,7 @@ export default class BoardsView extends BaseView {
         this._createModal?.closeModalBtn.removeEventListener('click',
                                                              this._hideCreateBoardModalCallBack);
         document.removeEventListener('click', this._hideCreateBoardModalCallBack);
-        this._createModal.submitBtn.removeEventListener('click', this._submitCreateBoardCallBack);
+        this._createModal.submitBtn?.removeEventListener('click', this._submitCreateBoardCallBack);
     }
 
     // Callbacks
