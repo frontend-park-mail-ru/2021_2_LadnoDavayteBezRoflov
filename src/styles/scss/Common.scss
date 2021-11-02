@@ -106,3 +106,58 @@ $simple-form-radius: 10px;
     border-radius: 100%;
   }
 }
+
+.avatar {
+  height: 30px;
+  border-radius: 50%;
+}
+
+.avatar:hover {
+  opacity: 0.8;
+}
+
+.card-tag {
+  background: darkred;  // будет в шаблоне
+  width: 50px;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.button {
+  padding: 16px 24px;
+
+  color: rgb(255, 255, 255);
+  background-color: $main-theme-color;
+
+  border: none;
+  outline: none;
+  border-radius: 5px;
+
+  letter-spacing: 1px;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease-in-out;
+
+  &_small {
+    padding: 8px 12px;
+  }
+}
+
+.button:focus,
+.button:hover {
+  background-color: $main-theme-color__focus;
+}
+
+.horizontal-line {
+  border-bottom: solid 2px $tertiary-bg-color;
+  margin: 5px;
+}
+
+.vertical-line {
+  height: 25px;
+  border-left: solid 2px $tertiary-bg-color;
+  margin-left: 5px;
+  margin-right: 5px;
+}

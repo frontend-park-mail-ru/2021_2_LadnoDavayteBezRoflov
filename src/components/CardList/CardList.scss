@@ -18,11 +18,9 @@
 }
 
 .column {
-    background: forestgreen;
     padding: 10px 0;
     display: flex;
     flex-direction: column;
-    //gap: 5px;
     max-height: $max-height-politic;
     background: $primary-bg-color;
     box-shadow: 0 0 2px $main-theme-color;
