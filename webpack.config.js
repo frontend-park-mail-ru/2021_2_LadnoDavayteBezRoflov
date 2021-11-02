@@ -35,6 +35,7 @@ const devServer = {
 const config = {
     entry: './src/index.js',
     output: {
+        publicPath: '/',
         path: path.resolve(__dirname, DEPLOY_DIR),
         filename: `bundle${confConst.DEBUG ? '' : '.[contenthash]'}.js`,
     },
