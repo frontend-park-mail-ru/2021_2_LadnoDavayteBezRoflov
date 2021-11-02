@@ -1,14 +1,14 @@
 <a class="card" href="/card/{{cid}}" type="text/popup">
-    {{#if tags}}
     <div class="card__tags-container">
         {{#each tags}}
-            <div class="card-tag">{{this.name}}</div>
+<!--        Пока не отображаем {this.name}}-->
+            <div class="card-tag"></div>
         {{/each}}
     </div>
-    {{/if}}
     <div class="card__header">
         <span class="card__title">{{title}}</span>
-        <a class="column__delete material-icons" id="deleteCard"></a>
+<!--        Вложенные <a> запрещены-->
+        <span class="column__delete material-icons" id="deleteCard"></span>
     </div>
     <div class="card__badges">
         {{#if deadline}}
