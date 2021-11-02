@@ -77,7 +77,6 @@ export default class BoardsView extends BaseView {
         super.render();
         this._findCreateModalElements();
         this.addEventListeners();
-        this._toggleModal();
     }
 
     /**
@@ -109,30 +108,18 @@ export default class BoardsView extends BaseView {
     }
 
     /**
-     * Переключает видимость модального окна в зависимости от контекста из стора
-     * @private
-     */
-    _toggleModal() {
-        console.log(this.context.get('modal'));
-        if (this.context.get('modal').visible) {
-            this._createModal.modalWrapper.style.display = 'block';
-            return;
-        }
-        this._createModal.modalWrapper.style.display = 'none';
-    }
-
-    /**
      * Метод сохраняет элементы DOM связанные с формой создания доски
      * @private
      */
     _findCreateModalElements() {
-        this._createModal = {};
-        this._createModal.addBoardBtns = document.querySelectorAll('.add-board');
-        this._createModal.closeModalBtn = document.getElementById('close-modal');
-        this._createModal.modalWrapper = document.getElementById('create-board-modal-wrapper');
-        this._createModal.boardName = document.getElementById('board-name');
-        this._createModal.boardTeam = document.getElementById('board-team');
-        this._createModal.submitBtn = document.getElementById('create-submit');
+        this._createModal = {
+            addBoardBtns: document.querySelectorAll('.add-board'),
+            closeModalBtn: document.getElementById('close-modal'),
+            modalWrapper: document.getElementById('create-board-modal-wrapper'),
+            boardName: document.getElementById('board-name'),
+            boardTeam: document.getElementById('board-team'),
+            submitBtn: document.getElementById('create-submit'),
+        };
     }
 
     /**

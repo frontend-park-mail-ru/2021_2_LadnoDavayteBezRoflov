@@ -20,11 +20,11 @@ class BoardsStore extends BaseStore {
 
         this._storage = new Map();
 
-        this._storage.set('teams', undefined);
+        this._storage.set('teams', null);
         this._storage.set('modal', {
             visible: false,
-            teamID: undefined,
-            errors: undefined,
+            teamID: null,
+            errors: null,
         });
     }
 
@@ -146,8 +146,8 @@ class BoardsStore extends BaseStore {
     _hideModal() {
         this._storage.set('modal', {
             visible: false,
-            teamID: undefined,
-            errors: undefined,
+            teamID: null,
+            errors: null,
         });
     }
 
@@ -160,7 +160,7 @@ class BoardsStore extends BaseStore {
         this._storage.set('modal', {
             visible: true,
             teamID: data.teamID,
-            errors: undefined,
+            errors: null,
         });
     }
 }

@@ -31,7 +31,11 @@
     </div>
 </div>
 
-<div id="create-board-modal-wrapper">
+{{# if modal.visible }}
+    <div id="create-board-modal-wrapper" style="display: block">
+{{ else }}
+    <div id="create-board-modal-wrapper" style="display: none">
+{{/if}}
     <div class="create-board-modal">
         <form class="create-board-form">
             <div class="create-board-form__header">
