@@ -112,7 +112,15 @@ export default class ProfileView extends BaseView {
      */
     formUpdate(event) {
         event.preventDefault();
-        settingsActions.putSettings(new FormData(document.getElementById('profile')));
+        const data = {
+            login: document.getElementById('login').value,
+            email: document.getElementById('email').value,
+            avatar: document.getElementById('avatar').value,
+            password: document.getElementById('password').value,
+            old_password: document.getElementById('oldPassword').value,
+        };
+
+        settingsActions.putSettings(data);
     }
 
     /**

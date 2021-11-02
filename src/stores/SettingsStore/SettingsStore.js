@@ -107,11 +107,11 @@ class SettingsStore extends BaseStore {
     async _put(data) {
         const formdata = data;
 
-        this._storage.set('login', data.get('login'));
-        this._storage.set('email', data.get('email'));
+        this._storage.set('login', data.login);
+        this._storage.set('email', data.email);
         this._storage.delete('password');
         this._storage.delete('passwordRepeat');
-        formdata.set('avatar', this._storage.get('avatar'));
+        formdata.avatar = this._storage.get('avatar');
 
         this._validate(data);
 
@@ -185,6 +185,38 @@ class SettingsStore extends BaseStore {
         }
 
         this._storage.set('avatar', this.__setAvatar(data.avatar));
+
+        const formdata = new FormData();
+
+        formdata.append('avatar', data.avatar);
+
+        let payload;
+
+        try {
+            payload = await Network.putImage(formdata, this._storage.get('login'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._storage.set('avatar', payload.data.avatar);
+            this._emitChange();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            this._storage.get('validation').avatar = ConstantMessages.BadRequest;
+            this._emitChange();
+            return;
+
+        case HttpStatusCodes.Unauthorized:
+            userActions.logout();
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
     }
 
     /**
@@ -196,29 +228,29 @@ class SettingsStore extends BaseStore {
 
         const validation = this._storage.get('validation');
 
-        validation.login = validator.validateLogin(data.get('login'));
+        validation.login = validator.validateLogin(data.login);
         if (validation.login) {
             this._storage.set('login', '');
         }
 
-        validation.oldPassword = validator.validatePassword(data.get('oldPassword'));
+        validation.oldPassword = validator.validatePassword(data.old_password);
 
-        if (data.get('password')) {
-            validation.password = validator.validatePassword(data.get('password'));
+        if (data.password) {
+            validation.password = validator.validatePassword(data.password);
         }
 
-        validation.email = validator.validateEMail(data.get('email'));
+        validation.email = validator.validateEMail(data.email);
         if (validation.email) {
             this._storage.set('email', '');
         }
 
-        if (data.get('password')) {
-            if (data.get('password') !== data.get('passwordRepeat')) {
+        if (data.password) {
+            if (data.password !== data.passwordRepeat) {
                 validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
             }
         }
 
-        validation.avatar = validator.validateAvatar(data.get('avatar'));
+        validation.avatar = validator.validateAvatar(data.avatar);
         if (validation.avatar) {
             this._storage.set('avatar', '');
         }
