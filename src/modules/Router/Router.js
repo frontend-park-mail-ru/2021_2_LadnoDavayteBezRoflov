@@ -67,6 +67,8 @@ class Router {
      * Относительный url - это часть url которая следует за именем хоста.
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
+     * @param {boolean} popup - true: открыть как попап, false: открыть как страницу
+     * (по умолчанию: false)
      */
     go(url, popup = false) {
         const {urlData, view} = this.processURL(url) || {};

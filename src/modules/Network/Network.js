@@ -18,6 +18,7 @@ class Network {
             sessions: 'api/sessions',
             profile: 'api/profile',
             board: 'api/boards',
+            card: 'api/cards',
         };
 
         this._defaultOptions = {
@@ -130,6 +131,51 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос POST /api/cards.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _createCard(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/cards.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _updateCard(data) {
+        const options = {
+            method: 'put',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/cards.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _deleteCard(data) {
+        const options = {
+            method: 'delete',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
             options);
     }
 

@@ -28,23 +28,18 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
-        case CardActionTypes.CARD_GET:
-            await this._get(action.data);
-            this._emitChange();
-            break;
-
         case CardActionTypes.CARD_CREATE:
-            await this._get(action.data);
+            await this._createCard(action.data);
             this._emitChange();
             break;
 
         case CardActionTypes.CARD_UPDATE:
-            await this._get(action.data);
+            await this._updateCard(action.data);
             this._emitChange();
             break;
 
         case CardActionTypes.CARD_DELETE:
-            await this._get(action.data);
+            await this._deleteCard(action.data);
             this._emitChange();
             break;
 
@@ -74,12 +69,103 @@ class BoardStore extends BaseStore {
         return cardByCID;
     }
 
+    /**
+     * Метод, возвращающий доску по CID.
+     * @param {int} CID
+     * @return {int} значение поля
+     */
     getBoardByCID(CID) {
         return this.getContext('content')[CID].bid;
     }
 
     /**
-     * Метод, реализующий реакцию на инициализацию.
+     * Метод, реализующий реакцию на запрос создания карточки.
+     * @param {Object} data полезная нагрузка запроса
+     */
+    async _createCard(data) {
+        // TODO validation
+
+        let payload;
+
+        try {
+            payload = await Network.createCard(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            return;
+
+        case HttpStatusCodes.Unauthorized:
+            UserStore.__logout();
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
+    }
+
+    /**
+     * Метод, реализующий реакцию на запрос обновления карточки.
+     * @param {Object} data полезная нагрузка запроса
+     */
+    async _updateCard(data) {
+        // TODO validation
+
+        let payload;
+
+        try {
+            payload = await Network.updateCard(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            return;
+
+        case HttpStatusCodes.Unauthorized:
+            UserStore.__logout();
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
+    }
+
+    /**
+     * Метод, реализующий реакцию на запрос удаления карточки.
+     * @param {Object} data полезная нагрузка запроса
+     */
+    async _deleteCard(data) {
+        let payload;
+
+        try {
+            payload = await Network.deleteCard(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            return;
+
+        case HttpStatusCodes.Unauthorized:
+            UserStore.__logout();
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
+    }
+
+    /**
+     * Метод, реализующий реакцию на запрос доски с id.
+     * @param {Object} data полезная нагрузка запроса
      */
     async _get(data) {
         this._storage.set('id', data.id);

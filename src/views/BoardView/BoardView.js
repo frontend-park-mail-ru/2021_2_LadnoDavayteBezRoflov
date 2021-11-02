@@ -49,6 +49,7 @@ export default class BoardView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
+     * @param {Object} urlData параметры адресной строки
      */
     _onShow(urlData) {
         this.urlData = urlData;
@@ -100,6 +101,8 @@ export default class BoardView extends BaseView {
     addEventListeners() {
         // document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
 
+        document.getElementById('addCardList').addEventListener('click', this.addCardListCallback);
+
         this.subComponents.forEach(([_, component]) => {
             component.addEventListeners();
         });
@@ -109,6 +112,8 @@ export default class BoardView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        document.getElementById('addCardList')?.removeEventListener('click', this.addCardListCallback);
+
         // document.getElementById('auth')?.removeEventListener('submit',
         //                                                     this.formAuthorizationCallback);
     }

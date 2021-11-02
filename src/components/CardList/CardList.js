@@ -5,6 +5,9 @@ import CardComponent from '../Card/Card.js';
 // Шаблон
 import template from './CardList.hbs';
 
+// Шаблон
+import templatePopup from './CardListPopup.hbs';
+
 /**
  * Класс, реализующий компонент CardList.
  */
@@ -15,6 +18,12 @@ export default class CardListComponent extends BaseComponent {
      */
     constructor(context) {
         super(context, template);
+
+        this._popupTemplate = templatePopup;
+
+        this._inputElements = {
+            title: undefined,
+        };
     }
 
     /**

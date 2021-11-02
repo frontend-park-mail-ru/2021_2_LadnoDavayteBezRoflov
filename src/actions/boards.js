@@ -9,9 +9,6 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
     BOARD_GET: 'board/get',
-    BOARD_CREATE: 'board/create',
-    BOARD_UPDATE: 'board/update',
-    BOARD_DELETE: 'board/delete',
 };
 
 /**
@@ -30,7 +27,6 @@ export const boardsActions = {
     /**
      * Действие: запрос доски с определенным id.
      * @param {any} id
-     * @returns {any}
      */
     getBoard(id) {
         Dispatcher.dispatch({

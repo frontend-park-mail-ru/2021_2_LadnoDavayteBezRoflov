@@ -19,13 +19,17 @@ export const CardListActionTypes = {
 export const cardListActions = {
     /**
      * Действие: запрос списка досок.
+     * @param {int} id - айди списка досок
      */
     getCardList(id) {
         Dispatcher.dispatch({
-            actionName: CardListActionTypes.CARDLIST_GET,
+            actionName: CardListActionTypes.CARDLIST_CREATE,
             data: {
                 id: id,
             },
         });
     },
+
+    // TODO cardlist: create, update, delete
+
 };

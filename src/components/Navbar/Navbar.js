@@ -5,7 +5,6 @@ import BaseComponent from '../BaseComponent.js';
 // Стили
 import './Navbar.scss';
 
-import {userActions} from '../../actions/user.js';
 import UserStore from '../../stores/UserStore/UserStore.js';
 
 // Шаблон

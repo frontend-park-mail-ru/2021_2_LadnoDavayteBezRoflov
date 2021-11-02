@@ -18,7 +18,8 @@ export const CardActionTypes = {
  */
 export const cardActions = {
     /**
-     * Действие: запрос списка досок.
+     * Действие: запрос карточки.
+     * @param {int} id - айди карточки.
      */
     getCard(id) {
         Dispatcher.dispatch({
@@ -29,7 +30,21 @@ export const cardActions = {
         });
     },
 
-    createCard(id, clid, position, title, description, deadline, checklist, assignees, tags, attachments) {
+    /**
+     * Действие: создание карточки.
+     * @param {any} id
+     * @param {any} clid
+     * @param {any} position
+     * @param {any} title
+     * @param {any} description
+     * @param {any} deadline
+     * @param {any} checklist
+     * @param {any} assignees
+     * @param {any} tags
+     * @param {any} attachments
+     */
+    createCard(id, clid, position, title, description, deadline, checklist,
+        assignees, tags, attachments) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_CREATE,
             data: {
@@ -47,7 +62,21 @@ export const cardActions = {
         });
     },
 
-    updateCard(id, clid, position, title, description, deadline, checklist, assignees, tags, attachments) {
+    /**
+     * Действие: обновление карточки.
+     * @param {any} id
+     * @param {any} clid
+     * @param {any} position
+     * @param {any} title
+     * @param {any} description
+     * @param {any} deadline
+     * @param {any} checklist
+     * @param {any} assignees
+     * @param {any} tags
+     * @param {any} attachments
+     */
+    updateCard(id, clid, position, title, description, deadline, checklist,
+        assignees, tags, attachments) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_UPDATE,
             data: {
@@ -65,20 +94,15 @@ export const cardActions = {
         });
     },
 
+    /**
+     * Действие: удаление карточки
+     * @param {int} id - айди карточки.
+     */
     deleteCard(id) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_DELETE,
             data: {
                 id: id,
-                clid: clid,
-                position: position,
-                title: title,
-                description: description,
-                deadline: deadline,
-                checklist: checklist,
-                assignees: assignees,
-                tags: tags,
-                attachments: attachments,
             },
         });
     },
