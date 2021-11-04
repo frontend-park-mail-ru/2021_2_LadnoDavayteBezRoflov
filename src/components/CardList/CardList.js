@@ -8,6 +8,10 @@ import template from './CardList.hbs';
 // Шаблон
 import templatePopup from './CardListPopup.hbs';
 
+// Стили
+import './CardList.scss';
+import './CardListPopup.scss';
+
 /**
  * Класс, реализующий компонент CardList.
  */

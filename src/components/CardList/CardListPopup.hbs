@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/src/styles/CardListPopup.css">
-
 <div class="popup">
     <div class="login__input__wrapper">
         <input class="login__input__input" type="text" placeholder=" " id="title" name="title" pattern="^[a-zA-Z\d]{3,20}$" value="{{title}}" required>
@@ -9,9 +7,9 @@
 
     <div class="login__input__wrapper">
     {{#if update}}
-    <button class="login__button" id="login-button"><a id="update">Обновить</a></button> 
+    <button class="login__button" id="login-button"><a id="update">Обновить</a></button>
     {{else}}
-    <button class="login__button" id="login-button"><a id="create">Создать</a></button> 
+    <button class="login__button" id="login-button"><a id="create">Создать</a></button>
     {{/if}}
     </div>
 </div>

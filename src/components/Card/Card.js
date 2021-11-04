@@ -15,6 +15,10 @@ import templatePopup from './CardPopup.hbs';
 
 import {cardActions} from '../../actions/card.js';
 
+// Стили
+import './Card.scss';
+import './CardPopup.scss';
+
 /**
  * Класс, реализующий компонент Card.
  */

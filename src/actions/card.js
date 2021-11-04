@@ -8,7 +8,7 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  */
 export const CardActionTypes = {
     CARD_GET: 'cards/get',
-    CARD_CREATE: 'cards/get',
+    CARD_CREATE: 'cards/create',
     CARD_UPDATE: 'card/update',
     CARD_DELETE: 'card/delete',
 };

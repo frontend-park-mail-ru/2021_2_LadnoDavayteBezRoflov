@@ -1,0 +1,71 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Fonts';
+
+.navbar__wrapper {
+    width: 100%;
+    z-index: 5;
+    background-color: #258085;
+    border-bottom: 1px solid #C3C3C3;
+    user-select: none;
+}
+
+.navbar {
+    z-index: inherit;
+    height: 56px;
+    //max-width: 1680px;
+    position: relative;
+    background-color: #258085;
+
+    //margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+}
+
+.board-page__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: 100vh;
+}
+
+.board {
+    flex-grow: 1;
+    max-height: $max-height-politic;
+    //max-height: 100%;
+    //flex-basis: 100%;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+
+    &-header {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        /* Для адаптивности*/
+        flex-wrap: wrap;
+        row-gap: 5px;
+        align-content: space-around;
+
+        background: $primary-bg-color;
+        box-shadow: 0 0 2px $main-theme-color;
+
+        &__members {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+        }
+
+        &__name {
+            text-align: center;
+            font-size: 18px;
+        }
+    }
+}

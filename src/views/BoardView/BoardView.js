@@ -24,6 +24,7 @@ import './board.scss';
 // Шаблон
 import template from './BoardView.hbs';
 
+import './BoardView.scss';
 
 /**
   * Класс, реализующий страницу доски.
