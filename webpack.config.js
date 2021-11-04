@@ -28,10 +28,6 @@ const confDefs = {
 const devServer = {
     port: JSON.parse(confDefs.FRONTEND_PORT),
     hot: true,
-    watch: true,
-    watchOptions: {
-        ignored: /node_modules/,
-    },
     static: [DEPLOY_DIR],
     historyApiFallback: true, // Для работы роута на 404
 };
