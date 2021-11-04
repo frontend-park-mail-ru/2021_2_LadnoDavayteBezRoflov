@@ -1,6 +1,8 @@
 @import '../../styles/scss/Constants';
 @import '../../styles/scss/Fonts';
 
+$scrollbar-width: 1600px;
+
 /* Стили списков карточек: */
 .columns {
     //background: darkred;
@@ -80,18 +82,21 @@
 }
 
 .custom-scroll {
+    scrollbar-width: auto;
+    scrollbar-color: $main-theme-color $transparent-bg-color;
+
     &::-webkit-scrollbar {
-        width: 15px;               /* width of the entire scrollbar */
+        width: 16px; /* width of the entire scrollbar */
     }
 
     &::-webkit-scrollbar-track {
-        border-radius: 20px;
-        background: $transparent-bg-color;        /* color of the tracking area */
+        border-radius: 24px;
+        background: $transparent-bg-color;      /* color of the tracking area */
     }
 
     &::-webkit-scrollbar-thumb {
         background-color: $main-theme-color;    /* color of the scroll thumb */
-        border-radius: 20px;       /* roundness of the scroll thumb */
+        border-radius: 24px;                    /* roundness of the scroll thumb */
         border: 3px solid $secondary-bg-color;  /* creates padding around scroll thumb */
     }
 }

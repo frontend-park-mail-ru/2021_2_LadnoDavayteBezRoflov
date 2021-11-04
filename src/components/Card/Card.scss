@@ -5,7 +5,6 @@
 $card-max-height: 500px;
 $card-min-height: 100px;
 $card-width: 250px;
-$card-shadow: rgba(0, 0, 0, 0.4);
 $card-due-date-overrun: coral;
 $card-due-date-done: forestgreen;
 
@@ -20,7 +19,7 @@ $card-due-date-done: forestgreen;
   background: $primary-bg-color;
   border-radius: 10px;
 
-  box-shadow: 0 0 4px 2px $card-shadow;
+  box-shadow: 0 0 4px 2px $dark-box-shadow;
 
   &:hover {
     transition: all 0.3s ease-in-out;
