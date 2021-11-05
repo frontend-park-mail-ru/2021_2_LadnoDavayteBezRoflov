@@ -51,7 +51,7 @@ export default class CardComponent extends BaseComponent {
      */
     _onRefresh() {
         this.context = BoardStore.getCardByCID(this._cid);
-        return this._popupTemplate(this.context);
+        return this._popupTemplate(this.context); //  ???
     }
 
     /**
@@ -137,8 +137,8 @@ export default class CardComponent extends BaseComponent {
     _addCard(event) {
         event.preventDefault();
         cardActions.addCard(this._cid, null, null, this._inputElements.title.value,
-                            this._inputElements.description.value,
-                            this._inputElements.deadline.value, null, null, null, null); // todo
+            this._inputElements.description.value,
+            this._inputElements.deadline.value, null, null, null, null); // todo
     }
 
     /**

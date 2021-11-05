@@ -19,21 +19,19 @@ import Router from '../../modules/Router/Router.js';
 import {Urls} from '../../constants/constants.js';
 
 // Стили
-import './board.scss';
+import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
 
-import './BoardView.scss';
-
 /**
-  * Класс, реализующий страницу доски.
-  */
+ * Класс, реализующий страницу доски.
+ */
 export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-    */
+     */
     constructor(parent) {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
         super(context, template, parent);
@@ -42,12 +40,15 @@ export default class BoardView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
+
         // this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
             title: null,
             description: null,
         };
+
+        this._bindCallBacks();
     }
 
     /**
@@ -111,7 +112,7 @@ export default class BoardView extends BaseView {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        document.getElementById('addCardList')?.removeEventListener('click', this.addCardListCallback);
+        document.getElementById('addCardList')?.removeEventListener('click', this._showCardListPopUp);
     }
 
     /**
@@ -136,4 +137,25 @@ export default class BoardView extends BaseView {
 
         userActions.login(data.login, data.password);
     }
+
+    /**
+     * Метод биндит контекст this к calllback'ам
+     * @private
+     */
+    _bindCallBacks() {
+        this._showCardListPopUp = this._showCardListPopUp.bind(this);
+        this._showInvitePopUp = this._showInvitePopUp.bind(this);
+    }
+
+
+    _showCardListPopUp() {
+
+
+    }
+
+    _showInvitePopUp() {
+
+    }
+
+
 }
