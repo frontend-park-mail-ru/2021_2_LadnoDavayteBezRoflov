@@ -7,51 +7,115 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  * Константа, содержащая в себе типы действий для списка досок.
  */
 export const BoardActionTypes = {
-    POPUP_BOARD_SHOW: 'board/popup/board/show', // Открыть popup настройки доски
-    POPUP_BOARD_HIDE: 'board/popup/board/hide', // Закрыть popup настройки доски
-    POPUP_BOARD_UPDATE: 'board/popup/board/update', // Кнопка обновить (название + описание доски)
-    POPUP_BOARD_DELETE_SHOW: 'board/popup/delete/show', // Отобразить диалог подтверждения удаления
-    POPUP_BOARD_DELETE_HIDE: 'board/popup/delete/hide', // Закрытие диалога подтверждения (нажато да/нет)
+    // Открыть popup настройки доски
+    POPUP_BOARD_SHOW: 'board/popup/board/show',
+    // Закрыть popup настройки доски
+    POPUP_BOARD_HIDE: 'board/popup/board/hide',
+    // Кнопка обновить (название + описание доски)
+    POPUP_BOARD_UPDATE: 'board/popup/board/update',
+    // Отобразить диалог подтверждения удаления доски
+    POPUP_BOARD_DELETE_SHOW: 'board/popup/delete/show',
+    // Закрытие диалога подтверждения удаления доски (нажато да/нет)
+    POPUP_BOARD_DELETE_HIDE: 'board/popup/delete/hide',
 
-    POPUP_CARD_LIST_CREATE_SHOW: 'board/popup/cardlist/create/show', // Отобразить popup создание CL
-    POPUP_CARD_LIST_CREATE_HIDE: 'board/popup/cardlist/create/hide', // Скрыть popup создания CL
-    POPUP_CARD_LIST_CREATE_SUBMIT: 'board/popup/cardlist/create/submit', // Кнопка создать CL
+    // Отобразить popup создание CL
+    POPUP_CARD_LIST_CREATE_SHOW: 'board/popup/cardlist/create/show',
+    // Скрыть popup создания CL
+    POPUP_CARD_LIST_CREATE_HIDE: 'board/popup/cardlist/create/hide',
+    // Кнопка создать CL
+    POPUP_CARD_LIST_CREATE_SUBMIT: 'board/popup/cardlist/create/submit',
 };
 
 /**
- * Класс, содержащий в себе действия в системе.
+ * Класс, содержащий в себе действия, иницируемые с BoardView.
  */
 export const boardActions = {
+
     /**
-     * Действие: показать popup создания создания списка карточек.
+     * Отобразить popup настроек доски
      */
-    cardListShowPopUp() {
+    showBoardSettingsPopUp() {
         Dispatcher.dispatch({
-            actionName: BoardActionTypes.POPUP_CARD_LIST_SHOW,
+            actionName: BoardActionTypes.POPUP_BOARD_SHOW,
         });
     },
 
     /**
-     * Действие: скрыть popup создания списка карточек.
+     * Скрыть popup с настройками доски
      */
-    cardListHidePopUp() {
+    hideBoardSettingsPopUp() {
         Dispatcher.dispatch({
-            actionName: BoardActionTypes.POPUP_CARD_LIST_HIDE,
+            actionName: BoardActionTypes.POPUP_BOARD_HIDE,
         });
     },
 
     /**
-     * Действие: создать card list
-     * @param {String} name - имя списка карточек
+     * Обновить заглавие и описание доски
+     * @param {String} title
+     * @param {String} description
      */
-    cardListCreate(name) {
+    updateBoardTitleDescription(title, description) {
         Dispatcher.dispatch({
-            actionName: BoardActionTypes.POPUP_CARD_LIST_CREATE,
+            actionName: BoardActionTypes.POPUP_BOARD_UPDATE,
+            data: {
+                title,
+                description,
+            },
+        });
+    },
+
+    /**
+     * Отобразить диалог подтверддения удаления доски
+     */
+    showConfirmDeleteBoard() {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.POPUP_BOARD_DELETE_SHOW,
+        });
+    },
+
+    /**
+     * Закрыть диалог подтверждения удаления доски
+     * @param {Boolean} confirmed - подтверждено или нет удаление доски
+     */
+    hideConfirmDeleteBoard(confirmed) {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.POPUP_BOARD_DELETE_HIDE,
+            data: {
+                confirmed
+            },
+        });
+
+    },
+
+
+    /**
+     * Действие: показать popup создания списка карточек
+     */
+    showCardListPopUp() {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.POPUP_CARD_LIST_CREATE_SHOW,
+        });
+    },
+
+    /**
+     * Скрыть popup создания списка карточек.
+     */
+    hideCardListPopUp() {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.POPUP_CARD_LIST_CREATE_HIDE,
+        });
+    },
+
+    /**
+     * Создать список карточек
+     * @param {String} title - имя списка карточек
+     */
+    createCardList(title) {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.POPUP_CARD_LIST_CREATE_SUBMIT,
             data: {
                 name,
             },
         });
     },
-
-
 };
