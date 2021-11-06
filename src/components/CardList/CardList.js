@@ -27,18 +27,10 @@ export default class CardListComponent extends BaseComponent {
         this._inputElements = {
             title: null,
         };
-    }
 
-    /**
-     * Метод, отрисовывающий HTML компонента.
-     * @return {String} HTML-код компонента
-    */
-    render() {
         Object.values(this.context.cards).forEach((card) => {
             this.addComponentToList('_cards', new CardComponent(card));
         });
-
-        return this.template(this.context);
     }
 
     /**

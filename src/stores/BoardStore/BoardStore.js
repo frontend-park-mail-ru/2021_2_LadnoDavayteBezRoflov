@@ -168,7 +168,7 @@ class BoardStore extends BaseStore {
      * @param {Object} data полезная нагрузка запроса
      */
     async _get(data) {
-        this._storage.set('id', data.id);
+        /* this._storage.set('id', data.id);
         this._storage.set('title', `${data.id}`);
         this._storage.set('team', 'testTeam');
         this._storage.set('content', {
@@ -255,7 +255,7 @@ class BoardStore extends BaseStore {
 
         this._storage.set('description', `coolboard ${data.id}_Board`);
 
-        return;
+        return; */
 
         let payload;
 
