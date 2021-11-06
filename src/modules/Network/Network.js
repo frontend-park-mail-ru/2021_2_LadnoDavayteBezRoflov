@@ -180,6 +180,7 @@ class Network {
             headers: {
                 'Content-Type': 'application/json',
             },
+
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
