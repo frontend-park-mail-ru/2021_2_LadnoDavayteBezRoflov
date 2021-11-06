@@ -7,7 +7,7 @@ export default class BaseComponent {
      * @constructor
      * @param {Object} context контекст отрисовки шаблона
      * @param {Function} template функция отрисовки шаблона
-     * @param {Object} parent элемент, в который будет отрисован шаблон
+     * @param {Element?} parent элемент, в который будет отрисован шаблон
      */
     constructor(context, template, parent) {
         if (!template) {
