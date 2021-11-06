@@ -59,6 +59,7 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
         this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
 
         if (!this._isActive) {
@@ -88,6 +89,7 @@ export default class ProfileView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
+        super.addEventListeners();
         document.getElementById('profile')?.addEventListener('submit', this.formUpdateCallback);
 
         document.getElementById('avatar')?.addEventListener('change', this.onAvatarChange);
@@ -101,6 +103,7 @@ export default class ProfileView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('profile')?.removeEventListener('submit',
                                                                 this.formUpdateCallback);
         document.getElementById('avatar')?.removeEventListener('change', this.onAvatarChange);

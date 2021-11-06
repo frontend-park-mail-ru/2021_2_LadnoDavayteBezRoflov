@@ -11,17 +11,14 @@ import FooterComponent from '../components/Footer/Footer.js';
  */
 export default class BaseView extends BaseComponent {
     /**
+     * Конструирует компонент. Обязательный параметр - функция отрисовки основного шаблона.
      * @constructor
      * @param {Object} context контекст отрисовки шаблона
-     * @param {Object} mainTemplate объект с функцией шаблона и контейнером для него
-     * @param {Function} mainTemplate.template функция отрисовки шаблона
-     * @param {Element?} mainTemplate.parent элемент, в который будет отрисован шаблон
-     * @param {Object} popupTemplate Объект с функцией шаблона popup и контейнером для него
-     * @param {Function} popupTemplate.template функция отрисовки шаблона popup
-     * @param {Element?} popupTemplate.parent элемент, в который будет отрисован шаблон popup
-    */
-    constructor(context, mainTemplate, popupTemplate) {
-        super(context, mainTemplate, popupTemplate);
+     * @param {Function} template функция отрисовки шаблона
+     * @param {Object} parent элемент, в который будет отрисован шаблон
+     */
+    constructor(context, template, parent) {
+        super(context, template, parent);
 
         this.addComponent('Navbar', new NavbarComponent(context));
         this.addComponent('Footer', new FooterComponent(context));
@@ -57,7 +54,6 @@ export default class BaseView extends BaseComponent {
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
-        super.removeEventListeners();
         this.removeEventListeners();
 
         this._isActive = false;

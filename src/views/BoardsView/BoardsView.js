@@ -39,6 +39,7 @@ export default class BoardsView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
         this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
         if (!this._isActive) {
@@ -84,9 +85,7 @@ export default class BoardsView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
+        super.addEventListeners();
         this._addListenersCreateModal();
     }
 
@@ -94,7 +93,7 @@ export default class BoardsView extends BaseView {
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        // TODO проследить, чтобы удалялись все потенциальные обработчики из компонентов
+        super.removeEventListeners();
         this._removeListenersCreateModal();
     }
 

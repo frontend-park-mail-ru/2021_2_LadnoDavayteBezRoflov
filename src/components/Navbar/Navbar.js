@@ -16,10 +16,10 @@ import template from './Navbar.hbs';
 export default class NavbarComponent extends BaseComponent {
     /**
     * Конструктор, создающий класс компонента Navbar.
-    * @param {function} context контекст отрисовки шаблона
+    * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
-        super(context, {template}, undefined);
+        super(context, template, undefined);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
