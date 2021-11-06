@@ -23,7 +23,11 @@
 </div>
 
 <div id="popup">
-
+<!--    рендерим подходящий popup, во view, также на основании контекста, навешиваем callback'и-->
+    {{#if popups.cardlist}}
+    {{ else if popups.board}}
+    {{ else if popups.card}}
+    {{/if}}
 </div>
 
 {{{Footer}}}

@@ -51,6 +51,7 @@ export default class LoginView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
         this._setContext(UserStore.getContext());
 
         if (!this._isActive) {
@@ -81,17 +82,15 @@ export default class LoginView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
+        super.addEventListeners();
         document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('auth')?.removeEventListener('submit',
                                                              this.formAuthorizationCallback);
     }

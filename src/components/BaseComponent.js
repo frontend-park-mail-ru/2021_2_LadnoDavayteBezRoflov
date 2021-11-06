@@ -3,10 +3,7 @@
  */
 export default class BaseComponent {
     /**
-     * Конструирует компонент. Обязательный параметр - функция отрисовки основного шаблона
-     * "mainTemplate.template". Опционально может принимать функцию отрисовки шаблона popUp
-     * "popupTemplate.template", в таком случает обязательно требуется передавать контейнер
-     * под отрисованный шаблон "popupTemplate.parent".
+     * Конструирует компонент. Обязательный параметр - функция отрисовки основного шаблона.
      * @constructor
      * @param {Object} context контекст отрисовки шаблона
      * @param {Function} template функция отрисовки шаблона
@@ -65,7 +62,7 @@ export default class BaseComponent {
             componentsLists, ...Object.fromEntries(this.context),
         };
 
-        const mainHTML = this.mainTemplate.template(contextWithComponents);
+        const mainHTML = this.template(contextWithComponents);
 
         if (!this.parent) {
             return mainHTML;
@@ -78,8 +75,14 @@ export default class BaseComponent {
      * Метод, добавляющий обработчики событий для компонента.
      */
     addEventListeners() {
-        this.subComponents.forEach(([_, component]) => {
+        this.subComponents.forEach((component) => {
             component.addEventListeners();
+        });
+
+        this.subComponentsLists.forEach((componentList) => {
+            componentList.forEach((component) => {
+                component.addEventListeners();
+            });
         });
     }
 
@@ -87,8 +90,14 @@ export default class BaseComponent {
      * Метод, удаляющий обработчики событий для компонента.
      */
     removeEventListeners() {
-        this.subComponents.forEach(([_, component]) => {
+        this.subComponents.forEach((component) => {
             component.removeEventListeners();
+        });
+
+        this.subComponentsLists.forEach((componentList) => {
+            componentList.forEach((component) => {
+                component.removeEventListeners();
+            });
         });
     }
 
@@ -107,6 +116,17 @@ export default class BaseComponent {
      * @param {Object} component - объект компонента
      */
     addComponentToList(name, component) {
+        if (!this.subComponentsLists.get(name)) {
+            this.subComponentsLists.set(name, []);
+        }
         this.subComponentsLists.get(name).push(component);
+    }
+
+    /**
+     * Удаляет список из компонентов
+     * @param {String} name
+     */
+    removeComponentList(name) {
+        this.subComponentsLists.delete(name);
     }
 }

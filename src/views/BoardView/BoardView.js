@@ -48,8 +48,6 @@ export default class BoardView extends BaseView {
             title: null,
             description: null,
         };
-
-        this._cardlists = [];
     }
 
     /**
@@ -66,18 +64,18 @@ export default class BoardView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
+        this.removeComponentList('_cardlists');
+        
         this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
-
         if (!this._isActive) {
             return;
         }
 
-        this._cardlists = [];
         Object.values(this.context.get('content')).forEach((cardlist) => {
-            this._cardlists.push(new CardListComponent(cardlist).render());
+            console.log(cardlist);
+            this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
-
-        this._setContext(this.context.set('_cardlists', this._cardlists));
 
         this.render();
     }
@@ -87,10 +85,10 @@ export default class BoardView extends BaseView {
      */
     render() {
         /* Если пользователь авторизован, то перебросить его на страницу входа */
-        if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
-            return;
-        }
+        // if (!this.context.get('isAuthorized')) {
+        //     Router.go(Urls.Login);
+        //     return;
+        // }
         this._isActive = true;
 
         super.render();
@@ -104,23 +102,16 @@ export default class BoardView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        // document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
-
+        super.addEventListeners();
         document.getElementById('addCardList').addEventListener('click', this.addCardListCallback);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('addCardList')?.removeEventListener('click', this.addCardListCallback);
-
-        // document.getElementById('auth')?.removeEventListener('submit',
-        //                                                     this.formAuthorizationCallback);
     }
 
     /**

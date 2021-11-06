@@ -34,13 +34,10 @@ export default class CardListComponent extends BaseComponent {
      * @return {String} HTML-код компонента
     */
     render() {
-        const cards = [];
-
         Object.values(this.context.cards).forEach((card) => {
-            cards.push(new CardComponent(card).render());
+            this.addComponentToList('_cards', new CardComponent(card));
         });
 
-        this.context._cards = cards;
         return this.template(this.context);
     }
 
@@ -48,6 +45,8 @@ export default class CardListComponent extends BaseComponent {
      * Метод, добавляющий event listeners.
      */
     addEventListeners() {
+        super.addEventListeners();
+        console.log('addEventListeners CardList');
         document.getElementById('addCardList')?.addEventListener('click', this._addCardList);
         document.getElementById('editCardList')?.addEventListener('click', this._editCardList);
         document.getElementById('removeCardList')?.addEventListener('click', this._deleteCardList);
@@ -57,6 +56,8 @@ export default class CardListComponent extends BaseComponent {
      * Метод, удаляющий обработчики событий для компонента.
      */
     removeEventListeners() {
+        super.removeEventListeners();
+        console.log('removeEventListeners CardList');
         document.getElementById('addCardList')?.removeEventListener('click', this._addCardList);
         document.getElementById('editCardList')?.removeEventListener('click', this._editCardList);
         document.getElementById('removeCardList')?.removeEventListener('click', this._deleteCardList);
