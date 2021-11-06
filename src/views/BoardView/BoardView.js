@@ -65,8 +65,8 @@ export default class BoardView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this.removeComponentList('_cardlists');
-        
+        this.removeComponentsList('_cardlists');
+
         this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
         if (!this._isActive) {
             return;

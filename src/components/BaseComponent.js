@@ -59,7 +59,8 @@ export default class BaseComponent {
 
         const contextWithComponents = {
             ...components,
-            componentsLists, ...Object.fromEntries(this.context),
+            ...componentsLists,
+            ...(this.context instanceof Map ? Object.fromEntries(this.context.entries()) : this.context),
         };
 
         const mainHTML = this.template(contextWithComponents);
@@ -126,7 +127,7 @@ export default class BaseComponent {
      * Удаляет список из компонентов
      * @param {String} name
      */
-    removeComponentList(name) {
+    removeComponentsList(name) {
         this.subComponentsLists.delete(name);
     }
 }
