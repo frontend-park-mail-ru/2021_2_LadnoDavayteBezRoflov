@@ -11,21 +11,20 @@ import FooterComponent from '../components/Footer/Footer.js';
  */
 export default class BaseView extends BaseComponent {
     /**
-    * @constructor
-    * @param {Object} context контекст отрисовки шаблона
-    * @param {function} template функция-шаблон
-    * @param {Element} parent HTML-элемент, в который
-    * будет осуществлена отрисовка
+     * @constructor
+     * @param {Object} context контекст отрисовки шаблона
+     * @param {Object} mainTemplate объект с функцией шаблона и контейнером для него
+     * @param {Function} mainTemplate.template функция отрисовки шаблона
+     * @param {Element?} mainTemplate.parent элемент, в который будет отрисован шаблон
+     * @param {Object} popupTemplate Объект с функцией шаблона popup и контейнером для него
+     * @param {Function} popupTemplate.template функция отрисовки шаблона popup
+     * @param {Element?} popupTemplate.parent элемент, в который будет отрисован шаблон popup
     */
-    constructor(context, template, parent) {
-        super(context, template, parent);
+    constructor(context, mainTemplate, popupTemplate) {
+        super(context, mainTemplate, popupTemplate);
 
-        if (!!this.template) {
-            this.subComponents = [];
-
-            this.subComponents.push(['Navbar', new NavbarComponent(context)]);
-            this.subComponents.push(['Footer', new FooterComponent(context)]);
-        }
+        this.addComponent('Navbar', new NavbarComponent(context));
+        this.addComponent('Footer', new FooterComponent(context));
 
         this._isActive = false;
     }
@@ -37,9 +36,7 @@ export default class BaseView extends BaseComponent {
     _setContext(context) {
         this.context = context;
 
-        this.subComponents.forEach(([_, component]) => {
-            component.context = this.context;
-        });
+        super._setContext(context);
     }
 
     /**
@@ -60,34 +57,9 @@ export default class BaseView extends BaseComponent {
      * Метод, вызывающийся по умолчанию при закрытии страницы.
      */
     _onHide() {
+        super.removeEventListeners();
         this.removeEventListeners();
 
-        this.subComponents.forEach(([_, component]) => {
-            component.removeEventListeners();
-        });
-
         this._isActive = false;
-    }
-
-    /**
-    * Метод, отрисовывающий страницу по заданному шаблону
-    */
-    render() {
-        const components = this.subComponents.reduce(function(accumulator, object) {
-            return {...accumulator, ...{[object[0]]: object[1].render()}};
-        }, {});
-
-        this.parent.innerHTML = this.template({...components, ...Object.fromEntries(this.context)});
-    }
-
-    /**
-     * Метод, добавляющий новый компонент.
-     * @param {String} name имя компонента
-     * @param {Object} component компонент
-     */
-    addComponent(name, component) {
-        if (typeof this.subComponents !== 'undefined') {
-            this.subComponents.push([name, component]);
-        }
     }
 }

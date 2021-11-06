@@ -9,24 +9,16 @@ export default class BaseComponent {
      * под отрисованный шаблон "popupTemplate.parent".
      * @constructor
      * @param {Object} context контекст отрисовки шаблона
-     * @param {Object} mainTemplate объект с функцией шаблона и контейнером для него
-     * @param {Function} mainTemplate.template функция отрисовки шаблона
-     * @param {Element?} mainTemplate.parent элемент, в который будет отрисован шаблон
-     * @param {Object} popupTemplate Объект с функцией шаблона popup и контейнером для него
-     * @param {Function} popupTemplate.template функция отрисовки шаблона popup
-     * @param {Element?} popupTemplate.parent элемент, в который будет отрисован шаблон popup
+     * @param {Function} template функция отрисовки шаблона
+     * @param {Object} parent элемент, в который будет отрисован шаблон
      */
-    constructor(context, mainTemplate, popupTemplate) {
-        if (!mainTemplate.template) {
-            throw new Error('Не задан основной шаблон компонента');
+    constructor(context, template, parent) {
+        if (!template) {
+            throw new Error('Не задан шаблон компонента');
         }
 
-        if (popupTemplate.template && !popupTemplate.parent) {
-            throw new Error('Не задан родительский элемент для popup');
-        }
-
-        this.mainTemplate = mainTemplate;
-        this.popupTemplate = popupTemplate;
+        this.template = template;
+        this.parent = parent;
         this.context = context;
 
         this.subComponents = new Map(); // Именованные компоненты
@@ -73,19 +65,13 @@ export default class BaseComponent {
             componentsLists, ...Object.fromEntries(this.context),
         };
 
-
-        if (this.popupTemplate.template) {
-
-            this.popupTemplate.parent = this.popupTemplate.template(components);
-        }
-
         const mainHTML = this.mainTemplate.template(contextWithComponents);
 
-        if (!this.mainTemplate.parent) {
+        if (!this.parent) {
             return mainHTML;
         }
 
-        this.mainTemplate.parent = mainHTML;
+        this.parent.innerHTML = mainHTML;
     }
 
     /**
