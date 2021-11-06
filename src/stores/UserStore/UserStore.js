@@ -99,6 +99,8 @@ class UserStore extends BaseStore {
 
         default:
             console.log('Undefined error');
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
         }
     }
 
