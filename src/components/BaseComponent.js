@@ -3,6 +3,10 @@
  */
 export default class BaseComponent {
     /**
+     * Конструирует компонент. Обязательный параметр - функция отрисовки основного шаблона
+     * "mainTemplate.template". Опционально может принимать функцию отрисовки шаблона popUp
+     * "popupTemplate.template", в таком случает обязательно требуется передавать контейнер
+     * под отрисованный шаблон "popupTemplate.parent".
      * @constructor
      * @param {Object} context контекст отрисовки шаблона
      * @param {Object} mainTemplate объект с функцией шаблона и контейнером для него
@@ -17,10 +21,34 @@ export default class BaseComponent {
             throw new Error('Не задан основной шаблон компонента');
         }
 
+        if (popupTemplate.template && !popupTemplate.parent) {
+            throw new Error('Не задан родительский элемент для popup');
+        }
+
         this.mainTemplate = mainTemplate;
         this.popupTemplate = popupTemplate;
         this.context = context;
-        this.subComponents = [];
+
+        this.subComponents = new Map(); // Именованные компоненты
+        this.subComponentsLists = new Map(); // Именованные списки однотипных компонентов
+    }
+
+    /**
+     * Метод, обновляющий контекст у текущего компонента и его субкомпонентов
+     * @param {Object} context
+     */
+    _setContext(context) {
+        this.context = context;
+
+        this.subComponents.forEach((component) => {
+            component.context = this.context;
+        });
+
+        this.subComponentsLists.forEach((componentList) => {
+            componentList.forEach((component) => {
+                component.context = this.context;
+            });
+        });
     }
 
     /**
@@ -28,27 +56,36 @@ export default class BaseComponent {
      * @return {String} HTML-код компонента
      */
     render() {
-        const components = this.subComponents.reduce(function(accumulator, object) {
-            return {...accumulator, ...{[object[0]]: object[1].render()}};
+        const components = [...this.subComponents.entries()].reduce((prev, [name, component]) => {
+            return {...prev, [name]: component.render()};
         }, {});
 
-        this.parent.innerHTML = this.template({...components, ...Object.fromEntries(this.context)});
+        const componentsLists = [...this.subComponentsLists.entries()]
+            .reduce((prev, [name, components]) => {
+                const renderedComponents = components.map((component) => {
+                    return component.render();
+                });
+                return {...prev, [name]: renderedComponents};
+            }, {});
+
+        const contextWithComponents = {
+            ...components,
+            componentsLists, ...Object.fromEntries(this.context),
+        };
 
 
-        if (!!this.template) {
-            if (this.context instanceof Map) {
-                this.context = Object.fromEntries(this.context);
-            }
+        if (this.popupTemplate.template) {
 
-            const html = (typeof this.template === Function) ?
-                this.template(this.context) :
-                this.template({...this.context});
-
-            if (this.parent === undefined) {
-                return html;
-            }
-            this.parent.innerHTML = html;
+            this.popupTemplate.parent = this.popupTemplate.template(components);
         }
+
+        const mainHTML = this.mainTemplate.template(contextWithComponents);
+
+        if (!this.mainTemplate.parent) {
+            return mainHTML;
+        }
+
+        this.mainTemplate.parent = mainHTML;
     }
 
     /**
@@ -67,5 +104,23 @@ export default class BaseComponent {
         this.subComponents.forEach(([_, component]) => {
             component.removeEventListeners();
         });
+    }
+
+    /**
+     * Сохраняет объект компонента под переданным именем
+     * @param {String} name - имя компонента
+     * @param {Object} component - объект компонента
+     */
+    addComponent(name, component) {
+        this.subComponents.set(name, component);
+    }
+
+    /**
+     * Сохраняет компонент в именованный список
+     * @param {String} name - имя списка
+     * @param {Object} component - объект компонента
+     */
+    addComponentToList(name, component) {
+        this.subComponentsLists.get(name).push(component);
     }
 }
