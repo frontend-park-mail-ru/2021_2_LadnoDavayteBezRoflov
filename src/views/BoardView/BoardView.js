@@ -42,9 +42,6 @@ export default class BoardView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
-
-        // this.formAuthorizationCallback = this.formAuthorization.bind(this);
-
         this._inputElements = {
             title: null,
             description: null,
@@ -76,7 +73,7 @@ export default class BoardView extends BaseView {
             return;
         }
 
-        Object.values(this.context.get('content')).forEach((cardlist) => {
+        Object.values(this.context.get('card_lists')).forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
 

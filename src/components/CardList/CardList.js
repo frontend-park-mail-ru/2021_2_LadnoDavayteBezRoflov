@@ -38,7 +38,6 @@ export default class CardListComponent extends BaseComponent {
      */
     addEventListeners() {
         super.addEventListeners();
-        console.log('addEventListeners CardList');
         document.getElementById('addCardList')?.addEventListener('click', this._addCardList);
         document.getElementById('editCardList')?.addEventListener('click', this._editCardList);
         document.getElementById('removeCardList')?.addEventListener('click', this._deleteCardList);
@@ -49,7 +48,6 @@ export default class CardListComponent extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        console.log('removeEventListeners CardList');
         document.getElementById('addCardList')?.removeEventListener('click', this._addCardList);
         document.getElementById('editCardList')?.removeEventListener('click', this._editCardList);
         document.getElementById('removeCardList')?.removeEventListener('click', this._deleteCardList);

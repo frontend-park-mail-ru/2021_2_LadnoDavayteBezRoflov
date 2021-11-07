@@ -51,14 +51,14 @@ export const boardActions = {
 
     /**
      * Обновить заглавие и описание доски
-     * @param {String} title
+     * @param {String} boardName
      * @param {String} description
      */
-    updateBoardTitleDescription(title, description) {
+    updateBoardTitleDescription(boardName, description) {
         Dispatcher.dispatch({
             actionName: BoardActionTypes.POPUP_BOARD_UPDATE,
             data: {
-                title,
+                board_name: boardName,
                 description,
             },
         });
@@ -81,10 +81,9 @@ export const boardActions = {
         Dispatcher.dispatch({
             actionName: BoardActionTypes.POPUP_BOARD_DELETE_HIDE,
             data: {
-                confirmed
+                confirmed,
             },
         });
-
     },
 
 

@@ -148,7 +148,7 @@ class BoardsStore extends BaseStore {
 
         case HttpStatusCodes.InternalServerError:
             this._showModal(data);
-            this._storage.get('create-popup').errors = ConstantMessages.BoardErrorOnServer;
+            this._storage.get('create-popup').errors = ConstantMessages.BoardCreateErrorOnServer;
             return;
 
         default:

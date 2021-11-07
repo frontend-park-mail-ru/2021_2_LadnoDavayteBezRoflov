@@ -10,6 +10,10 @@
   box-sizing: border-box;
 }
 
+textarea {
+  resize: vertical;
+}
+
 body {
   margin: 0;
   background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
@@ -43,34 +47,6 @@ body {
   }
 }
 
-.button {
-  padding: 16px 24px;
-
-  color: rgb(255, 255, 255);
-  background-color: $main-theme-color;
-
-  border: none;
-  outline: none;
-  border-radius: 5px;
-
-  letter-spacing: 1px;
-  font-size: 16px;
-
-  cursor: pointer;
-
-  transition: all 0.3s ease-in-out;
-
-  &_small {
-    padding: 8px 12px;
-  }
-}
-
-.button:focus,
-.button:hover {
-  background-color: $main-theme-color__focus;
-}
-
-
 $simple-form-radius: 10px;
 
 .simple-form-element {
@@ -98,7 +74,7 @@ $simple-form-radius: 10px;
 
   &::before {
     @extend .material-icons;
-    content: 'close';
+    /*content: 'close';*/
     font-size: 30px;
     display: inline;
     position: relative;
@@ -144,12 +120,21 @@ $simple-form-radius: 10px;
   &_small {
     padding: 8px 12px;
   }
+
+  &_red {
+    background-color: $delete-color;
+  }
+
+  &_full-space {
+    flex: 1;
+  }
+
+  &:focus,
+  &:hover {
+    background-color: $main-theme-color__focus;
+  }
 }
 
-.button:focus,
-.button:hover {
-  background-color: $main-theme-color__focus;
-}
 
 .horizontal-line {
   border-bottom: solid 2px $tertiary-bg-color;

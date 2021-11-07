@@ -2,10 +2,12 @@ import BaseStore from '../BaseStore.js';
 import {BoardsActionTypes} from '../../actions/boards.js';
 
 import Network from '../../modules/Network/Network.js';
-import {HttpStatusCodes} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board';
+import Router from '../../modules/Router/Router';
+import Validator from '../../modules/Validator/Validator';
 
 /**
  * Класс, реализующий хранилище доски
@@ -16,8 +18,13 @@ class BoardStore extends BaseStore {
      */
     constructor() {
         super('Board');
+        this._storage.set('card_lists', []);
         this._storage.set('setting-popup', {
             visible: false,
+            board_name: null,
+            description: null,
+            errors: null,
+            confirm: false,
         });
     }
 
@@ -62,6 +69,15 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case BoardActionTypes.POPUP_BOARD_DELETE_SHOW:
+            this._showConfirmDialog();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.POPUP_BOARD_DELETE_HIDE:
+            await this._processHideConfirmDialog(action.data);
+            break;
+
         default:
             return;
         }
@@ -74,8 +90,8 @@ class BoardStore extends BaseStore {
      */
     getCardByCID(cid) {
         let cardByCID;
-        (Object.values(this.getContext('content'))
-            .filter((cardlist) => {
+        (Object.values(this.getContext('card_lists'))
+            ?.filter((cardlist) => {
                 (Object.values(cardlist.cards)
                     .filter((card) => {
                         if (card.cid === cid) {
@@ -104,8 +120,8 @@ class BoardStore extends BaseStore {
     getSettingPopUpContext() {
         return {
             ...this._storage.get('setting-popup'),
-            title: 'some board',
-            description: 'board description',
+            board_name: this._storage.get('board_name'),
+            description: this._storage.get('description'),
         };
     }
 
@@ -210,11 +226,11 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('id', response.data.id);
-            this._storage.set('title', response.data.title);
-            this._storage.set('team', response.data.team);
-            this._storage.set('description', response.data.description);
-            this._storage.set('content', response.data.content);
+            this._storage.set('bid', payload.data.bid);
+            this._storage.set('tid', payload.data.tid);
+            this._storage.set('board_name', payload.data.board_name);
+            this._storage.set('description', payload.data.description);
+            this._storage.set('card_lists', payload.data.card_lists);
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -226,20 +242,118 @@ class BoardStore extends BaseStore {
         }
     }
 
+    /**
+     * Установить окно настроект видимым
+     * @private
+     */
     _showSetting() {
-        console.log('_showSetting');
+        this._storage.get('setting-popup').errors = null;
         this._storage.get('setting-popup').visible = true;
     }
 
+    /**
+     * Установить окно настроект не видимым
+     * @private
+     */
     _hideSettings() {
-        console.log('_hideSettings');
+        this._storage.get('setting-popup').errors = null;
         this._storage.get('setting-popup').visible = false;
+        this._storage.get('setting-popup').confirm = false;
     }
 
+    /**
+     * Обновить информацию о доске
+     * @param {Object} data новые данные
+     * @return {Promise<void>}
+     * @private
+     */
     async _updateTitleAndDescription(data) {
-        this._storage.get('setting-popup').visible = false;
-        console.log('_updateTitleAndDescription');
-        // Поход в сеть
+        this._storage.get('setting-popup').errors = null;
+        const validator = new Validator();
+
+        this._storage.get('setting-popup').errors = validator.validateBoardDescription(data.description);
+        if (this._storage.get('setting-popup').errors) {
+            return;
+        }
+
+        this._storage.get('setting-popup').errors = validator.validateBoardTitle(data.board_name);
+        if (this._storage.get('setting-popup').errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.updateBoard(data, this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._hideSettings();
+            this._storage.set('board_name', payload.data.board_name);
+            this._storage.set('description', payload.data.description);
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('setting-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('setting-popup').errors = ConstantMessages.BoardUpdateErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Отобразить диалог подтверждения удаления доски
+     * @private
+     */
+    _showConfirmDialog() {
+        this._storage.get('setting-popup').errors = null;
+        this._storage.get('setting-popup').confirm = true;
+    }
+
+    /**
+     * Обработать закрытие диалога подтверждения удаления
+     * @param {Object} data - результат диалога
+     * @return {Promise<void>}
+     * @private
+     */
+    async _processHideConfirmDialog(data) {
+        this._storage.get('setting-popup').errors = null;
+        this._storage.get('setting-popup').confirm = false;
+        if (!data.confirmed) {
+            this._emitChange();
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.deleteBoard(this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            Router.go('/boards');
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('setting-popup').errors = ConstantMessages.BoardNoAccess;
+            this._emitChange();
+            return;
+
+        default:
+            this._storage.get('setting-popup').errors = ConstantMessages.BoardDeleteErrorOnServer;
+            this._emitChange();
+            return;
+        }
     }
 }
 

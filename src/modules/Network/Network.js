@@ -171,7 +171,7 @@ class Network {
 
     /**
      * Метод, реализующий запрос GET /api/board/.
-     * @param {int} bid - номер доски
+     * @param {Number} bid - id доски
      * @return {Promise<Response>} промис запроса
      */
     async getBoard(bid) {
@@ -180,7 +180,6 @@ class Network {
             headers: {
                 'Content-Type': 'application/json',
             },
-
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
@@ -300,7 +299,6 @@ class Network {
      * @return {Promise<Response>} промис запроса
      */
     async createBoard(data) {
-        console.log(data);
         const options = {
             method: 'post',
             body: JSON.stringify(data),
@@ -310,7 +308,43 @@ class Network {
     }
 
     /**
-     * Метод, реализующий запрос DELETE /api/sessions.
+     * Метод, реализующий запрос PUT /api/sessions.
+     * @param {Object} data полезная нагрузка запроса
+     * @param {Number} bid id обновляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateBoard(data, bid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/board/:bid.
+     * @param {Number} bid id уаляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteBoard(bid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/board/:bid.
      * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */

@@ -50,7 +50,7 @@ export default class CardComponent extends BaseComponent {
      * @return {html} код компонента
      */
     _onRefresh() {
-        this.context = BoardStore.getCardByCID(this._cid);
+        // this.context = BoardStore.getCardByCID(this._cid);
         return this._popupTemplate(this.context); //  ???
     }
 

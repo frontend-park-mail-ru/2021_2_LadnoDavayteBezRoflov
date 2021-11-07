@@ -83,7 +83,7 @@ export default class Validator {
 
     /**
      * Метод, валидирующий название доски
-     * @param {String} title
+     * @param {String} title заглавие на проверку
      * @return {String | null}
      */
     validateBoardTitle(title) {
@@ -92,6 +92,18 @@ export default class Validator {
         }
         if (title.length > 60) {
             return ConstantMessages.BoardTitleTooLong;
+        }
+        return null;
+    }
+
+    /**
+     * Метод, валидирующий описание доски
+     * @param {String} description описание на проверку
+     * @return {String | null}
+     */
+    validateBoardDescription(description) {
+        if (description.length > 500) {
+            return ConstantMessages.BoardDescriptionTooLong;
         }
         return null;
     }
