@@ -56,6 +56,7 @@ const config = {
                     path.resolve(__dirname, 'src/components/'),
                     path.resolve(__dirname, 'src/views/'),
                     path.resolve(__dirname, 'src/styles/'),
+                    path.resolve(__dirname, 'src/popups/'),
                 ],
                 test: /\.(s*)css$/,
                 use: [

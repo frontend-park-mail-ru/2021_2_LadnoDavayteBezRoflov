@@ -10,8 +10,6 @@ import template from './CreateBoardPopUp.hbs';
 // Actions
 import {boardsActions} from '../../actions/boards.js';
 
-// Любой попап сначала закрывается. Только после этого может что происходить не связанное с ним.
-
 /**
  * Класс popup окна настроек доски
  */
@@ -35,8 +33,6 @@ export default class CreateBoardPopUp extends BaseComponent {
      */
     _onStoreRefresh() {
         this._setContext(BoardsStore.getCreateBoardPopUpContext());
-        console.log('context in create board popup');
-        console.log(this.context);
         this._removeEventListeners();
         super.render();
         this._registerPopUpElements();

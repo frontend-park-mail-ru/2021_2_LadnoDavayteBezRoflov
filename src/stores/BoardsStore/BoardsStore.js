@@ -127,8 +127,6 @@ class BoardsStore extends BaseStore {
             return;
         }
 
-        console.log('payload');
-        console.log(payload);
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             const team = this._storage.get('teams').find((team) => {
