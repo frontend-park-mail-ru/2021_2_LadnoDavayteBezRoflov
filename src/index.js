@@ -22,6 +22,7 @@ import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 import BoardSettingPopUp from './popups/BoardSetting/BoardSettingPopUp.js';
+import CreateBoardPopUp from './popups/CreateBoard/CreateBoardPopUp';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -33,6 +34,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const popup = document.getElementById('popup');
 
     const boardSettingPopUp = new BoardSettingPopUp(popup);
+    const createBoardPopUp = new CreateBoardPopUp(popup);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

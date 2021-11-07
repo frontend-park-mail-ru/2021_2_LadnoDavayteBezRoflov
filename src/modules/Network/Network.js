@@ -300,6 +300,7 @@ class Network {
      * @return {Promise<Response>} промис запроса
      */
     async createBoard(data) {
+        console.log(data);
         const options = {
             method: 'post',
             body: JSON.stringify(data),

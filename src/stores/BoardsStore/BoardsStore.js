@@ -21,12 +21,24 @@ class BoardsStore extends BaseStore {
         this._storage = new Map();
 
         this._storage.set('teams', null);
-        this._storage.set('modal', {
+        this._storage.set('create-popup', {
             visible: false,
             teamID: null,
             errors: null,
         });
     }
+
+    /**
+     * Возвращает контекст для boardSettingPopUp
+     * @return {Object} контекст
+     */
+    getCreateBoardPopUpContext() {
+        return {
+            ...this._storage.get('create-popup'),
+            teams: this._storage.get('teams'),
+        };
+    }
+
 
     /**
      * Метод, реализующий реакцию на рассылку Диспетчера.
@@ -42,11 +54,11 @@ class BoardsStore extends BaseStore {
             await this._create(action.data);
             this._emitChange();
             break;
-        case BoardsActionTypes.BOARDS_MODAL_HIDE:
+        case BoardsActionTypes.BOARDS_POPUP_HIDE:
             this._hideModal();
             this._emitChange();
             break;
-        case BoardsActionTypes.BOARDS_MODAL_SHOW:
+        case BoardsActionTypes.BOARDS_POPUP_SHOW:
             this._showModal(action.data);
             this._emitChange();
             break;
@@ -97,7 +109,7 @@ class BoardsStore extends BaseStore {
         const validator = new Validator();
 
         const validatorStatus = validator.validateBoardTitle(data.name);
-        this._storage.get('modal').errors = validatorStatus;
+        this._storage.get('create-popup').errors = validatorStatus;
         if (validatorStatus) {
             return;
         }
@@ -107,22 +119,29 @@ class BoardsStore extends BaseStore {
 
         try {
             payload = await Network.createBoard({
-                board_name: data.name,
                 tid: parseInt(data.teamID, 10),
+                board_name: data.name,
             });
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
         }
 
+        console.log('payload');
+        console.log(payload);
         switch (payload.status) {
-        case HttpStatusCodes.Created:
-            const team = this._storage.get('teams').find((value) => {
-                return value.id === data.teamID;
+        case HttpStatusCodes.Ok:
+            const team = this._storage.get('teams').find((team) => {
+                return team.tid === parseInt(data.teamID, 10);
             });
 
-            // Ожидаются данные по доске (board_name, description, id, tasks)
-            team.boards.push(payload.data);
+            team.boards.push({
+                bid: payload.data.bid,
+                board_name: data.name,
+                description: '',
+                tid: data.teamID,
+            });
+
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -131,7 +150,7 @@ class BoardsStore extends BaseStore {
 
         case HttpStatusCodes.InternalServerError:
             this._showModal(data);
-            this._storage.get('modal').errors = ConstantMessages.BoardErrorOnServer;
+            this._storage.get('create-popup').errors = ConstantMessages.BoardErrorOnServer;
             return;
 
         default:
@@ -144,7 +163,7 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _hideModal() {
-        this._storage.set('modal', {
+        this._storage.set('create-popup', {
             visible: false,
             teamID: null,
             errors: null,
@@ -157,7 +176,7 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _showModal(data) {
-        this._storage.set('modal', {
+        this._storage.set('create-popup', {
             visible: true,
             teamID: data.teamID,
             errors: null,
