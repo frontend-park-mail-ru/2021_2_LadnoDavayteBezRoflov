@@ -19,6 +19,7 @@ export const Urls = {
   */
 export const Html = {
     Root: 'root',
+    PopUp: 'popup',
 };
 
 /**

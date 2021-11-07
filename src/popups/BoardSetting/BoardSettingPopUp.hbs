@@ -1,0 +1,12 @@
+{{# if visible }}
+    <div class="popup-wrapper" id="boardSettingPopUpWrapperId">
+        <div class="board-setting-popup">
+            <form>
+                <label for="boardSettingPopUpTitleId" class>Название доски:</label>
+                <input class="simple-form-element" type="text" id="boardSettingPopUpTitleId" name="board-name" autofocus
+                       pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+            </form>
+        </div>
+    </div>
+{{/if}}

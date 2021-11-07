@@ -23,6 +23,7 @@ import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
+import {boardActions} from '../../actions/board';
 
 /**
  * Класс, реализующий страницу доски.
@@ -31,8 +32,9 @@ export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
+     * @param {Element} popup HTML-элемент, в который будет осуществлена отрисовка popup
      */
-    constructor(parent) {
+    constructor(parent, popup) {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
         super(context, template, parent);
 
@@ -49,6 +51,7 @@ export default class BoardView extends BaseView {
         };
 
         this._bindCallBacks();
+        this.registerViewElements();
     }
 
     /**
@@ -74,7 +77,6 @@ export default class BoardView extends BaseView {
         }
 
         Object.values(this.context.get('content')).forEach((cardlist) => {
-            console.log(cardlist);
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
 
@@ -94,9 +96,9 @@ export default class BoardView extends BaseView {
 
         super.render();
 
-        this.addEventListeners();
+        this.registerViewElements();
 
-        this.registerInputElements();
+        this.addEventListeners();
     }
 
     /**
@@ -104,7 +106,8 @@ export default class BoardView extends BaseView {
      */
     addEventListeners() {
         super.addEventListeners();
-        document.getElementById('addCardList').addEventListener('click', this.addCardListCallback);
+        this._elements.setting.showBtn?.addEventListener('click', this._showSettingPopUp);
+        // this._elements.cardList.showBtn.addEventListener('click', this._showCardListPopUp);
     }
 
     /**
@@ -112,15 +115,31 @@ export default class BoardView extends BaseView {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        document.getElementById('addCardList')?.removeEventListener('click', this._showCardListPopUp);
+        this._elements.setting.showBtn?.removeEventListener('click', this._showSettingPopUp);
+        // this._elements.cardList.showBtn.removeEventListener('click', this._showCardListPopUp);
     }
 
     /**
-     * Метод, регистрирующий поля ввода в документе.
+     * Метод, сохраняющий ссылки на поля и кнопки
      */
-    registerInputElements() {
-        this._inputElements.title = document.getElementById('title');
-        this._inputElements.description = document.getElementById('description');
+    registerViewElements() {
+        this._elements = {
+            cardList: {
+                showBtn: document.getElementById('addCardListPopUp'),
+                hideBtn: document.getElementById('hideCardListPopUp'),
+                title: document.getElementById('cardListTitle'),
+                submit: document.getElementById('cardCreateCreate'),
+            },
+            setting: {
+                showBtn: document.getElementById('showBoardSettingPopUp'),
+                hideBtn: document.getElementById('hideBoardSettingPopUp'),
+                title: document.getElementById('boardSetting'),
+                description: document.getElementById('boardSetting'),
+                deleteBtn: document.getElementById('boardSetting'),
+                acceptBtn: document.getElementById('acceptDeleteBoard'),
+                denyBtn: document.getElementById('denyDeleteBoard'),
+            },
+        };
     }
 
     /**
@@ -145,12 +164,14 @@ export default class BoardView extends BaseView {
     _bindCallBacks() {
         this._showCardListPopUp = this._showCardListPopUp.bind(this);
         this._showInvitePopUp = this._showInvitePopUp.bind(this);
+        this._showSettingPopUp = this._showSettingPopUp.bind(this);
     }
 
+    _showSettingPopUp() {
+        boardActions.showBoardSettingsPopUp();
+    }
 
     _showCardListPopUp() {
-
-
     }
 
     _showInvitePopUp() {

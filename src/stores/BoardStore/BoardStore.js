@@ -5,6 +5,7 @@ import Network from '../../modules/Network/Network.js';
 import {HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
 import {CardActionTypes} from '../../actions/card.js';
+import {BoardActionTypes} from '../../actions/board';
 
 /**
  * Класс, реализующий хранилище доски
@@ -15,6 +16,9 @@ class BoardStore extends BaseStore {
      */
     constructor() {
         super('Board');
+        this._storage.set('setting-popup', {
+            visible: false,
+        });
     }
 
     /**
@@ -40,6 +44,21 @@ class BoardStore extends BaseStore {
 
         case CardActionTypes.CARD_DELETE:
             await this._deleteCard(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.POPUP_BOARD_SHOW:
+            this._showSetting();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.POPUP_BOARD_HIDE:
+            this._hideSettings();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.POPUP_BOARD_UPDATE:
+            await this._updateTitleAndDescription(action.data);
             this._emitChange();
             break;
 
@@ -76,6 +95,18 @@ class BoardStore extends BaseStore {
      */
     getBoardByCID(CID) {
         return this.getContext('content')[CID].bid;
+    }
+
+    /**
+     * Возвращает контекст для boardSettingPopUp
+     * @return {Object} контекст
+     */
+    getSettingPopUpContext() {
+        return {
+            ...this._storage.get('setting-popup'),
+            title: 'some board',
+            description: 'board description',
+        };
     }
 
     /**
@@ -193,6 +224,22 @@ class BoardStore extends BaseStore {
         default:
             console.log('Undefined error');
         }
+    }
+
+    _showSetting() {
+        console.log('_showSetting');
+        this._storage.get('setting-popup').visible = true;
+    }
+
+    _hideSettings() {
+        console.log('_hideSettings');
+        this._storage.get('setting-popup').visible = false;
+    }
+
+    async _updateTitleAndDescription(data) {
+        this._storage.get('setting-popup').visible = false;
+        console.log('_updateTitleAndDescription');
+        // Поход в сеть
     }
 }
 

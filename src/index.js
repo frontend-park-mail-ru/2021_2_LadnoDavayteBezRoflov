@@ -21,6 +21,7 @@ import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
+import BoardSettingPopUp from './popups/BoardSetting/BoardSettingPopUp.js';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -29,6 +30,9 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
+    const popup = document.getElementById('popup');
+
+    const boardSettingPopUp = new BoardSettingPopUp(popup);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {
