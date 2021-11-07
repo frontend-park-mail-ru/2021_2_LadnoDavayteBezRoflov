@@ -39,9 +39,9 @@ export default class CardComponent extends BaseComponent {
         this._popupTemplate = templatePopup;
 
         this._inputElements = {
-            title: undefined,
-            description: undefined,
-            deadline: undefined,
+            title: null,
+            description: null,
+            deadline: null,
         };
     }
 

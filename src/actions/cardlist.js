@@ -23,9 +23,7 @@ export const cardListActions = {
     createCardList(title) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARDLIST_CREATE,
-            data: {
-                title: title,
-            },
+            data: {title},
         });
     },
 
@@ -38,8 +36,8 @@ export const cardListActions = {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARDLIST_UPDATE,
             data: {
-                title: title,
-                position: position,
+                title,
+                position,
             },
         });
     },
@@ -51,9 +49,7 @@ export const cardListActions = {
     deleteCardList(clid) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARDLIST_CREATE,
-            data: {
-                clid: clid,
-            },
+            data: {clid},
         });
     },
 };

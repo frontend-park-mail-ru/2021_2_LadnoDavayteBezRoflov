@@ -25,7 +25,7 @@ export default class CardListComponent extends BaseComponent {
         this._popupTemplate = templatePopup;
 
         this._inputElements = {
-            title: undefined,
+            title: null,
         };
     }
 

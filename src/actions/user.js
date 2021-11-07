@@ -37,10 +37,10 @@ export const userActions = {
         Dispatcher.dispatch({
             actionName: UserActionTypes.USER_REGISTER,
             data: {
-                login: login,
-                email: email,
-                password: password,
-                passwordRepeat: passwordRepeat,
+                login,
+                email,
+                password,
+                passwordRepeat,
             },
         });
     },
@@ -54,8 +54,8 @@ export const userActions = {
         Dispatcher.dispatch({
             actionName: UserActionTypes.USER_LOGIN,
             data: {
-                login: login,
-                password: password,
+                login,
+                password,
             },
         });
     },

@@ -168,99 +168,10 @@ class BoardStore extends BaseStore {
      * @param {Object} data полезная нагрузка запроса
      */
     async _get(data) {
-        /* this._storage.set('id', data.id);
-        this._storage.set('title', `${data.id}`);
-        this._storage.set('team', 'testTeam');
-        this._storage.set('content', {
-            1: {
-                title: 'in progress',
-                position: 0,
-                clid: 1,
-                bid: 0,
-                cards: {
-                    1: {
-                        cid: 1,
-                        title: 'card1',
-                        tags: [
-                            {
-                                name: 'Frontend',
-                            },
-                        ],
-                        clid: 1,
-                        bid: 0,
-                        description: 'desc1',
-                        deadline: '1.11.2021',
-                        attachments: [],
-                        checklist: null,
-                        assignees: [
-                            {
-                                userName: 'SomeBody',
-                                avatar: '/assets/default_user_picture.webp',
-                            },
-                        ],
-
-                    },
-                    2: {
-                        cid: 2,
-                        title: 'card2',
-                        tags: [
-                            {
-                                name: 'Backend',
-                            },
-                        ],
-                        clid: 1,
-                        bid: 0,
-                        description: null,
-                        deadline: null,
-                        attachments: [],
-                        checklist: 'here',
-                        assignees: [
-                            {
-                                userName: 'SomeBody',
-                                avatar: '/assets/default_user_picture.webp',
-                            },
-                            {
-                                userName: 'NotJustAnybody',
-                                avatar: '/assets/default_user_picture.webp',
-                            },
-                        ],
-                    },
-                },
-            },
-            2: {
-                title: 'done',
-                position: 1,
-                clid: 2,
-                bid: 0,
-                cards: {
-                    25: {
-                        title: 'card25',
-                        cid: 25,
-                        clid: 2,
-                        bid: 0,
-                        description: 'desc25',
-                        deadline: '1.11.2021',
-                    },
-                    26: {
-                        title: 'card26',
-                        cid: 26,
-                        clid: 2,
-                        bid: 0,
-                        description: 'desc26',
-                        deadline: '2.11.2021',
-                    },
-                },
-            },
-        });
-
-        this._storage.set('description', `coolboard ${data.id}_Board`);
-
-        return; */
-
         let payload;
 
         try {
-            payload = await Network.getBoard(data, data.id);
+            payload = await Network.getBoard(data.id);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;

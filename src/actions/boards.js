@@ -34,31 +34,39 @@ export const boardsActions = {
     getBoard(id) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARD_GET,
-            data: {
-                id: id,
-            },
+            data: {id},
         });
     },
 
+    /**
+     * Действие: создание доски.
+     * @param {String} name - название доски
+     * @param {int} teamID - номер команды
+     */
     createBoard(name, teamID) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_CREATE,
             data: {
-                name: name,
-                teamID: teamID,
-            },
-        });
-    },
-
-    showModal(teamID) {
-        Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_MODAL_SHOW,
-            data: {
+                name,
                 teamID,
             },
         });
     },
 
+    /**
+     * Действие: открытие модального окна для команды.
+     * @param {int} teamID - номер команды
+     */
+    showModal(teamID) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_MODAL_SHOW,
+            data: {teamID},
+        });
+    },
+
+    /**
+     * Действие: сокрытие модального окна.
+     */
     hideModal() {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_MODAL_HIDE,

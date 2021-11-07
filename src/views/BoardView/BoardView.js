@@ -45,8 +45,8 @@ export default class BoardView extends BaseView {
         // this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
-            title: undefined,
-            description: undefined,
+            title: null,
+            description: null,
         };
 
         this._cardlists = [];

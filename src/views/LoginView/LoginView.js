@@ -34,8 +34,8 @@ export default class LoginView extends BaseView {
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            password: undefined,
+            login: null,
+            password: null,
         };
     }
 

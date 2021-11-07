@@ -24,73 +24,29 @@ export const cardActions = {
     getCard(id) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_GET,
-            data: {
-                id: id,
-            },
+            data: {id},
         });
     },
 
     /**
      * Действие: создание карточки.
-     * @param {any} id
-     * @param {any} clid
-     * @param {any} position
-     * @param {any} title
-     * @param {any} description
-     * @param {any} deadline
-     * @param {any} checklist
-     * @param {any} assignees
-     * @param {any} tags
-     * @param {any} attachments
+     * @param {any} data
      */
-    createCard(id, clid, position, title, description, deadline, checklist,
-        assignees, tags, attachments) {
+    createCard(data) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_CREATE,
-            data: {
-                id: id,
-                clid: clid,
-                position: position,
-                title: title,
-                description: description,
-                deadline: deadline,
-                checklist: checklist,
-                assignees: assignees,
-                tags: tags,
-                attachments: attachments,
-            },
+            data,
         });
     },
 
     /**
      * Действие: обновление карточки.
-     * @param {any} id
-     * @param {any} clid
-     * @param {any} position
-     * @param {any} title
-     * @param {any} description
-     * @param {any} deadline
-     * @param {any} checklist
-     * @param {any} assignees
-     * @param {any} tags
-     * @param {any} attachments
+     * @param {any} data
      */
-    updateCard(id, clid, position, title, description, deadline, checklist,
-        assignees, tags, attachments) {
+    updateCard(data) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_UPDATE,
-            data: {
-                id: id,
-                clid: clid,
-                position: position,
-                title: title,
-                description: description,
-                deadline: deadline,
-                checklist: checklist,
-                assignees: assignees,
-                tags: tags,
-                attachments: attachments,
-            },
+            data,
         });
     },
 
@@ -101,9 +57,7 @@ export const cardActions = {
     deleteCard(id) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_DELETE,
-            data: {
-                id: id,
-            },
+            data: {id},
         });
     },
 };

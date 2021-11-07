@@ -38,10 +38,10 @@ export default class RegisterView extends BaseView {
         this.formRegistrationCallback = this.formRegistration.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
+            login: null,
+            email: null,
+            password: null,
+            passwordRepeat: null,
         };
     }
 

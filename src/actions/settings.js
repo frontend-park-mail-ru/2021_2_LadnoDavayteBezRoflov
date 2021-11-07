@@ -23,9 +23,7 @@ export const settingsActions = {
     getSettings(userName) {
         Dispatcher.dispatch({
             actionName: SettingsActionTypes.SETTINGS_GET,
-            data: {
-                userName: userName,
-            },
+            data: {userName},
         });
     },
 
@@ -36,7 +34,7 @@ export const settingsActions = {
     putSettings(data) {
         Dispatcher.dispatch({
             actionName: SettingsActionTypes.SETTINGS_UPDATE,
-            data: data,
+            data,
         });
     },
 
@@ -47,9 +45,7 @@ export const settingsActions = {
     uploadAvatar(avatar) {
         Dispatcher.dispatch({
             actionName: SettingsActionTypes.AVATAR_UPLOAD,
-            data: {
-                avatar: avatar,
-            },
+            data: {avatar},
         });
     },
 };
