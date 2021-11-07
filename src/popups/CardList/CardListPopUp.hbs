@@ -1,0 +1,45 @@
+{{# if visible }}
+    <div class="popup-wrapper" id="cardListPopUpWrapperId">
+        <div class="popup-content">
+            <form class="popup-form">
+                <div class="popup-form__header">
+                    {{#if edit }}
+                        Редактирование "{{cardList_name}}"
+                    {{else}}
+                        Создание списка карточек
+                    {{/if}}
+                </div>
+                <div class="horizontal-line"></div>
+                <div class="popup-form__elements-wrapper">
+                    <div>
+                        <label for="cardListPopUpTitleId" class>Название списка:</label>
+                        <input class="simple-form-element" type="text" id="cardListPopUpTitleId" name="cardlist-name"
+                               autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                               {{#if edit}} value="{{cardList_name}}" {{/if}}>
+                    </div>
+                    {{#if edit}}
+                        <label for="cardListPopUpPositionId">Позиция:</label>
+                        <select class="simple-form-element" id="cardListPopUpPositionId" name="posotion-select" required>
+                            {{#each positionRange}}
+                                {{#if (../CreateBoard/IsEqualHelper this ../teamID) }}
+                                    <option value="{{this}}" selected>#{{this}}</option>
+                                {{else}}
+                                    <option value="{{this}}">#{{this}}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                    {{/if}}
+                    {{#if errors}}
+                        <div class="error">{{errors}}</div>
+                    {{/if}}
+                    {{# if edit }}
+                        <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+                    {{ else }}
+                        <button class="button" id="boardSettingPopUpCreateBtnId">Создать</button>
+                    {{/if}}
+                </div>
+            </form>
+            <div class="close-button" id="boardSettingPopUpCloseId"></div>
+        </div>
+    </div>
+{{/if}}

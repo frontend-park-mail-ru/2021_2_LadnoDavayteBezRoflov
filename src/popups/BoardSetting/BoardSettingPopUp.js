@@ -23,9 +23,8 @@ export default class BoardSettingPopUp extends BaseComponent {
      */
     constructor(parent) {
         super(null, template, parent);
-        this._onStoreRefresh = this._onStoreRefresh.bind(this);
-        BoardStore.addListener(this._onStoreRefresh);
         this._bindCallBacks();
+        BoardStore.addListener(this._onStoreRefresh);
         this._registerPopUpElements();
     }
 
@@ -92,6 +91,7 @@ export default class BoardSettingPopUp extends BaseComponent {
      * @private
      */
     _bindCallBacks() {
+        this._onStoreRefresh = this._onStoreRefresh.bind(this);
         this._onPopUpClose = this._onPopUpClose.bind(this);
         this._onDelete = this._onDelete.bind(this);
         this._onDeleteConfirm = this._onDeleteConfirm.bind(this);

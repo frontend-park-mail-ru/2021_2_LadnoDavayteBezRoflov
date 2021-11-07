@@ -5,9 +5,6 @@ import CardComponent from '../Card/Card.js';
 // Шаблон
 import template from './CardList.hbs';
 
-// Шаблон
-import templatePopup from './CardListPopup.hbs';
-
 // Стили
 import './CardList.scss';
 

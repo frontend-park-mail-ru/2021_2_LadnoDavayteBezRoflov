@@ -38,16 +38,10 @@ export default class BoardView extends BaseView {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
         super(context, template, parent);
 
-        this._onRefresh = this._onRefresh.bind(this);
+        this._bindCallBacks();
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
-        this._inputElements = {
-            title: null,
-            description: null,
-        };
-
-        this._bindCallBacks();
         this.registerViewElements();
     }
 
@@ -73,6 +67,7 @@ export default class BoardView extends BaseView {
             return;
         }
 
+        // todo карточки и так массивом идут
         Object.values(this.context.get('card_lists')).forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
@@ -99,59 +94,13 @@ export default class BoardView extends BaseView {
     }
 
     /**
-     * Метод, добавляющий обработчики событий для страницы.
-     */
-    addEventListeners() {
-        super.addEventListeners();
-        this._elements.setting.showBtn?.addEventListener('click', this._showSettingPopUp);
-        // this._elements.cardList.showBtn.addEventListener('click', this._showCardListPopUp);
-    }
-
-    /**
-     * Метод, удаляющий обработчики событий для страницы.
-     */
-    removeEventListeners() {
-        super.removeEventListeners();
-        this._elements.setting.showBtn?.removeEventListener('click', this._showSettingPopUp);
-        // this._elements.cardList.showBtn.removeEventListener('click', this._showCardListPopUp);
-    }
-
-    /**
      * Метод, сохраняющий ссылки на поля и кнопки
      */
     registerViewElements() {
         this._elements = {
-            cardList: {
-                showBtn: document.getElementById('addCardListPopUp'),
-                hideBtn: document.getElementById('hideCardListPopUp'),
-                title: document.getElementById('cardListTitle'),
-                submit: document.getElementById('cardCreateCreate'),
-            },
-            setting: {
-                showBtn: document.getElementById('showBoardSettingPopUp'),
-                hideBtn: document.getElementById('hideBoardSettingPopUp'),
-                title: document.getElementById('boardSetting'),
-                description: document.getElementById('boardSetting'),
-                deleteBtn: document.getElementById('boardSetting'),
-                acceptBtn: document.getElementById('acceptDeleteBoard'),
-                denyBtn: document.getElementById('denyDeleteBoard'),
-            },
+            showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
+            showCreateCLBtn: document.getElementById('addCardListId'),
         };
-    }
-
-    /**
-     * Метод, обрабатывающий посылку формы.
-     * @param {object} event событие
-     */
-    formAuthorization(event) {
-        event.preventDefault();
-
-        const data = {
-            login: this._inputElements.login.value,
-            password: this._inputElements.password.value,
-        };
-
-        userActions.login(data.login, data.password);
     }
 
     /**
@@ -159,21 +108,42 @@ export default class BoardView extends BaseView {
      * @private
      */
     _bindCallBacks() {
-        this._showCardListPopUp = this._showCardListPopUp.bind(this);
-        this._showInvitePopUp = this._showInvitePopUp.bind(this);
-        this._showSettingPopUp = this._showSettingPopUp.bind(this);
+        this._onRefresh = this._onRefresh.bind(this);
+        this._onShowSettingPopUp = this._onShowSettingPopUp.bind(this);
+        this._onShowCreateCLPopUp = this._onShowCreateCLPopUp.bind(this);
     }
 
-    _showSettingPopUp() {
+    /**
+     * Метод, добавляющий обработчики событий для страницы.
+     */
+    addEventListeners() {
+        super.addEventListeners();
+        this._elements.showSettingBtn?.addEventListener('click', this._onShowSettingPopUp);
+        this._elements.showCreateCLBtn?.addEventListener('click', this._onShowCreateCLPopUp);
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для страницы.
+     */
+    removeEventListeners() {
+        super.removeEventListeners();
+        this._elements.showSettingBtn?.removeEventListener('click', this._onShowSettingPopUp);
+        this._elements.showCreateCLBtn?.removeEventListener('click', this._onShowCreateCLPopUp);
+    }
+
+    /**
+     * Callback, срабатывающий при нажатии на кнопку "Настройки"
+     * @private
+     */
+    _onShowSettingPopUp() {
         boardActions.showBoardSettingsPopUp();
     }
 
-    _showCardListPopUp() {
+    /**
+     * Callback, срабатывающий при нажатии на кнопку "Добавить список"
+     * @private
+     */
+    _onShowCreateCLPopUp() {
+        boardActions.showCardListPopUp();
     }
-
-    _showInvitePopUp() {
-
-    }
-
-
 }

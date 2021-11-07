@@ -8,6 +8,7 @@ import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board';
 import Router from '../../modules/Router/Router';
 import Validator from '../../modules/Validator/Validator';
+import {CardListActionTypes} from '../../actions/cardlist';
 
 /**
  * Класс, реализующий хранилище доски
@@ -25,6 +26,20 @@ class BoardStore extends BaseStore {
             description: null,
             errors: null,
             confirm: false,
+        });
+
+        this._storage.set('cardlist-popup', {
+            visible: false,
+            edit: false,
+            cid: null,
+            position: null,
+            positionRange: null,
+            cardList_name: null,
+            errors: null,
+        });
+
+        this._storage.set('delete-cl-popup', {
+            visible: false,
         });
     }
 
@@ -54,6 +69,7 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        /* Board Settings*/
         case BoardActionTypes.POPUP_BOARD_SHOW:
             this._showSetting();
             this._emitChange();
@@ -76,6 +92,28 @@ class BoardStore extends BaseStore {
 
         case BoardActionTypes.POPUP_BOARD_DELETE_HIDE:
             await this._processHideConfirmDialog(action.data);
+            break;
+
+        /* Card List */
+        case CardListActionTypes.CARD_LIST_CREATE_SHOW:
+            break;
+
+        case CardListActionTypes.CARD_LIST_EDIT_SHOW:
+            break;
+
+        case CardListActionTypes.CARD_LIST_HIDE:
+            break;
+
+        case CardListActionTypes.CARD_LIST_UPDATE_SUBMIT:
+            break;
+
+        case CardListActionTypes.CARD_LIST_CREATE_SUBMIT:
+            break;
+
+        case CardListActionTypes.CARD_LIST_DELETE_SHOW:
+            break;
+
+        case CardListActionTypes.CARD_LIST_DELETE_HIDE:
             break;
 
         default:
