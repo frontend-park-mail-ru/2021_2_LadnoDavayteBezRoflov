@@ -3,23 +3,27 @@
 <div class="board">
     <div class="board-header">
         <div class="board-header__name">{{board_name}}</div>
-            <div class="vertical-line"></div>
-                <div class="board-header__members">
-                    {{#each members}}
-                        <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}"/>
-                    {{/each}}
-                    <div class="button button_small" id="addMember">Пригласить</div>
-                </div>
-            <div class="vertical-line"></div>
-            <div class="button button_small" id="showCreateCardListPopUpId">Добавить колонку</div>
-            <div class="vertical-line"></div>
-            <div class="button button_small" id="showBoardSettingPopUpId">Настройки</div>
-        </div>
-        <div class="columns custom-scroll">
-            {{#each _cardlists}}
-                {{{this}}}
+        <div class="vertical-line"></div>
+        <div class="board-header__members">
+            {{#each members}}
+                <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}"/>
             {{/each}}
+            <div class="button button_small" id="addMember">Пригласить</div>
         </div>
+        <div class="vertical-line"></div>
+        <div class="button button_small" id="showCreateCardListPopUpId">Добавить колонку</div>
+        <div class="vertical-line"></div>
+        <div class="button button_small" id="showBoardSettingPopUpId">Настройки</div>
+    </div>
+    <div class="columns custom-scroll">
+        {{#each _cardlists}}
+            {{{this}}}
+        {{/each}}
+    </div>
 </div>
+
+{{{BoardSettingPopUp}}}
+{{{CardListPopUp}}}
+{{{DeleteCardListPopUp}}}
 
 {{{Footer}}}

@@ -1,9 +1,6 @@
 // BaseComponent
 import BaseComponent from '../../components/BaseComponent.js';
 
-// Стор
-import BoardStore from '../../stores/BoardStore/BoardStore.js';
-
 // Шаблон
 import template from './CardListPopUp.hbs';
 
@@ -17,30 +14,11 @@ import {cardListActions} from '../../actions/cardlist.js';
 export default class CardListPopUp extends BaseComponent {
     /**
      * Конструирует объект CardListPopUp
-     * @param {Element} parent - элемент, в который отрисуется данный popup
      */
-    constructor(parent) {
-        super(null, template, parent);
+    constructor() {
+        super(null, template);
         this._bindCallBacks();
-        BoardStore.addListener(this._onStoreRefresh);
-        this._registerPopUpElements();
-    }
-
-
-    /**
-     * Метод, вызываемый при обновлении стора.
-     * @private
-     */
-    _onStoreRefresh() {
-        this._setContext(BoardStore.getContext('cardlist-popup'));
-        this._removeEventListeners();
-
-        if (!this.context.visible) {
-            return;
-        }
-        super.render();
-        this._registerPopUpElements();
-        this._addEventListeners();
+        this._elements = {};
     }
 
     /**
@@ -62,7 +40,8 @@ export default class CardListPopUp extends BaseComponent {
      * Метод регестрирует callback
      * @private
      */
-    _addEventListeners() {
+    addEventListeners() {
+        this._registerPopUpElements();
         super.addEventListeners();
         this._elements.wrapper?.addEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
@@ -74,7 +53,7 @@ export default class CardListPopUp extends BaseComponent {
      * Метод удаляет все ранее зарегестрированные callback
      * @private
      */
-    _removeEventListeners() {
+    removeEventListeners() {
         super.removeEventListeners();
         this._elements.wrapper?.removeEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
@@ -87,7 +66,6 @@ export default class CardListPopUp extends BaseComponent {
      * @private
      */
     _bindCallBacks() {
-        this._onStoreRefresh = this._onStoreRefresh.bind(this);
         this._onPopUpClose = this._onPopUpClose.bind(this);
         this._onCreate = this._onCreate.bind(this);
         this._onSave = this._onSave.bind(this);

@@ -173,18 +173,6 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Возвращает контекст для boardSettingPopUp
-     * @return {Object} контекст
-     */
-    getSettingPopUpContext() {
-        return {
-            ...this._storage.get('setting-popup'),
-            board_name: this._storage.get('board_name'),
-            description: this._storage.get('description'),
-        };
-    }
-
-    /**
      * Метод, реализующий реакцию на запрос создания карточки.
      * @param {Object} data полезная нагрузка запроса
      */
@@ -438,7 +426,6 @@ class BoardStore extends BaseStore {
         }
 
         data.bid = this._storage.get('bid');
-        console.log(data);
 
         let payload;
 
@@ -542,17 +529,13 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('cardlist-popup').visible = false;
 
-            console.log('До переупорялочивания');
-            console.log(data);
             // Обновим позиции списков в storage
-
             const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
             const bound = data.pos > cardList.pos ?
                 {left: cardList.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
-            const cardLists = this._storage.get('card_lists');
 
-            console.log(cardLists);
+            const cardLists = this._storage.get('card_lists');
             for (let index = bound.left; index < bound.right; index +=1) {
                 cardLists[index].pos += bound.increment;
             }
@@ -565,8 +548,6 @@ class BoardStore extends BaseStore {
             cardLists.sort((lhs, rhs) => {
                 return lhs.pos - rhs.pos;
             });
-            console.log('После переупорядочивания');
-            console.log(cardLists);
 
             return;
 

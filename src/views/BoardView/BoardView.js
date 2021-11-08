@@ -24,6 +24,9 @@ import './BoardView.scss';
 import template from './BoardView.hbs';
 import {boardActions} from '../../actions/board';
 import {cardListActions} from '../../actions/cardlist';
+import BoardSettingPopUp from '../../popups/BoardSetting/BoardSettingPopUp';
+import CardListPopUp from '../../popups/CardList/CardListPopUp';
+import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp';
 
 /**
  * Класс, реализующий страницу доски.
@@ -41,6 +44,10 @@ export default class BoardView extends BaseView {
         this._bindCallBacks();
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
+
+        this.addComponent('BoardSettingPopUp', new BoardSettingPopUp());
+        this.addComponent('CardListPopUp', new CardListPopUp());
+        this.addComponent('DeleteCardListPopUp', new DeleteCardListPopUp());
 
         this.registerViewElements();
     }
@@ -67,7 +74,6 @@ export default class BoardView extends BaseView {
             return;
         }
 
-        // todo карточки и так массивом идут
         this.context.get('card_lists')?.forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });

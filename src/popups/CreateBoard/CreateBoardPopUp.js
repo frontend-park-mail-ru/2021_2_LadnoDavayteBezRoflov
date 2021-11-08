@@ -1,9 +1,6 @@
 // BaseComponent
 import BaseComponent from '../../components/BaseComponent.js';
 
-// Стор
-import BoardsStore from '../../stores/BoardsStore/BoardsStore.js';
-
 // Шаблон
 import template from './CreateBoardPopUp.hbs';
 
@@ -16,32 +13,11 @@ import {boardsActions} from '../../actions/boards.js';
 export default class CreateBoardPopUp extends BaseComponent {
     /**
      * Конструирует объект BoardSettingPopUp
-     * @param {Element} parent - элемент, в который отрисуется данный popup
      */
-    constructor(parent) {
-        super(null, template, parent);
-        this._onStoreRefresh = this._onStoreRefresh.bind(this);
-        BoardsStore.addListener(this._onStoreRefresh);
+    constructor() {
+        super(null, template);
         this._bindCallBacks();
-        this._registerPopUpElements();
-    }
-
-
-    /**
-     * Метод, вызываемый при обновлении стора.
-     * @private
-     */
-    _onStoreRefresh() {
-        this._setContext(BoardsStore.getCreateBoardPopUpContext());
-        this._removeEventListeners();
-
-        if (!this.context.visible) {
-            return;
-        }
-
-        super.render();
-        this._registerPopUpElements();
-        this._addEventListeners();
+        this._elements = {};
     }
 
     /**
@@ -62,7 +38,8 @@ export default class CreateBoardPopUp extends BaseComponent {
      * Метод регестрирует callback
      * @private
      */
-    _addEventListeners() {
+    addEventListeners() {
+        this._registerPopUpElements();
         super.addEventListeners();
         this._elements.wrapper?.addEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
@@ -74,7 +51,7 @@ export default class CreateBoardPopUp extends BaseComponent {
      * Метод удаляет все ранее зарегестрированные callback
      * @private
      */
-    _removeEventListeners() {
+    removeEventListeners() {
         super.removeEventListeners();
         this._elements.wrapper?.removeEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);

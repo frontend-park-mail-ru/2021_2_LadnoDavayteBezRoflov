@@ -1,3 +1,4 @@
+{{#with setting-popup}}
 {{# if visible }}
     <div class="popup-wrapper" id="boardSettingPopUpWrapperId">
         <div class="popup-content popup-content_sized">
@@ -10,7 +11,7 @@
                     <div>
                         <label for="boardSettingPopUpTitleId" class>Название доски:</label>
                         <input class="simple-form-element" type="text" id="boardSettingPopUpTitleId" name="board-name"
-                               autofocus value="{{board_name}}"
+                               autofocus value="{{../board_name}}"
                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                     </div>
                     <div>
@@ -18,7 +19,7 @@
                         <textarea rows="3" cols="50" class="simple-form-element" type="text"
                                   id="boardSettingPopUpDescriptionId"
                                   name="board-description" autofocus
-                                  autocomplete="off">{{description}}</textarea>
+                                  autocomplete="off">{{../description}}</textarea>
                     </div>
                     {{#if errors}}
                         <div class="error">{{errors}}</div>
@@ -38,3 +39,4 @@
         </div>
     </div>
 {{/if}}
+{{/with}}

@@ -14,6 +14,7 @@ import './BoardsView.scss';
 
 // Шаблон
 import template from './BoardsView.hbs';
+import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp';
 
 /**
  * Класс, реализующий страницу с досками.
@@ -27,12 +28,12 @@ export default class BoardsView extends BaseView {
         const context = UserStore.getContext();
         super(context, template, parent);
 
-        this._onRefresh = this._onRefresh.bind(this);
+        this._bindCallBacks();
 
         UserStore.addListener(this._onRefresh);
         BoardsStore.addListener(this._onRefresh);
 
-        this._bindCallBacks();
+        this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
     }
 
     /**
@@ -106,6 +107,7 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _bindCallBacks() {
+        this._onRefresh = this._onRefresh.bind(this);
         this._showCreateBoardModal = this._showCreateBoardModal.bind(this);
     }
 
