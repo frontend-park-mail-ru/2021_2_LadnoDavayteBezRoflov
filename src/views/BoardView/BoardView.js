@@ -101,6 +101,11 @@ export default class BoardView extends BaseView {
         this._elements = {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
             showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
+            cardLists: {
+                addCardBtns: document.querySelectorAll('.addCardToCardList'),
+                editBtns: document.querySelectorAll('.editCardList'),
+                deleteBtns: document.querySelectorAll('.deleteCardList'),
+            },
         };
     }
 
@@ -110,8 +115,14 @@ export default class BoardView extends BaseView {
      */
     _bindCallBacks() {
         this._onRefresh = this._onRefresh.bind(this);
+        /* Board */
         this._onShowSettingPopUp = this._onShowSettingPopUp.bind(this);
         this._onShowCreateCLPopUp = this._onShowCreateCLPopUp.bind(this);
+        /* Card Lists */
+        this._onAddCardToCardList = this._onAddCardToCardList.bind(this);
+        this._onEditCardList = this._onEditCardList.bind(this);
+        this._onDeleteCardList = this._onDeleteCardList.bind(this);
+        /* Cards (todo) */
     }
 
     /**
@@ -121,6 +132,15 @@ export default class BoardView extends BaseView {
         super.addEventListeners();
         this._elements.showSettingBtn?.addEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.addEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
+            addCardBtn.addEventListener('click', this._onAddCardToCardList);
+        });
+        this._elements.cardLists.editBtns.forEach((editCardListBtn)=>{
+            editCardListBtn.addEventListener('click', this._onEditCardList);
+        });
+        this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
+            deleteCardListBtn.addEventListener('click', this._onDeleteCardList);
+        });
     }
 
     /**
@@ -130,6 +150,15 @@ export default class BoardView extends BaseView {
         super.removeEventListeners();
         this._elements.showSettingBtn?.removeEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.removeEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
+            addCardBtn.removeEventListener('click', this._onAddCardToCardList);
+        });
+        this._elements.cardLists.editBtns.forEach((editCardListBtn)=>{
+            editCardListBtn.removeEventListener('click', this._onEditCardList);
+        });
+        this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
+            deleteCardListBtn.removeEventListener('click', this._onDeleteCardList);
+        });
     }
 
     /**
@@ -146,5 +175,32 @@ export default class BoardView extends BaseView {
      */
     _onShowCreateCLPopUp() {
         cardListActions.showCreateCardListPopUp();
+    }
+
+    /**
+     * Метод вызывается при нажатии на "+"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardToCardList(event) {
+        // todo отображаем popup с созданием карточки
+    }
+
+    /**
+     * Метод вызывается при нажатии на кнопку редактирования списка карточек
+     * @param {Event} event объект события
+     * @private
+     */
+    _onEditCardList(event) {
+        cardListActions.showEditCardListPopUp(parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Метод вызывается при нажатии на значек удаления списка карточек
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteCardList(event) {
+        cardListActions.showDeleteCardListPopUp(parseInt(event.target.dataset.id, 10));
     }
 }
