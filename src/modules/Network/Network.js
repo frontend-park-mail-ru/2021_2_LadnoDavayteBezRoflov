@@ -260,9 +260,10 @@ class Network {
     /**
      * Метод, реализующий запрос PUT /api/cardlists.
      * @param {object} data полезная нагрузка запроса
+     * @param {Number} clid id обновляемой доски
      * @return {Promise<Response>} промис запроса
      */
-    async _updateCardList(data) {
+    async _updateCardList(data, clid) {
         const options = {
             method: 'put',
             headers: {
@@ -271,7 +272,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 

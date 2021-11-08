@@ -69,7 +69,7 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
-        /* Board Settings*/
+            /* Board Settings*/
         case BoardActionTypes.POPUP_BOARD_SHOW:
             this._showSetting();
             this._emitChange();
@@ -95,13 +95,15 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
-        /* Card List */
+            /* Card List */
         case CardListActionTypes.CARD_LIST_CREATE_SHOW:
             this._showCreateCardListPopUp();
             this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_EDIT_SHOW:
+            this._showEditCardListPopUp(action.data);
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_HIDE:
@@ -110,6 +112,8 @@ class BoardStore extends BaseStore {
             break;
 
         case CardListActionTypes.CARD_LIST_UPDATE_SUBMIT:
+            await this._updateCardList(action.data);
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_CREATE_SUBMIT:
@@ -468,6 +472,94 @@ class BoardStore extends BaseStore {
     _hideCardListPopUp() {
         this._storage.get('cardlist-popup').visible = false;
         this._storage.get('cardlist-popup').errors = null;
+    }
+
+    /**
+     * Возвращает объект cardlist'a из storage
+     * @param {Number} clid id cardlist
+     * @private
+     */
+    _getCardListById(clid) {
+        return this._storage.get('card_lists').find((cardList) => {
+            return cardList.clid === clid;
+        });
+    }
+
+    /**
+     * Показывает popup редактирования спика карточек
+     * @param {Object} data информация о списке карточек (clid)
+     * @private
+     */
+    _showEditCardListPopUp(data) {
+        const cardListPopup = this._storage.get('cardlist-popup');
+        cardListPopup.visible = true;
+        cardListPopup.edit = true;
+        cardListPopup.clid = data.clid;
+        cardListPopup.errors = null;
+
+        const cardlist = this._getCardListById(data.clid);
+
+        cardListPopup.position = cardlist.pos;
+        cardListPopup.positionRange = Array.from(
+            {length: this._storage.get('card_lists').length},
+            (_, index) => index + 1);
+        cardListPopup.cardList_name = cardlist.cardList_name;
+    }
+
+    /**
+     * Обновляет текущий card list
+     * @param {Object} data новые данные списка
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCardList(data) {
+        this._storage.get('cardlist-popup').errors = null;
+        const validator = new Validator();
+
+        this._storage.get('cardlist-popup').errors = validator.validateCardListTitle(data.cardList_name);
+        if (this._storage.get('cardlist-popup').errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network._updateCardList(data, this._storage.get('cardlist-popup').clid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._storage.get('cardlist-popup').visible = false;
+
+            // Обновим позиции списков в storage
+            const cardLists = this._storage.get('card_lists');
+            for (let index = cardLists.findIndex((cardlist) => {
+                return cardlist.pos === data.pos;
+            }); index < cardLists.length; index++) {
+                cardLists[index].pos +=1;
+            }
+            // Установим новую позицию обновленному card list
+            const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
+            cardList.cardList_name = data.cardList_name;
+            cardList.pos = data.pos;
+            // Переупорядочим списки
+            cardLists.sort((lhs, rhs) => {
+                return lhs.pos - rhs.pos;
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('cardlist-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('cardlist-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
     }
 }
 

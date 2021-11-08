@@ -51,11 +51,14 @@ export const cardListActions = {
 
     /**
      * Отобразить popup редактирования cardlist
-     * @param {Number} cid id списка карточек
+     * @param {Number} clid id списка карточек
      */
-    showEditCardListPopUp(cid) {
+    showEditCardListPopUp(clid) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARD_LIST_EDIT_SHOW,
+            data: {
+                clid,
+            },
         });
     },
 
@@ -78,7 +81,7 @@ export const cardListActions = {
             actionName: CardListActionTypes.CARD_LIST_UPDATE_SUBMIT,
             data: {
                 cardList_name: title,
-                position,
+                pos: position,
             },
         });
     },
@@ -98,13 +101,13 @@ export const cardListActions = {
 
     /**
      * Отобразить popup удаления списка карточек
-     * @param {Number} cid id списка карточек
+     * @param {Number} clid id списка карточек
      */
-    showDeleteCardListPopUp(cid) {
+    showDeleteCardListPopUp(clid) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARD_LIST_CREATE_SUBMIT,
             data: {
-                cid,
+                clid,
             },
         });
     },

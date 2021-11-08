@@ -47,6 +47,7 @@ $scrollbar-width: 1600px;
         transition: all 0.3s ease-in-out;
         &:focus,
         &:hover {
+            cursor: pointer;
             box-shadow: 0 0 2px $main-theme-color;
         }
     }
