@@ -19,7 +19,6 @@ export default class CardListComponent extends BaseComponent {
     constructor(context) {
         super(context, template);
 
-        this._popupTemplate = templatePopup;
 
         this._inputElements = {
             title: null,

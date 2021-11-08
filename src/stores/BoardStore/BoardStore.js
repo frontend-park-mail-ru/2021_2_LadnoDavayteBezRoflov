@@ -97,18 +97,24 @@ class BoardStore extends BaseStore {
 
         /* Card List */
         case CardListActionTypes.CARD_LIST_CREATE_SHOW:
+            this._showCreateCardListPopUp();
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_EDIT_SHOW:
             break;
 
         case CardListActionTypes.CARD_LIST_HIDE:
+            this._hideCardListPopUp();
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_UPDATE_SUBMIT:
             break;
 
         case CardListActionTypes.CARD_LIST_CREATE_SUBMIT:
+            await this._createCardList(action.data);
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_DELETE_SHOW:
@@ -394,6 +400,74 @@ class BoardStore extends BaseStore {
             this._storage.get('setting-popup').errors = ConstantMessages.BoardDeleteErrorOnServer;
             return;
         }
+    }
+
+    /**
+     * Делает popup создания card list'a видимым
+     * @private
+     */
+    _showCreateCardListPopUp() {
+        this._storage.get('cardlist-popup').visible = true;
+        this._storage.get('cardlist-popup').edit = false;
+        this._storage.get('cardlist-popup').errors = null;
+    }
+
+    /**
+     * Создает новый список
+     * @param {Object} data информация о списке
+     * @private
+     */
+    async _createCardList(data) {
+        this._storage.get('cardlist-popup').errors = null;
+        const validator = new Validator();
+
+        this._storage.get('cardlist-popup').errors = validator.validateCardListTitle(data.cardList_name);
+        if (this._storage.get('cardlist-popup').errors) {
+            return;
+        }
+
+        data.bid = this._storage.get('bid');
+        console.log(data);
+
+        let payload;
+
+        try {
+            payload = await Network._createCard(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._storage.get('cardlist-popup').visible = false;
+            this._storage.get('card_lists').push({
+                bid: this._storage.get('bid'),
+                cardList_name: data.cardList_name,
+                cards: [],
+                cid: 0,
+                clid: payload.data.clid,
+                pos: this._storage.get('card_lists').length + 1,
+            });
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('cardlist-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('cardlist-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Скрывает popup создания/редактирования карточки
+     * @private
+     */
+    _hideCardListPopUp() {
+        this._storage.get('cardlist-popup').visible = false;
+        this._storage.get('cardlist-popup').errors = null;
     }
 }
 

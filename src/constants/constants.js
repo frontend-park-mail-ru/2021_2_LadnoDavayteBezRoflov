@@ -82,4 +82,8 @@ export const ConstantMessages = {
     BoardDeleteErrorOnServer: 'Не удалось удалить доску, попробуйте позднее',
     BoardUpdateErrorOnServer: 'Не удалось обновить доску, попробуйте позднее',
     BoardNoAccess: 'Нет доступа к доске',
+
+    CardListTitleTooShort: 'Название списка карточек слишком короткое',
+    CardListTitleTooLong: 'Название списка карточек слишком длинное',
+    CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
 };

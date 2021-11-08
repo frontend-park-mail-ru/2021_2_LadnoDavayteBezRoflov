@@ -24,6 +24,7 @@ import './BoardView.scss';
 // Шаблон
 import template from './BoardView.hbs';
 import {boardActions} from '../../actions/board';
+import {cardListActions} from '../../actions/cardlist';
 
 /**
  * Класс, реализующий страницу доски.
@@ -68,7 +69,7 @@ export default class BoardView extends BaseView {
         }
 
         // todo карточки и так массивом идут
-        Object.values(this.context.get('card_lists')).forEach((cardlist) => {
+        this.context.get('card_lists')?.forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
 
@@ -99,7 +100,7 @@ export default class BoardView extends BaseView {
     registerViewElements() {
         this._elements = {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
-            showCreateCLBtn: document.getElementById('addCardListId'),
+            showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
         };
     }
 
@@ -144,6 +145,6 @@ export default class BoardView extends BaseView {
      * @private
      */
     _onShowCreateCLPopUp() {
-        boardActions.showCardListPopUp();
+        cardListActions.showCreateCardListPopUp();
     }
 }

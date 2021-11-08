@@ -19,7 +19,7 @@ class Network {
             profile: 'api/profile',
             board: 'api/boards',
             card: 'api/cards',
-            cardlist: 'api/cardlists',
+            cardlist: 'api/cardLists',
         };
 
         this._defaultOptions = {

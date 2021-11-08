@@ -107,4 +107,20 @@ export default class Validator {
         }
         return null;
     }
+
+    /**
+     * Метод, валидирующий название списка карточек
+     * @param {String} title заглавие на проверку
+     * @return {String | null}
+     */
+    validateCardListTitle(title) {
+        if (title.length < 1) {
+            return ConstantMessages.CardListTitleTooShort;
+        }
+        if (title.length > 40) {
+            return ConstantMessages.CardListTitleTooLong;
+        }
+        return null;
+
+    }
 }
