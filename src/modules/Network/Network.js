@@ -278,19 +278,18 @@ class Network {
 
     /**
      * Метод, реализующий запрос DELETE /api/cardlists.
-     * @param {object} data полезная нагрузка запроса
+     * @param {Number} clid id удаляемой доски
      * @return {Promise<Response>} промис запроса
      */
-    async _deleteCardList(data) {
+    async _deleteCardList(clid) {
         const options = {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 

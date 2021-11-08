@@ -31,7 +31,7 @@ class BoardStore extends BaseStore {
         this._storage.set('cardlist-popup', {
             visible: false,
             edit: false,
-            cid: null,
+            clid: null,
             position: null,
             positionRange: null,
             cardList_name: null,
@@ -40,6 +40,7 @@ class BoardStore extends BaseStore {
 
         this._storage.set('delete-cl-popup', {
             visible: false,
+            clid: null,
         });
     }
 
@@ -122,12 +123,18 @@ class BoardStore extends BaseStore {
             break;
 
         case CardListActionTypes.CARD_LIST_DELETE_SHOW:
+            this._showDeleteCardListPopUp(action.data);
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_DELETE_CHOOSE:
+            await this._deleteCardList(action.data);
+            this._emitChange();
             break;
 
         case CardListActionTypes.CARD_LIST_DELETE_HIDE:
+            this._hideDeleteCardListPopUp();
+            this._emitChange();
             break;
 
         default:
@@ -477,6 +484,7 @@ class BoardStore extends BaseStore {
     /**
      * Возвращает объект cardlist'a из storage
      * @param {Number} clid id cardlist
+     * @return {Object} найденный объект карточки
      * @private
      */
     _getCardListById(clid) {
@@ -539,7 +547,7 @@ class BoardStore extends BaseStore {
             for (let index = cardLists.findIndex((cardlist) => {
                 return cardlist.pos === data.pos;
             }); index < cardLists.length; index++) {
-                cardLists[index].pos +=1;
+                cardLists[index].pos += 1;
             }
             // Установим новую позицию обновленному card list
             const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
@@ -558,6 +566,62 @@ class BoardStore extends BaseStore {
 
         default:
             this._storage.get('cardlist-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Отображает popup удаления списка карточек
+     * @param {Object} data информация о спике
+     * @private
+     */
+    _showDeleteCardListPopUp(data) {
+        this._storage.get('delete-cl-popup').visible = true;
+        this._storage.get('delete-cl-popup').clid = data.clid;
+        this._storage.get('delete-cl-popup').cardList_name =
+            this._getCardListById(data.clid).cardList_name;
+    }
+
+    /**
+     * Скрывает popup удаления списка карточек
+     * @private
+     */
+    _hideDeleteCardListPopUp() {
+        this._storage.get('delete-cl-popup').visible = false;
+    }
+
+    /**
+     * Удаляет связанный с popup'ом cardlist
+     * @param {Object} data результат диалога удаления
+     * @private
+     */
+    async _deleteCardList(data) {
+        this._hideDeleteCardListPopUp();
+        if (!data.confirm) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network._deleteCardList(this._storage.get('delete-cl-popup').clid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+
+            // Удалим список из storage
+            const cardLists = this._storage.get('card_lists');
+            const index = cardLists.indexOf(
+                this._getCardListById(this._storage.get('delete-cl-popup').clid));
+            cardLists.splice(index, 1);
+
+            return;
+
+        default:
             return;
         }
     }

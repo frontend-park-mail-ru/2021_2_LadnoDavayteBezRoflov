@@ -105,7 +105,7 @@ export const cardListActions = {
      */
     showDeleteCardListPopUp(clid) {
         Dispatcher.dispatch({
-            actionName: CardListActionTypes.CARD_LIST_CREATE_SUBMIT,
+            actionName: CardListActionTypes.CARD_LIST_DELETE_SHOW,
             data: {
                 clid,
             },
