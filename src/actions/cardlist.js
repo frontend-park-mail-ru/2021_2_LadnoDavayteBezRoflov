@@ -1,16 +1,5 @@
 'use strict';
 
-// this._storage.set('cardlist-popup', {
-//     visible: false,
-//     edit: false,
-//     cid: null,
-//     position: null,
-//     positionRange: null,
-//     cardList_name: null,
-//     errors: null,
-// });
-
-
 // Modules
 import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 
