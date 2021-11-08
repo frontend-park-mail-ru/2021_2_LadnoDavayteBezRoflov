@@ -132,6 +132,14 @@ $simple-form-radius: 10px;
   &:hover {
     background-color: $main-theme-color__focus;
   }
+
+  &_disabled {
+    background-color: gray;
+    &:focus,
+    &:hover {
+      background-color: gray;
+    }
+  }
 }
 
 
