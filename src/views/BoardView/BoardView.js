@@ -2,7 +2,6 @@
 import BaseView from '../BaseView.js';
 
 // Actions
-import {userActions} from '../../actions/user.js';
 import {boardsActions} from '../../actions/boards.js';
 
 // Components

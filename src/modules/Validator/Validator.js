@@ -121,6 +121,5 @@ export default class Validator {
             return ConstantMessages.CardListTitleTooLong;
         }
         return null;
-
     }
 }
