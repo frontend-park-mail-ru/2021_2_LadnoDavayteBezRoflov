@@ -34,6 +34,11 @@ export default class CreateBoardPopUp extends BaseComponent {
     _onStoreRefresh() {
         this._setContext(BoardsStore.getCreateBoardPopUpContext());
         this._removeEventListeners();
+
+        if (!this.context.visible) {
+            return;
+        }
+
         super.render();
         this._registerPopUpElements();
         this._addEventListeners();

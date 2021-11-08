@@ -33,6 +33,11 @@ export default class DeleteCardListPopUp extends BaseComponent {
     _onStoreRefresh() {
         this._setContext(BoardStore.getContext('delete-cl-popup'));
         this._removeEventListeners();
+
+        if (!this.context.visible) {
+            return;
+        }
+        console.log('DeleteCardListPopUp');
         super.render();
         this._registerPopUpElements();
         this._addEventListeners();

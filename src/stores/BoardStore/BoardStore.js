@@ -92,6 +92,7 @@ class BoardStore extends BaseStore {
 
         case BoardActionTypes.POPUP_BOARD_DELETE_HIDE:
             await this._processHideConfirmDialog(action.data);
+            this._emitChange();
             break;
 
         /* Card List */
@@ -367,7 +368,6 @@ class BoardStore extends BaseStore {
         this._storage.get('setting-popup').errors = null;
         this._storage.get('setting-popup').confirm = false;
         if (!data.confirmed) {
-            this._emitChange();
             return;
         }
 
@@ -383,16 +383,15 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             Router.go('/boards');
+            this._storage.get('setting-popup').visible = false;
             return;
 
         case HttpStatusCodes.Forbidden:
             this._storage.get('setting-popup').errors = ConstantMessages.BoardNoAccess;
-            this._emitChange();
             return;
 
         default:
             this._storage.get('setting-popup').errors = ConstantMessages.BoardDeleteErrorOnServer;
-            this._emitChange();
             return;
         }
     }

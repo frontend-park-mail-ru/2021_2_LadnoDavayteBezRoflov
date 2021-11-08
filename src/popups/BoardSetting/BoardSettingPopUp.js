@@ -36,6 +36,11 @@ export default class BoardSettingPopUp extends BaseComponent {
     _onStoreRefresh() {
         this._setContext(BoardStore.getSettingPopUpContext());
         this._removeEventListeners();
+
+        if (!this.context.visible) {
+            return;
+        }
+
         super.render();
         this._registerPopUpElements();
         this._addEventListeners();
@@ -147,6 +152,7 @@ export default class BoardSettingPopUp extends BaseComponent {
      * @private
      */
     _onSave(event) {
+        console.log('_onSave');
         event.preventDefault();
         boardActions.updateBoardTitleDescription(
             this._elements.title.value,

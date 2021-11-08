@@ -34,6 +34,11 @@ export default class CardListPopUp extends BaseComponent {
     _onStoreRefresh() {
         this._setContext(BoardStore.getContext('cardlist-popup'));
         this._removeEventListeners();
+
+        if (!this.context.visible) {
+            return;
+        }
+        console.log('CardListPopUp');
         super.render();
         this._registerPopUpElements();
         this._addEventListeners();
