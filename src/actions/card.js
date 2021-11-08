@@ -7,7 +7,17 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  * Константа, содержащая в себе типы действий для списка досок.
  */
 export const CardActionTypes = {
-    CARD_GET: 'cards/get',
+    CARD_GET: 'card/get',
+
+    POPUP_CARD_DELETE_SHOW: 'card/popup/delete/show',
+    POPUP_CARD_DELETE_HIDE: 'card/popup/delete/hide',
+
+    POPUP_CARD_CREATE_SHOW: 'card/popup/update/show',
+    POPUP_CARD_CREATE_HIDE: 'card/popup/update/hide',
+
+    POPUP_CARD_UPDATE_SHOW: 'card/popup/update/show',
+    POPUP_CARD_UPDATE_HIDE: 'card/popup/update/hide',
+
     CARD_CREATE: 'cards/create',
     CARD_UPDATE: 'card/update',
     CARD_DELETE: 'card/delete',

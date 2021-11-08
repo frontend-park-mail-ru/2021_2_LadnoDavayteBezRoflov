@@ -24,6 +24,7 @@ app.use([/\/bundle\.[A-Za-z0-9]*\.js/, /\/style\.[A-Za-z0-9]*\.css/], cacheMW);
 /* Директория со статикой */
 const distFolder = path.resolve(__dirname, '..', 'dist');
 const publicFolder = path.resolve(__dirname, '..', 'public');
+
 /* Используем статику */
 app.use(express.static(distFolder));
 app.use(express.static(publicFolder));

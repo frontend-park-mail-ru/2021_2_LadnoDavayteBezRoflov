@@ -30,6 +30,10 @@ export default class CardComponent extends BaseComponent {
     constructor(context) {
         super(context, template);
 
+        this._popupTemplate = templatePopup;
+
+        document.getElementById('removeCardList')?.addEventListener('click', this._addCardList);
+
         this._onRefresh = this._onRefresh.bind(this);
         BoardStore.addListener(this._onRefresh);
 
