@@ -5,10 +5,12 @@ import Network from '../../modules/Network/Network.js';
 import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
 import {CardActionTypes} from '../../actions/card.js';
-import {BoardActionTypes} from '../../actions/board';
-import Router from '../../modules/Router/Router';
-import Validator from '../../modules/Validator/Validator';
-import {CardListActionTypes} from '../../actions/cardlist';
+import {BoardActionTypes} from '../../actions/board.js';
+import Router from '../../modules/Router/Router.js';
+import Validator from '../../modules/Validator/Validator.js';
+import {CardListActionTypes} from '../../actions/cardlist.js';
+import {Urls} from '../../constants/constants.js';
+import * as Url from 'url';
 
 /**
  * Класс, реализующий хранилище доски
@@ -387,7 +389,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            Router.go('/boards');
+            Router.go(Urls.Boards);
             this._storage.get('setting-popup').visible = false;
             return;
 
