@@ -23,6 +23,8 @@ import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 import BoardSettingPopUp from './popups/BoardSetting/BoardSettingPopUp.js';
 import CreateBoardPopUp from './popups/CreateBoard/CreateBoardPopUp';
+import CardListPopUp from './popups/CardList/CardListPopUp';
+import DeleteCardListPopUp from './popups/DeleteCardList/DeleteCardListPopUp';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -35,6 +37,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const boardSettingPopUp = new BoardSettingPopUp(popup);
     const createBoardPopUp = new CreateBoardPopUp(popup);
+    const cardListPopUp = new CardListPopUp(popup);
+    const deleteCardListPopUp = new DeleteCardListPopUp(popup);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

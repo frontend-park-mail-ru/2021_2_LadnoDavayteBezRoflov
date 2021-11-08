@@ -19,6 +19,8 @@ export const CardListActionTypes = {
     CARD_LIST_CREATE_SUBMIT: 'cardlist/create/submit',
     // Отобразить popup удаления списка карточек
     CARD_LIST_DELETE_SHOW: 'cardlist/delete/show',
+    // Скрыть pop удаления списка карточек с выбором "удалять" или "не удалять"
+    CARD_LIST_DELETE_CHOOSE: 'cardlist/delete/choose',
     // Скрыть pop удаления списка карточек
     CARD_LIST_DELETE_HIDE: 'cardlist/delete/hide',
 };
@@ -97,15 +99,24 @@ export const cardListActions = {
     },
 
     /**
-     * Отобразить popup удаления списка карточек
+     * Скрыть pop удаления списка карточек с выбором "удалять" или "не удалять"
      * @param {Boolean} confirm подтверждено ли удаление
      */
-    hideDeleteCardListPopUp(confirm) {
+    deleteCardList(confirm) {
         Dispatcher.dispatch({
-            actionName: CardListActionTypes.CARD_LIST_DELETE_HIDE,
+            actionName: CardListActionTypes.CARD_LIST_DELETE_CHOOSE,
             data: {
                 confirm,
             },
+        });
+    },
+
+    /**
+     * Скрыть pop удаления списка карточек
+     */
+    hideDeleteCardListPopUp() {
+        Dispatcher.dispatch({
+            actionName: CardListActionTypes.CARD_LIST_DELETE_HIDE,
         });
     },
 

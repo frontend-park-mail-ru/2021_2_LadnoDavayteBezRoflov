@@ -113,6 +113,9 @@ class BoardStore extends BaseStore {
         case CardListActionTypes.CARD_LIST_DELETE_SHOW:
             break;
 
+        case CardListActionTypes.CARD_LIST_DELETE_CHOOSE:
+            break;
+
         case CardListActionTypes.CARD_LIST_DELETE_HIDE:
             break;
 

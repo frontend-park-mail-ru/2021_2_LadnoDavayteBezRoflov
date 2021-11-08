@@ -105,6 +105,6 @@ export default class CreateBoardPopUp extends BaseComponent {
      */
     _onSaveBtnClick(event) {
         event.preventDefault();
-        boardsActions.createBoard(this._elements.name.value, this.context.teamID);
+        boardsActions.createBoard(this._elements.name.value, this._elements.team.value);
     }
 }

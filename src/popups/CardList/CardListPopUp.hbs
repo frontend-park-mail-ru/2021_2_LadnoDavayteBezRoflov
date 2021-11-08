@@ -19,7 +19,7 @@
                     </div>
                     {{#if edit}}
                         <label for="cardListPopUpPositionId">Позиция:</label>
-                        <select class="simple-form-element" id="cardListPopUpPositionId" name="posotion-select" required>
+                        <select class="simple-form-element" id="cardListPopUpPositionId" name="position-select" required>
                             {{#each positionRange}}
                                 {{#if (../CreateBoard/IsEqualHelper this ../teamID) }}
                                     <option value="{{this}}" selected>#{{this}}</option>
@@ -33,13 +33,13 @@
                         <div class="error">{{errors}}</div>
                     {{/if}}
                     {{# if edit }}
-                        <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+                        <button class="button" id="cardListPopUpSaveBtnId">Сохранить</button>
                     {{ else }}
-                        <button class="button" id="boardSettingPopUpCreateBtnId">Создать</button>
+                        <button class="button" id="cardListPopUpCreateBtnId">Создать</button>
                     {{/if}}
                 </div>
             </form>
-            <div class="close-button" id="boardSettingPopUpCloseId"></div>
+            <div class="close-button" id="cardListPopUpCloseId"></div>
         </div>
     </div>
 {{/if}}
