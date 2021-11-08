@@ -542,21 +542,31 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('cardlist-popup').visible = false;
 
+            console.log('До переупорялочивания');
+            console.log(data);
             // Обновим позиции списков в storage
-            const cardLists = this._storage.get('card_lists');
-            for (let index = cardLists.findIndex((cardlist) => {
-                return cardlist.pos === data.pos;
-            }); index < cardLists.length; index++) {
-                cardLists[index].pos += 1;
-            }
-            // Установим новую позицию обновленному card list
+
             const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
+            const bound = data.pos > cardList.pos ?
+                {left: cardList.pos, right: data.pos, increment: -1} :
+                {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
+            const cardLists = this._storage.get('card_lists');
+
+            console.log(cardLists);
+            for (let index = bound.left; index < bound.right; index +=1) {
+                cardLists[index].pos += bound.increment;
+            }
+
+            // Обновим cardList:
             cardList.cardList_name = data.cardList_name;
             cardList.pos = data.pos;
+
             // Переупорядочим списки
             cardLists.sort((lhs, rhs) => {
                 return lhs.pos - rhs.pos;
             });
+            console.log('После переупорядочивания');
+            console.log(cardLists);
 
             return;
 
