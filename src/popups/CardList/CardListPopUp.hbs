@@ -21,7 +21,7 @@
                         <label for="cardListPopUpPositionId">Позиция:</label>
                         <select class="simple-form-element" id="cardListPopUpPositionId" name="position-select" required>
                             {{#each positionRange}}
-                                {{#if (../CreateBoard/IsEqualHelper this ../teamID) }}
+                                {{#if (IsEqualHelper this ../teamID) }}
                                     <option value="{{this}}" selected>#{{this}}</option>
                                 {{else}}
                                     <option value="{{this}}">#{{this}}</option>

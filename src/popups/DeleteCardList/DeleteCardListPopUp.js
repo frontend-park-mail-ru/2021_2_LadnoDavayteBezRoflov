@@ -26,7 +26,6 @@ export default class DeleteCardListPopUp extends BaseComponent {
         this._registerPopUpElements();
     }
 
-
     /**
      * Метод, вызываемый при обновлении стора.
      * @private

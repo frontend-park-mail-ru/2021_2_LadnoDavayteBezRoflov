@@ -73,6 +73,9 @@ const config = {
                 ],
                 test: /\.hbs$/,
                 loader: 'handlebars-loader',
+                options: {
+                    helperDirs: path.resolve(__dirname, 'src/modules/Helpers'),
+                },
             },
         ],
     },
