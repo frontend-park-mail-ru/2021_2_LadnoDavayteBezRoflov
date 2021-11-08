@@ -36,6 +36,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
     const popup = document.getElementById(Html.PopUp);
 
+    // eslint-disable-next-line no-unused-vars
     const popUpCleaner = new PopUpCleaner(popup);
     const boardSettingPopUp = new BoardSettingPopUp(popup);
     const createBoardPopUp = new CreateBoardPopUp(popup);

@@ -152,7 +152,6 @@ export default class BoardSettingPopUp extends BaseComponent {
      * @private
      */
     _onSave(event) {
-        console.log('_onSave');
         event.preventDefault();
         boardActions.updateBoardTitleDescription(
             this._elements.title.value,

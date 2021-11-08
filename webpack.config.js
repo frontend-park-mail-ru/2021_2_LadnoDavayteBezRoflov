@@ -53,10 +53,7 @@ const config = {
             },
             {
                 include: [
-                    path.resolve(__dirname, 'src/components/'),
-                    path.resolve(__dirname, 'src/views/'),
-                    path.resolve(__dirname, 'src/styles/'),
-                    path.resolve(__dirname, 'src/popups/'),
+                    path.resolve(__dirname, 'src/'),
                 ],
                 test: /\.(s*)css$/,
                 use: [

@@ -38,7 +38,6 @@ export default class CardListPopUp extends BaseComponent {
         if (!this.context.visible) {
             return;
         }
-        console.log('CardListPopUp');
         super.render();
         this._registerPopUpElements();
         this._addEventListeners();
