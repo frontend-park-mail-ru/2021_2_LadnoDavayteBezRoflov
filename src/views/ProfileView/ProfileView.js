@@ -50,7 +50,8 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-        settingsActions.getSettings(UserStore.getContext('userName'));
+        console.log(UserStore.getContext('userName').login);
+        settingsActions.getSettings(UserStore.getContext('userName').login);
         this.render();
         this._isActive = true;
     }
