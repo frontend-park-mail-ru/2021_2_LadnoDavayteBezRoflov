@@ -541,7 +541,7 @@ class BoardStore extends BaseStore {
             // Удалим список из storage
             const {clid} = this._storage.get('delete-cl-popup');
             const cardLists = this._storage.get('card_lists');
-            const index = cardLists.findIndex(
+            const index = cardLists.indexOf(
                 this._getCardListById(clid));
             cardLists.splice(index, 1);
 
