@@ -22,6 +22,13 @@ import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 
+if ('serviceWorker' in navigator) {
+    // Use the window load event to keep the page load performant
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+    });
+}
+
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
 }
@@ -29,7 +36,6 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
-    const popup = document.getElementById(Html.PopUp);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {
