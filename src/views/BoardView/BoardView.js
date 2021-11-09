@@ -94,7 +94,7 @@ export default class BoardView extends BaseView {
     render() {
         /* Если пользователь авторизован, то перебросить его на страницу входа */
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
         this._isActive = true;

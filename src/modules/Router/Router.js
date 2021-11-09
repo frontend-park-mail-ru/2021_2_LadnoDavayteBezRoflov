@@ -67,17 +67,17 @@ class Router {
      * Относительный url - это часть url которая следует за именем хоста.
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
-     * @param {boolean} popup - true: открыть как попап, false: открыть как страницу
+     * @param {boolean} replaceState - true: заменить текущую запись, false: добавить новую
      * (по умолчанию: false)
      */
-    go(url, popup = false) {
+    go(url, replaceState = false) {
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
-            this.go(Urls.NotFound);
+            this.go(Urls.NotFound, true);
             return;
         }
 
-        if (this._currentView && !popup) {
+        if (this._currentView) {
             this._currentView._onHide();
         }
 
@@ -89,14 +89,16 @@ class Router {
          */
         if (window.location.pathname + window.location.search !== url) {
             /**
-             * Добавляет запись в историю и делает ее активной.
+             * Добавляет (заменяет) запись в историю и делает ее активной.
              * Не приводит к срабатыванию popstate.
              */
-            window.history.pushState(null, null, url);
+            replaceState ?
+                window.history.replaceState(null, null, url) :
+                window.history.pushState(null, null, url);
         }
 
         this._currentView = view;
-        popup ? view._onPopup(urlData) : view._onShow(urlData);
+        view._onShow(urlData);
     }
 
     /**

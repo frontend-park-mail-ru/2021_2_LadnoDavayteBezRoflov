@@ -72,7 +72,7 @@ export default class RegisterView extends BaseView {
     render() {
         /* Если пользователь авторизован, то перебросить его на страницу списка досок */
         if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+            Router.go(Urls.Boards, true);
             return;
         }
 
