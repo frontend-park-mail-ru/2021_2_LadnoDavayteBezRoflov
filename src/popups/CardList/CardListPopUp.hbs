@@ -1,5 +1,5 @@
 {{#with cardlist-popup}}
-{{# if visible }}
+{{#if visible }}
     <div class="popup-wrapper" id="cardListPopUpWrapperId">
         <div class="popup-content">
             <form class="popup-form">
@@ -41,9 +41,9 @@
                         {{#if errors}}
                             <div class="error">{{errors}}</div>
                         {{/if}}
-                        {{# if edit }}
+                        {{#if edit }}
                             <button class="button" id="cardListPopUpSaveBtnId">Сохранить</button>
-                        {{ else }}
+                        {{else }}
                             <button class="button" id="cardListPopUpCreateBtnId">Создать</button>
                         {{/if}}
                     </div>

@@ -8,7 +8,7 @@ import {BoardActionTypes} from '../../actions/board.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
-import Router from '../../modules/Router/Router';
+import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
@@ -468,12 +468,6 @@ class BoardStore extends BaseStore {
                 {left: cardList.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
 
-            // Обновим позиции списков в storage
-            const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
-            const bound = data.pos > cardList.pos ?
-                {left: cardList.pos, right: data.pos, increment: -1} :
-                {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
-
             const cardLists = this._storage.get('card_lists');
 
             for (let index = bound.left; index < bound.right; index +=1) {
@@ -545,9 +539,10 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
 
             // Удалим список из storage
+            const {clid} = this._storage.get('delete-cl-popup');
             const cardLists = this._storage.get('card_lists');
-            const index = cardLists.indexOf(
-                this._getCardListById(this._storage.get('delete-cl-popup').clid));
+            const index = cardLists.findIndex(
+                this._getCardListById(clid));
             cardLists.splice(index, 1);
 
             return;
@@ -660,22 +655,22 @@ class BoardStore extends BaseStore {
      * @private
      */
     _showEditCardPopUp(data) {
-        const cardPopup = this._storage.get('card-popup');
-        cardPopup.visible = true;
-        cardPopup.edit = true;
-        cardPopup.cid = data.cid;
-        cardPopup.clid = data.clid;
-        cardPopup.errors = null;
-
         const card = this._getCardById(data.clid, data.cid);
 
-        cardPopup.position = card.pos;
-        cardPopup.positionRange = Array.from(
-            {length: this._getCardListById(card.clid).cards.length},
-            (_, index) => index + 1);
-        cardPopup.card_name = card.card_name;
-        cardPopup.description = card.description;
-        cardPopup.deadline = card.deadline;
+        this._storage.set('card-popup', {
+            visible: true,
+            edit: true,
+            cid: data.cid,
+            clid: data.clid,
+            position: card.pos,
+            positionRange: Array.from(
+                {length: this._getCardListById(data.clid).cards.length},
+                (_, index) => index + 1),
+            card_name: card.card_name,
+            description: card.description,
+            deadline: card.deadline,
+            errors: null,
+        });
     }
 
     /**
@@ -747,11 +742,12 @@ class BoardStore extends BaseStore {
      * @private
      */
     _showDeleteCardPopUp(data) {
-        this._storage.get('delete-card-popup').visible = true;
-        this._storage.get('delete-card-popup').cid = data.cid;
-        this._storage.get('delete-card-popup').clid = data.clid;
-        this._storage.get('delete-card-popup').card_name =
-            this._getCardById(data.clid, data.cid).card_name;
+        this._storage.set('delete-card-popup', {
+            visible: true,
+            cid: data.cid,
+            clid: data.clid,
+            card_name: this._getCardById(data.clid, data.cid).card_name,
+        });
     }
 
     /**
@@ -785,12 +781,12 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
 
-            // Удалим список из storage
-            const cards = this._getCardListById(this._storage.get('delete-card-popup').clid).cards;
+            // Удалим из storage
+            const cid = this._storage.get('delete-card-popup').cid;
+            const clid = this._storage.get('delete-card-popup').clid;
+            const cards = this._getCardListById().cards;
             const index = cards.indexOf(
-                this._getCardById(
-                    this._storage.get('delete-card-popup').clid,
-                    this._storage.get('delete-card-popup').cid),
+                this._getCardById(clid, cid),
             );
             cards.splice(index, 1);
 
