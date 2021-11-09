@@ -50,7 +50,6 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-        console.log(UserStore.getContext('userName').login);
         settingsActions.getSettings(UserStore.getContext('userName').login);
         this.render();
         this._isActive = true;
@@ -115,6 +114,7 @@ export default class ProfileView extends BaseView {
             email: document.getElementById('email').value,
             avatar: document.getElementById('avatar').value,
             password: document.getElementById('password').value,
+            passwordRepeat: document.getElementById('passwordRepeat').value,
             old_password: document.getElementById('oldPassword').value,
         };
 
