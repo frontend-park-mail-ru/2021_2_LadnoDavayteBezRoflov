@@ -668,7 +668,6 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
-            deadline: card.deadline,
             errors: null,
         });
     }
@@ -784,7 +783,7 @@ class BoardStore extends BaseStore {
             // Удалим из storage
             const cid = this._storage.get('delete-card-popup').cid;
             const clid = this._storage.get('delete-card-popup').clid;
-            const cards = this._getCardListById().cards;
+            const cards = this._getCardListById(clid).cards;
             const index = cards.indexOf(
                 this._getCardById(clid, cid),
             );
