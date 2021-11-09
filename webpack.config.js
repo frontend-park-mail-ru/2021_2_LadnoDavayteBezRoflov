@@ -97,7 +97,7 @@ const config = {
         new InjectManifest({
             swSrc: './src/sw.js',
             swDest: 'sw.js',
-          }),
+        }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
