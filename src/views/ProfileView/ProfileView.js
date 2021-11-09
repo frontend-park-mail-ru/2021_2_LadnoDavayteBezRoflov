@@ -35,7 +35,7 @@ export default class ProfileView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         SettingsStore.addListener(this._onRefresh);
 
-        this.formUpdateCallback = this.formUpdate.bind(this);
+        this.formUpdate = this.formUpdate.bind(this);
         this.onAvatarChange = this.onAvatarChange.bind(this);
 
         this._inputElements = {
@@ -90,13 +90,8 @@ export default class ProfileView extends BaseView {
      */
     addEventListeners() {
         super.addEventListeners();
-        document.getElementById('profile')?.addEventListener('submit', this.formUpdateCallback);
-
+        document.getElementById('profile')?.addEventListener('submit', this.formUpdate);
         document.getElementById('avatar')?.addEventListener('change', this.onAvatarChange);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
@@ -104,8 +99,7 @@ export default class ProfileView extends BaseView {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        document.getElementById('profile')?.removeEventListener('submit',
-                                                                this.formUpdateCallback);
+        document.getElementById('profile')?.removeEventListener('submit', this.formUpdate);
         document.getElementById('avatar')?.removeEventListener('change', this.onAvatarChange);
     }
 

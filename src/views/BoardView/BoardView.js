@@ -2,7 +2,6 @@
 import BaseView from '../BaseView.js';
 
 // Actions
-import {userActions} from '../../actions/user.js';
 import {boardsActions} from '../../actions/boards.js';
 
 // Components
@@ -19,35 +18,38 @@ import Router from '../../modules/Router/Router.js';
 import {Urls} from '../../constants/constants.js';
 
 // Стили
-import './board.scss';
+import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
-
-import './BoardView.scss';
+import {boardActions} from '../../actions/board';
+import {cardListActions} from '../../actions/cardlist';
+import BoardSettingPopUp from '../../popups/BoardSetting/BoardSettingPopUp';
+import CardListPopUp from '../../popups/CardList/CardListPopUp';
+import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp';
 
 /**
-  * Класс, реализующий страницу доски.
-  */
+ * Класс, реализующий страницу доски.
+ */
 export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-    */
-    constructor(parent) {
+     * @param {Element} popup HTML-элемент, в который будет осуществлена отрисовка popup
+     */
+    constructor(parent, popup) {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
         super(context, template, parent);
 
-        this._onRefresh = this._onRefresh.bind(this);
+        this._bindCallBacks();
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
-        // this.formAuthorizationCallback = this.formAuthorization.bind(this);
+        this.addComponent('BoardSettingPopUp', new BoardSettingPopUp());
+        this.addComponent('CardListPopUp', new CardListPopUp());
+        this.addComponent('DeleteCardListPopUp', new DeleteCardListPopUp());
 
-        this._inputElements = {
-            title: null,
-            description: null,
-        };
+        this.registerViewElements();
     }
 
     /**
@@ -72,8 +74,7 @@ export default class BoardView extends BaseView {
             return;
         }
 
-        Object.values(this.context.get('content')).forEach((cardlist) => {
-            console.log(cardlist);
+        this.context.get('card_lists')?.forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
 
@@ -93,9 +94,40 @@ export default class BoardView extends BaseView {
 
         super.render();
 
-        this.addEventListeners();
+        this.registerViewElements();
 
-        this.registerInputElements();
+        this.addEventListeners();
+    }
+
+    /**
+     * Метод, сохраняющий ссылки на поля и кнопки
+     */
+    registerViewElements() {
+        this._elements = {
+            showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
+            showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
+            cardLists: {
+                addCardBtns: document.querySelectorAll('.addCardToCardList'),
+                editBtns: document.querySelectorAll('.editCardList'),
+                deleteBtns: document.querySelectorAll('.deleteCardList'),
+            },
+        };
+    }
+
+    /**
+     * Метод биндит контекст this к calllback'ам
+     * @private
+     */
+    _bindCallBacks() {
+        this._onRefresh = this._onRefresh.bind(this);
+        /* Board */
+        this._onShowSettingPopUp = this._onShowSettingPopUp.bind(this);
+        this._onShowCreateCLPopUp = this._onShowCreateCLPopUp.bind(this);
+        /* Card Lists */
+        this._onAddCardToCardList = this._onAddCardToCardList.bind(this);
+        this._onEditCardList = this._onEditCardList.bind(this);
+        this._onDeleteCardList = this._onDeleteCardList.bind(this);
+        /* Cards (todo) */
     }
 
     /**
@@ -103,7 +135,17 @@ export default class BoardView extends BaseView {
      */
     addEventListeners() {
         super.addEventListeners();
-        document.getElementById('addCardList').addEventListener('click', this.addCardListCallback);
+        this._elements.showSettingBtn?.addEventListener('click', this._onShowSettingPopUp);
+        this._elements.showCreateCLBtn?.addEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
+            addCardBtn.addEventListener('click', this._onAddCardToCardList);
+        });
+        this._elements.cardLists.editBtns.forEach((editCardListBtn)=>{
+            editCardListBtn.addEventListener('click', this._onEditCardList);
+        });
+        this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
+            deleteCardListBtn.addEventListener('click', this._onDeleteCardList);
+        });
     }
 
     /**
@@ -111,29 +153,59 @@ export default class BoardView extends BaseView {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        document.getElementById('addCardList')?.removeEventListener('click', this.addCardListCallback);
+        this._elements.showSettingBtn?.removeEventListener('click', this._onShowSettingPopUp);
+        this._elements.showCreateCLBtn?.removeEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
+            addCardBtn.removeEventListener('click', this._onAddCardToCardList);
+        });
+        this._elements.cardLists.editBtns.forEach((editCardListBtn)=>{
+            editCardListBtn.removeEventListener('click', this._onEditCardList);
+        });
+        this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
+            deleteCardListBtn.removeEventListener('click', this._onDeleteCardList);
+        });
     }
 
     /**
-     * Метод, регистрирующий поля ввода в документе.
+     * Callback, срабатывающий при нажатии на кнопку "Настройки"
+     * @private
      */
-    registerInputElements() {
-        this._inputElements.title = document.getElementById('title');
-        this._inputElements.description = document.getElementById('description');
+    _onShowSettingPopUp() {
+        boardActions.showBoardSettingsPopUp();
     }
 
     /**
-     * Метод, обрабатывающий посылку формы.
-     * @param {object} event событие
+     * Callback, срабатывающий при нажатии на кнопку "Добавить список"
+     * @private
      */
-    formAuthorization(event) {
-        event.preventDefault();
+    _onShowCreateCLPopUp() {
+        cardListActions.showCreateCardListPopUp();
+    }
 
-        const data = {
-            login: this._inputElements.login.value,
-            password: this._inputElements.password.value,
-        };
+    /**
+     * Метод вызывается при нажатии на "+"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardToCardList(event) {
+        // todo отображаем popup с созданием карточки
+    }
 
-        userActions.login(data.login, data.password);
+    /**
+     * Метод вызывается при нажатии на кнопку редактирования списка карточек
+     * @param {Event} event объект события
+     * @private
+     */
+    _onEditCardList(event) {
+        cardListActions.showEditCardListPopUp(parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Метод вызывается при нажатии на значек удаления списка карточек
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteCardList(event) {
+        cardListActions.showDeleteCardListPopUp(parseInt(event.target.dataset.id, 10));
     }
 }
