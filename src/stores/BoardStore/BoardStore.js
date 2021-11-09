@@ -691,11 +691,11 @@ class BoardStore extends BaseStore {
 
         const _data = {
             pos: data.pos,
-            cid: data.cid,
-            clid: data.clid,
+            cid: this._storage.get('card-popup').cid,
+            clid: this._storage.get('card-popup').clid,
             card_name: data.card_name,
             description: data.description,
-            bid: data.bid,
+            bid: this._storage.get('card-popup').bid,
         };
 
         try {
