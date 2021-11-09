@@ -53,9 +53,7 @@ const config = {
             },
             {
                 include: [
-                    path.resolve(__dirname, 'src/components/'),
-                    path.resolve(__dirname, 'src/views/'),
-                    path.resolve(__dirname, 'src/styles/'),
+                    path.resolve(__dirname, 'src/'),
                 ],
                 test: /\.(s*)css$/,
                 use: [
@@ -68,9 +66,13 @@ const config = {
                 include: [
                     path.resolve(__dirname, 'src/components/'),
                     path.resolve(__dirname, 'src/views/'),
+                    path.resolve(__dirname, 'src/popups/'),
                 ],
                 test: /\.hbs$/,
                 loader: 'handlebars-loader',
+                options: {
+                    helperDirs: path.resolve(__dirname, 'src/modules/Helpers'),
+                },
             },
         ],
     },

@@ -19,7 +19,7 @@ class Network {
             profile: 'api/profile',
             board: 'api/boards',
             card: 'api/cards',
-            cardlist: 'api/cardlists',
+            cardlist: 'api/cardLists',
         };
 
         this._defaultOptions = {
@@ -171,7 +171,7 @@ class Network {
 
     /**
      * Метод, реализующий запрос GET /api/board/.
-     * @param {int} bid - номер доски
+     * @param {Number} bid - id доски
      * @return {Promise<Response>} промис запроса
      */
     async getBoard(bid) {
@@ -260,9 +260,10 @@ class Network {
     /**
      * Метод, реализующий запрос PUT /api/cardlists.
      * @param {object} data полезная нагрузка запроса
+     * @param {Number} clid id обновляемой доски
      * @return {Promise<Response>} промис запроса
      */
-    async _updateCardList(data) {
+    async _updateCardList(data, clid) {
         const options = {
             method: 'put',
             headers: {
@@ -271,25 +272,24 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 
     /**
      * Метод, реализующий запрос DELETE /api/cardlists.
-     * @param {object} data полезная нагрузка запроса
+     * @param {Number} clid id удаляемой доски
      * @return {Promise<Response>} промис запроса
      */
-    async _deleteCardList(data) {
+    async _deleteCardList(clid) {
         const options = {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 
@@ -308,7 +308,43 @@ class Network {
     }
 
     /**
-     * Метод, реализующий запрос DELETE /api/sessions.
+     * Метод, реализующий запрос PUT /api/sessions.
+     * @param {Object} data полезная нагрузка запроса
+     * @param {Number} bid id обновляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateBoard(data, bid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/board/:bid.
+     * @param {Number} bid id уаляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteBoard(bid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/board/:bid.
      * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */

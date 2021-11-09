@@ -1,0 +1,15 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/PopUp';
+
+.confirm-delete-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+}
+
+.popup-content_sized {
+    min-width: 450px;
+}

@@ -87,17 +87,15 @@ export default class RegisterView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
+        super.addEventListeners();
         document.getElementById('register').addEventListener('submit', this.formRegistrationCallback);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('register')?.removeEventListener('submit',
                                                                  this.formRegistrationCallback);
     }

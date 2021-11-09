@@ -10,8 +10,8 @@ export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
     BOARD_GET: 'board/get',
     BOARDS_CREATE: 'boards/create',
-    BOARDS_MODAL_SHOW: 'boards/modal/show',
-    BOARDS_MODAL_HIDE: 'boards/modal/hide',
+    BOARDS_POPUP_SHOW: 'boards/popup/show',
+    BOARDS_POPUP_HIDE: 'boards/popup/hide',
 };
 
 /**
@@ -59,17 +59,16 @@ export const boardsActions = {
      */
     showModal(teamID) {
         Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_MODAL_SHOW,
-            data: {teamID},
+            actionName: BoardsActionTypes.BOARDS_POPUP_SHOW,
+            data: {
+                teamID,
+            },
         });
     },
 
-    /**
-     * Действие: сокрытие модального окна.
-     */
-    hideModal() {
+    hidePopUp() {
         Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_MODAL_HIDE,
+            actionName: BoardsActionTypes.BOARDS_POPUP_HIDE,
         });
     },
 };
