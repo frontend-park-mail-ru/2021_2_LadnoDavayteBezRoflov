@@ -19,7 +19,7 @@ export default class NavbarComponent extends BaseComponent {
     * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
-        super(context, template);
+        super(context, template, undefined);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
