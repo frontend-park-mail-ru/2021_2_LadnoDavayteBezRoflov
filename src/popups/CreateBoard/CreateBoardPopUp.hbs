@@ -25,9 +25,13 @@
                             {{/each}}
                         </select>
                     </div>
-                </form>
-                <div class="close-button" id="createBoardPopUpCloseId"></div>
-            </div>
+                    {{#if errors}}
+                        <div class="error"> {{errors}}</div>
+                    {{/if}}
+                    <button type="submit" class="button" id="createBoardPopUpSubmitId">Создать</button>
+                </div>
+            </form>
+            <div class="close-button" id="createBoardPopUpCloseId"></div>
         </div>
     </div>
 {{/if}}
