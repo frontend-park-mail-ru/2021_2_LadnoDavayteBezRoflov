@@ -2,17 +2,17 @@ import BaseStore from '../BaseStore.js';
 
 // Actions
 import {BoardsActionTypes} from '../../actions/boards.js';
-import {CardListActionTypes} from '../../actions/cardlist';
+import {CardListActionTypes} from '../../actions/cardlist.js';
 import {CardActionTypes} from '../../actions/card.js';
-import {BoardActionTypes} from '../../actions/board';
-
-// Constants
-import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
+import {BoardActionTypes} from '../../actions/board.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
-import Router from '../../modules/Router/Router';
+import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
+
+// Constants
+import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -192,36 +192,6 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Метод, возвращающий карточку по ее айди.
-     * @param {Int} cid айди карточки
-     * @return {Object} данные карточки
-     */
-    getCardByCID(cid) {
-        let cardByCID;
-        (Object.values(this.getContext('card_lists'))
-            ?.filter((cardlist) => {
-                (Object.values(cardlist.cards)
-                    .filter((card) => {
-                        if (card.cid === cid) {
-                            cardByCID = card;
-                        }
-                    }));
-            },
-            )
-        );
-        return cardByCID;
-    }
-
-    /**
-     * Метод, возвращающий доску по CID.
-     * @param {int} CID
-     * @return {int} значение поля
-     */
-    getBoardByCID(CID) {
-        return this.getContext('content')[CID].bid;
-    }
-
-    /**
      * Метод, реализующий реакцию на запрос доски с id.
      * @param {Object} data полезная нагрузка запроса
      */
@@ -351,7 +321,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            Router.go('/boards');
+            Router.go(Urls.Boards);
             this._storage.get('setting-popup').visible = false;
             return;
 
@@ -390,7 +360,6 @@ class BoardStore extends BaseStore {
         }
 
         data.bid = this._storage.get('bid');
-        console.log(data);
 
         let payload;
 
@@ -506,9 +475,10 @@ class BoardStore extends BaseStore {
                 cardLists[index].pos += bound.increment;
             }
 
-            // Установим новую позицию обновленному card list
+            // Обновим cardList:
             cardList.cardList_name = data.cardList_name;
             cardList.pos = data.pos;
+
             // Переупорядочим списки
             cardLists.sort((lhs, rhs) => {
                 return lhs.pos - rhs.pos;
@@ -570,9 +540,10 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
 
             // Удалим список из storage
+            const {clid} = this._storage.get('delete-cl-popup');
             const cardLists = this._storage.get('card_lists');
             const index = cardLists.indexOf(
-                this._getCardListById(this._storage.get('delete-cl-popup').clid));
+                this._getCardListById(clid));
             cardLists.splice(index, 1);
 
             return;
@@ -624,7 +595,6 @@ class BoardStore extends BaseStore {
 
         data.bid = this._storage.get('bid');
         data.clid = this._storage.get('card-popup').clid;
-        console.log(data);
 
         let payload;
 
@@ -686,22 +656,21 @@ class BoardStore extends BaseStore {
      * @private
      */
     _showEditCardPopUp(data) {
-        const cardPopup = this._storage.get('card-popup');
-        cardPopup.visible = true;
-        cardPopup.edit = true;
-        cardPopup.cid = data.cid;
-        cardPopup.clid = data.clid;
-        cardPopup.errors = null;
-
         const card = this._getCardById(data.clid, data.cid);
 
-        cardPopup.position = card.pos;
-        cardPopup.positionRange = Array.from(
-            {length: this._getCardListById(card.clid).cards.length},
-            (_, index) => index + 1);
-        cardPopup.card_name = card.card_name;
-        cardPopup.description = card.description;
-        cardPopup.deadline = card.deadline;
+        this._storage.set('card-popup', {
+            visible: true,
+            edit: true,
+            cid: data.cid,
+            clid: data.clid,
+            position: card.pos,
+            positionRange: Array.from(
+                {length: this._getCardListById(data.clid).cards.length},
+                (_, index) => index + 1),
+            card_name: card.card_name,
+            description: card.description,
+            errors: null,
+        });
     }
 
     /**
@@ -721,8 +690,17 @@ class BoardStore extends BaseStore {
 
         let payload;
 
+        const _data = {
+            pos: data.pos,
+            cid: this._storage.get('card-popup').cid,
+            clid: this._storage.get('card-popup').clid,
+            card_name: data.card_name,
+            description: data.description,
+            bid: this._storage.get('card-popup').bid,
+        };
+
         try {
-            payload = await Network._updateCard(data, this._storage.get('card-popup').cid);
+            payload = await Network._updateCard(_data, this._storage.get('card-popup').cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -737,20 +715,21 @@ class BoardStore extends BaseStore {
                 this._storage.get('card-popup').cid,
             );
             const bound = data.pos > card.pos ?
-                {left: card.pos, right: data.position, increment: -1} :
-                {left: data.position - 1, right: card.pos - 1, increment: 1};
+                {left: card.pos, right: data.pos, increment: -1} :
+                {left: data.pos - 1, right: card.pos - 1, increment: 1};
 
-            // Обновим позиции списков в storage
             const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
 
             for (let index = bound.left; index < bound.right; index +=1) {
                 cards[index].pos += bound.increment;
             }
 
-            // Установим новую позицию обновленному card
-            card.cardName = data.cardName;
-            card.pos = data.position;
-            // Переупорядочим
+            // Обновим cardList:
+            card.card_name = data.card_name;
+            card.description = data.description;
+            card.pos = data.pos;
+
+            // Переупорядочим списки
             cards.sort((lhs, rhs) => {
                 return lhs.pos - rhs.pos;
             });
@@ -773,11 +752,12 @@ class BoardStore extends BaseStore {
      * @private
      */
     _showDeleteCardPopUp(data) {
-        this._storage.get('delete-card-popup').visible = true;
-        this._storage.get('delete-card-popup').cid = data.cid;
-        this._storage.get('delete-card-popup').clid = data.clid;
-        this._storage.get('delete-card-popup').card_name =
-            this._getCardById(data.clid, data.cid).card_name;
+        this._storage.set('delete-card-popup', {
+            visible: true,
+            cid: data.cid,
+            clid: data.clid,
+            card_name: this._getCardById(data.clid, data.cid).card_name,
+        });
     }
 
     /**
@@ -811,12 +791,12 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
 
-            // Удалим список из storage
-            const cards = this._getCardListById(this._storage.get('delete-card-popup').clid).cards;
+            // Удалим из storage
+            const cid = this._storage.get('delete-card-popup').cid;
+            const clid = this._storage.get('delete-card-popup').clid;
+            const cards = this._getCardListById(clid).cards;
             const index = cards.indexOf(
-                this._getCardById(
-                    this._storage.get('delete-card-popup').clid,
-                    this._storage.get('delete-card-popup').cid),
+                this._getCardById(clid, cid),
             );
             cards.splice(index, 1);
 

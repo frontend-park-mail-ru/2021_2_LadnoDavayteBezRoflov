@@ -81,7 +81,6 @@ export default class BoardView extends BaseView {
             return;
         }
 
-        // todo карточки и так массивом идут
         this.context.get('card_lists')?.forEach((cardlist) => {
             this.addComponentToList('_cardlists', new CardListComponent(cardlist));
         });
@@ -214,7 +213,6 @@ export default class BoardView extends BaseView {
      * @private
      */
     _onAddCardToCardList(event) {
-        console.log(parseInt(event.target.dataset.id, 10));
         cardActions.showCreateCardPopUp(parseInt(event.target.dataset.id, 10));
     }
 
@@ -242,9 +240,6 @@ export default class BoardView extends BaseView {
      * @private
      */
     _onEditCard(event) {
-        console.log(event.target);
-        console.log('clid', parseInt(event.target.closest('.column__content').dataset.id, 10));
-        console.log('cid', parseInt(event.target.dataset.id, 10));
         cardActions.showEditCardPopUp(
             parseInt(event.target.closest('.column__content').dataset.id, 10),
             parseInt(event.target.dataset.id, 10),
@@ -257,8 +252,6 @@ export default class BoardView extends BaseView {
      * @private
      */
     _onDeleteCard(event) {
-        console.log(event.target.closest('.column__content'));
-        console.log('eventTarget: ', event.target);
         cardActions.showDeleteCardPopUp(
             parseInt(event.target.closest('.column__content').dataset.id, 10),
             parseInt(event.target.dataset.id, 10),

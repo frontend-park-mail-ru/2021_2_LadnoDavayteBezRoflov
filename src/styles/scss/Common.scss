@@ -74,7 +74,6 @@ $simple-form-radius: 10px;
 
   &::before {
     @extend .material-icons;
-    /*content: 'close';*/
     font-size: 30px;
     display: inline;
     position: relative;
@@ -132,6 +131,14 @@ $simple-form-radius: 10px;
   &:focus,
   &:hover {
     background-color: $main-theme-color__focus;
+  }
+
+  &_disabled {
+    background-color: gray;
+    &:focus,
+    &:hover {
+      background-color: gray;
+    }
   }
 }
 
