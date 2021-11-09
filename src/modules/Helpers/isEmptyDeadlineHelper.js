@@ -2,6 +2,7 @@
  * Handelbars helper
  * @param {any} deadline - дедлайн
  * @return {boolean} - результат сравнения
+ * @constructor
  */
 export default function IsEmptyDeadlineHelper(deadline) {
     if (deadline) {
