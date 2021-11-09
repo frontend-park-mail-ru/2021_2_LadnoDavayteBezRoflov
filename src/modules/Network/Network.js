@@ -344,17 +344,15 @@ class Network {
     }
 
     /**
-     * Метод, реализующий запрос DELETE /api/board/:bid.
-     * @param {object} data полезная нагрузка запроса
+     * Метод, реализующий запрос DELETE /api/sessions.
      * @return {Promise<Response>} промис запроса
      */
-    async sendLogout(data) {
+    async sendLogout() {
         const options = {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
