@@ -192,36 +192,6 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Метод, возвращающий карточку по ее айди.
-     * @param {Int} cid айди карточки
-     * @return {Object} данные карточки
-     */
-    getCardByCID(cid) {
-        let cardByCID;
-        (Object.values(this.getContext('card_lists'))
-            ?.filter((cardlist) => {
-                (Object.values(cardlist.cards)
-                    .filter((card) => {
-                        if (card.cid === cid) {
-                            cardByCID = card;
-                        }
-                    }));
-            },
-            )
-        );
-        return cardByCID;
-    }
-
-    /**
-     * Метод, возвращающий доску по CID.
-     * @param {int} CID
-     * @return {int} значение поля
-     */
-    getBoardByCID(CID) {
-        return this.getContext('content')[CID].bid;
-    }
-
-    /**
      * Метод, реализующий реакцию на запрос доски с id.
      * @param {Object} data полезная нагрузка запроса
      */
@@ -629,7 +599,6 @@ class BoardStore extends BaseStore {
 
         data.bid = this._storage.get('bid');
         data.clid = this._storage.get('card-popup').clid;
-        console.log(data);
 
         let payload;
 
