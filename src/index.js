@@ -29,7 +29,6 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
-    const popup = document.getElementById(Html.PopUp);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

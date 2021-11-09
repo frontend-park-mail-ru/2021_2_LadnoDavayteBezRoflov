@@ -1,16 +1,21 @@
 import BaseStore from '../BaseStore.js';
-import {BoardsActionTypes} from '../../actions/boards.js';
 
-import Network from '../../modules/Network/Network.js';
-import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
-import UserStore from '../UserStore/UserStore.js';
+// Actions
+import {BoardsActionTypes} from '../../actions/boards.js';
+import {CardListActionTypes} from '../../actions/cardlist.js';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
-import Router from '../../modules/Router/Router.js';
-import Validator from '../../modules/Validator/Validator.js';
-import {CardListActionTypes} from '../../actions/cardlist.js';
-import {Urls} from '../../constants/constants.js';
-import * as Url from 'url';
+
+// Modules
+import Network from '../../modules/Network/Network.js';
+import Router from '../../modules/Router/Router';
+import Validator from '../../modules/Validator/Validator';
+
+// Constants
+import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
+
+// Stores
+import UserStore from '../UserStore/UserStore.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -44,6 +49,22 @@ class BoardStore extends BaseStore {
             visible: false,
             clid: null,
         });
+
+        this._storage.set('card-popup', {
+            visible: false,
+            edit: false,
+            cid: null,
+            clid: null,
+            position: null,
+            positionRange: null,
+            card_name: null,
+            errors: null,
+        });
+
+        this._storage.set('delete-card-popup', {
+            visible: false,
+            cid: null,
+        });
     }
 
     /**
@@ -53,22 +74,7 @@ class BoardStore extends BaseStore {
     async _onDispatch(action) {
         switch (action.actionName) {
         case BoardsActionTypes.BOARD_GET:
-            await this._get(action.data);
-            this._emitChange();
-            break;
-
-        case CardActionTypes.CARD_CREATE:
-            await this._createCard(action.data);
-            this._emitChange();
-            break;
-
-        case CardActionTypes.CARD_UPDATE:
-            await this._updateCard(action.data);
-            this._emitChange();
-            break;
-
-        case CardActionTypes.CARD_DELETE:
-            await this._deleteCard(action.data);
+            await this._getBoard(action.data);
             this._emitChange();
             break;
 
@@ -139,6 +145,47 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+            /* Card */
+        case CardActionTypes.CARD_CREATE_SHOW_POPUP:
+            this._showCreateCardPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_EDIT_SHOW_POPUP:
+            this._showEditCardPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_HIDE_POPUP:
+            this._hideCardPopUp();
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_UPDATE_SUBMIT:
+            await this._updateCard(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_CREATE_SUBMIT:
+            await this._createCard(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_DELETE_SHOW:
+            this._showDeleteCardPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_DELETE_CHOOSE:
+            await this._deleteCard(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_DELETE_HIDE:
+            this._hideDeleteCardPopUp();
+            this._emitChange();
+            break;
+
         default:
             return;
         }
@@ -175,95 +222,10 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Метод, реализующий реакцию на запрос создания карточки.
-     * @param {Object} data полезная нагрузка запроса
-     */
-    async _createCard(data) {
-        // TODO validation
-
-        let payload;
-
-        try {
-            payload = await Network.createCard(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            return;
-
-        case HttpStatusCodes.Unauthorized:
-            UserStore.__logout();
-            return;
-
-        default:
-            console.log('Undefined error');
-        }
-    }
-
-    /**
-     * Метод, реализующий реакцию на запрос обновления карточки.
-     * @param {Object} data полезная нагрузка запроса
-     */
-    async _updateCard(data) {
-        // TODO validation
-
-        let payload;
-
-        try {
-            payload = await Network.updateCard(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            return;
-
-        case HttpStatusCodes.Unauthorized:
-            UserStore.__logout();
-            return;
-
-        default:
-            console.log('Undefined error');
-        }
-    }
-
-    /**
-     * Метод, реализующий реакцию на запрос удаления карточки.
-     * @param {Object} data полезная нагрузка запроса
-     */
-    async _deleteCard(data) {
-        let payload;
-
-        try {
-            payload = await Network.deleteCard(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error); // TODO pretty
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            return;
-
-        case HttpStatusCodes.Unauthorized:
-            UserStore.__logout();
-            return;
-
-        default:
-            console.log('Undefined error');
-        }
-    }
-
-    /**
      * Метод, реализующий реакцию на запрос доски с id.
      * @param {Object} data полезная нагрузка запроса
      */
-    async _get(data) {
+    async _getBoard(data) {
         let payload;
 
         try {
@@ -432,7 +394,7 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network._createCard(data);
+            payload = await Network._createCardList(data);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -531,6 +493,11 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('cardlist-popup').visible = false;
 
+            const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
+            const bound = data.pos > cardList.pos ?
+                {left: cardList.pos, right: data.pos, increment: -1} :
+                {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
+
             // Обновим позиции списков в storage
             const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
             const bound = data.pos > cardList.pos ?
@@ -538,6 +505,7 @@ class BoardStore extends BaseStore {
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
 
             const cardLists = this._storage.get('card_lists');
+
             for (let index = bound.left; index < bound.right; index +=1) {
                 cardLists[index].pos += bound.increment;
             }
@@ -611,6 +579,251 @@ class BoardStore extends BaseStore {
             const index = cardLists.indexOf(
                 this._getCardListById(this._storage.get('delete-cl-popup').clid));
             cardLists.splice(index, 1);
+
+            return;
+
+        default:
+            return;
+        }
+    }
+
+    /* Секция карточек */
+
+    /**
+     * Делает popup создания карточки видимым
+     * @private
+     * @param {object} data данные из запроса
+     */
+    _showCreateCardPopUp(data) {
+        this._storage.get('card-popup').visible = true;
+        this._storage.get('card-popup').edit = false;
+        this._storage.get('card-popup').errors = null;
+        this._storage.get('card-popup').clid = data.clid;
+    }
+
+    /**
+     * Делает popup создания карточки видимым
+     * @param {object} data данные из запроса
+     * @private
+     */
+    _getCard(data) {
+        this._storage.get('card-popup').visible = true;
+        this._storage.get('card-popup').edit = false;
+        this._storage.get('card-popup').errors = null;
+        this._storage.get('card-popup').clid = data.clid;
+    }
+
+    /**
+     * Создает новую карточку
+     * @param {Object} data информация о карточке
+     * @private
+     */
+    async _createCard(data) {
+        this._storage.get('card-popup').errors = null;
+        const validator = new Validator();
+
+        this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
+        if (this._storage.get('card-popup').errors) {
+            return;
+        }
+
+        data.bid = this._storage.get('bid');
+        data.clid = this._storage.get('card-popup').clid;
+        console.log(data);
+
+        let payload;
+
+        try {
+            payload = await Network._createCard(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._storage.get('card-popup').visible = false;
+            console.log(this._storage.get('card_lists'));
+            this._getCardListById(data.clid).cards.push({
+                cid: payload.data.cid,
+                bid: this._storage.get('bid'),
+                card_name: data.card_name,
+                description: data.description,
+                pos: this._getCardListById(data.clid).cards.length + 1,
+            });
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer; // CARDLIST
+            return;
+        }
+    }
+
+    /**
+     * Скрывает popup создания/редактирования карточки
+     * @private
+     */
+    _hideCardPopUp() {
+        this._storage.get('card-popup').visible = false;
+        this._storage.get('card-popup').errors = null;
+    }
+
+    /**
+     * Возвращает объект card из storage
+     * @param {Number} clid id списка карточек
+     * @param {Number} cid id карточки
+     * @return {Object} найденный объект
+     * @private
+     */
+    _getCardById(clid, cid) {
+        return this._getCardListById(clid).cards.find((card) => {
+            return card.cid === cid;
+        });
+    }
+
+    /**
+     * Показывает popup редактирования карточки
+     * @param {Object} data информация о карточке
+     * @private
+     */
+    _showEditCardPopUp(data) {
+        const cardPopup = this._storage.get('card-popup');
+        cardPopup.visible = true;
+        cardPopup.edit = true;
+        cardPopup.cid = data.cid;
+        cardPopup.clid = data.clid;
+        cardPopup.errors = null;
+
+        const card = this._getCardById(data.clid, data.cid);
+
+        cardPopup.position = card.pos;
+        cardPopup.positionRange = Array.from(
+            {length: this._getCardListById(card.clid).cards.length},
+            (_, index) => index + 1);
+        cardPopup.card_name = card.card_name;
+        cardPopup.description = card.description;
+        cardPopup.deadline = card.deadline;
+    }
+
+    /**
+     * Обновляет текущий card
+     * @param {Object} data новые данные списка
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCard(data) {
+        this._storage.get('card-popup').errors = null;
+        const validator = new Validator();
+
+        this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
+        if (this._storage.get('card-popup').errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network._updateCard(data, this._storage.get('card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._storage.get('card-popup').visible = false;
+
+            const card = this._getCardById(
+                this._storage.get('card-popup').clid,
+                this._storage.get('card-popup').cid,
+            );
+            const bound = data.pos > card.pos ?
+                {left: card.pos, right: data.position, increment: -1} :
+                {left: data.position - 1, right: card.pos - 1, increment: 1};
+
+            // Обновим позиции списков в storage
+            const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
+
+            for (let index = bound.left; index < bound.right; index +=1) {
+                cards[index].pos += bound.increment;
+            }
+
+            // Установим новую позицию обновленному card
+            card.cardName = data.cardName;
+            card.pos = data.position;
+            // Переупорядочим
+            cards.sort((lhs, rhs) => {
+                return lhs.pos - rhs.pos;
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Отображает popup удаления карточки
+     * @param {Object} data информация о спике
+     * @private
+     */
+    _showDeleteCardPopUp(data) {
+        this._storage.get('delete-card-popup').visible = true;
+        this._storage.get('delete-card-popup').cid = data.cid;
+        this._storage.get('delete-card-popup').clid = data.clid;
+        this._storage.get('delete-card-popup').card_name =
+            this._getCardById(data.clid, data.cid).card_name;
+    }
+
+    /**
+     * Скрывает popup удаления карточки
+     * @private
+     */
+    _hideDeleteCardPopUp() {
+        this._storage.get('delete-card-popup').visible = false;
+    }
+
+    /**
+     * Удаляет связанный с popup'ом card
+     * @param {Object} data результат диалога удаления
+     * @private
+     */
+    async _deleteCard(data) {
+        this._hideDeleteCardPopUp();
+        if (!data.confirmation) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network._deleteCard(this._storage.get('delete-card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+
+            // Удалим список из storage
+            const cards = this._getCardListById(this._storage.get('delete-card-popup').clid).cards;
+            const index = cards.indexOf(
+                this._getCardById(
+                    this._storage.get('delete-card-popup').clid,
+                    this._storage.get('delete-card-popup').cid),
+            );
+            cards.splice(index, 1);
 
             return;
 

@@ -3,9 +3,19 @@ import BaseView from '../BaseView.js';
 
 // Actions
 import {boardsActions} from '../../actions/boards.js';
+import {boardActions} from '../../actions/board';
+import {cardListActions} from '../../actions/cardlist';
+import {cardActions} from '../../actions/card.js';
 
 // Components
 import CardListComponent from '../../components/CardList/CardList.js';
+
+// Popups
+import BoardSettingPopUp from '../../popups/BoardSetting/BoardSettingPopUp.js';
+import CardListPopUp from '../../popups/CardList/CardListPopUp.js';
+import CardPopUp from '../../popups/Card/CardPopUp.js';
+import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp.js';
+import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -22,11 +32,6 @@ import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
-import {boardActions} from '../../actions/board';
-import {cardListActions} from '../../actions/cardlist';
-import BoardSettingPopUp from '../../popups/BoardSetting/BoardSettingPopUp';
-import CardListPopUp from '../../popups/CardList/CardListPopUp';
-import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp';
 
 /**
  * Класс, реализующий страницу доски.
@@ -35,9 +40,8 @@ export default class BoardView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-     * @param {Element} popup HTML-элемент, в который будет осуществлена отрисовка popup
      */
-    constructor(parent, popup) {
+    constructor(parent) {
         const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
         super(context, template, parent);
 
@@ -45,9 +49,12 @@ export default class BoardView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
 
+        // Добавить попапы
         this.addComponent('BoardSettingPopUp', new BoardSettingPopUp());
         this.addComponent('CardListPopUp', new CardListPopUp());
+        this.addComponent('CardPopUp', new CardPopUp());
         this.addComponent('DeleteCardListPopUp', new DeleteCardListPopUp());
+        this.addComponent('DeleteCardPopUp', new DeleteCardPopUp());
 
         this.registerViewElements();
     }
@@ -111,6 +118,10 @@ export default class BoardView extends BaseView {
                 editBtns: document.querySelectorAll('.editCardList'),
                 deleteBtns: document.querySelectorAll('.deleteCardList'),
             },
+            cards: {
+                editAreas: document.querySelectorAll('.editCard'),
+                deleteBtns: document.querySelectorAll('.deleteCard'),
+            },
         };
     }
 
@@ -127,7 +138,9 @@ export default class BoardView extends BaseView {
         this._onAddCardToCardList = this._onAddCardToCardList.bind(this);
         this._onEditCardList = this._onEditCardList.bind(this);
         this._onDeleteCardList = this._onDeleteCardList.bind(this);
-        /* Cards (todo) */
+        /* Cards */
+        this._onDeleteCard = this._onDeleteCard.bind(this);
+        this._onEditCard = this._onEditCard.bind(this);
     }
 
     /**
@@ -146,6 +159,12 @@ export default class BoardView extends BaseView {
         this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
             deleteCardListBtn.addEventListener('click', this._onDeleteCardList);
         });
+        this._elements.cards.editAreas.forEach((editArea)=>{
+            editArea.addEventListener('click', this._onEditCard);
+        });
+        this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
+            deleteCardBtn.addEventListener('click', this._onDeleteCard);
+        });
     }
 
     /**
@@ -163,6 +182,12 @@ export default class BoardView extends BaseView {
         });
         this._elements.cardLists.deleteBtns.forEach((deleteCardListBtn)=>{
             deleteCardListBtn.removeEventListener('click', this._onDeleteCardList);
+        });
+        this._elements.cards.editAreas.forEach((editArea)=>{
+            editArea.removeEventListener('click', this._onEditCard);
+        });
+        this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
+            deleteCardBtn.removeEventListener('click', this._onDeleteCard);
         });
     }
 
@@ -188,7 +213,7 @@ export default class BoardView extends BaseView {
      * @private
      */
     _onAddCardToCardList(event) {
-        // todo отображаем popup с созданием карточки
+        cardActions.showCreateCardPopUp(parseInt(event.target.dataset.id, 10));
     }
 
     /**
@@ -207,5 +232,30 @@ export default class BoardView extends BaseView {
      */
     _onDeleteCardList(event) {
         cardListActions.showDeleteCardListPopUp(parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Метод вызывается при нажатии на кнопку редактирования карточки
+     * @param {Event} event объект события
+     * @private
+     */
+    _onEditCard(event) {
+        cardActions.showEditCardPopUp(
+            parseInt(event.target.closest('.column__content').dataset.id, 10),
+            parseInt(event.target.dataset.id, 10),
+        );
+    }
+
+    /**
+     * Метод вызывается при нажатии на значок удаления карточки
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteCard(event) {
+        cardActions.showDeleteCardPopUp(
+            parseInt(event.target.closest('.column__content').dataset.id, 10),
+            parseInt(event.target.dataset.id, 10),
+        );
+        event.stopPropagation();
     }
 }

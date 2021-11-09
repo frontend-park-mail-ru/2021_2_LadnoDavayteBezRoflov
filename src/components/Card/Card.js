@@ -1,23 +1,11 @@
 // Базовый компонент
 import BaseComponent from '../BaseComponent.js';
 
-// Modules
-import Router from '../../modules/Router/Router.js';
-
-// Stores
-import BoardStore from '../../stores/BoardStore/BoardStore.js';
-
 // Шаблон
 import template from './Card.hbs';
 
-// Шаблон
-import templatePopup from './CardPopup.hbs';
-
-import {cardActions} from '../../actions/card.js';
-
 // Стили
 import './Card.scss';
-import './CardPopup.scss';
 
 /**
  * Класс, реализующий компонент Card.
@@ -29,6 +17,7 @@ export default class CardComponent extends BaseComponent {
      */
     constructor(context) {
         super(context, template);
+<<<<<<< HEAD
 
         this._popupTemplate = templatePopup;
 
@@ -158,5 +147,7 @@ export default class CardComponent extends BaseComponent {
      */
     removeEventListeners() {
         document.getElementById('deleteCard')?.removeEventListener('click', this._deleteCard);
+=======
+>>>>>>> LDBR-2.27: Переделать попапы карточек. Ребейзнуть исправления системы попапов. Исправить отображение карточек.
     }
 }
