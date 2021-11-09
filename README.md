@@ -1,3 +1,5 @@
+[![CI](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml)
+
 # Trello
 
 Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.

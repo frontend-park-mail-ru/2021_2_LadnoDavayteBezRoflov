@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
@@ -33,7 +34,11 @@ const devServer = {
 };
 
 const config = {
-    entry: './src/index.js',
+/*     entry: {
+        'app': './src/index.js',
+        'service-worker': './src/sw.js',
+    }, */
+    entry: ['./src/index.js', './src/sw.js'],
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, DEPLOY_DIR),
@@ -53,10 +58,7 @@ const config = {
             },
             {
                 include: [
-                    path.resolve(__dirname, 'src/components/'),
-                    path.resolve(__dirname, 'src/views/'),
-                    path.resolve(__dirname, 'src/styles/'),
-                    path.resolve(__dirname, 'src/popups/'),
+                    path.resolve(__dirname, 'src/'),
                 ],
                 test: /\.(s*)css$/,
                 use: [
@@ -90,12 +92,15 @@ const config = {
             template: 'src/index_template.html',
         }),
         new DefinePlugin(confDefs),
-        new CopyPlugin([
+        new CopyPlugin({patterns: [
             {
                 from: path.resolve(__dirname, 'public', 'assets'),
                 to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
             },
-        ]),
+        ]}),
+        new InjectManifest({
+            swSrc: path.join(process.cwd(), './src/sw.js'),
+          }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
