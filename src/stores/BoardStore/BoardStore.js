@@ -724,7 +724,8 @@ class BoardStore extends BaseStore {
             }
 
             // Обновим cardList:
-            card.cardName = data.cardName;
+            card.card_name = data.card_name;
+            card.description = data.description;
             card.pos = data.pos;
 
             // Переупорядочим списки
