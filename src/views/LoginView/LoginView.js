@@ -65,9 +65,9 @@ export default class LoginView extends BaseView {
      * Метод, отрисовывающий страницу.
      */
     render() {
-        /* Если пользователь авторизован, то перебросить его туда, где он был */
+        /* Если пользователь авторизован, то перебросить его на /boards */
         if (this.context.get('isAuthorized')) {
-            Router.prev();
+            Router.go(Urls.Boards);
             return;
         }
 
