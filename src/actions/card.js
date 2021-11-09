@@ -65,7 +65,7 @@ export const cardActions = {
      * @param {Number} bid id доски
      * @param {Number} clid id списка карточек
      */
-    updateCard(position, title, description, deadline, cid, bid, clid) {
+    updateCard(position, title, description, cid, bid, clid) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_UPDATE_SUBMIT,
             data: {
@@ -90,7 +90,7 @@ export const cardActions = {
             data: {
                 card_name: title,
                 description,
-                //deadline,
+                // deadline,
             },
         });
     },
