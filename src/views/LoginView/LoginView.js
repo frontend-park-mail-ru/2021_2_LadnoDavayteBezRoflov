@@ -1,6 +1,8 @@
 // Базовая страница
 import BaseView from '../BaseView.js';
 
+import {Urls} from '../../constants/constants.js';
+
 // Actions
 import {userActions} from '../../actions/user.js';
 
