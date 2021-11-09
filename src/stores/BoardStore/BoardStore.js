@@ -704,21 +704,21 @@ class BoardStore extends BaseStore {
                 this._storage.get('card-popup').clid,
                 this._storage.get('card-popup').cid,
             );
-            const bound = data.pos > card.pos ?
+            const bound = data.position > card.pos ?
                 {left: card.pos, right: data.position, increment: -1} :
                 {left: data.position - 1, right: card.pos - 1, increment: 1};
 
-            // Обновим позиции списков в storage
             const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
 
             for (let index = bound.left; index < bound.right; index +=1) {
                 cards[index].pos += bound.increment;
             }
 
-            // Установим новую позицию обновленному card
+            // Обновим cardList:
             card.cardName = data.cardName;
             card.pos = data.position;
-            // Переупорядочим
+
+            // Переупорядочим списки
             cards.sort((lhs, rhs) => {
                 return lhs.pos - rhs.pos;
             });
