@@ -33,7 +33,7 @@ export default class CardPopUp extends BaseComponent {
             positionSelect: document.getElementById('cardPopUpPositionId'),
             card_name: document.getElementById('cardPopUpTitleId'),
             description: document.getElementById('cardPopUpDescriptionId'),
-            deadline: document.getElementById('cardPopUpDeadlineId'),
+            //deadline: document.getElementById('cardPopUpDeadlineId'),
         };
     }
 
@@ -95,7 +95,7 @@ export default class CardPopUp extends BaseComponent {
             parseInt(this._elements.positionSelect.value, 10),
             this._elements.card_name.value,
             this._elements.description.value,
-            this._elements.deadline.value,
+            //this._elements.deadline.value,
             this.context.cid,
             this.context.bid,
             this.context.clid,
@@ -112,7 +112,7 @@ export default class CardPopUp extends BaseComponent {
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,
-            this._elements.deadline.value,
+            //this._elements.deadline.value,
         );
     }
 }

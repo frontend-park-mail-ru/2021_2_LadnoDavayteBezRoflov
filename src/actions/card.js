@@ -61,7 +61,6 @@ export const cardActions = {
      * @param {Number} position позиция на доске
      * @param {String} title заголовок
      * @param {String} description описание
-     * @param {String} deadline дедлайн (пока строка)
      * @param {Number} cid id карточки
      * @param {Number} bid id доски
      * @param {Number} clid id списка карточек
@@ -72,7 +71,6 @@ export const cardActions = {
             data: {
                 card_name: title,
                 description,
-                deadline,
                 position,
                 cid,
                 bid,
@@ -85,15 +83,14 @@ export const cardActions = {
      * Создает карточку
      * @param {String} title заголовок
      * @param {String} description описание
-     * @param {String} deadline дедлайн (пока строка)
      */
-    createCard(title, description, deadline) {
+    createCard(title, description) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_CREATE_SUBMIT,
             data: {
                 card_name: title,
                 description,
-                deadline,
+                //deadline,
             },
         });
     },
