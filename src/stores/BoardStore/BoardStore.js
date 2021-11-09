@@ -689,8 +689,17 @@ class BoardStore extends BaseStore {
 
         let payload;
 
+        const _data = {
+            pos: data.pos,
+            cid: data.cid,
+            clid: data.clid,
+            card_name: data.card_name,
+            description: data.description,
+            bid: data.bid,
+        };
+
         try {
-            payload = await Network._updateCard(data, this._storage.get('card-popup').cid);
+            payload = await Network._updateCard(_data, this._storage.get('card-popup').cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
