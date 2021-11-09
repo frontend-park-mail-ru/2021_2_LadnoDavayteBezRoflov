@@ -2,7 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const { InjectManifest } = require('workbox-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
@@ -28,17 +28,13 @@ const confDefs = {
 
 const devServer = {
     port: JSON.parse(confDefs.FRONTEND_PORT),
-    hot: true,
+    hot: false,
     static: [DEPLOY_DIR],
     historyApiFallback: true, // Для работы роута на 404
 };
 
 const config = {
-/*     entry: {
-        'app': './src/index.js',
-        'service-worker': './src/sw.js',
-    }, */
-    entry: ['./src/index.js', './src/sw.js'],
+    entry: './src/index.js',
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, DEPLOY_DIR),
@@ -99,12 +95,13 @@ const config = {
             },
         ]}),
         new InjectManifest({
-            swSrc: path.join(process.cwd(), './src/sw.js'),
+            swSrc: './src/sw.js',
+            swDest: 'sw.js',
           }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
-    devServer: confConst.DEBUG ? devServer : devServer,
+    devServer: confConst.DEBUG ? devServer : undefined,
 };
 
 module.exports = config;

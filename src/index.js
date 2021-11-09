@@ -22,7 +22,8 @@ import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 
-if ('serviceWorker' in navigator) {
+debugger;
+/* if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then(registration => {
         console.log('SW registered with scope ', registration.scope);
@@ -30,7 +31,7 @@ if ('serviceWorker' in navigator) {
         console.log('SW registration failed: ', registrationError);
       });
     });
-}
+} */
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
