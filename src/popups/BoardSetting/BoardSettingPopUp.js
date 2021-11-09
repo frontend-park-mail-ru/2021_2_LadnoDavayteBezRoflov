@@ -1,9 +1,6 @@
 // BaseComponent
 import BaseComponent from '../../components/BaseComponent.js';
 
-// Стор
-import BoardStore from '../../stores/BoardStore/BoardStore.js';
-
 // Шаблон
 import template from './BoardSettingPopUp.hbs';
 
@@ -19,31 +16,11 @@ import './BoardSettingPopUp.scss';
 export default class BoardSettingPopUp extends BaseComponent {
     /**
      * Конструирует объект BoardSettingPopUp
-     * @param {Element} parent - элемент, в который отрисуется данный popup
      */
-    constructor(parent) {
-        super(null, template, parent);
+    constructor() {
+        super(null, template);
         this._bindCallBacks();
-        BoardStore.addListener(this._onStoreRefresh);
-        this._registerPopUpElements();
-    }
-
-
-    /**
-     * Метод, вызываемый при обновлении стора.
-     * @private
-     */
-    _onStoreRefresh() {
-        this._setContext(BoardStore.getSettingPopUpContext());
-        this._removeEventListeners();
-
-        if (!this.context.visible) {
-            return;
-        }
-
-        super.render();
-        this._registerPopUpElements();
-        this._addEventListeners();
+        this._elements = {};
     }
 
     /**
@@ -67,7 +44,8 @@ export default class BoardSettingPopUp extends BaseComponent {
      * Метод регестрирует callback
      * @private
      */
-    _addEventListeners() {
+    addEventListeners() {
+        this._registerPopUpElements();
         super.addEventListeners();
         this._elements.wrapper?.addEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
@@ -81,7 +59,7 @@ export default class BoardSettingPopUp extends BaseComponent {
      * Метод удаляет все ранее зарегестрированные callback
      * @private
      */
-    _removeEventListeners() {
+    removeEventListeners() {
         super.removeEventListeners();
         this._elements.wrapper?.removeEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
@@ -96,7 +74,6 @@ export default class BoardSettingPopUp extends BaseComponent {
      * @private
      */
     _bindCallBacks() {
-        this._onStoreRefresh = this._onStoreRefresh.bind(this);
         this._onPopUpClose = this._onPopUpClose.bind(this);
         this._onDelete = this._onDelete.bind(this);
         this._onDeleteConfirm = this._onDeleteConfirm.bind(this);

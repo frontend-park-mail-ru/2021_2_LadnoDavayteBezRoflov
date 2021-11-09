@@ -21,11 +21,6 @@ import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
-import BoardSettingPopUp from './popups/BoardSetting/BoardSettingPopUp.js';
-import CreateBoardPopUp from './popups/CreateBoard/CreateBoardPopUp';
-import CardListPopUp from './popups/CardList/CardListPopUp';
-import DeleteCardListPopUp from './popups/DeleteCardList/DeleteCardListPopUp';
-import PopUpCleaner from './popups/PopUpCleaner/PopUpCleaner';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -34,13 +29,6 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
-    const popup = document.getElementById(Html.PopUp);
-
-    const popUpCleaner = new PopUpCleaner(popup);
-    const boardSettingPopUp = new BoardSettingPopUp(popup);
-    const createBoardPopUp = new CreateBoardPopUp(popup);
-    const cardListPopUp = new CardListPopUp(popup);
-    const deleteCardListPopUp = new DeleteCardListPopUp(popup);
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

@@ -2,18 +2,17 @@
 import BaseComponent from '../../components/BaseComponent.js';
 
 // Шаблон
-import template from './DeleteCardListPopUp.hbs';
+import template from './DeleteCardPopUp.hbs';
 
 // Actions
-import {cardListActions} from '../../actions/cardlist.js';
-
+import {cardActions} from '../../actions/card.js';
 
 /**
- * Класс popup'а удаления списка карточек
+ * Класс popup'а удаления карточки
  */
-export default class DeleteCardListPopUp extends BaseComponent {
+export default class DeleteCardPopUp extends BaseComponent {
     /**
-     * Конструирует объект DeleteCardListPopUp
+     * @constructor
      */
     constructor() {
         super(null, template);
@@ -27,15 +26,15 @@ export default class DeleteCardListPopUp extends BaseComponent {
      */
     _registerPopUpElements() {
         this._elements = {
-            wrapper: document.getElementById('deleteCLPopUpWrapperId'),
-            closeBtn: document.getElementById('deleteCLPopUpCloseId'),
-            confirmBtn: document.getElementById('deleteCLPopUpConfirmBtnId'),
-            rejectBtn: document.getElementById('deleteCLPopUpRejectBtnId'),
+            wrapper: document.getElementById('deleteCardPopUpWrapperId'),
+            closeBtn: document.getElementById('deleteCardPopUpCloseId'),
+            confirmBtn: document.getElementById('deleteCardPopUpConfirmBtnId'),
+            rejectBtn: document.getElementById('deleteCardPopUpRejectBtnId'),
         };
     }
 
     /**
-     * Метод регестрирует callback
+     * Метод регистрирует callback'и
      * @private
      */
     addEventListeners() {
@@ -48,7 +47,7 @@ export default class DeleteCardListPopUp extends BaseComponent {
     };
 
     /**
-     * Метод удаляет все ранее зарегестрированные callback
+     * Метод удаляет все ранее зарегистрированные callback'и
      * @private
      */
     removeEventListeners() {
@@ -60,7 +59,7 @@ export default class DeleteCardListPopUp extends BaseComponent {
     }
 
     /**
-     * Метод биндит this контекст к callback методам
+     * Метод биндит this контекст к callback-методам
      * @private
      */
     _bindCallBacks() {
@@ -77,7 +76,7 @@ export default class DeleteCardListPopUp extends BaseComponent {
     _onPopUpClose(event) {
         if (event.target === this._elements.closeBtn ||
             event.target === this._elements.wrapper) {
-            cardListActions.hideDeleteCardListPopUp();
+            cardActions.hideDeleteCardPopUp();
         }
     }
 
@@ -88,7 +87,7 @@ export default class DeleteCardListPopUp extends BaseComponent {
      */
     _onConfirm(event) {
         event.preventDefault();
-        cardListActions.deleteCardList(true);
+        cardActions.deleteCard(true);
     }
 
     /**
@@ -98,6 +97,6 @@ export default class DeleteCardListPopUp extends BaseComponent {
      */
     _onReject(event) {
         event.preventDefault();
-        cardListActions.deleteCardList(false);
+        cardActions.deleteCard(false);
     }
 }

@@ -1,36 +1,38 @@
-{{# if visible }}
-    <div class="popup-wrapper" id="createBoardPopUpWrapperId">
-        <div class="popup-content">
-            <form class="popup-form">
-                <div class="popup-form__header">
-                    Добавить доску
-                </div>
-                <div class="horizontal-line"></div>
-                <div class="popup-form__elements-wrapper">
-                    <div>
-                        <label for="board-name" class>Название доски:</label>
-                        <input class="simple-form-element" type="text" id="createBoardPopUpNameId" name="board-name" autofocus
-                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+{{#with create-popup}}
+    {{# if visible }}
+        <div class="popup-wrapper" id="createBoardPopUpWrapperId">
+            <div class="popup-content">
+                <form class="popup-form">
+                    <div class="popup-form__header">
+                        Добавить доску
                     </div>
-                    <div>
-                        <label for="team-select">Команда:</label>
-                        <select class="simple-form-element" id="createBoardPopUpTeamId" name="team-select" required>
-                            {{#each teams}}
-                                {{#if (IsEqualHelper this.tid ../teamID) }}
-                                    <option value="{{this.tid}}" selected>{{this.team_name}}</option>
-                                {{else}}
-                                    <option value="{{this.tid}}">{{this.team_name}}</option>
-                                {{/if}}
-                            {{/each}}
-                        </select>
+                    <div class="horizontal-line"></div>
+                    <div class="popup-form__elements-wrapper">
+                        <div>
+                            <label for="board-name" class>Название доски:</label>
+                            <input class="simple-form-element" type="text" id="createBoardPopUpNameId" name="board-name" autofocus
+                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                        </div>
+                        <div>
+                            <label for="team-select">Команда:</label>
+                            <select class="simple-form-element" id="createBoardPopUpTeamId" name="team-select" required>
+                                {{#each teams}}
+                                    {{#if (IsEqualHelper this.tid ../teamID) }}
+                                        <option value="{{this.tid}}" selected>{{this.team_name}}</option>
+                                    {{else}}
+                                        <option value="{{this.tid}}">{{this.team_name}}</option>
+                                    {{/if}}
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{#if errors}}
+                            <div class="error"> {{errors}}</div>
+                        {{/if}}
+                        <button type="submit" class="button" id="createBoardPopUpSubmitId">Создать</button>
                     </div>
-                    {{#if errors}}
-                        <div class="error"> {{errors}}</div>
-                    {{/if}}
-                    <button type="submit" class="button" id="createBoardPopUpSubmitId">Создать</button>
-                </div>
-            </form>
-            <div class="close-button" id="createBoardPopUpCloseId"></div>
+                </form>
+                <div class="close-button" id="createBoardPopUpCloseId"></div>
+            </div>
         </div>
-    </div>
-{{/if}}
+    {{/if}}
+{{/with}}

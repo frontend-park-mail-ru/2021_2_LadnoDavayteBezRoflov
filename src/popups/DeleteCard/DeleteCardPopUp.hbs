@@ -1,20 +1,20 @@
-{{#with delete-cl-popup}}
+{{#with delete-card-popup}}
     {{# if visible }}
-        <div class="popup-wrapper" id="deleteCLPopUpWrapperId">
+        <div class="popup-wrapper" id="deleteCardPopUpWrapperId">
             <div class="popup-content">
                 <form class="popup-form">
                     <div class="popup-form__header">
-                            Удалить "{{cardList_name}}"?
+                            Удалить "{{card_name}}"?
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
                         <div class="confirm-delete-wrapper">
-                            <button class="button button_red button_full-space" id="deleteCLPopUpConfirmBtnId">Удалить</button>
-                            <button class="button button_full-space" id="deleteCLPopUpRejectBtnId">Не удалять</button>
+                            <button class="button button_red button_full-space" id="deleteCardPopUpConfirmBtnId">Удалить</button>
+                            <button class="button button_full-space" id="deleteCardPopUpRejectBtnId">Не удалять</button>
                         </div>
                     </div>
                 </form>
-                <div class="close-button" id="deleteCLPopUpCloseId"></div>
+                <div class="close-button" id="deleteCardPopUpCloseId"></div>
             </div>
         </div>
     {{/if}}

@@ -2,18 +2,17 @@
 import BaseComponent from '../../components/BaseComponent.js';
 
 // Шаблон
-import template from './CardListPopUp.hbs';
+import template from './CardPopUp.hbs';
 
 // Actions
-import {cardListActions} from '../../actions/cardlist.js';
-
+import {cardActions} from '../../actions/card.js';
 
 /**
- * Класс popup окна создания и редактирования списка карточек
+ * Класс popup окна создания и редактирования карточки
  */
-export default class CardListPopUp extends BaseComponent {
+export default class CardPopUp extends BaseComponent {
     /**
-     * Конструирует объект CardListPopUp
+     * @constructor
      */
     constructor() {
         super(null, template);
@@ -27,17 +26,19 @@ export default class CardListPopUp extends BaseComponent {
      */
     _registerPopUpElements() {
         this._elements = {
-            wrapper: document.getElementById('cardListPopUpWrapperId'),
-            closeBtn: document.getElementById('cardListPopUpCloseId'),
-            createBtn: document.getElementById('cardListPopUpCreateBtnId'),
-            saveBtn: document.getElementById('cardListPopUpSaveBtnId'),
-            positionSelect: document.getElementById('cardListPopUpPositionId'),
-            title: document.getElementById('cardListPopUpTitleId'),
+            wrapper: document.getElementById('cardPopUpWrapperId'),
+            closeBtn: document.getElementById('cardPopUpCloseId'),
+            createBtn: document.getElementById('cardPopUpCreateBtnId'),
+            saveBtn: document.getElementById('cardPopUpSaveBtnId'),
+            positionSelect: document.getElementById('cardPopUpPositionId'),
+            card_name: document.getElementById('cardPopUpTitleId'),
+            description: document.getElementById('cardPopUpDescriptionId'),
+            deadline: document.getElementById('cardPopUpDeadlineId'),
         };
     }
 
     /**
-     * Метод регестрирует callback
+     * Метод регистрирует callback
      * @private
      */
     addEventListeners() {
@@ -79,7 +80,7 @@ export default class CardListPopUp extends BaseComponent {
     _onPopUpClose(event) {
         if (event.target === this._elements.closeBtn ||
             event.target === this._elements.wrapper) {
-            cardListActions.hideCardListPopUp();
+            cardActions.hidePopUp();
         }
     }
 
@@ -90,9 +91,14 @@ export default class CardListPopUp extends BaseComponent {
      */
     _onSave(event) {
         event.preventDefault();
-        cardListActions.updateCardList(
+        cardActions.updateCard(
             parseInt(this._elements.positionSelect.value, 10),
-            this._elements.title.value,
+            this._elements.card_name.value,
+            this._elements.description.value,
+            this._elements.deadline.value,
+            this.context.cid,
+            this.context.bid,
+            this.context.clid,
         );
     }
 
@@ -103,8 +109,10 @@ export default class CardListPopUp extends BaseComponent {
      */
     _onCreate(event) {
         event.preventDefault();
-        cardListActions.createCardList(
-            this._elements.title.value,
+        cardActions.createCard(
+            this._elements.card_name.value,
+            this._elements.description.value,
+            this._elements.deadline.value,
         );
     }
 }

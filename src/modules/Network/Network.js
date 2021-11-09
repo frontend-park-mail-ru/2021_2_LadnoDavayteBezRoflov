@@ -207,9 +207,10 @@ class Network {
     /**
      * Метод, реализующий запрос PUT /api/cards.
      * @param {object} data полезная нагрузка запроса
+     * @param {Number} cid id карточки
      * @return {Promise<Response>} промис запроса
      */
-    async _updateCard(data) {
+    async _updateCard(data, cid) {
         const options = {
             method: 'put',
             headers: {
@@ -218,25 +219,24 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}`,
             options);
     }
 
     /**
      * Метод, реализующий запрос DELETE /api/cards.
-     * @param {object} data полезная нагрузка запроса
+     * @param {Number} cid id карточки
      * @return {Promise<Response>} промис запроса
      */
-    async _deleteCard(data) {
+    async _deleteCard(cid) {
         const options = {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}`,
             options);
     }
     /**
@@ -244,7 +244,7 @@ class Network {
      * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */
-    async _createCard(data) {
+    async _createCardList(data) {
         const options = {
             method: 'post',
             headers: {
