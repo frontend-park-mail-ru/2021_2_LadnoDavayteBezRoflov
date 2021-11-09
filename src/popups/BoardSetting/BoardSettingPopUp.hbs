@@ -1,5 +1,5 @@
 {{#with setting-popup}}
-{{#if visible }}
+{{# if visible }}
     <div class="popup-wrapper" id="boardSettingPopUpWrapperId">
         <div class="popup-content popup-content_sized">
             <form class="popup-form">
@@ -29,23 +29,13 @@
                             <button class="button button_red button_full-space" id="boardSettingPopUpDeleteConfirmBtnId">Удалить</button>
                             <button class="button button_full-space" id="boardSettingPopUpDeleteRejectBtnId">Не удалять</button>
                         </div>
-                        {{#if errors}}
-                            <div class="error">{{errors}}</div>
-                        {{/if}}
-                        {{#if confirm }}
-                            <div class="confirm-delete-wrapper">
-                                <button class="button button_red button_full-space" id="boardSettingPopUpDeleteConfirmBtnId">Удалить</button>
-                                <button class="button button_full-space" id="boardSettingPopUpDeleteRejectBtnId">Не удалять</button>
-                            </div>
-                        {{else}}
-                            <button class="button button_red" id="boardSettingPopUpDeleteBtnId">Удалить доску</button>
-                        {{/if}}
-                        <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+                    {{else}}
+                        <button class="button button_red" id="boardSettingPopUpDeleteBtnId">Удалить доску</button>
                     {{/if}}
-                    </div>
-                </form>
-                <div class="close-button" id="boardSettingPopUpCloseId"></div>
-            </div>
+                    <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+                </div>
+            </form>
+            <div class="close-button" id="boardSettingPopUpCloseId"></div>
         </div>
     </div>
 {{/if}}

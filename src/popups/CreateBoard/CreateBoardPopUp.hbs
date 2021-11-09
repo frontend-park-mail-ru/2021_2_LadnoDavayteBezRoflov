@@ -1,37 +1,46 @@
-{{#with create-popup}}
+{{#with cardlist-popup}}
 {{# if visible }}
-    <div class="popup-wrapper" id="createBoardPopUpWrapperId">
+    <div class="popup-wrapper" id="cardListPopUpWrapperId">
         <div class="popup-content">
             <form class="popup-form">
                 <div class="popup-form__header">
-                    Добавить доску
+                    {{#if edit }}
+                        Редактирование "{{cardList_name}}"
+                    {{else}}
+                        Создание списка карточек
+                    {{/if}}
                 </div>
                 <div class="horizontal-line"></div>
                 <div class="popup-form__elements-wrapper">
                     <div>
-                        <label for="board-name" class>Название доски:</label>
-                        <input class="simple-form-element" type="text" id="createBoardPopUpNameId" name="board-name" autofocus
-                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                        <label for="cardListPopUpTitleId" class>Название списка:</label>
+                        <input class="simple-form-element" type="text" id="cardListPopUpTitleId" name="cardlist-name"
+                               autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                               {{#if edit}} value="{{cardList_name}}" {{/if}}>
                     </div>
-                    <div>
-                        <label for="team-select">Команда:</label>
-                        <select class="simple-form-element" id="createBoardPopUpTeamId" name="team-select" required>
-                            {{#each ../teams}}
-                                {{#if (IsEqualHelper this.tid ../teamID) }}
-                                    <option value="{{this.tid}}" selected>{{this.team_name}}</option>
+                    {{#if edit}}
+                        <label for="cardListPopUpPositionId">Позиция:</label>
+                        <select class="simple-form-element" id="cardListPopUpPositionId" name="position-select" required>
+                            {{#each positionRange}}
+                                {{#if (IsEqualHelper this ../position) }}
+                                    <option value="{{this}}" selected>#{{this}}</option>
                                 {{else}}
-                                    <option value="{{this.tid}}">{{this.team_name}}</option>
+                                    <option value="{{this}}">#{{this}}</option>
                                 {{/if}}
                             {{/each}}
                         </select>
-                    </div>
-                    {{#if errors}}
-                        <div class="error"> {{errors}}</div>
                     {{/if}}
-                    <button type="submit" class="button" id="createBoardPopUpSubmitId">Создать</button>
+                    {{#if errors}}
+                        <div class="error">{{errors}}</div>
+                    {{/if}}
+                    {{# if edit }}
+                        <button class="button" id="cardListPopUpSaveBtnId">Сохранить</button>
+                    {{ else }}
+                        <button class="button" id="cardListPopUpCreateBtnId">Создать</button>
+                    {{/if}}
                 </div>
             </form>
-            <div class="close-button" id="createBoardPopUpCloseId"></div>
+            <div class="close-button" id="cardListPopUpCloseId"></div>
         </div>
     </div>
 {{/if}}
