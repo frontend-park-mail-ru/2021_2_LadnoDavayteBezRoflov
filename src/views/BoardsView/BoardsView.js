@@ -14,7 +14,7 @@ import './BoardsView.scss';
 
 // Шаблон
 import template from './BoardsView.hbs';
-import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
+import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp';
 
 /**
  * Класс, реализующий страницу с досками.
