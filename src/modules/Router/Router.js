@@ -67,10 +67,10 @@ class Router {
      * Относительный url - это часть url которая следует за именем хоста.
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
-     * @param {boolean} refirest - true: replacestate, false: pushstate
+     * @param {boolean} replaceState - true: заменить текущую запись, false: добавить новую
      * (по умолчанию: false)
      */
-    go(url, redirect = false) {
+    go(url, replaceState = false) {
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
             this.go(Urls.NotFound, true);
@@ -89,11 +89,12 @@ class Router {
          */
         if (window.location.pathname + window.location.search !== url) {
             /**
-             * Добавляет запись в историю и делает ее активной.
+             * Добавляет (заменяет) запись в историю и делает ее активной.
              * Не приводит к срабатыванию popstate.
              */
-            redirect? window.history.replaceState(null, null, url) :
-                    window.history.pushState(null, null, url);
+            replaceState ?
+                window.history.replaceState(null, null, url) :
+                window.history.pushState(null, null, url);
         }
 
         this._currentView = view;

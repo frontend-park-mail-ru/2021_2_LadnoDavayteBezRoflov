@@ -109,8 +109,8 @@ class SettingsStore extends BaseStore {
 
         this._storage.set('login', data.login);
         this._storage.set('email', data.email);
-        this._storage.delete('password');
-        this._storage.delete('passwordRepeat');
+        this._storage.get('validation').password = null;
+        this._storage.get('validation').passwordRepeat = null;
         formdata.avatar = this._storage.get('avatar');
 
         this._validate(data);

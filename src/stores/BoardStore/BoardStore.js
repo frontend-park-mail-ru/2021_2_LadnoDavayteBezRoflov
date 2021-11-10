@@ -321,8 +321,8 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            Router.go(Urls.Boards);
             this._storage.get('setting-popup').visible = false;
+            Router.go(Urls.Boards, true);
             return;
 
         case HttpStatusCodes.Forbidden:
