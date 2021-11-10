@@ -540,13 +540,14 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
 
             // Удалим список из storage
-            const {clid} = this._storage.get('delete-cl-popup');
+            const clidForDeletion = this._storage.get('delete-cl-popup').clid;
             const cardLists = this._storage.get('card_lists');
-            const index = cardLists.indexOf(
-                this._getCardListById(clid));
-            cardLists.splice(index, 1);
-
-            return;
+            const index = cardLists.findIndex(({clid}) => clid === clidForDeletion);
+            if (index !== -1) {
+                cardLists.splice(index, 1);
+                return;
+            }
+            throw new Error(`BoardStore: список карточек ${clidForDeletion} не найден `);
 
         default:
             return;
@@ -791,15 +792,22 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
 
             // Удалим из storage
-            const cid = this._storage.get('delete-card-popup').cid;
-            const clid = this._storage.get('delete-card-popup').clid;
-            const cards = this._getCardListById(clid).cards;
-            const index = cards.indexOf(
-                this._getCardById(clid, cid),
-            );
-            cards.splice(index, 1);
+            const cidForDeletion = this._storage.get('delete-card-popup').cid;
+            const clidForDeletion = this._storage.get('delete-card-popup').clid;
 
-            return;
+            const cardLists = this._storage.get('card_lists');
+
+            const clid = cardLists.findIndex(({clid}) => clid === clidForDeletion);
+            if (clid === -1) {
+                throw new Error(`BoardStore: список карточек ${clidForDeletion} не найден.`);
+            }
+
+            const index = cardLists[clid].cards.findIndex(({cid}) => cid === cidForDeletion);
+            if (index !== -1) {
+                cardLists[clid].cards.splice(index, 1);
+                return;
+            }
+            throw new Error(`BoardStore: карточка ${cidForDeletion} не найдена.`);
 
         default:
             return;

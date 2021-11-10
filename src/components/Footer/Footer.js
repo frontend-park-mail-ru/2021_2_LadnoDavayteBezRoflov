@@ -14,6 +14,6 @@ export default class FooterComponent extends BaseComponent {
     * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
-        super(context, template, undefined);
+        super(context, template);
     }
 }
