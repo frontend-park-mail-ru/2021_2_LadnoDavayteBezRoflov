@@ -130,12 +130,4 @@ export default class BaseComponent {
     removeComponentsList(name) {
         this.subComponentsLists.delete(name);
     }
-
-    /**
-     * Устанавливает родительский элемент
-     * @param {Element?} parent
-     */
-    setParent(parent) {
-        this.parent = parent;
-    }
 }
