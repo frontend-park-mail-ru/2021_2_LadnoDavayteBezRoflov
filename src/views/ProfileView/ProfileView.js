@@ -55,7 +55,7 @@ export default class ProfileView extends BaseView {
             return;
         }
 
-        settingsActions.getSettings(UserStore.getContext('userName'));
+        settingsActions.getSettings(UserStore.getContext('userName').login);
         this.render();
         this._isActive = true;
     }
