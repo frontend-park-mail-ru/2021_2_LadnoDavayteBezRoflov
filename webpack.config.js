@@ -108,7 +108,7 @@ const config = {
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
-    devServer: confConst.DEBUG ? devServer : undefined,
+    devServer: confConst.DEBUG ? devServer : devServer,
 };
 
 module.exports = config;

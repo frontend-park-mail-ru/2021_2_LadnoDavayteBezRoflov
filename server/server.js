@@ -13,7 +13,7 @@ const port = process.env.PORT || 80;
 app.use(morgan('dev'));
 
 /* Время кэширования ответов, в сек */
-//const cacheTime = 256 * 24 * 60 * 60;
+// const cacheTime = 256 * 24 * 60 * 60;
 /* middleware для кэширования бандлов */
 /* const cacheMW = (req, res, next) => {
     res.set('Cache-control', `public, max-age=${cacheTime}`);
