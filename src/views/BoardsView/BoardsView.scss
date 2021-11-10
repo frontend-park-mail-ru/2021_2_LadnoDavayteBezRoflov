@@ -29,6 +29,8 @@ $team-font-size: 25px;
     &__header {
         padding-bottom: 1px;
         font-size: $card-header-font-size;
+        overflow: hidden;
+        text-overflow: ellipsis;
         border-bottom: dotted 1px;
     }
 

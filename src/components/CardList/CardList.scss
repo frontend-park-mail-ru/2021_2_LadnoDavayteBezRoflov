@@ -38,7 +38,8 @@ $scrollbar-width: 1600px;
     &__title {
         font-size: 20px;
         margin-right: auto;
-
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     span:empty {
