@@ -1,0 +1,45 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Fonts';
+
+.board-page__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: 100vh;
+}
+
+.board {
+    flex-grow: 1;
+    max-height: $max-height-politic;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+
+    &-header {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        /* Для адаптивности*/
+        flex-wrap: wrap;
+        row-gap: 5px;
+        align-content: space-around;
+
+        background: $primary-bg-color;
+        box-shadow: 0 0 2px $main-theme-color;
+
+        &__members {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+        }
+
+        &__name {
+            text-align: center;
+            font-size: 18px;
+        }
+    }
+}

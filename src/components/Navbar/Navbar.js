@@ -1,10 +1,12 @@
 // Базовый компонент
 import {userActions} from '../../actions/user.js';
 import BaseComponent from '../BaseComponent.js';
+
 // Стили
 import './Navbar.scss';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
+
 // Шаблон
 import template from './Navbar.hbs';
 
@@ -14,7 +16,7 @@ import template from './Navbar.hbs';
 export default class NavbarComponent extends BaseComponent {
     /**
     * Конструктор, создающий класс компонента Navbar.
-    * @param {function} context контекст отрисовки шаблона
+    * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
         super(context, template);
@@ -46,7 +48,6 @@ export default class NavbarComponent extends BaseComponent {
      */
     _logout(event) {
         event.preventDefault();
-
         userActions.logout();
     }
 

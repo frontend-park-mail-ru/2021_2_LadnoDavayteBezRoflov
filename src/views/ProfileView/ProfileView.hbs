@@ -1,12 +1,12 @@
 {{{Navbar}}}
 
 <div class="wrapper">
-    <form id="profile" name="profile" novalidate autocomplete="off">
+    <form id="profile" name="profile" novalidate autocomplete="off" method="post">
         <div class="profile-box">
             <div class="profile-box__column-left">
                 <div class="profile-container">
                     <img class="profile-box__user-picture" src="{{avatar}}" alt="User Picture" id="avatar-img">
-                    <input type="file" name="avatar" id="avatar" class="profile-box__user-avatar" accept="image/*" value="{{avatar}}">
+                    <input type="file" name="avatar" id="avatar" class="profile-box__user-avatar" accept="image/png" value="{{avatar}}">
                     <label for="avatar" class="profile-box__upload-button">
                         <span class="profile-box__upload-icon-wrapper"><img class="profile-box__upload-icon" src="assets/icons/upload.webp" alt="Выбрать файл" width="25"></span>
                         <span class="profile-box__upload-button-text">Выберите файл</span>

@@ -1,6 +1,6 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {
@@ -12,7 +12,7 @@
         "server-dev": "npx webpack serve",
         "start-dev": "npm run server-dev",
         "build": "NODE_ENV='production' npx webpack",
-        "server": "node server/server.js",
+        "server": "sudo node server/server.js",
         "start": "npm run build && npm run server"
     },
     "repository": {
@@ -29,29 +29,37 @@
     },
     "homepage": "https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov#readme",
     "dependencies": {
-        "body-parser": "^1.18.3",
-        "eslint": "^7.5.0",
+        "body-parser": "^1.19.0",
+        "eslint": "^8.2.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-unused-imports": "^1.1.5",
-        "express": "^4.17.1",
+        "express": "5.0.0-alpha.8",
         "handlebars": "^4.7.7",
         "handlebars-loader": "^1.7.1",
-        "morgan": "^1.9.1"
+        "morgan": "^1.10.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.15.8",
-        "@babel/plugin-transform-runtime": "^7.15.8",
-        "@babel/preset-env": "^7.15.8",
+        "@babel/core": "^7.16.0",
+        "@babel/plugin-transform-runtime": "^7.16.0",
+        "@babel/preset-env": "^7.16.0",
         "babel-loader": "^8.2.3",
         "clean-webpack-plugin": "^4.0.0",
-        "copy-webpack-plugin": "^5.1.2",
-        "css-loader": "^6.5.0",
+        "copy-webpack-plugin": "^9.0.1",
+        "css-loader": "^6.5.1",
         "html-webpack-plugin": "^5.5.0",
-        "mini-css-extract-plugin": "^2.4.3",
+        "mini-css-extract-plugin": "^2.4.4",
         "node-sass": "^6.0.1",
         "sass-loader": "^12.3.0",
-        "webpack": "^5.60.0",
+        "webpack": "^5.62.1",
         "webpack-cli": "^4.9.1",
-        "webpack-dev-server": "^4.4.0"
+        "webpack-dev-server": "^4.4.0",
+        "workbox-build": "^6.3.0",
+        "workbox-cli": "^6.3.0",
+        "workbox-core": "^6.3.0",
+        "workbox-expiration": "^6.3.0",
+        "workbox-precaching": "^6.3.0",
+        "workbox-routing": "^6.3.0",
+        "workbox-strategies": "^6.3.0",
+        "workbox-webpack-plugin": "^6.3.0"
     }
 }

@@ -14,6 +14,7 @@ import {Urls} from '../../constants/constants.js';
 
 // Стили
 import './RegisterView.scss';
+
 // Шаблон
 import template from './RegisterView.hbs';
 
@@ -37,10 +38,10 @@ export default class RegisterView extends BaseView {
         this.formRegistrationCallback = this.formRegistration.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            email: undefined,
-            password: undefined,
-            passwordRepeat: undefined,
+            login: null,
+            email: null,
+            password: null,
+            passwordRepeat: null,
         };
     }
 
@@ -71,7 +72,7 @@ export default class RegisterView extends BaseView {
     render() {
         /* Если пользователь авторизован, то перебросить его на страницу списка досок */
         if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+            Router.go(Urls.Boards, true);
             return;
         }
 
@@ -86,17 +87,15 @@ export default class RegisterView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
+        super.addEventListeners();
         document.getElementById('register').addEventListener('submit', this.formRegistrationCallback);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('register')?.removeEventListener('submit',
                                                                  this.formRegistrationCallback);
     }

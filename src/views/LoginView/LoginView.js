@@ -1,6 +1,8 @@
 // Базовая страница
 import BaseView from '../BaseView.js';
 
+import {Urls} from '../../constants/constants.js';
+
 // Actions
 import {userActions} from '../../actions/user.js';
 
@@ -10,11 +12,9 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 // Modules
 import Router from '../../modules/Router/Router.js';
 
-// Constants
-import {Urls} from '../../constants/constants.js';
-
 // Стили
 import './LoginView.scss';
+
 // Шаблон
 import template from './LoginView.hbs';
 
@@ -36,8 +36,8 @@ export default class LoginView extends BaseView {
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
         this._inputElements = {
-            login: undefined,
-            password: undefined,
+            login: null,
+            password: null,
         };
     }
 
@@ -53,6 +53,7 @@ export default class LoginView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
         this._setContext(UserStore.getContext());
 
         if (!this._isActive) {
@@ -66,9 +67,9 @@ export default class LoginView extends BaseView {
      * Метод, отрисовывающий страницу.
      */
     render() {
-        /* Если пользователь авторизован, то перебросить его на страницу списка досок */
+        /* Если пользователь авторизован, то перебросить его на /boards */
         if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+            Router.go(Urls.Boards, true);
             return;
         }
 
@@ -83,17 +84,15 @@ export default class LoginView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
+        super.addEventListeners();
         document.getElementById('auth').addEventListener('submit', this.formAuthorizationCallback);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
+        super.removeEventListeners();
         document.getElementById('auth')?.removeEventListener('submit',
                                                              this.formAuthorizationCallback);
     }

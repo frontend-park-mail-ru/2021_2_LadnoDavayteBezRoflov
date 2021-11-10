@@ -19,11 +19,6 @@ class UserStore extends BaseStore {
      */
     constructor() {
         super('User');
-
-        this._channel = 'User';
-
-        this._storage = new Map();
-
         this._storage.set('isAuthorized', undefined);
         this._storage.set('userName', undefined);
 
@@ -93,7 +88,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', response.data);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 
@@ -104,6 +99,8 @@ class UserStore extends BaseStore {
 
         default:
             console.log('Undefined error');
+            this._storage.set('userName', null);
+            this._storage.set('isAuthorized', false);
         }
     }
 
@@ -130,7 +127,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Created:
-            this._storage.set('userName', response.data.login);
+            this._storage.set('userName', data.login);
             this._storage.set('isAuthorized', true);
             return;
 
@@ -177,7 +174,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', data.login);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 

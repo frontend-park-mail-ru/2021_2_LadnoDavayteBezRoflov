@@ -8,7 +8,8 @@ export const Urls = {
     Boards: '/boards',
     Login: '/login',
     Register: '/register',
-    Logout: '/logout',
+    Board: '/board/<id>',
+    Card: '/card/<id>',
     Profile: '/profile',
     NotFound: '/404',
 };
@@ -18,6 +19,7 @@ export const Urls = {
   */
 export const Html = {
     Root: 'root',
+    PopUp: 'popup',
 };
 
 /**
@@ -46,6 +48,7 @@ export const HttpStatusCodes = {
     BadRequest: 400,
     Unauthorized: 401,
     InternalServerError: 500,
+    Forbidden: 403,
 };
 
 /**
@@ -73,5 +76,14 @@ export const ConstantMessages = {
 
     BoardTitleTooLong: 'Название доски превышает 60 символов',
     BoardTitleTooShort: 'Название доски слишком короткое',
-    BoardErrorOnServer: 'Не удалось создать доску, попробуйте позднее',
+    BoardDescriptionTooLong: 'Описание доски превышает 500 символов',
+    BoardDescriptionTooShort: 'Описание доски слишком короткое',
+    BoardCreateErrorOnServer: 'Не удалось создать доску, попробуйте позднее',
+    BoardDeleteErrorOnServer: 'Не удалось удалить доску, попробуйте позднее',
+    BoardUpdateErrorOnServer: 'Не удалось обновить доску, попробуйте позднее',
+    BoardNoAccess: 'Нет доступа к доске',
+
+    CardListTitleTooShort: 'Название списка карточек слишком короткое',
+    CardListTitleTooLong: 'Название списка карточек слишком длинное',
+    CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
 };

@@ -35,7 +35,7 @@ export default class ProfileView extends BaseView {
         UserStore.addListener(this._onRefresh); // + field
         SettingsStore.addListener(this._onRefresh);
 
-        this.formUpdateCallback = this.formUpdate.bind(this);
+        this.formUpdate = this.formUpdate.bind(this);
         this.onAvatarChange = this.onAvatarChange.bind(this);
 
         this._inputElements = {
@@ -50,7 +50,11 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-        this.render();
+        if (!UserStore.getContext('isAuthorized')) {
+            Router.go(Urls.Login, true);
+            return;
+        }
+
         settingsActions.getSettings(UserStore.getContext('userName'));
         this._isActive = true;
     }
@@ -59,6 +63,7 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
+        this.removeEventListeners();
         this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
 
         if (!this._isActive) {
@@ -75,7 +80,7 @@ export default class ProfileView extends BaseView {
     render() {
         /* Если пользователь не авторизован, то перебросить его на страницу входа */
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
 
@@ -88,21 +93,17 @@ export default class ProfileView extends BaseView {
      * Метод, добавляющий обработчики событий для страницы.
      */
     addEventListeners() {
-        document.getElementById('profile')?.addEventListener('submit', this.formUpdateCallback);
-
+        super.addEventListeners();
+        document.getElementById('profile')?.addEventListener('submit', this.formUpdate);
         document.getElementById('avatar')?.addEventListener('change', this.onAvatarChange);
-
-        this.subComponents.forEach(([_, component]) => {
-            component.addEventListeners();
-        });
     }
 
     /**
      * Метод, удаляющий обработчики событий для страницы.
      */
     removeEventListeners() {
-        document.getElementById('profile')?.removeEventListener('submit',
-                                                                this.formUpdateCallback);
+        super.removeEventListeners();
+        document.getElementById('profile')?.removeEventListener('submit', this.formUpdate);
         document.getElementById('avatar')?.removeEventListener('change', this.onAvatarChange);
     }
 
@@ -112,7 +113,16 @@ export default class ProfileView extends BaseView {
      */
     formUpdate(event) {
         event.preventDefault();
-        settingsActions.putSettings(new FormData(document.getElementById('profile')));
+        const data = {
+            login: document.getElementById('login').value,
+            email: document.getElementById('email').value,
+            avatar: document.getElementById('avatar').value,
+            password: document.getElementById('password').value,
+            passwordRepeat: document.getElementById('passwordRepeat').value,
+            old_password: document.getElementById('oldPassword').value,
+        };
+
+        settingsActions.putSettings(data);
     }
 
     /**

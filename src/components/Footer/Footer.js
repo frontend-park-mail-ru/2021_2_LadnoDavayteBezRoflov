@@ -11,7 +11,7 @@ import template from './Footer.hbs';
 export default class FooterComponent extends BaseComponent {
     /**
     * Конструктор, создающий класс компонента Footer.
-    * @param {function} context контекст отрисовки шаблона
+    * @param {Object} context контекст отрисовки шаблона
     */
     constructor(context) {
         super(context, template);

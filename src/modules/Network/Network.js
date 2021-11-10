@@ -18,14 +18,15 @@ class Network {
             sessions: 'api/sessions',
             profile: 'api/profile',
             board: 'api/boards',
+            card: 'api/cards',
+            cardlist: 'api/cardLists',
         };
 
         this._defaultOptions = {
             mode: 'cors',
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Origin': `http://${this.SelfUrl}:${this.SelfPort}`,
+                Origin: `http://${this.SelfUrl}:${this.SelfPort}`,
             },
         };
     }
@@ -51,6 +52,9 @@ class Network {
     async getUser(data) {
         const options = {
             method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
         };
         return this.httpRequest(
@@ -66,6 +70,9 @@ class Network {
     async getSettings(data) {
         const options = {
             method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.profile}/${data.userName}`,
@@ -80,6 +87,9 @@ class Network {
     async sendRegistration(data) {
         const options = {
             method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
         };
         return this.httpRequest(
@@ -95,11 +105,31 @@ class Network {
     async putSettings(data) {
         const options = {
             method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/` +
+            `${this._endpoints.profile}/${data.login}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/profile/<login>/upload.
+     * @param {object} data полезная нагрузка запроса
+     * @param {String} login логин, аватар которого будем менять
+     * @return {Promise<Response>} промис запроса
+     */
+    async putImage(data, login) {
+        const options = {
+            method: 'put',
             body: data,
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/` +
-            `${this._endpoints.profile}/${data.get('login')}`,
+            `${this._endpoints.profile}/${login}/upload`,
             options);
     }
 
@@ -111,6 +141,9 @@ class Network {
     async sendAuthorization(data) {
         const options = {
             method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
         };
         return this.httpRequest(
@@ -126,10 +159,137 @@ class Network {
     async getBoards(data) {
         const options = {
             method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос GET /api/board/.
+     * @param {Number} bid - id доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async getBoard(bid) {
+        const options = {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос POST /api/cards.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _createCard(data) {
+        const options = {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/cards.
+     * @param {object} data полезная нагрузка запроса
+     * @param {Number} cid id карточки
+     * @return {Promise<Response>} промис запроса
+     */
+    async _updateCard(data, cid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/cards.
+     * @param {Number} cid id карточки
+     * @return {Promise<Response>} промис запроса
+     */
+    async _deleteCard(cid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}`,
+            options);
+    }
+    /**
+     * Метод, реализующий запрос POST /api/cardlists.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async _createCardList(data) {
+        const options = {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/cardlists.
+     * @param {object} data полезная нагрузка запроса
+     * @param {Number} clid id обновляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async _updateCardList(data, clid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/cardlists.
+     * @param {Number} clid id удаляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async _deleteCardList(clid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 
@@ -148,14 +308,51 @@ class Network {
     }
 
     /**
-     * Метод, реализующий запрос DELETE /api/sessions.
-     * @param {object} data полезная нагрузка запроса
+     * Метод, реализующий запрос PUT /api/sessions.
+     * @param {Object} data полезная нагрузка запроса
+     * @param {Number} bid id обновляемой доски
      * @return {Promise<Response>} промис запроса
      */
-    async sendLogout(data) {
+    async updateBoard(data, bid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/board/:bid.
+     * @param {Number} bid id уаляемой доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteBoard(bid) {
         const options = {
             method: 'delete',
-            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/sessions.
+     * @return {Promise<Response>} промис запроса
+     */
+    async sendLogout() {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,

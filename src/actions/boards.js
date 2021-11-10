@@ -8,9 +8,10 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
  */
 export const BoardsActionTypes = {
     BOARDS_GET: 'boards/get',
+    BOARD_GET: 'board/get',
     BOARDS_CREATE: 'boards/create',
-    BOARDS_MODAL_SHOW: 'boards/modal/show',
-    BOARDS_MODAL_HIDE: 'boards/modal/hide',
+    BOARDS_POPUP_SHOW: 'boards/popup/show',
+    BOARDS_POPUP_HIDE: 'boards/popup/hide',
 };
 
 /**
@@ -26,7 +27,22 @@ export const boardsActions = {
         });
     },
 
+    /**
+     * Действие: запрос доски с определенным id.
+     * @param {any} id
+     */
+    getBoard(id) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARD_GET,
+            data: {id},
+        });
+    },
 
+    /**
+     * Действие: создание доски.
+     * @param {String} name - название доски
+     * @param {int} teamID - номер команды
+     */
     createBoard(name, teamID) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_CREATE,
@@ -37,18 +53,22 @@ export const boardsActions = {
         });
     },
 
+    /**
+     * Действие: открытие модального окна для команды.
+     * @param {int} teamID - номер команды
+     */
     showModal(teamID) {
         Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_MODAL_SHOW,
+            actionName: BoardsActionTypes.BOARDS_POPUP_SHOW,
             data: {
                 teamID,
             },
         });
     },
 
-    hideModal() {
+    hidePopUp() {
         Dispatcher.dispatch({
-            actionName: BoardsActionTypes.BOARDS_MODAL_HIDE,
+            actionName: BoardsActionTypes.BOARDS_POPUP_HIDE,
         });
     },
 };

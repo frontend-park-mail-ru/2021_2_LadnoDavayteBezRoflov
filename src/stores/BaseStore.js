@@ -13,10 +13,13 @@ export default class BaseStore {
     constructor(channelName) {
         this._changed = false;
         this._changeEvent = 'change';
+        this._storage = new Map();
+
         this._invokeOnDispatch = this._invokeOnDispatch.bind(this);
         Dispatcher.register(this._invokeOnDispatch);
 
         EventBus.addChannel(channelName);
+        this._channel = channelName;
     }
 
     /**
@@ -35,6 +38,15 @@ export default class BaseStore {
      */
     addListener(callback, changeEvent = this._changeEvent) {
         EventBus.addListener(this._channel, changeEvent, callback);
+    }
+
+    /**
+     * Метод, возвращающий текущее состояние (контекст) хранилища.
+     * @param {String?} field возвращаемое поле
+     * @return {String} контекст хранилища
+     */
+    getContext(field) {
+        return field ? this._storage.get(field) : this._storage;
     }
 
     /**

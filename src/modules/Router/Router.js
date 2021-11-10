@@ -3,6 +3,7 @@ import {Html, Urls} from '../../constants/constants.js';
 import NotFoundView from '../../views/NotFoundView/NotFoundView.js';
 
 import BaseView from '../../views/BaseView.js';
+import BaseComponent from '../../components/BaseComponent.js';
 
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им view
@@ -34,7 +35,7 @@ class Router {
             return this;
         }
 
-        if (!(view instanceof BaseView)) {
+        if (!(view instanceof BaseView) && !(view instanceof BaseComponent)) {
             return this;
         }
 
@@ -66,11 +67,13 @@ class Router {
      * Относительный url - это часть url которая следует за именем хоста.
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
+     * @param {boolean} replaceState - true: заменить текущую запись, false: добавить новую
+     * (по умолчанию: false)
      */
-    go(url) {
+    go(url, replaceState = false) {
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
-            this.go(Urls.NotFound);
+            this.go(Urls.NotFound, true);
             return;
         }
 
@@ -86,10 +89,12 @@ class Router {
          */
         if (window.location.pathname + window.location.search !== url) {
             /**
-             * Добавляет запись в историю и делает ее активной.
+             * Добавляет (заменяет) запись в историю и делает ее активной.
              * Не приводит к срабатыванию popstate.
              */
-            window.history.pushState(null, null, url);
+            replaceState ?
+                window.history.replaceState(null, null, url) :
+                window.history.pushState(null, null, url);
         }
 
         this._currentView = view;
