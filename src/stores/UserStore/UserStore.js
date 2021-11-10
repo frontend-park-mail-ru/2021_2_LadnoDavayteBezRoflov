@@ -174,7 +174,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', data.login);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 
