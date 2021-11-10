@@ -34,6 +34,8 @@ $card-due-date-done: forestgreen;
 
   &__title {
     display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

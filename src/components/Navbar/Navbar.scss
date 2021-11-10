@@ -1,20 +1,23 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+
 /* navbar style */
 
 .navbar__wrapper {
-    background-color: #258085;
+    background-color: $main-theme-color;
     border-bottom: 1px solid #C3C3C3;
     user-select: none;
 }
 
 .navbar {
-    z-index: 5;
     height: 56px;
     max-width: 1680px;
     position: relative;
-    background-color: #258085;
+    background-color: $main-theme-color;
 
     margin: 0 auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
   
 .navbar__header {
@@ -29,20 +32,20 @@
 }
   
 .navbar__link__title {
-    color: #ffffff;
+    color: rgb(255, 255, 255);
     text-decoration: none;
 }
   
 .navbar__links {
-    display: inline;
+    display: block;
     float: right;
     font-size: 18px;
 }
   
 .navbar__link {
     display: inline-block;
-    padding: 16px 10px;
-    color: #e5e9f5;
+    padding: 18px 12px;
+    color: rgb(255, 255, 255);
     text-decoration: none;
     cursor: pointer;
 }

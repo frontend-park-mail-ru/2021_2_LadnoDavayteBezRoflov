@@ -1,9 +1,13 @@
+@import '../../styles/scss/Constants';
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+
 /* Таблица стилей для компонента footer */
 
 .footer {
     position: fixed;
     height: 50px;
-    background-color: #005f73;
+    background-color: $main-theme-secondary-color;
     bottom: 0;
     left: 0;
     right: 0;
@@ -14,8 +18,8 @@
 
 
     &__text {
-        color: azure;
-        font-family: 'IBM Plex Sans', sans-serif;
+        color: rgb(255, 255, 255);
+        font-family: 'Montserrat', sans-serif;
         text-align: center;
     }
 }
