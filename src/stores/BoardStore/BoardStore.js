@@ -608,7 +608,6 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             this._storage.get('card-popup').visible = false;
-            console.log(this._storage.get('card_lists'));
             this._getCardListById(data.clid).cards.push({
                 cid: payload.data.cid,
                 bid: this._storage.get('bid'),

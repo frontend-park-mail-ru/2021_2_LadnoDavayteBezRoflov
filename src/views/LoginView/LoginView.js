@@ -69,7 +69,7 @@ export default class LoginView extends BaseView {
     render() {
         /* Если пользователь авторизован, то перебросить его на /boards */
         if (this.context.get('isAuthorized')) {
-            Router.go(Urls.Boards);
+            Router.go(Urls.Boards, true);
             return;
         }
 

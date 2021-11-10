@@ -49,6 +49,7 @@ export default class NavbarComponent extends BaseComponent {
     _logout(event) {
         event.preventDefault();
         userActions.logout();
+        event.stopPropagation();
     }
 
     /**

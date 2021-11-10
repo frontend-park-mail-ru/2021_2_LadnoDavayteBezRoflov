@@ -16,7 +16,7 @@
                         <div>
                             <label for="team-select">Команда:</label>
                             <select class="simple-form-element" id="createBoardPopUpTeamId" name="team-select" required>
-                                {{#each teams}}
+                                {{#each ../teams}}
                                     {{#if (IsEqualHelper this.tid ../teamID) }}
                                         <option value="{{this.tid}}" selected>{{this.team_name}}</option>
                                     {{else}}

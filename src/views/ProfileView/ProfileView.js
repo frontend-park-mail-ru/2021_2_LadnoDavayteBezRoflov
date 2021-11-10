@@ -77,7 +77,7 @@ export default class ProfileView extends BaseView {
     render() {
         /* Если пользователь не авторизован, то перебросить его на страницу входа */
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
 

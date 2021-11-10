@@ -51,7 +51,7 @@ class Router {
             const link = event.target.closest('a');
             if (link) {
                 event.preventDefault();
-                this.go(link.pathname + link.search, link.type === 'text/popup');
+                this.go(link.pathname + link.search);
             }
         });
 
@@ -67,17 +67,17 @@ class Router {
      * Относительный url - это часть url которая следует за именем хоста.
      * Пример: в URL "http://a.com/b/c?key=val" относительная часть - "/b/c?key=val"
      * @param {string} url - url на который следует перейти
-     * @param {boolean} popup - true: открыть как попап, false: открыть как страницу
+     * @param {boolean} refirest - true: replacestate, false: pushstate
      * (по умолчанию: false)
      */
-    go(url, popup = false) {
+    go(url, redirect = false) {
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
-            this.go(Urls.NotFound);
+            this.go(Urls.NotFound, true);
             return;
         }
 
-        if (this._currentView && !popup) {
+        if (this._currentView) {
             this._currentView._onHide();
         }
 
@@ -92,11 +92,12 @@ class Router {
              * Добавляет запись в историю и делает ее активной.
              * Не приводит к срабатыванию popstate.
              */
-            window.history.pushState(null, null, url);
+            redirect? window.history.replaceState(null, null, url) :
+                    window.history.pushState(null, null, url);
         }
 
         this._currentView = view;
-        popup ? view._onPopup(urlData) : view._onShow(urlData);
+        view._onShow(urlData);
     }
 
     /**

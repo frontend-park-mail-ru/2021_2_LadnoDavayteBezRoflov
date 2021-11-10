@@ -22,16 +22,15 @@ import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 
-debugger;
-/* if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(registration => {
-        console.log('SW registered with scope ', registration.scope);
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-      });
+        navigator.serviceWorker.register('/sw.js').then((registration) => {
+            console.log('SW registered with scope ', registration.scope);
+        }).catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+        });
     });
-} */
+}
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();

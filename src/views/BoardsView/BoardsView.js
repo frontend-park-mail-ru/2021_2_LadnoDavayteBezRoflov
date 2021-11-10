@@ -49,7 +49,7 @@ export default class BoardsView extends BaseView {
         }
 
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
 
@@ -63,7 +63,7 @@ export default class BoardsView extends BaseView {
         this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
 
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
 
