@@ -23,9 +23,12 @@ import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 
 if ('serviceWorker' in navigator) {
-    // Use the window load event to keep the page load performant
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js');
+        navigator.serviceWorker.register('/sw.js').then((registration) => {
+            console.log('SW registered with scope ', registration.scope);
+        }).catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+        });
     });
 }
 
@@ -36,6 +39,7 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
+    document.getElementById('no-connection').innerHTML = '';
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

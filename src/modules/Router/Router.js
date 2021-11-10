@@ -51,7 +51,7 @@ class Router {
             const link = event.target.closest('a');
             if (link) {
                 event.preventDefault();
-                this.go(link.pathname + link.search, link.type === 'text/popup');
+                this.go(link.pathname + link.search);
             }
         });
 

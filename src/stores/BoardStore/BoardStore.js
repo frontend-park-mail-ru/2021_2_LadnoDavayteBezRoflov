@@ -468,6 +468,7 @@ class BoardStore extends BaseStore {
                 {left: cardList.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
 
+            // Обновим позиции списков в storage
             const cardLists = this._storage.get('card_lists');
 
             for (let index = bound.left; index < bound.right; index +=1) {
@@ -607,7 +608,6 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             this._storage.get('card-popup').visible = false;
-            console.log(this._storage.get('card_lists'));
             this._getCardListById(data.clid).cards.push({
                 cid: payload.data.cid,
                 bid: this._storage.get('bid'),

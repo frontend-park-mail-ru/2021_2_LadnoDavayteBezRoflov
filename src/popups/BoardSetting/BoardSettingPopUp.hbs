@@ -1,42 +1,42 @@
 {{#with setting-popup}}
-{{# if visible }}
-    <div class="popup-wrapper" id="boardSettingPopUpWrapperId">
-        <div class="popup-content popup-content_sized">
-            <form class="popup-form">
-                <div class="popup-form__header">
-                    Настройки доски
-                </div>
-                <div class="horizontal-line"></div>
-                <div class="popup-form__elements-wrapper">
-                    <div>
-                        <label for="boardSettingPopUpTitleId" class>Название доски:</label>
-                        <input class="simple-form-element" type="text" id="boardSettingPopUpTitleId" name="board-name"
-                               autofocus value="{{../board_name}}"
-                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+    {{# if visible }}
+        <div class="popup-wrapper" id="boardSettingPopUpWrapperId">
+            <div class="popup-content popup-content_sized">
+                <form class="popup-form">
+                    <div class="popup-form__header">
+                        Настройки доски
                     </div>
-                    <div>
-                        <label for="boardSettingPopUpDescriptionId" class>Описание доски:</label>
-                        <textarea rows="3" cols="50" class="simple-form-element" type="text"
-                                  id="boardSettingPopUpDescriptionId"
-                                  name="board-description" autofocus
-                                  autocomplete="off">{{../description}}</textarea>
-                    </div>
-                    {{#if errors}}
-                        <div class="error">{{errors}}</div>
-                    {{/if}}
-                    {{#if confirm }}
-                        <div class="confirm-delete-wrapper">
-                            <button class="button button_red button_full-space" id="boardSettingPopUpDeleteConfirmBtnId">Удалить</button>
-                            <button class="button button_full-space" id="boardSettingPopUpDeleteRejectBtnId">Не удалять</button>
+                    <div class="horizontal-line"></div>
+                    <div class="popup-form__elements-wrapper">
+                        <div>
+                            <label for="boardSettingPopUpTitleId" class>Название доски:</label>
+                            <input class="simple-form-element" type="text" id="boardSettingPopUpTitleId" name="board-name"
+                                autofocus value="{{../board_name}}"
+                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                         </div>
-                    {{else}}
-                        <button class="button button_red" id="boardSettingPopUpDeleteBtnId">Удалить доску</button>
-                    {{/if}}
-                    <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
-                </div>
-            </form>
-            <div class="close-button" id="boardSettingPopUpCloseId"></div>
+                        <div>
+                            <label for="boardSettingPopUpDescriptionId" class>Описание доски:</label>
+                            <textarea rows="3" cols="50" class="simple-form-element" type="text"
+                                    id="boardSettingPopUpDescriptionId"
+                                    name="board-description" autofocus
+                                    autocomplete="off">{{../description}}</textarea>
+                        </div>
+                        {{#if errors}}
+                            <div class="error">{{errors}}</div>
+                        {{/if}}
+                        {{#if confirm }}
+                            <div class="confirm-delete-wrapper">
+                                <button class="button button_red button_full-space" id="boardSettingPopUpDeleteConfirmBtnId">Удалить</button>
+                                <button class="button button_full-space" id="boardSettingPopUpDeleteRejectBtnId">Не удалять</button>
+                            </div>
+                        {{else}}
+                            <button class="button button_red" id="boardSettingPopUpDeleteBtnId">Удалить доску</button>
+                        {{/if}}
+                        <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
+                    </div>
+                </form>
+                <div class="close-button" id="boardSettingPopUpCloseId"></div>
+            </div>
         </div>
-    </div>
-{{/if}}
+    {{/if}}
 {{/with}}

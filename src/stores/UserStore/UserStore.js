@@ -88,7 +88,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', response.data);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 
@@ -127,7 +127,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Created:
-            this._storage.set('userName', response.data.login);
+            this._storage.set('userName', data.login);
             this._storage.set('isAuthorized', true);
             return;
 
@@ -174,7 +174,7 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', data.login);
+            this._storage.set('userName', response.data.login);
             this._storage.set('isAuthorized', true);
             return;
 
