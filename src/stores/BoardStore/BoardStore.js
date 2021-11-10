@@ -542,12 +542,11 @@ class BoardStore extends BaseStore {
             // Удалим список из storage
             const clidForDeletion = this._storage.get('delete-cl-popup').clid;
             const cardLists = this._storage.get('card_lists');
-            const index = cardLists.findIndex(({clid}) => clid === clidForDeletion);
-            if (index !== -1) {
-                cardLists.splice(index, 1);
-                return;
+            const clid = cardLists.findIndex(({clid}) => clid === clidForDeletion);
+            if (clid === -1) {
+                throw new Error(`BoardStore: список карточек ${clidForDeletion} не найден `);
             }
-            throw new Error(`BoardStore: список карточек ${clidForDeletion} не найден `);
+            cardLists.splice(clid, 1);
 
         default:
             return;
@@ -802,12 +801,11 @@ class BoardStore extends BaseStore {
                 throw new Error(`BoardStore: список карточек ${clidForDeletion} не найден.`);
             }
 
-            const index = cardLists[clid].cards.findIndex(({cid}) => cid === cidForDeletion);
-            if (index !== -1) {
-                cardLists[clid].cards.splice(index, 1);
-                return;
+            const cid = cardLists[clid].cards.findIndex(({cid}) => cid === cidForDeletion);
+            if (cid === -1) {
+                throw new Error(`BoardStore: карточка ${cidForDeletion} не найдена.`);
             }
-            throw new Error(`BoardStore: карточка ${cidForDeletion} не найдена.`);
+            cardLists[clid].cards.splice(cid, 1);
 
         default:
             return;
