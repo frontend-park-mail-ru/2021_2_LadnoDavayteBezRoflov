@@ -50,8 +50,13 @@ export default class ProfileView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
+        if (!UserStore.getContext().get('isAuthorized')) {
+            Router.go(Urls.Login, true);
+            return;
+        }
+
+        settingsActions.getSettings(UserStore.getContext('userName').login);
         this.render();
-        settingsActions.getSettings(UserStore.getContext('userName'));
         this._isActive = true;
     }
 
@@ -76,7 +81,7 @@ export default class ProfileView extends BaseView {
     render() {
         /* Если пользователь не авторизован, то перебросить его на страницу входа */
         if (!this.context.get('isAuthorized')) {
-            Router.go(Urls.Login);
+            Router.go(Urls.Login, true);
             return;
         }
 
@@ -114,6 +119,7 @@ export default class ProfileView extends BaseView {
             email: document.getElementById('email').value,
             avatar: document.getElementById('avatar').value,
             password: document.getElementById('password').value,
+            passwordRepeat: document.getElementById('passwordRepeat').value,
             old_password: document.getElementById('oldPassword').value,
         };
 

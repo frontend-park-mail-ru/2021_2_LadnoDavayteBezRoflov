@@ -6,7 +6,7 @@
         <span class="column__delete material-icons deleteCardList" data-id="{{clid}}"></span>
     </div>
     <div class="horizontal-line"></div>
-    <div class="column__content custom-scroll">
+    <div class="column__content custom-scroll" data-id="{{clid}}">
         {{#each _cards}}
             {{{this}}}
         {{/each}}

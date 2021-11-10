@@ -1,35 +1,33 @@
-<a class="card" href="/card/{{cid}}" type="text/popup">
-    <div class="card__tags-container">
+<div class="card editCard" data-id="{{cid}}">
+    <div class="card__tags-container" data-id="{{cid}}">
         {{#each tags}}
-<!--        Пока не отображаем {this.name}}-->
-            <div class="card-tag"></div>
+            <div class="card-tag" data-id="{{cid}}"></div>
         {{/each}}
     </div>
-    <div class="card__header">
-        <span class="card__title">{{title}}</span>
-<!--        Вложенные <a> запрещены-->
-        <span class="column__delete material-icons" id="deleteCard"></span>
+    <div class="card__header" data-id="{{cid}}">
+        <span class="card__title" data-id="{{cid}}">{{card_name}}</span>
+        <span class="column__delete material-icons deleteCard" data-id="{{cid}}"></span>
     </div>
-    <div class="card__badges">
-        {{#if deadline}}
-        <div class="badge-due-date-wrapper">
-            <div class="material-icons badge-due-date__icon"></div>
-            <div class="badge-due-date__text">{{deadline}}</div>
+    <div class="card__badges" data-id="{{cid}}">
+{{!--         {{#if (IsEmptyDeadlineHelper deadline)}}
+        <div class="badge-due-date-wrapper" data-id="{{cid}}">
+            <div class="material-icons badge-due-date__icon" data-id="{{cid}}"></div>
+            <div class="badge-due-date__text" data-id="{{cid}}">{{deadline}}</div>
         </div>
-        {{/if}}
+        {{/if}} --}}
         {{#if description}}
-            <div class="material-icons badge-description"></div>
+            <div class="material-icons badge-description" data-id="{{cid}}"></div>
         {{/if}}
         {{#if attachments}}
-            <div class="material-icons badge-attachments"></div>
+            <div class="material-icons badge-attachments" data-id="{{cid}}"></div>
         {{/if}}
         {{#if checklist}}
-            <div class="material-icons badge-checklist"></div>
+            <div class="material-icons badge-checklist" data-id="{{cid}}"></div>
         {{/if}}
-        <div class="card__assignees">
+        <div class="card__assignees" data-id="{{cid}}">
             {{#each assignees}}
-                <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}"/>
+                <img class="avatar" src="{{this.avatar}}" title="{{this.userName}}" data-id="{{cid}}"/>
             {{/each}}
         </div>
     </div>
-</a>
+</div>
