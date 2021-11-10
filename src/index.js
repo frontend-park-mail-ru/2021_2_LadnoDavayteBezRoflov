@@ -39,6 +39,7 @@ if (UserStore.getContext('isAuthorized') === undefined) {
 /* Обработчик на загрузку страницы */
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
+    document.getElementById('no-connection').innerHTML = '';
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') !== undefined) {

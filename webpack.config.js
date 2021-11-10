@@ -93,10 +93,6 @@ const config = {
                 from: path.resolve(__dirname, 'public', 'assets'),
                 to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
             },
-            {
-                from: path.resolve(__dirname, 'public', 'offline.html'),
-                to: path.resolve(__dirname, DEPLOY_DIR, 'offline.html'),
-            },
         ]}),
         new InjectManifest({
             swSrc: './src/sw.js',

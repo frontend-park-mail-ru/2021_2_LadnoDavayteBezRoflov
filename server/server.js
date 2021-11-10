@@ -13,13 +13,13 @@ const port = process.env.PORT || 80;
 app.use(morgan('dev'));
 
 /* Время кэширования ответов, в сек */
-// const cacheTime = 256 * 24 * 60 * 60;
+const cacheTime = 256 * 24 * 60 * 60;
 /* middleware для кэширования бандлов */
-/* const cacheMW = (req, res, next) => {
+const cacheMW = (req, res, next) => {
     res.set('Cache-control', `public, max-age=${cacheTime}`);
     next();
 };
-app.use([/\/bundle\.[A-Za-z0-9]*\.js/, /\/style\.[A-Za-z0-9]*\.css/], cacheMW); */
+app.use([/\/bundle\.[A-Za-z0-9]*\.js/, /\/style\.[A-Za-z0-9]*\.css/], cacheMW);
 
 /* Директория со статикой */
 const distFolder = path.resolve(__dirname, '..', 'dist');
