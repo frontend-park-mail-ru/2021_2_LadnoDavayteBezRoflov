@@ -11,7 +11,13 @@
         <div class="navbar__links">
             {{#if isAuthorized}}
                 <a href="/boards" class="navbar__link">Доски</a>
-                <a href="/profile" class="navbar__link">Профиль</a>
+                <a href="/profile" class="navbar__link">
+                    <img id="navbarAvatarId" class="navbarPicture"
+                         src="{{#if avatar}}{{avatar}}{{else}}/assets/nodata.webp{{/if}}"
+                         alt="{{userName}}">
+                    <span id="navbarUserNameId" class="navbar__link">{{userName}}</span>
+                </a>
+
                 <a id="logout" class="navbar__link">Выход</a>
             {{else}}
                 <a href="/login" class="navbar__link">Войти</a>

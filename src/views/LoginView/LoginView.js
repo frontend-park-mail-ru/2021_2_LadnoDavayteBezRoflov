@@ -17,6 +17,7 @@ import './LoginView.scss';
 
 // Шаблон
 import template from './LoginView.hbs';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 /**
   * Класс, реализующий страницу с входа.
@@ -27,11 +28,12 @@ export default class LoginView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        const context = UserStore.getContext();
+        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh); // + field
+        SettingsStore.addListener(this._onRefresh);
 
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
@@ -45,6 +47,7 @@ export default class LoginView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
+        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
         this.render();
         this._isActive = true;
     }
@@ -54,8 +57,9 @@ export default class LoginView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this._setContext(UserStore.getContext());
-
+        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
+        console.log('login view');
+        console.log(UserStore.getContext());
         if (!this._isActive) {
             return;
         }

@@ -10,6 +10,7 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 // Шаблон
 import template from './Navbar.hbs';
 
+
 /**
  * Класс, реализующий компонент Navbar.
  */
@@ -23,7 +24,6 @@ export default class NavbarComponent extends BaseComponent {
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
-
 
         this._logoutCallback = this._logout.bind(this);
     }

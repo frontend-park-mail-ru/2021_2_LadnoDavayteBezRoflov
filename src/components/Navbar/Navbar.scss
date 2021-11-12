@@ -19,29 +19,29 @@
     margin: 0 auto;
     font-family: 'Montserrat', sans-serif;
 }
-  
+
 .navbar__header {
     display: inline-block;
 }
-  
+
 .navbar__logo {
     height: 56px;
-    width: 136px; 
+    width: 136px;
     display: inline-block;
     padding: 2px;
 }
-  
+
 .navbar__link__title {
     color: rgb(255, 255, 255);
     text-decoration: none;
 }
-  
+
 .navbar__links {
     display: block;
     float: right;
     font-size: 18px;
 }
-  
+
 .navbar__link {
     display: inline-block;
     padding: 18px 12px;
@@ -49,7 +49,14 @@
     text-decoration: none;
     cursor: pointer;
 }
-  
+
 .navbar__link:hover {
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.navbarPicture {
+    border-radius: $common-radius;
+    border: 4px solid $tertiary-bg-color;
+    width: 30px;
+    height: 30px;
 }

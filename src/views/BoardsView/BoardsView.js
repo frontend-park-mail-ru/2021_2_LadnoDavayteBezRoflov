@@ -16,6 +16,7 @@ import './BoardsView.scss';
 import template from './BoardsView.hbs';
 
 import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 /**
  * Класс, реализующий страницу с досками.
@@ -26,13 +27,14 @@ export default class BoardsView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
      */
     constructor(parent) {
-        const context = UserStore.getContext();
+        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
         super(context, template, parent);
 
         this._bindCallBacks();
 
         UserStore.addListener(this._onRefresh);
         BoardsStore.addListener(this._onRefresh);
+        SettingsStore.addListener(this._onRefresh);
 
         this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
     }
@@ -42,7 +44,8 @@ export default class BoardsView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext(),
+            ...SettingsStore.getContext()]));
 
         if (!this._isActive) {
             return;
@@ -60,8 +63,6 @@ export default class BoardsView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext()]));
-
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login, true);
             return;

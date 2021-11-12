@@ -19,18 +19,18 @@ import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
-import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
+import {settingsActions} from './actions/settings';
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then((registration) => {
-            console.log('SW registered with scope ', registration.scope);
-        }).catch((registrationError) => {
-            console.log('SW registration failed: ', registrationError);
-        });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('/sw.js').then((registration) => {
+//             console.log('SW registered with scope ', registration.scope);
+//         }).catch((registrationError) => {
+//             console.log('SW registration failed: ', registrationError);
+//         });
+//     });
+// }
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -41,20 +41,23 @@ window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
     document.getElementById('no-connection').innerHTML = '';
 
+    const boardView = new BoardsView(root);
+    Router.register(Urls.Root, boardView);
+    Router.register(Urls.Boards, boardView);
+    Router.register(Urls.Register, new RegisterView(root));
+    Router.register(Urls.Login, new LoginView(root));
+    Router.register(Urls.Board, new BoardView(root));
+    Router.register(Urls.Profile, new ProfileView(root));
+
     UserStore.addListener(() => {
-        if (UserStore.getContext('isAuthorized') !== undefined) {
-            try {
-                Router.register(Urls.Root, new BoardsView(root));
-                Router.register(Urls.Register, new RegisterView(root));
-                Router.register(Urls.Login, new LoginView(root));
-                Router.register(Urls.Card, new CardComponent());
-                Router.register(Urls.Boards, new BoardsView(root));
-                Router.register(Urls.Board, new BoardView(root));
-                Router.register(Urls.Profile, new ProfileView(root));
-                Router.start();
-            } catch (error) {
-                console.error(error);
-            }
+        if (UserStore.getContext('isAuthorized') === undefined) {
+            return;
+        }
+        try {
+            settingsActions.getSettings(UserStore.getContext('userName'));
+            Router.start();
+        } catch (error) {
+            console.error(error);
         }
     });
 });

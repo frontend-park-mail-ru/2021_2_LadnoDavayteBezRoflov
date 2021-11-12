@@ -187,6 +187,8 @@ class UserStore extends BaseStore {
                 login: ConstantMessages.WrongCredentials,
                 password: ConstantMessages.WrongCredentials,
             };
+            console.log('user store');
+            console.log(this._storage.get('validation'));
 
             return;
 

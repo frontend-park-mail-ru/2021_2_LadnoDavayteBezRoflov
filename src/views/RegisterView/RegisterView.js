@@ -6,6 +6,7 @@ import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
@@ -27,13 +28,13 @@ export default class RegisterView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
      */
     constructor(parent) {
-        const context = UserStore.getContext();
-
+        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
 
         UserStore.addListener(this._onRefresh);
+        SettingsStore.addListener(this._onRefresh);
 
         this.formRegistrationCallback = this.formRegistration.bind(this);
 
@@ -57,7 +58,7 @@ export default class RegisterView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this._setContext(UserStore.getContext());
+        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
 
         if (!this._isActive) {
             return;

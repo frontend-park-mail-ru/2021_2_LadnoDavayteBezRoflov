@@ -35,7 +35,7 @@ class Router {
             return this;
         }
 
-        if (!(view instanceof BaseView) && !(view instanceof BaseComponent)) {
+        if (!(view instanceof BaseView)) {
             return this;
         }
 

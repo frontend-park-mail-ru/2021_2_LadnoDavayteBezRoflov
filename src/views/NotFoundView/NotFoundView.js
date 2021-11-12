@@ -1,6 +1,7 @@
 import BaseView from '../BaseView.js';
 
 import UserStore from '../../stores/UserStore/UserStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Шаблон
 import template from './NotFoundView.hbs';
@@ -14,11 +15,12 @@ export default class NotFoundView extends BaseView {
      * @param {Element} parent элемент, в который будет происходить отрисовка
      */
     constructor(parent) {
-        const context = UserStore.getContext();
+        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
+        SettingsStore.addListener(this._onRefresh);
     }
 
     /**
@@ -42,6 +44,6 @@ export default class NotFoundView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this._setContext(UserStore.getContext());
+        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
     }
 }
