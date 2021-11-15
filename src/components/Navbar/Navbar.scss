@@ -88,3 +88,12 @@ img.avatar {
     color: rgb(255, 255, 255);
     text-decoration: none;
 }
+
+@media screen and (max-width: 450px) {
+    .navbar {
+        flex-direction: column;
+        &__links {
+            flex-direction: column;
+        }
+    }
+}
