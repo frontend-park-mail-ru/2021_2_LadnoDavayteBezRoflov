@@ -106,7 +106,7 @@ export default class LoginView extends BaseView {
     removeEventListeners() {
         super.removeEventListeners();
         document.getElementById('auth')?.removeEventListener('submit',
-            this.formAuthorizationCallback);
+                                                             this.formAuthorizationCallback);
     }
 
     /**

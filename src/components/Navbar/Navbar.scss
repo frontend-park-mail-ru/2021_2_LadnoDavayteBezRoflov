@@ -8,55 +8,83 @@
     background-color: $main-theme-color;
     border-bottom: 1px solid #C3C3C3;
     user-select: none;
+    padding-bottom: 1px;
 }
 
 .navbar {
-    height: 56px;
+    min-height: $nav-bar-height;
     max-width: 1680px;
     position: relative;
     background-color: $main-theme-color;
 
     margin: 0 auto;
     font-family: 'Montserrat', sans-serif;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__logo {
+        height: 56px;
+        width: 136px;
+    }
+
+    &__links {
+        font-size: 18px;
+        height: auto;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    &__link-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        min-height: $nav-bar-height;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    &__link {
+        display: block;
+        padding: 0 12px;
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+    }
 }
 
-.navbar__header {
-    display: inline-block;
+.avatar-wrapper {
+    min-height: $nav-bar-height;
+    padding: 0 12px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 }
 
-.navbar__logo {
-    height: 56px;
-    width: 136px;
-    display: inline-block;
-    padding: 2px;
+img.avatar {
+    width: 35px;
+    height: 35px;
+    border: 2px solid $tertiary-bg-color;
+    margin-right: 10px;
 }
 
 .navbar__link__title {
     color: rgb(255, 255, 255);
     text-decoration: none;
-}
-
-.navbar__links {
-    display: block;
-    float: right;
-    font-size: 18px;
-}
-
-.navbar__link {
-    display: inline-block;
-    padding: 18px 12px;
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.navbar__link:hover {
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.navbarPicture {
-    border-radius: $common-radius;
-    border: 4px solid $tertiary-bg-color;
-    width: 30px;
-    height: 30px;
 }

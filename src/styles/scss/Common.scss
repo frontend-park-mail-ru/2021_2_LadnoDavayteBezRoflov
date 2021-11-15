@@ -19,19 +19,7 @@ body {
   background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
   height: 100%;
   font-family: 'Montserrat', sans-serif;
-  min-width: 400px;
-}
-
-.horizontal-line {
-  border-bottom: solid 2px $tertiary-bg-color;
-  margin: 5px;
-}
-
-.vertical-line {
-  height: 25px;
-  border-left: solid 2px $tertiary-bg-color;
-  margin-left: 5px;
-  margin-right: 5px;
+  //min-width: 400px;
 }
 
 .close-button {
@@ -83,6 +71,7 @@ body {
 
 .avatar {
   height: 30px;
+  width: 30px;
   border-radius: 50%;
 }
 
