@@ -46,7 +46,6 @@ export default class BoardsView extends BaseView {
         this.removeEventListeners();
         this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext(),
             ...SettingsStore.getContext()]));
-
         if (!this._isActive) {
             return;
         }
@@ -63,6 +62,9 @@ export default class BoardsView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
+        this._setContext(new Map([...UserStore.getContext(), ...BoardsStore.getContext(),
+            ...SettingsStore.getContext()]));
+
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login, true);
             return;
