@@ -20,15 +20,18 @@ import template from './LoginView.hbs';
 import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 /**
-  * Класс, реализующий страницу с входа.
-  */
+ * Класс, реализующий страницу с входа.
+ */
 export default class LoginView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-    */
+     */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
@@ -47,7 +50,10 @@ export default class LoginView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
-        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]));
         this.render();
         this._isActive = true;
     }
@@ -57,9 +63,11 @@ export default class LoginView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
-        console.log('login view');
-        console.log(UserStore.getContext());
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]));
+
         if (!this._isActive) {
             return;
         }
@@ -98,7 +106,7 @@ export default class LoginView extends BaseView {
     removeEventListeners() {
         super.removeEventListeners();
         document.getElementById('auth')?.removeEventListener('submit',
-                                                             this.formAuthorizationCallback);
+            this.formAuthorizationCallback);
     }
 
     /**
