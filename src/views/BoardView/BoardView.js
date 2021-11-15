@@ -274,7 +274,7 @@ export default class BoardView extends BaseView {
     _onCheckDeadlineCard(event) {
         cardActions.updateDeadlineCard(
             parseInt(event.target.closest('.column__content').dataset.id, 10),
-            parseInt(event.target.dataset.id, 10)
+            parseInt(event.target.dataset.id, 10),
         );
         event.stopPropagation();
     }

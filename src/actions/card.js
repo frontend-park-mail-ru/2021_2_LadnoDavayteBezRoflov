@@ -83,7 +83,6 @@ export const cardActions = {
         });
     },
 
-    
 
     /**
      * Создает карточку
