@@ -94,13 +94,13 @@ const config = {
                 to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
             },
         ]}),
-        // new InjectManifest({
-        //     swSrc: './src/sw.js',
-        //     swDest: 'sw.js',
-        //     exclude: [
-        //         /\.m?js$/,
-        //     ],
-        // }),
+        new InjectManifest({
+            swSrc: './src/sw.js',
+            swDest: 'sw.js',
+            exclude: [
+                /\.m?js$/,
+            ],
+        }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
