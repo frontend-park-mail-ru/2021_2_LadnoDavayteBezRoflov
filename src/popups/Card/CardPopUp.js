@@ -33,7 +33,7 @@ export default class CardPopUp extends BaseComponent {
             positionSelect: document.getElementById('cardPopUpPositionId'),
             card_name: document.getElementById('cardPopUpTitleId'),
             description: document.getElementById('cardPopUpDescriptionId'),
-            // deadline: document.getElementById('cardPopUpDeadlineId'),
+            deadline: document.getElementById('cardPopUpDeadlineId'),
         };
     }
 
@@ -91,14 +91,16 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSave(event) {
         event.preventDefault();
-        cardActions.updateCard(
-            parseInt(this._elements.positionSelect.value, 10),
-            this._elements.card_name.value,
-            this._elements.description.value,
-            this.context.cid,
-            this.context.bid,
-            this.context.clid,
-        );
+        const data = {
+            position: parseInt(this._elements.positionSelect.value, 10),
+            card_name: this._elements.card_name.value,
+            description: this._elements.description.value,
+            cid: this.context.cid,
+            bid: this.context.bid,
+            clid: this.context.clid,
+            deadline: this._elements.deadline.value,
+        };
+        cardActions.updateCard(data);
     }
 
     /**

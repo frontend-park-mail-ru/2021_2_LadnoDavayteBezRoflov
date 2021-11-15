@@ -59,6 +59,15 @@ $card-due-date-done: forestgreen;
   font-size: 15px;
   font-weight: bold;
   line-height: normal;
+  color: rgb(255, 255, 255);
+    
+  &__invalid {
+    background-color: rgb(174, 82, 82);
+  }
+
+  &__valid {
+    background-color: rgb(79, 194, 79);
+  }
 }
 
 .badge-due-date-wrapper_overdue {

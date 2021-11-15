@@ -24,12 +24,12 @@
                                 autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{description}}" {{/if}}>
                         </div>
-{{!--                         <div>
+                        <div>
                             <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDeadlineId" name="card-deadline"
+                            <input class="simple-form-element" type="datetime-local" id="cardPopUpDeadlineId" name="card-deadline"
                                 autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
-                        </div> --}}
+                        </div>
                         {{#if edit}}
                             <label for="cardPopUpPositionId">Позиция:</label>
                             <select class="simple-form-element" id="cardPopUpPositionId" name="position-select" required>

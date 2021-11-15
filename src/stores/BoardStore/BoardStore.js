@@ -614,6 +614,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                deadline: null,
             });
             return;
 
@@ -668,6 +669,7 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
+            deadline: card.deadline,
             errors: null,
         });
     }
@@ -696,6 +698,7 @@ class BoardStore extends BaseStore {
             card_name: data.card_name,
             description: data.description,
             bid: this._storage.get('card-popup').bid,
+            deadline: data.deadline,
         };
 
         try {
@@ -723,10 +726,16 @@ class BoardStore extends BaseStore {
                 cards[index].pos += bound.increment;
             }
 
-            // Обновим cardList:
+            // Обновим card:
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
             card.card_name = data.card_name;
             card.description = data.description;
             card.pos = data.pos;
+
+            card.deadline = data.deadline;
+            card.deadlineStatus = validator.validateDeadline(data.deadline);
+            card.deadlineDate = (new Date(data.deadline)).toLocaleDateString('ru-RU', options);
 
             // Переупорядочим списки
             cards.sort((lhs, rhs) => {

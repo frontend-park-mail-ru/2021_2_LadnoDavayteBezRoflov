@@ -58,24 +58,12 @@ export const cardActions = {
 
     /**
      * Обновляет список карточек
-     * @param {Number} position позиция на доске
-     * @param {String} title заголовок
-     * @param {String} description описание
-     * @param {Number} cid id карточки
-     * @param {Number} bid id доски
-     * @param {Number} clid id списка карточек
+     * @param {Object} data объект, содержащий поля карточки
      */
-    updateCard(position, title, description, cid, bid, clid) {
+    updateCard(data) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_UPDATE_SUBMIT,
-            data: {
-                card_name: title,
-                description,
-                pos: position,
-                cid,
-                bid,
-                clid,
-            },
+            data,
         });
     },
 
