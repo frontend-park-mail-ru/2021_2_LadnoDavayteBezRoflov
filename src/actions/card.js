@@ -15,6 +15,7 @@ export const CardActionTypes = {
     CARD_DELETE_SHOW: 'card/delete/show',
     CARD_DELETE_CHOOSE: 'card/delete/choose',
     CARD_DELETE_HIDE: 'card/delete/hide',
+    CARD_UPDATE_STATUS: 'card/update/deadline',
 };
 
 /**
@@ -66,6 +67,23 @@ export const cardActions = {
             data,
         });
     },
+
+    /**
+     * Обновляет статус дедлайна карточки
+     * @param {Number} clid id списка карточек
+     * @param {Number} cid id карточки
+     */
+    updateDeadlineCard(clid, cid) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_UPDATE_STATUS,
+            data: {
+                clid,
+                cid,
+            },
+        });
+    },
+
+    
 
     /**
      * Создает карточку

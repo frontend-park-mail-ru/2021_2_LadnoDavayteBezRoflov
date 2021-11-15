@@ -43,7 +43,6 @@ $card-due-date-done: forestgreen;
 .badge-due-date-wrapper {
   border: 2px solid;
   border-radius: 10px;
-  width: min-content;
   display: flex;
   flex-direction: row;
   padding-right: 5px;
@@ -56,17 +55,22 @@ $card-due-date-done: forestgreen;
 
 .badge-due-date__text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: bold;
   line-height: normal;
   color: rgb(255, 255, 255);
+  padding-top: 3px;
     
   &__invalid {
-    background-color: rgb(174, 82, 82);
+    background-color: rgb(235, 90, 70);
   }
 
   &__valid {
-    background-color: rgb(79, 194, 79);
+    background-color: rgb(97, 189, 79);
+  }
+
+  &__completed {
+    background-color: rgb(107, 148, 99);
   }
 }
 

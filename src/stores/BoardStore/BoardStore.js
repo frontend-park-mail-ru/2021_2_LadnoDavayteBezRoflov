@@ -186,6 +186,11 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case CardActionTypes.CARD_UPDATE_STATUS:
+            await this._updateDeadlineCheck(action.data);
+            this._emitChange();
+            break;
+
         default:
             return;
         }
@@ -615,6 +620,7 @@ class BoardStore extends BaseStore {
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
                 deadline: null,
+                deadlineCheck: false,
             });
             return;
 
@@ -670,8 +676,55 @@ class BoardStore extends BaseStore {
             card_name: card.card_name,
             description: card.description,
             deadline: card.deadline,
+            deadlineCheck: card.deadlineCheck,
             errors: null,
         });
+    }
+
+    /**
+     * Меняет статус дедлайна (выполнено | не выполнено)
+     * @param {Object} data информация о карточке
+     * @private
+     */
+    async _updateDeadlineCheck(data) {
+        const card = this._getCardById(
+            data.clid,
+            data.cid,
+        );
+
+        let payload;
+
+        const _data = {
+            pos: card.pos,
+            cid: card.cid,
+            clid: card.clid,
+            card_name: card.card_name,
+            description: card.description,
+            bid: card.bid,
+            deadline: card.deadline,
+            deadline_check: !card.deadlineCheck,
+        };
+
+        try {
+            payload = await Network._updateCard(_data, card.cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            card.deadlineCheck = data.deadlineCheck;
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            // todo
+            return;
+
+        default:
+            // todo
+            return;
+        }
     }
 
     /**
@@ -699,6 +752,7 @@ class BoardStore extends BaseStore {
             description: data.description,
             bid: this._storage.get('card-popup').bid,
             deadline: data.deadline,
+            deadline_check: data.deadlineCheck,
         };
 
         try {
@@ -734,7 +788,8 @@ class BoardStore extends BaseStore {
             card.pos = data.pos;
 
             card.deadline = data.deadline;
-            card.deadlineStatus = validator.validateDeadline(data.deadline);
+            card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadlineCheck);
+            card.deadlineCheck = data.deadlineCheck;
             card.deadlineDate = (new Date(data.deadline)).toLocaleDateString('ru-RU', options);
 
             // Переупорядочим списки
