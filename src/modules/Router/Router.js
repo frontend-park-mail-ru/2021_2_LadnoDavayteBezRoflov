@@ -3,7 +3,6 @@ import {Html, Urls} from '../../constants/constants.js';
 import NotFoundView from '../../views/NotFoundView/NotFoundView.js';
 
 import BaseView from '../../views/BaseView.js';
-import BaseComponent from '../../components/BaseComponent.js';
 
 /**
  * Роутер отсеживает переход по url, и вызывает соответствующие им view
