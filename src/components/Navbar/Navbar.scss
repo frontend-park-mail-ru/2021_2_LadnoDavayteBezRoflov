@@ -2,8 +2,6 @@
 @import '../../styles/scss/Fonts';
 @import '../../styles/scss/Common';
 
-/* navbar style */
-
 .navbar__wrapper {
     background-color: $main-theme-color;
     border-bottom: 1px solid #C3C3C3;
@@ -26,7 +24,7 @@
     justify-content: space-between;
 
     &__logo {
-        height: 56px;
+        height: $nav-bar-height;
         width: 136px;
     }
 
@@ -48,14 +46,14 @@
         min-height: $nav-bar-height;
 
         &:hover {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: $nav-bar-hover;
         }
     }
 
     &__link {
         display: block;
         padding: 0 12px;
-        color: rgb(255, 255, 255);
+        color: white;
         text-decoration: none;
     }
 }
@@ -63,7 +61,7 @@
 .avatar-wrapper {
     min-height: $nav-bar-height;
     padding: 0 12px;
-    color: rgb(255, 255, 255);
+    color: white;
     text-decoration: none;
     cursor: pointer;
 
@@ -73,7 +71,7 @@
     align-items: center;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: $nav-bar-hover;
     }
 }
 
@@ -85,7 +83,7 @@ img.avatar {
 }
 
 .navbar__link__title {
-    color: rgb(255, 255, 255);
+    color: white;
     text-decoration: none;
 }
 

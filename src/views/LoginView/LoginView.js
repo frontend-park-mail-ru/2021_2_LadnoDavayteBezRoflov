@@ -8,6 +8,7 @@ import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
@@ -17,7 +18,6 @@ import './LoginView.scss';
 
 // Шаблон
 import template from './LoginView.hbs';
-import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 /**
  * Класс, реализующий страницу с входа.

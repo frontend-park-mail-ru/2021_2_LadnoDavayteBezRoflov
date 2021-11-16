@@ -53,6 +53,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (UserStore.getContext('isAuthorized') === undefined) {
             return;
         }
+
         try {
             settingsActions.getSettings(UserStore.getContext('userName'));
             Router.start();

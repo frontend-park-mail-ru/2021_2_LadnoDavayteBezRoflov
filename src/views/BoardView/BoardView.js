@@ -43,8 +43,11 @@ export default class BoardView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
      */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...BoardStore.getContext(),
-            ...SettingsStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]);
         super(context, template, parent);
 
         this._bindCallBacks();
@@ -79,8 +82,11 @@ export default class BoardView extends BaseView {
         this.removeEventListeners();
         this.removeComponentsList('_cardlists');
 
-        this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext(),
-            ...SettingsStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]));
 
         if (!this._isActive) {
             return;

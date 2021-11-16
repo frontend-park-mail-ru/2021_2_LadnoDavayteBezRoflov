@@ -37,7 +37,7 @@ class SettingsStore extends BaseStore {
         this._storage.set('email', null);
         this._storage.set('password', null);
         this._storage.set('passwordRepeat', null);
-        this._storage.set('avatar', null);
+        this._storage.set('avatar', '/assets/nodata.webp');
     }
 
     /**

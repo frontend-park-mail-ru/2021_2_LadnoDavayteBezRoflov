@@ -15,7 +15,10 @@ export default class NotFoundView extends BaseView {
      * @param {Element} parent элемент, в который будет происходить отрисовка
      */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
@@ -44,6 +47,9 @@ export default class NotFoundView extends BaseView {
      * Метод, вызывающийся по умолчанию при обновлении страницы.
      */
     _onRefresh() {
-        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]));
     }
 }
