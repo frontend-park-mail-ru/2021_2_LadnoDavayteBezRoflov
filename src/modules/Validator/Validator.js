@@ -130,10 +130,10 @@ export default class Validator {
      */
     validateCardTitle(title) {
         if (title.length < 1) {
-            return ConstantMessages.CardListTitleTooShort;
+            return ConstantMessages.CardTitleTooShort;
         }
         if (title.length > 40) {
-            return ConstantMessages.CardListTitleTooLong;
+            return ConstantMessages.CardTitleTooLong;
         }
         return null;
     }

@@ -261,9 +261,13 @@ class UserStore extends BaseStore {
             }
         }
 
-        if (data.hasOwnProperty('passwordRepeat') && (data.password !== data.passwordRepeat)) {
-            validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
-            this._storage.get(form).passwordRepeat = '';
+        if (data.hasOwnProperty('passwordRepeat')) {
+            if (data.password !== data.passwordRepeat) {
+                validation.passwordRepeat = ConstantMessages.NonMatchingPasswords;
+                this._storage.get(form).passwordRepeat = '';
+            } else {
+                validation.passwordRepeat = '';
+            }
         }
     }
 
