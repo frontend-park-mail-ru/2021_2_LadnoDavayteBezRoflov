@@ -20,6 +20,7 @@ import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
 import BoardStore from '../../stores/BoardStore/BoardStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
@@ -42,12 +43,17 @@ export default class BoardView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
      */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]);
         super(context, template, parent);
 
         this._bindCallBacks();
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
+        SettingsStore.addListener(this._onRefresh);
 
         // Добавить попапы
         this.addComponent('BoardSettingPopUp', new BoardSettingPopUp());
@@ -76,7 +82,12 @@ export default class BoardView extends BaseView {
         this.removeEventListeners();
         this.removeComponentsList('_cardlists');
 
-        this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]));
+
         if (!this._isActive) {
             return;
         }

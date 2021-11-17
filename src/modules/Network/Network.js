@@ -46,16 +46,14 @@ class Network {
 
     /**
      * Метод, реализующий запрос GET /api/sessions.
-     * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */
-    async getUser(data) {
+    async getUser() {
         const options = {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,

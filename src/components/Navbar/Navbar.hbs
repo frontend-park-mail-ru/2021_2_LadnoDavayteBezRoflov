@@ -1,24 +1,26 @@
 <header id="header-main">
+    <div class="navbar__wrapper">
+        <div class="navbar">
+            <a href="/" draggable="false">
+                <img alt="Brrrello" src="/assets/logo.webp" class="navbar__logo"
+                     draggable="false"/>
+            </a>
+            <div class="navbar__links">
+                {{#if isAuthorized}}
+                    <div class="navbar__link-wrapper"><a href="/boards" class="navbar__link">Доски</a></div>
+                    <a href="/profile" class="avatar-wrapper">
+                        <img id="navbarAvatarId" class="avatar"
+                             src="{{avatar}}"
+                             alt="{{userName}}">
+                        <span id="navbarUserNameId">{{userName}}</span>
+                    </a>
 
-<div class ="navbar__wrapper">
-    <div class="navbar">
-        <div class="navbar__header">
-            <div class="navbar__title">
-                <a href="/" draggable="false"><img alt="Brrrello" src="/assets/logo.webp" class="navbar__logo" draggable="false"/></a>
+                    <div class="navbar__link-wrapper"><a id="logout" class="navbar__link">Выход</a></div>
+                {{else}}
+                    <div class="navbar__link-wrapper"><a href="/login" class="navbar__link">Войти</a></div>
+                    <div class="navbar__link-wrapper"><a href="/register" class="navbar__link">Зарегистрироваться</a></div>
+                {{/if}}
             </div>
         </div>
-
-        <div class="navbar__links">
-            {{#if isAuthorized}}
-                <a href="/boards" class="navbar__link">Доски</a>
-                <a href="/profile" class="navbar__link">Профиль</a>
-                <a id="logout" class="navbar__link">Выход</a>
-            {{else}}
-                <a href="/login" class="navbar__link">Войти</a>
-                <a href="/register" class="navbar__link">Зарегистрироваться</a>
-            {{/if}}
-        </div>
     </div>
-</div>
-
 </header>
