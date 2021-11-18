@@ -16,6 +16,7 @@ import CardListPopUp from '../../popups/CardList/CardListPopUp.js';
 import CardPopUp from '../../popups/Card/CardPopUp.js';
 import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp.js';
 import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
+import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -61,7 +62,13 @@ export default class BoardView extends BaseView {
         this.addComponent('CardPopUp', new CardPopUp());
         this.addComponent('DeleteCardListPopUp', new DeleteCardListPopUp());
         this.addComponent('DeleteCardPopUp', new DeleteCardPopUp());
+        this.addComponent('AddBoardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.board));
+        this.addComponent('AddCardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.card));
 
+        this._setContextByComponentName('AddBoardMemberPopUp',
+                                        BoardStore.getContext('add-board-member-popup'));
+        this._setContextByComponentName('AddCardMemberPopUp',
+                                        BoardStore.getContext('add-card-member-popup'));
         this.registerViewElements();
     }
 
@@ -87,6 +94,10 @@ export default class BoardView extends BaseView {
             ...BoardStore.getContext(),
             ...SettingsStore.getContext(),
         ]));
+        this._setContextByComponentName('AddBoardMemberPopUp',
+                                        BoardStore.getContext('add-board-member-popup'));
+        this._setContextByComponentName('AddCardMemberPopUp',
+                                        BoardStore.getContext('add-card-member-popup'));
 
         if (!this._isActive) {
             return;
@@ -153,6 +164,12 @@ export default class BoardView extends BaseView {
         /* Cards */
         this._onDeleteCard = this._onDeleteCard.bind(this);
         this._onEditCard = this._onEditCard.bind(this);
+        /* Add User PopUps */
+        // bind
+        this._addUserCallBacks = {
+            card: {},
+            board: {},
+        };
     }
 
     /**

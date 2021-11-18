@@ -65,6 +65,35 @@ class BoardStore extends BaseStore {
             visible: false,
             cid: null,
         });
+
+        this._storage.set('add-board-member-popup', {
+            visible: false,
+            header: null,
+            users: [],
+        });
+
+        this._storage.set('add-card-member-popup', {
+            visible: true,
+            header: 'null',
+            users: [
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: true,
+                },
+
+            ],
+        });
     }
 
     /**
