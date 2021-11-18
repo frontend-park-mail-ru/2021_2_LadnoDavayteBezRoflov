@@ -74,7 +74,7 @@ class BoardStore extends BaseStore {
 
         this._storage.set('add-card-member-popup', {
             visible: true,
-            header: 'null',
+            header: 'Добавить пользователя в карточку',
             users: [
                 {
                     avatar: '/assets/noscript.webp',
@@ -85,6 +85,41 @@ class BoardStore extends BaseStore {
                     avatar: '/assets/noscript.webp',
                     userName: 'vasya',
                     added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: true,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: false,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: true,
+                },
+                {
+                    avatar: '/assets/noscript.webp',
+                    userName: 'vasya',
+                    added: true,
                 },
                 {
                     avatar: '/assets/noscript.webp',

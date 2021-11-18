@@ -8,41 +8,25 @@
                 <div class="horizontal-line"></div>
                 <div class="popup-form__elements-wrapper">
                     <div>
-                        <label for="boardSettingPopUpTitleId" class>Пригласить пользователя:</label>
                         <input class="simple-form-element" type="text" id="addUserPopUpSearchInputId"
                                name="search-input"
                                autofocus placeholder="Введите имя пользователя..."
                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                     </div>
-                    <div>
+                    {{#if errors}}
+                        <div class="error">{{errors}}</div>
+                    {{/if}}
+                    <div class="search-result-wrapper custom-scroll">
                         {{#each users}}
                             <div class="search-result">
                                 <img class="avatar" src="{{this.avatar}}"/>
                                 <div class="user-name">{{this.userName}}</div>
-                                {{#if this.added}}
-                                    <div class="check"></div>
-                                {{/if}}
+                                <div class="{{#if this.added}}check check_padded{{else}}add add_padded{{/if}}"></div>
                             </div>
                         {{/each}}
-
                     </div>
-                    {{#if errors}}
-                        <div class="error">{{errors}}</div>
-                    {{/if}}
-                    {{#if confirm }}
-                        <div class="confirm-delete-wrapper">
-                            <button class="button button_red button_full-space"
-                                    id="boardSettingPopUpDeleteConfirmBtnId">Удалить
-                            </button>
-                            <button class="button button_full-space" id="boardSettingPopUpDeleteRejectBtnId">Не
-                                удалять
-                            </button>
-                        </div>
-                    {{else}}
-                        <button class="button button_red" id="boardSettingPopUpDeleteBtnId">Удалить доску</button>
-                    {{/if}}
-                    <button class="button" id="boardSettingPopUpSaveBtnId">Сохранить</button>
                 </div>
+                <div class="horizontal-line horizontal-line_aligned"></div>
             </div>
             <div class="close-button" id="boardSettingPopUpCloseId"></div>
         </div>
