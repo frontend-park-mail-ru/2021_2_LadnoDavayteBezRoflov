@@ -301,6 +301,7 @@ export default class BoardView extends BaseView {
      */
     _onAddCardMemberInput(event) {
         console.log('typed: ' + event.target.value);
+        cardActions.refreshUserSearchList(event.target.value);
     }
 
     /**
@@ -311,6 +312,7 @@ export default class BoardView extends BaseView {
     _onAddCardMemberUserClick(event) {
         const user = event.target.closest('div.search-result');
         console.log('user id: ' + user.dataset.uid);
+        cardActions.toggleUserInSearchList(parseInt(user.dataset.uid, 10));
     }
 
     /**
@@ -322,6 +324,7 @@ export default class BoardView extends BaseView {
         if (event.target.id === 'addUserPopUpCloseId' ||
             event.target.id === 'addUserPopUpWrapperId') {
             console.log('close');
+            cardActions.hideAddCardAssigneePopUp();
         }
     }
 }

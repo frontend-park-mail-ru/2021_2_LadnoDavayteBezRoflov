@@ -15,24 +15,26 @@
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
                             <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{card_name}}" {{/if}}>
                         </div>
                         <div>
                             <label for="cardPopUpDescriptionId" class>Описание карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId" name="card-description"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId"
+                                   name="card-description"
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{description}}" {{/if}}>
                         </div>
-{{!--                         <div>
-                            <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDeadlineId" name="card-deadline"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
-                                {{#if edit}} value="{{deadline}}" {{/if}}>
-                        </div> --}}
+                        {{!--                         <div>
+                                                    <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
+                                                    <input class="simple-form-element" type="text" id="cardPopUpDeadlineId" name="card-deadline"
+                                                        autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                                        {{#if edit}} value="{{deadline}}" {{/if}}>
+                                                </div> --}}
                         {{#if edit}}
                             <label for="cardPopUpPositionId">Позиция:</label>
-                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select" required>
+                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
+                                    required>
                                 {{#each positionRange}}
                                     {{#if (IsEqualHelper this ../position) }}
                                         <option value="{{this}}" selected>#{{this}}</option>
@@ -46,6 +48,7 @@
                             <div class="error">{{errors}}</div>
                         {{/if}}
                         {{# if edit }}
+                            <button class="button" id="cardPopUpAddAssigneeBtnId">Участники</button>
                             <button class="button" id="cardPopUpSaveBtnId">Сохранить</button>
                         {{ else }}
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>

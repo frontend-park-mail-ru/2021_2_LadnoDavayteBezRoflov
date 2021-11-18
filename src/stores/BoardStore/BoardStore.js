@@ -73,7 +73,7 @@ class BoardStore extends BaseStore {
         });
 
         this._storage.set('add-card-member-popup', {
-            visible: true,
+            visible: false,
             header: 'Добавить пользователя в карточку',
             users: [
                 {

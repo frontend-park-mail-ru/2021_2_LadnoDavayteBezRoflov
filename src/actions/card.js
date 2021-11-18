@@ -15,6 +15,10 @@ export const CardActionTypes = {
     CARD_DELETE_SHOW: 'card/delete/show',
     CARD_DELETE_CHOOSE: 'card/delete/choose',
     CARD_DELETE_HIDE: 'card/delete/hide',
+    CARD_ADD_ASSIGNEE_SHOW: 'card/assignee/show',
+    CARD_ADD_ASSIGNEE_CLOSE: 'card/assignee/close',
+    CARD_ADD_ASSIGNEE_INPUT: 'card/assignee/input',
+    CARD_ADD_ASSIGNEE_USER_CLICKED: 'card/assignee/clicked',
 };
 
 /**
@@ -129,4 +133,45 @@ export const cardActions = {
             actionName: CardActionTypes.CARD_DELETE_HIDE,
         });
     },
+
+    /**
+     * Отобразить popup добавления пользователя на карточку
+     */
+    showAddCardAssigneePopUp() {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_ADD_ASSIGNEE_SHOW,
+        });
+    },
+
+    /**
+     * Скрыть popup добавления пользователя на карточку
+     */
+    hideAddCardAssigneePopUp() {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_ADD_ASSIGNEE_CLOSE,
+        });
+    },
+
+    /**
+     * Обновить список пользователей на основании ввода пользователя
+     * @param {String} searchString - строка для поиска
+     */
+    refreshUserSearchList(searchString) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_ADD_ASSIGNEE_INPUT,
+            data: {searchString},
+        });
+    },
+
+    /**
+     * Добаваить/исключить пользователя из карточки
+     * @param {Number} uid - id пользователя
+     */
+    toggleUserInSearchList(uid) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.CARD_ADD_ASSIGNEE_USER_CLICKED,
+            data: {uid},
+        });
+    },
+
 };
