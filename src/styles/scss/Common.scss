@@ -132,6 +132,9 @@ body {
 .horizontal-line {
   border-bottom: solid 2px $tertiary-bg-color;
   margin: 5px;
+  &_aligned {
+    margin-top: 25px;
+  }
 }
 
 .vertical-line {
@@ -139,4 +142,14 @@ body {
   border-left: solid 2px $tertiary-bg-color;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.material-icon-base {
+  @extend .material-icons;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1.0;
+    cursor: pointer;
+  }
 }
