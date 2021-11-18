@@ -34,6 +34,7 @@ export default class CardPopUp extends BaseComponent {
             card_name: document.getElementById('cardPopUpTitleId'),
             description: document.getElementById('cardPopUpDescriptionId'),
             deadline: document.getElementById('cardPopUpDeadlineId'),
+            assigneeBtn: document.getElementById('cardPopUpAddAssigneeBtnId'),
         };
     }
 
@@ -49,6 +50,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
         this._elements.deadline?.addEventListener('click', this._onDeadlineClick);
+        this._elements.assigneeBtn?.addEventListener('click', this._onAssigneeClick);
     };
 
     /**
@@ -62,6 +64,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.createBtn?.removeEventListener('click', this._onCreate);
         this._elements.saveBtn?.removeEventListener('click', this._onSave);
         this._elements.deadline?.removeEventListener('click', this._onDeadlineClick);
+        this._elements.assigneeBtn?.removeEventListener('click', this._onAssigneeClick);
     }
 
     /**
@@ -73,6 +76,7 @@ export default class CardPopUp extends BaseComponent {
         this._onCreate = this._onCreate.bind(this);
         this._onSave = this._onSave.bind(this);
         this._onDeadlineClick = this._onDeadlineClick.bind(this);
+        this._onAssigneeClick = this._onAssigneeClick.bind(this);
     }
 
     /**
@@ -113,7 +117,7 @@ export default class CardPopUp extends BaseComponent {
 
     /**
      * Callback, вызываемый при нажатии "Создать"
-     * @param {Event} event объект события
+     * @param {Event} event - объект события
      * @private
      */
     _onCreate(event) {
@@ -144,5 +148,16 @@ export default class CardPopUp extends BaseComponent {
                 .toISOString()
                 .substring(0, 16);
         }
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Участники"
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAssigneeClick(event) {
+        event.preventDefault();
+        console.log('show');
+        cardActions.showAddCardAssigneePopUp();
     }
 }
