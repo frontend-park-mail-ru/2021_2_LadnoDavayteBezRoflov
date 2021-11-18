@@ -18,7 +18,7 @@
                     {{/if}}
                     <div class="search-result-wrapper custom-scroll">
                         {{#each users}}
-                            <div class="search-result">
+                            <div class="search-result" data-uid="{{this.uid}}">
                                 <img class="avatar" src="{{this.avatar}}"/>
                                 <div class="user-name">{{this.userName}}</div>
                                 <div class="{{#if this.added}}check check_padded{{else}}add add_padded{{/if}}"></div>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="horizontal-line horizontal-line_aligned"></div>
             </div>
-            <div class="close-button" id="boardSettingPopUpCloseId"></div>
+            <div class="close-button" id="addUserPopUpCloseId"></div>
         </div>
     </div>
 {{/if}}

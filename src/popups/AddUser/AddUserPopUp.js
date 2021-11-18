@@ -27,14 +27,10 @@ export default class AddUserPopUp extends BaseComponent {
      */
     _registerPopUpElements() {
         this._elements = {
-            wrapper: document.getElementById('boardSettingPopUpWrapperId'),
-            saveBtn: document.getElementById('boardSettingPopUpSaveBtnId'),
-            title: document.getElementById('boardSettingPopUpTitleId'),
-            description: document.getElementById('boardSettingPopUpDescriptionId'),
-            deleteBtn: document.getElementById('boardSettingPopUpDeleteBtnId'),
-            confirmBtn: document.getElementById('boardSettingPopUpDeleteConfirmBtnId'),
-            rejectBtn: document.getElementById('boardSettingPopUpDeleteRejectBtnId'),
-            closeBtn: document.getElementById('boardSettingPopUpCloseId'),
+            wrapper: document.getElementById('addUserPopUpWrapperId'),
+            input: document.getElementById('addUserPopUpSearchInputId'),
+            users: document.querySelectorAll('.search-result'),
+            closeBtn: document.getElementById('addUserPopUpCloseId'),
         };
     }
 
@@ -45,12 +41,12 @@ export default class AddUserPopUp extends BaseComponent {
     addEventListeners() {
         this._registerPopUpElements();
         super.addEventListeners();
-        this._elements.wrapper?.addEventListener('click', this._onPopUpClose);
-        this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
-        this._elements.deleteBtn?.addEventListener('click', this._onDelete);
-        this._elements.confirmBtn?.addEventListener('click', this._onDeleteConfirm);
-        this._elements.rejectBtn?.addEventListener('click', this._onRejectConfirm);
-        this._elements.saveBtn?.addEventListener('click', this._onSave);
+        this._elements.wrapper?.addEventListener('click', this._callbacks.onClose);
+        this._elements.closeBtn?.addEventListener('click', this._callbacks.onClose);
+        this._elements.input?.addEventListener('input', this._callbacks.onInput);
+        this._elements.users?.forEach((user)=>{
+            user.addEventListener('click', this._callbacks.onUserClick);
+        });
     };
 
     /**
@@ -59,11 +55,11 @@ export default class AddUserPopUp extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._elements.wrapper?.removeEventListener('click', this._onPopUpClose);
-        this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
-        this._elements.deleteBtn?.removeEventListener('click', this._onDelete);
-        this._elements.confirmBtn?.removeEventListener('click', this._onDeleteConfirm);
-        this._elements.rejectBtn?.removeEventListener('click', this._onRejectConfirm);
-        this._elements.saveBtn?.removeEventListener('click', this._onSave);
+        this._elements.wrapper?.removeEventListener('click', this._callbacks.onClose);
+        this._elements.closeBtn?.removeEventListener('click', this._callbacks.onClose);
+        this._elements.input?.removeEventListener('click', this._callbacks.onInput);
+        this._elements.users?.forEach((user)=>{
+            user.removeEventListener('click', this._callbacks.onUserClick);
+        });
     }
 }
