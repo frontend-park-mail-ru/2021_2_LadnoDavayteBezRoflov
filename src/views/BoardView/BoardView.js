@@ -165,9 +165,15 @@ export default class BoardView extends BaseView {
         this._onDeleteCard = this._onDeleteCard.bind(this);
         this._onEditCard = this._onEditCard.bind(this);
         /* Add User PopUps */
-        // bind
+        this._onAddCardMemberInput = this._onAddCardMemberInput.bind(this);
+        this._onAddCardMemberUserClick = this._onAddCardMemberUserClick.bind(this);
+        this._onAddCardMemberClose = this._onAddCardMemberClose.bind(this);
         this._addUserCallBacks = {
-            card: {},
+            card: {
+                onInput: this._onAddCardMemberInput,
+                onUserClick: this._onAddCardMemberUserClick,
+                onClose: this._onAddCardMemberClose,
+            },
             board: {},
         };
     }
@@ -305,5 +311,37 @@ export default class BoardView extends BaseView {
             parseInt(event.target.dataset.id, 10),
         );
         event.stopPropagation();
+    }
+
+
+    /**
+     * Callback вызывается при вводе текста в input поиска пользователя для карточки
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardMemberInput(event) {
+        console.log('typed: ' + event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатие на строку с пользователем
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAddCardMemberUserClick(event) {
+        const user = event.target.closest('div.search-result');
+        console.log('user id: ' + user.dataset.uid);
+    }
+
+    /**
+     * Callback, вызываемый при закрытии окна добавления пользователя в карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardMemberClose(event) {
+        if (event.target.id === 'addUserPopUpCloseId' ||
+            event.target.id === 'addUserPopUpWrapperId') {
+            console.log('close');
+        }
     }
 }
