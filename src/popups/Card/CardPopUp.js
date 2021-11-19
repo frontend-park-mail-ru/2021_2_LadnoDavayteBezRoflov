@@ -157,7 +157,6 @@ export default class CardPopUp extends BaseComponent {
      */
     _onAssigneeClick(event) {
         event.preventDefault();
-        console.log('show');
         cardActions.showAddCardAssigneePopUp();
     }
 }
