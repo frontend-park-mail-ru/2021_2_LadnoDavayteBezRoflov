@@ -74,70 +74,9 @@ class BoardStore extends BaseStore {
 
         this._storage.set('add-card-member-popup', {
             visible: false,
-            header: 'Добавить пользователя в карточку',
-            users: [
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: true,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: false,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: true,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: true,
-                },
-                {
-                    uid: 1,
-                    avatar: '/assets/noscript.webp',
-                    userName: 'vasya',
-                    added: true,
-                },
-
-            ],
+            errors: null,
+            users: null,
+            header: 'Добавить пользователя в карточку'
         });
     }
 
