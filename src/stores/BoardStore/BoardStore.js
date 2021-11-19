@@ -76,7 +76,7 @@ class BoardStore extends BaseStore {
             visible: false,
             errors: null,
             users: null,
-            header: 'Добавить пользователя в карточку'
+            header: 'Добавить пользователя в карточку',
         });
     }
 

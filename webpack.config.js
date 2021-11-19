@@ -24,6 +24,7 @@ const confDefs = {
     FRONTEND_PORT: confConst.FRONTEND_PORT,
     BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE),
     BACKEND_PORT: confConst.BACKEND_PORT,
+    DEBUG: confConst.DEBUG,
 };
 
 const devServer = {
@@ -94,17 +95,20 @@ const config = {
                 to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
             },
         ]}),
-        // new InjectManifest({
-        //     swSrc: './src/sw.js',
-        //     swDest: 'sw.js',
-        //     exclude: [
-        //         /\.m?js$/,
-        //     ],
-        // }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
 };
+
+if (!confConst.DEBUG) {
+    config.plugins.push(new InjectManifest({
+        swSrc: './src/sw.js',
+        swDest: 'sw.js',
+        exclude: [
+            /\.m?js$/,
+        ],
+    }));
+}
 
 module.exports = config;
