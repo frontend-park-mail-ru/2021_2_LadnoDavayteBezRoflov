@@ -373,7 +373,7 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.card}` +
-            `/${searchString}`,
+            `/${cid}/${searchString}`,
             options);
     }
 }
