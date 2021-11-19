@@ -20,6 +20,11 @@ class Network {
             board: 'api/boards',
             card: 'api/cards',
             cardlist: 'api/cardLists',
+            usersearch: {
+                card: 'api/usersearch/card',
+                board: 'api/usersearch/board',
+                team: 'api/usersearch/team',
+            },
         };
 
         this._defaultOptions = {
@@ -354,6 +359,21 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий GET /api/usersearch/card/:cid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} cid - номер карточки
+     */
+    async searchCardMembers(searchString, cid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.card}` +
+            `/${searchString}`,
             options);
     }
 }
