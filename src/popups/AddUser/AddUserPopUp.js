@@ -40,6 +40,7 @@ export default class AddUserPopUp extends BaseComponent {
      */
     addEventListeners() {
         this._registerPopUpElements();
+        this._setUpSearchInput();
         super.addEventListeners();
         this._elements.wrapper?.addEventListener('click', this._callbacks.onClose);
         this._elements.closeBtn?.addEventListener('click', this._callbacks.onClose);
@@ -61,5 +62,15 @@ export default class AddUserPopUp extends BaseComponent {
         this._elements.users?.forEach((user)=>{
             user.removeEventListener('click', this._callbacks.onUserClick);
         });
+    }
+
+    /**
+     * Метод устанавливает курсор в конце строки внутри input тэга
+     * @private
+     */
+    _setUpSearchInput() {
+        this._elements.input?.focus();
+        this._elements.input?.setSelectionRange(this._elements.input.value.length,
+                                                this._elements.input.value.length);
     }
 }

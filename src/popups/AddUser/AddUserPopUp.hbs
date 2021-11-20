@@ -9,7 +9,7 @@
                 <div class="popup-form__elements-wrapper">
                     <div>
                         <input class="simple-form-element" type="text" id="addUserPopUpSearchInputId"
-                               name="search-input"
+                               name="search-input" {{# if searchString}}value="{{searchString}}"{{/if}}
                                autofocus placeholder="Введите имя пользователя..."
                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                     </div>

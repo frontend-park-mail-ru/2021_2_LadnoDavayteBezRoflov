@@ -134,7 +134,7 @@ class SettingsStore extends BaseStore {
             this._emitChange();
             return;
 
-        case HttpStatusCodes.NotMofidied:
+        case HttpStatusCodes.NotModified:
             this._storage.set('validation', {
                 login: ConstantMessages.NotModified,
                 email: null,

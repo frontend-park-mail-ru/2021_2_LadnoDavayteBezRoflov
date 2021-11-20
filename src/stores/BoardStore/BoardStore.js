@@ -12,7 +12,8 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes,
+    Urls, BoardStoreConstants} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -75,7 +76,8 @@ class BoardStore extends BaseStore {
         this._storage.set('add-card-member-popup', {
             visible: false,
             errors: null,
-            users: null,
+            searchString: null,
+            users: [],
             header: 'Добавить пользователя в карточку',
         });
     }
@@ -937,8 +939,10 @@ class BoardStore extends BaseStore {
         const context = this._storage.get('add-card-member-popup');
         context.visible = true;
         context.errors = null;
+        context.searchString = null;
         const card = this._getCardById(this._storage.get('card-popup').clid,
                                        this._storage.get('card-popup').cid);
+        card.assignees = []; // @todo del!
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
@@ -959,7 +963,14 @@ class BoardStore extends BaseStore {
      */
     async _refreshUserSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
         const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
         const validator = new Validator();
         context.errors = validator.validateLogin(searchString);
         if (context.errors) {
@@ -980,12 +991,8 @@ class BoardStore extends BaseStore {
             context.users = payload.users;
             return;
 
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.UnsuccessfulRequest;
-            return;
-
         default:
-            this._storage.get('card-popup').errors = ConstantMessages.UnsuccessfulRequest;
+            context.errors = ConstantMessages.UnsuccessfulRequest;
             return;
         }
     }
@@ -1032,10 +1039,6 @@ class BoardStore extends BaseStore {
 
             user.added = !assignee;
             card.assignees = assignees;
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            context.errors = ConstantMessages.UnsuccessfulRequest;
             return;
 
         default:
