@@ -93,7 +93,7 @@ export const boardActions = {
     },
 
     /**
-     * Скрыть popup добавления пользователя на карточку
+     * Скрыть popup добавления пользователя в доску
      */
     hideAddBoardMemberPopUp() {
         Dispatcher.dispatch({

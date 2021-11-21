@@ -23,7 +23,7 @@ class BoardsStore extends BaseStore {
         this._storage.set('teams', null);
         this._storage.set('create-popup', {
             visible: false,
-            teamID: null,
+            tid: null,
             errors: null,
         });
     }
@@ -119,7 +119,7 @@ class BoardsStore extends BaseStore {
 
         try {
             payload = await Network.createBoard({
-                tid: parseInt(data.teamID, 10),
+                tid: data.tid,
                 board_name: data.name,
             });
         } catch (error) {
@@ -130,14 +130,14 @@ class BoardsStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             const team = this._storage.get('teams').find((team) => {
-                return team.tid === parseInt(data.teamID, 10);
+                return team.tid === data.tid;
             });
 
             team.boards.push({
                 bid: payload.data.bid,
                 board_name: data.name,
                 description: '',
-                tid: data.teamID,
+                tid: data.tid,
             });
 
             return;
@@ -163,7 +163,7 @@ class BoardsStore extends BaseStore {
     _hideModal() {
         this._storage.set('create-popup', {
             visible: false,
-            teamID: null,
+            tid: null,
             errors: null,
         });
     }
@@ -176,7 +176,7 @@ class BoardsStore extends BaseStore {
     _showModal(data) {
         this._storage.set('create-popup', {
             visible: true,
-            teamID: data.teamID,
+            tid: data.tid,
             errors: null,
         });
     }
