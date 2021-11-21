@@ -69,8 +69,10 @@ class BoardStore extends BaseStore {
 
         this._storage.set('add-board-member-popup', {
             visible: false,
-            header: null,
+            errors: null,
+            searchString: null,
             users: [],
+            header: 'Добавить пользователя в доску',
         });
 
         this._storage.set('add-card-member-popup', {
@@ -212,12 +214,32 @@ class BoardStore extends BaseStore {
             break;
 
         case CardActionTypes.CARD_ADD_ASSIGNEE_INPUT:
-            await this._refreshUserSearchList(action.data);
+            await this._refreshCardAssigneeSearchList(action.data);
             this._emitChange();
             break;
 
         case CardActionTypes.CARD_ADD_ASSIGNEE_USER_CLICKED:
-            await this._toggleUserInSearchList(action.data);
+            await this._toggleCardAssigneeInSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_SHOW:
+            this._showAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_CLOSE:
+            this._hideAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_INPUT:
+            await this._refreshBoardMemberSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_USER_CLICKED:
+            await this._toggleBoardMemberInSearchList(action.data);
             this._emitChange();
             break;
 
@@ -247,6 +269,7 @@ class BoardStore extends BaseStore {
             this._storage.set('board_name', payload.data.board_name);
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
+            this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -300,7 +323,10 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network.updateBoard(data, this._storage.get('bid'));
+            payload = await Network.updateBoard({
+                ...data,
+                members: this._storage.get('members'),
+            }, this._storage.get('bid'));
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
@@ -877,7 +903,7 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с текстом поиска
      * @private
      */
-    async _refreshUserSearchList(data) {
+    async _refreshCardAssigneeSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
         context.errors = null;
         const {searchString} = data;
@@ -918,30 +944,37 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с uid пользователя
      * @private
      */
-    async _toggleUserInSearchList(data) {
+    async _toggleCardAssigneeInSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
         context.errors = null;
 
         const card = this._getCardById(this._storage.get('card-popup').clid,
                                        this._storage.get('card-popup').cid);
         const assignees = card.assignees.slice();
+
+        // Найдем выбранного пользователя в списке assignees карточки
         const assignee = card.assignees.find((assignee) => {
             return assignee.uid === data.uid;
         });
 
-        // Если пользователь быть в assignee, исключим его от туда. Иначе - добавим.
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в assignees, исключим его от туда. Иначе - добавим.
         if (assignee) {
             assignees.splice(assignees.indexOf(assignee), 1);
         } else {
-            assignee.push({uid: assignee.uid, userName: assignee.userName, avatar: assignee.avatar});
+            assignees.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
         }
 
-        const newCard = {...card};
-        newCard.assignees = assignees;
+        const updatedCard = {...card};
+        updatedCard.assignees = assignees;
         let payload;
 
         try {
-            payload = await Network._updateCard(newCard, this._storage.get('card-popup').cid);
+            payload = await Network._updateCard(updatedCard, this._storage.get('card-popup').cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -949,12 +982,127 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const user = context.users.find((user) => {
-                return user.uid === data.uid;
-            });
-
             user.added = !assignee;
             card.assignees = assignees;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления опльзователя в доску и устанавливает контекст
+     * @private
+     */
+    _showAddBoardMemberPopUp() {
+        const context = this._storage.get('add-board-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        this._storage.set('members', []); // @todo del!
+        context.users = this._storage.get('members').map((member) => {
+            return {...member, added: true};
+        });
+    }
+
+    /**
+     * Метод скрывает popup добавления пользователя в доску
+     * @private
+     */
+    _hideAddBoardMemberPopUp() {
+        this._storage.get('add-board-member-popup').visible = false;
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из доски
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _toggleBoardMemberInSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+
+        const members = this._storage.get('members').slice();
+        // Найдем выбранного пользователя в списке членов доски
+        const member = members.find((memeber) => {
+            return memeber.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в members, исключим его от туда. Иначе - добавим.
+        if (member) {
+            members.splice(members.indexOf(member), 1);
+        } else {
+            members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        const updatedBoard = {
+            description: this._storage.get('description'),
+            board_name: this._storage.get('board_name'),
+            members: members,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !member;
+            this._storage.set('members', members);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления пользователя в доску
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _refreshBoardMemberSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchBoardMembers(searchString, this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.users;
             return;
 
         default:
