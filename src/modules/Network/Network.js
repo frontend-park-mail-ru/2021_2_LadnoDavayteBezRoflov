@@ -156,16 +156,11 @@ class Network {
 
     /**
      * Метод, реализующий запрос GET /api/boards.
-     * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */
-    async getBoards(data) {
+    async getBoards() {
         const options = {
             method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
