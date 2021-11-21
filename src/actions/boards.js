@@ -2,7 +2,6 @@
 
 // Modules
 import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
-import {BoardActionTypes} from './board';
 
 /**
  * Константа, содержащая в себе типы действий для списка досок.
