@@ -41,6 +41,8 @@ export default class BoardsView extends BaseView {
 
         this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
         this.addComponent('AddTeamMemberPopUp', new AddUserPopUp(this._addUserCallBacks));
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
     }
 
     /**
@@ -53,6 +55,10 @@ export default class BoardsView extends BaseView {
             ...BoardsStore.getContext(),
             ...SettingsStore.getContext()],
         ));
+
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
+
         if (!this._isActive) {
             return;
         }
@@ -74,6 +80,9 @@ export default class BoardsView extends BaseView {
             ...BoardsStore.getContext(),
             ...SettingsStore.getContext(),
         ]));
+
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
 
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login, true);
