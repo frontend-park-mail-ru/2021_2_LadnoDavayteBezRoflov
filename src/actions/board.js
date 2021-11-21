@@ -17,6 +17,10 @@ export const BoardActionTypes = {
     POPUP_BOARD_DELETE_SHOW: 'board/popup/delete/show',
     // Закрытие диалога подтверждения удаления доски (нажато да/нет)
     POPUP_BOARD_DELETE_HIDE: 'board/popup/delete/hide',
+    BOARD_ADD_MEMBER_SHOW: 'board/member/show',
+    BOARD_ADD_MEMBER_CLOSE: 'board/member/close',
+    BOARD_ADD_MEMBER_INPUT: 'board/member/input',
+    BOARD_ADD_MEMBER_USER_CLICKED: 'board/member/clicked',
 };
 
 /**
@@ -76,6 +80,46 @@ export const boardActions = {
             data: {
                 confirmed,
             },
+        });
+    },
+
+    /**
+     * Отобразить popup добавления пользователя в доску
+     */
+    showAddBoardMemberPopUp() {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.BOARD_ADD_MEMBER_SHOW,
+        });
+    },
+
+    /**
+     * Скрыть popup добавления пользователя на карточку
+     */
+    hideAddBoardMemberPopUp() {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.BOARD_ADD_MEMBER_CLOSE,
+        });
+    },
+
+    /**
+     * Обновить список пользователей на основании ввода пользователя
+     * @param {String} searchString - строка для поиска
+     */
+    refreshUserSearchList(searchString) {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.BOARD_ADD_MEMBER_INPUT,
+            data: {searchString},
+        });
+    },
+
+    /**
+     * Добаваить/исключить пользователя из доски
+     * @param {Number} uid - id пользователя
+     */
+    toggleUserInSearchList(uid) {
+        Dispatcher.dispatch({
+            actionName: BoardActionTypes.BOARD_ADD_MEMBER_USER_CLICKED,
+            data: {uid},
         });
     },
 };

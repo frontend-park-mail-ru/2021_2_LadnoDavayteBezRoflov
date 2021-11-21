@@ -376,6 +376,22 @@ class Network {
             `/${cid}/${searchString}`,
             options);
     }
+
+
+    /**
+     * Метод, реализующий GET /api/usersearch/board/:bid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} bid - номер карточки
+     */
+    async searchBoardMembers(searchString, bid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.board}` +
+            `/${bid}/${searchString}`,
+            options);
+    }
 }
 
 export default new Network();

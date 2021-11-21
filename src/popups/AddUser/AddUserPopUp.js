@@ -26,6 +26,10 @@ export default class AddUserPopUp extends BaseComponent {
      * @private
      */
     _registerPopUpElements() {
+        if (!this.context.visible) {
+            this._elements = {};
+            return;
+        }
         this._elements = {
             wrapper: document.getElementById('addUserPopUpWrapperId'),
             input: document.getElementById('addUserPopUpSearchInputId'),
