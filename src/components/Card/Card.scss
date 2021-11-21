@@ -61,15 +61,15 @@ $card-due-date-done: forestgreen;
   color: rgb(255, 255, 255);
   padding-top: 3px;
     
-  &__invalid {
+  &-invalid {
     background-color: rgb(235, 90, 70);
   }
 
-  &__valid {
+  &-valid {
     background-color: rgb(97, 189, 79);
   }
 
-  &__completed {
+  &-completed {
     background-color: rgb(107, 148, 99);
   }
 }
