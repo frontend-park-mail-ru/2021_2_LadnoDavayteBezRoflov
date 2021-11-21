@@ -201,6 +201,9 @@ class BoardStore extends BaseStore {
      * @param {Object} data полезная нагрузка запроса
      */
     async _getBoard(data) {
+        const validator = new Validator();
+        const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
         let payload;
 
         try {
@@ -217,6 +220,15 @@ class BoardStore extends BaseStore {
             this._storage.set('board_name', payload.data.board_name);
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
+
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
+                    card.deadlineCheck = card.deadline_check;
+                    card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                });
+            });
+
             return;
 
         case HttpStatusCodes.Unauthorized:

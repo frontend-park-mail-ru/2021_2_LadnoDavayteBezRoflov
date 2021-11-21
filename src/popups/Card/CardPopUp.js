@@ -113,6 +113,7 @@ export default class CardPopUp extends BaseComponent {
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,
+            this._elements.deadline.value,
         );
     }
 }

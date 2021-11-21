@@ -145,9 +145,9 @@ export default class Validator {
      * @return {String} 'invalid' или 'valid'
      */
     validateDeadline(deadline, deadlineCheck) {
-        if (!deadline) {
+        /*  if (!deadline) {
             throw new Error('DeadlinePreview: некорректный deadline.');
-        }
+        } */
         const deadlineDate = new Date(deadline);
         const timeNow = new Date();
 

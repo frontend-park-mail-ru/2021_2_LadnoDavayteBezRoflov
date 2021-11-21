@@ -88,14 +88,15 @@ export const cardActions = {
      * Создает карточку
      * @param {String} title заголовок
      * @param {String} description описание
+     * @param {String} deadline дедлайн
      */
-    createCard(title, description) {
+    createCard(title, description, deadline) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_CREATE_SUBMIT,
             data: {
                 card_name: title,
                 description,
-                // deadline,
+                deadline,
             },
         });
     },
