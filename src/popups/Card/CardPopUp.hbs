@@ -45,7 +45,7 @@
                         {{#if errors}}
                             <div class="error">{{errors}}</div>
                         {{/if}}
-                        {{# if edit }}
+                        {{#if edit }}
                             <button class="button" id="cardPopUpSaveBtnId">Сохранить</button>
                         {{ else }}
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>
@@ -54,6 +54,40 @@
                 </form>
                 <div class="close-button" id="cardPopUpCloseId"></div>
             </div>
-        </div>
+
+            <div class="comments-wrapper">
+                <div class="custom-scroll">
+                    <ul class="comments">
+                        {{#each comments}}
+                        <div class="comment" data-id="{{this.cmid}}">
+                            <li data-id="{{this.cmid}}" data-author="{{this.author}}">
+                                <div class="column__header">
+                                        <div class="comment__avatar">
+                                            <img src="{{this.avatar}}"/>
+                                        </div>
+                                        {{#if (IsAuthorHelper this.author)}}
+                                        <span class="column__edit material-icons editComment" data-id="{{this.cmid}}"></span>
+                                        <span class="column__delete material-icons deleteComment" data-id="{{this.cmid}}"></span>
+                                        {{/if}}
+                                </div>
+                                <div class="comment__text__wrapper">
+                                    <p class="comment__text" data-id="{{this.cmid}}">{{this.text}}</p> <span class="date sub-text">{{this.date}}</span>
+                                </div>
+                            </li>
+                        </div>
+                        {{/each}}
+                    </ul>
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <input class="simple-form-element" type="text" id="newCommentText" name="comment"
+                                autocomplete="off" placeholder="Добавить комментарий" required>
+                        </div>
+                        <div class="form-group">
+                            <button class="button_small" id="createComment">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                </div>
     {{/if}}
 {{/with}}

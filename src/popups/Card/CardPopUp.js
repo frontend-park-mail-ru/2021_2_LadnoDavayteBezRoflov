@@ -18,6 +18,7 @@ export default class CardPopUp extends BaseComponent {
         super(null, template);
         this._bindCallBacks();
         this._elements = {};
+        this.commentEdit = -1;
     }
 
     /**
@@ -34,6 +35,12 @@ export default class CardPopUp extends BaseComponent {
             card_name: document.getElementById('cardPopUpTitleId'),
             description: document.getElementById('cardPopUpDescriptionId'),
             // deadline: document.getElementById('cardPopUpDeadlineId'),
+            comments: {
+                editBtns: document.querySelectorAll('.editComment'),
+                deleteBtns: document.querySelectorAll('.deleteComment'),
+            },
+            newCommentText: document.getElementById('newCommentText'),
+            addCommentBtn: document.getElementById('createComment'),
         };
     }
 
@@ -48,6 +55,13 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
+        this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
+            editCommentBtn.addEventListener('click', this._onEditComment);
+        });
+        this._elements.comments?.deleteBtns?.forEach((deleteCommentBtn)=>{
+            deleteCommentBtn.addEventListener('click', this._onDeleteComment);
+        });
+        this._elements.addCommentBtn?.addEventListener('click', this._onCreateComment);
     };
 
     /**
@@ -60,6 +74,13 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.removeEventListener('click', this._onCreate);
         this._elements.saveBtn?.removeEventListener('click', this._onSave);
+        this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
+            editCommentBtn.removeEventListener('click', this._onEditComment);
+        });
+        this._elements.comments?.deleteBtns?.forEach((deleteCommentBtn)=>{
+            deleteCommentBtn.removeEventListener('click', this._onDeleteComment);
+        });
+        this._elements.addCommentBtn?.removeEventListener('click', this._onCreateComment);
     }
 
     /**
@@ -70,6 +91,11 @@ export default class CardPopUp extends BaseComponent {
         this._onPopUpClose = this._onPopUpClose.bind(this);
         this._onCreate = this._onCreate.bind(this);
         this._onSave = this._onSave.bind(this);
+
+        /* Comments */
+        this._onDeleteComment = this._onDeleteComment.bind(this);
+        this._onEditComment = this._onEditComment.bind(this);
+        this._onCreateComment = this._onCreateComment.bind(this);
     }
 
     /**
@@ -111,6 +137,52 @@ export default class CardPopUp extends BaseComponent {
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,
+        );
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Создать комментарий"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCreateComment(event) {
+        event.preventDefault();
+        if (this.commentEdit === -1) {
+            cardActions.createComment(
+                this._elements.newCommentText.value,
+            );
+            return;
+        }
+        cardActions.updateComment(
+            this._elements.newCommentText.value,
+            this.commentEdit,
+        );
+        this.commentEdit = -1;
+    }
+
+    /**
+     * Callback, вызываемый при нажатии редактировании комментария
+     * @param {Event} event объект события
+     * @private
+     */
+    _onEditComment(event) {
+        event.preventDefault();
+        const commentId = event.target.dataset.id;
+        this.commentEdit = parseInt(commentId, 10);
+        const comment = Array.from(document.querySelectorAll('.comment__text'))
+            .find((element) => element.dataset.id === commentId);
+        this._elements.newCommentText.value = comment.innerHTML;
+    }
+
+    /**
+     * Callback, вызываемый при удалении комментария
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteComment(event) {
+        event.preventDefault();
+        cardActions.deleteComment(
+            parseInt(event.target.dataset.id, 10),
         );
     }
 }

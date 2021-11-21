@@ -20,6 +20,7 @@ class Network {
             board: 'api/boards',
             card: 'api/cards',
             cardlist: 'api/cardLists',
+            comments: 'api/comments',
         };
 
         this._defaultOptions = {
@@ -356,6 +357,57 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.sessions}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос POST /api/comments.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async createComment(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.comments}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/comments.
+     * @param {Object} data полезная нагрузка запроса
+     * @param {Number} cmid id обновляемого комментария
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateComment(data) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.comments}/${data.cmid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/comments/:cmid.
+     * @param {Number} data данные запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteComment(data) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.comments}/${data.cmid}`,
             options);
     }
 }

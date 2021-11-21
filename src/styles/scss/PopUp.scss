@@ -45,3 +45,45 @@
         padding: 15px 30px 0;
     }
 }
+
+.comments-wrapper {
+    z-index: 1;
+    background-color: $primary-bg-color;
+    padding: 20px;
+    border: 2px solid $tertiary-bg-color;
+    border-radius: 16px;
+    width: 35%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 0 10px 10px $default-box-shadow-color;
+    min-width: 300px;
+}
+
+.comments {
+    padding:0;
+    list-style:none;
+    max-height:200px;
+    width: 100%;
+    overflow:auto;
+
+    &__avatar {
+        width:30px;
+        margin-right:5px;
+        height:100%;
+        float:left;
+    }
+
+    &__text {
+        margin:0;
+    }
+
+}
+
+.sub-text {
+    color:rgb(170, 170, 170);
+    font-family:verdana;
+    font-size:11px;
+}
