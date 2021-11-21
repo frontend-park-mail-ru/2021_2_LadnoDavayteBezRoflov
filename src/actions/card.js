@@ -135,12 +135,16 @@ export const cardActions = {
 
     /**
      * Создает комментарий
+     * @param {Number} cid id карточки
      * @param {String} text текст комментария
      */
-    createComment(text) {
+    createComment(cid, text) {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_ADD_COMMENT,
-            data: {text},
+            data: {
+                cid,
+                text,
+            },
         });
     },
 

@@ -6,6 +6,7 @@ import template from './CardPopUp.hbs';
 
 // Actions
 import {cardActions} from '../../actions/card.js';
+import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
 /**
  * Класс popup окна создания и редактирования карточки
@@ -149,6 +150,7 @@ export default class CardPopUp extends BaseComponent {
         event.preventDefault();
         if (this.commentEdit === -1) {
             cardActions.createComment(
+                BoardStore.getContext('card-popup').cid,
                 this._elements.newCommentText.value,
             );
             return;
@@ -184,5 +186,6 @@ export default class CardPopUp extends BaseComponent {
         cardActions.deleteComment(
             parseInt(event.target.dataset.id, 10),
         );
+        event.stopPropagation();
     }
 }

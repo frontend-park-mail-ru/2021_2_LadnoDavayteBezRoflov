@@ -60,12 +60,12 @@
                     <ul class="comments">
                         {{#each comments}}
                         <div class="comment" data-id="{{this.cmid}}">
-                            <li data-id="{{this.cmid}}" data-author="{{this.author}}">
+                            <li data-id="{{this.cmid}}" data-author="{{this.user.login}}">
                                 <div class="column__header">
                                         <div class="comment__avatar">
-                                            <img src="{{this.avatar}}"/>
+                                            <img width="25px" height="25px" src="{{this.user.avatar}}"/>
                                         </div>
-                                        {{#if (IsAuthorHelper this.author)}}
+                                        {{#if (IsAuthorHelper this.user.login)}}
                                         <span class="column__edit material-icons editComment" data-id="{{this.cmid}}"></span>
                                         <span class="column__delete material-icons deleteComment" data-id="{{this.cmid}}"></span>
                                         {{/if}}

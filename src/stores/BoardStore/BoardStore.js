@@ -16,6 +16,7 @@ import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
+import SettingsStore from '../SettingsStore/SettingsStore.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -685,7 +686,12 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
-            comments: [
+            comments: card.comments,
+            errors: null,
+        });
+    }
+
+    /* [
                 {
                     cmid: 1,
                     author: 'test',
@@ -704,10 +710,7 @@ class BoardStore extends BaseStore {
                     text: 'test comment #2',
                     date: '2004-00-00',
                 },
-            ],
-            errors: null,
-        });
-    }
+            ],*/
 
     /**
      * Обновляет текущий card
@@ -872,14 +875,13 @@ class BoardStore extends BaseStore {
                 this._storage.get('card-popup').cid,
             );
 
-            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
-            if (cmid === -1) {
-                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
-            }
-
             card.comments.push({
                 cmid: payload.data.cmid,
-                author: UserStore.getContext('userName'),
+                cid: this._storage.get('card-popup').cid,
+                user: {
+                    login: UserStore.getContext('userName'),
+                    avatar: SettingsStore.getContext('avatar'),
+                },
                 text: data.text,
                 date: payload.data.date,
             });
@@ -924,7 +926,7 @@ class BoardStore extends BaseStore {
                 throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
             }
 
-            cmid.text = data.text;
+            card.comments[cmid].text = data.text;
 
             return;
 
