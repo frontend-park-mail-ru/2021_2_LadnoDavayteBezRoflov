@@ -25,6 +25,7 @@ class Network {
                 board: 'api/usersearch/board',
                 team: 'api/usersearch/team',
             },
+            team: 'api/teams',
         };
 
         this._defaultOptions = {
@@ -360,7 +361,7 @@ class Network {
     /**
      * Метод, реализующий GET /api/usersearch/card/:cid/:search_text
      * @param {String} searchString - строка для поиска
-     * @param {Number} cid - номер карточки
+     * @param {Number} cid - id карточки
      */
     async searchCardMembers(searchString, cid) {
         const options = {
@@ -372,11 +373,10 @@ class Network {
             options);
     }
 
-
     /**
      * Метод, реализующий GET /api/usersearch/board/:bid/:search_text
      * @param {String} searchString - строка для поиска
-     * @param {Number} bid - номер карточки
+     * @param {Number} bid - id доски
      */
     async searchBoardMembers(searchString, bid) {
         const options = {
@@ -385,6 +385,39 @@ class Network {
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.board}` +
             `/${bid}/${searchString}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий GET /api/usersearch/team/:tid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} tid - id команды
+     */
+    async searchTeamMembers(searchString, tid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.team}` +
+            `/${tid}/${searchString}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/teams/:tid
+     * @param {Object} data - body запроса
+     * @param {Number} tid - id запроса
+     */
+    async updateTeam(data, tid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
             options);
     }
 }

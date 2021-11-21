@@ -1108,7 +1108,6 @@ class BoardStore extends BaseStore {
         const context = this._storage.get('add-board-member-popup');
         context.errors = null;
 
-
         const members = this._storage.get('members').slice();
         // Найдем выбранного пользователя в списке членов доски
         const member = members.find((memeber) => {
