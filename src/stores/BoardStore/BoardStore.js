@@ -16,6 +16,7 @@ import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
+import {CheckListActionTypes} from '../../actions/checklist';
 
 /**
  * Класс, реализующий хранилище доски
@@ -186,6 +187,52 @@ class BoardStore extends BaseStore {
             this._hideDeleteCardPopUp();
             this._emitChange();
             break;
+
+        case CheckListActionTypes.CHECKLIST_CREATE:
+            await this._createCheckList();
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_EDIT:
+            this._editCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_SAVE:
+            await this._saveChekList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_DELETE:
+            await this._deleteCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_CREATE:
+            await this._createCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_EDIT:
+            this._editCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_SAVE:
+            await this._saveChekListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_DELETE:
+            await this._deleteCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
+            await this._toggleChekListItem(action.data);
+            this._emitChange();
+            break;
+
 
         default:
             return;
@@ -814,6 +861,86 @@ class BoardStore extends BaseStore {
         default:
             return;
         }
+    }
+
+    /**
+     * Создает чеклист
+     * @private
+     */
+    async _createCheckList() {
+
+    }
+
+    /**
+     * Переключает чеклист в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckList(data) {
+
+    }
+
+    /**
+     * Сохраняет новый заголовок чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveChekList(data) {
+
+    }
+
+    /**
+     * Удаляет чеклист
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckList(data) {
+
+    }
+
+    /**
+     * Создает элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _createCheckListItem(data) {
+
+    }
+
+    /**
+     * Перключает элемент чеклиста в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckListItem(data) {
+
+    }
+
+    /**
+     * Сохраняет текст элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveChekListItem(data) {
+
+    }
+
+    /**
+     * Удаляет элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckListItem(data) {
+
+    }
+
+    /**
+     * Переключает чекбокс элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _toggleChekListItem(data) {
+
     }
 }
 
