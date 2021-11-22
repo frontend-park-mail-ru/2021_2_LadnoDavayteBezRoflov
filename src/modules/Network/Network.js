@@ -404,21 +404,54 @@ class Network {
     }
 
     /**
-     * Метод, реализующий PUT /api/teams/:tid
-     * @param {Object} data - body запроса
-     * @param {Number} tid - id запроса
+     * Метод, реализующий PUT /api/teams/:tid/toggleuser/:uid
+     * @param {Number} tid - id команды
+     * @param {Number} uid - id переключаемого пользователя
      */
-    async updateTeam(data, tid) {
+    async toggleTeamMember(tid, uid) {
         const options = {
             method: 'put',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
-            options);
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}` +
+            `/toggleuser/${uid}`, options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/boards/:bid/toggleuser/:uid
+     * @param {Number} bid - id доски
+     * @param {Number} uid - id переключаемого пользователя
+     */
+    async toggleBoardMember(bid, uid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}` +
+            `/toggleuser/${uid}`, options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/cards/:cid/toggleuser/:uid
+     * @param {Number} cid - id карточки
+     * @param {Number} uid - id переключаемого пользователя
+     */
+    async toggleCardMember(cid, uid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}` +
+            `/toggleuser/${uid}`, options);
     }
 }
 

@@ -299,15 +299,10 @@ class BoardsStore extends BaseStore {
             members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
         }
 
-        const updatedTeam = {
-            team_name: team.team_name,
-            users: members,
-        };
-
         let payload;
 
         try {
-            payload = await Network.updateTeam(updatedTeam, context.tid);
+            payload = await Network.toggleTeamMember(context.tid, data.uid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
