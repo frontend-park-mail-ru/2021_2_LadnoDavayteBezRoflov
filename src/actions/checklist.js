@@ -63,7 +63,7 @@ export const checkListAction = {
      * @param {Number} chlid - id чеклиста
      * @param {String} title - название чеклиста
      */
-    saveChekList(chlid, title) {
+    saveCheckList(chlid, title) {
         Dispatcher.dispatch({
             actionName: CheckListActionTypes.CHECKLIST_SAVE,
             data: {

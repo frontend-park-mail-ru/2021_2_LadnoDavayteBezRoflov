@@ -145,31 +145,36 @@ body {
 }
 
 .material-icon {
-    opacity: 0.6;
+    @extend .material-icons;
+    opacity: 0.3;
 
     &:hover {
         opacity: 1.0;
     }
 
     &-delete {
+        @extend .material-icon;
         &::before {
             content: 'delete';
         }
     }
 
     &-edit {
+        @extend .material-icon;
         &::before {
             content: 'edit';
         }
     }
 
     &-add {
+        @extend .material-icon;
         &::before {
             content: 'add';
         }
     }
 
     &-save {
+        @extend .material-icon;
         &::before {
             content: 'save';
         }

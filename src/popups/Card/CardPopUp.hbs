@@ -1,7 +1,7 @@
 {{#with card-popup}}
     {{#if visible }}
         <div class="popup-wrapper" id="cardPopUpWrapperId">
-            <div class="popup-content">
+            <div class="popup-content popup-content_width">
                 <form class="popup-form custom-scroll">
                     <div class="popup-form__header">
                         {{#if edit }}
@@ -44,11 +44,14 @@
                                 {{/each}}
                             </select>
                         {{/if}}
-                        {{# each checkList}}
+                        {{# if checkLists}}
+                            <span class="check-list-separator">Чек листы</span>
+                        {{/if}}
+                        {{# each checkLists}}
                             <div class="check-list" data-id="{{this.chlid}}">
                                 <div class="check-list__header-wrapper">
                                     {{#if this.edit}}
-                                        <input class="simple-form-element checklist-input" type="text"
+                                        <input class="simple-form-element check-list__input" type="text"
                                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                                value="{{this.title}}">
                                         <div class="material-icon-save checklist-save"></div>

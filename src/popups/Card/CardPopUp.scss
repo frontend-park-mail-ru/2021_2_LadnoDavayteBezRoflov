@@ -1,10 +1,19 @@
-.check-list {
-    &__header-wrapper {
+@import '../../styles/scss/Constants';
 
+.check-list {
+    display: flex;
+    flex-direction: column;
+
+    &__header-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
     }
 
     &__title {
-
+        flex-grow: 1;
+        font-size: 16px;
     }
 
     &__items-wrapper {
@@ -14,9 +23,12 @@
 
 }
 
-.checkbox {
-    &__label {
-    }
-    &__control {
-    }
+input.check-list__input {
+    font-size: 16px;
+}
+
+.check-list-separator {
+    font-size: 24px;
+    padding-bottom: 5px;
+    border-bottom: solid 2px $tertiary-bg-color;
 }
