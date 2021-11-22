@@ -8,6 +8,9 @@ import template from './CardPopUp.hbs';
 import {cardActions} from '../../actions/card.js';
 import {checkListAction} from '../../actions/checklist';
 
+// Стили:
+import './CardPopUp.scss';
+
 /**
  * Класс popup окна создания и редактирования карточки
  */
@@ -264,9 +267,10 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSaveChekList(event) {
         event.preventDefault();
-        const chlid = event.target.closest('div.check-list').dataset.id;
-        const title = event.target.previousSibling.value;
-        checkListAction.saveChekList(parseInt(chlid, 10), title);
+        const checkListContainer = event.target.closest('div.check-list');
+        const chlid = checkListContainer.dataset.id;
+        const title = checkListContainer.querySelector('.check-list__input').value;
+        checkListAction.saveCheckList(parseInt(chlid, 10), title);
     }
 
 

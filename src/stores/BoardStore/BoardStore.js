@@ -12,7 +12,7 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
+import {CheckLists, ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -204,7 +204,7 @@ class BoardStore extends BaseStore {
             break;
 
         case CheckListActionTypes.CHECKLIST_SAVE:
-            await this._saveChekList(action.data);
+            await this._saveCheckList(action.data);
             this._emitChange();
             break;
 
@@ -630,6 +630,7 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').edit = false;
         this._storage.get('card-popup').errors = null;
         this._storage.get('card-popup').clid = data.clid;
+        this._storage.get('card-popup').checkLists = [];
     }
 
     /**
@@ -743,7 +744,7 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
-            cardList: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
+            checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
                 return {...list, edit: false};
             }),
         });
@@ -952,7 +953,34 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCheckList() {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
 
+        const newCheckList = {
+            cid: context.cid,
+            title: CheckLists.CheckListDefaultTitle + ' ' + context.checkLists.length,
+            check_list_items: [],
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckList(newCheckList);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckList.chlid = payload.data.chlid;
+            context.checkLists.push(newCheckList);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -961,7 +989,11 @@ class BoardStore extends BaseStore {
      * @private
      */
     _editCheckList(data) {
-
+        const checkLists = this._storage.get('card-popup').checkLists;
+        const checkList = checkLists.find((checkList) => {
+            return checkList.chlid === data.chlid;
+        });
+        checkList.edit = true;
     }
 
     /**
@@ -969,8 +1001,35 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с данными action'a
      * @private
      */
-    async _saveChekList(data) {
+    async _saveCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = context.checkLists.find((list) => {
+            return list.chlid === data.chlid;
+        });
 
+        const newCheckList = {...checkList};
+        newCheckList.title = data.title;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckList(newCheckList, data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            checkList.title = data.title;
+            checkList.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -979,7 +1038,30 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _deleteCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
 
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckList(data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const delCheckList = context.checkLists.find((checklist) => {
+                return checklist.chlid === data.chlid;
+            });
+            context.checkLists.splice(context.checkLists.indexOf(delCheckList), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
