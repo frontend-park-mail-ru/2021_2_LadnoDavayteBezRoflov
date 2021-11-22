@@ -5,6 +5,7 @@ import Network from '../../modules/Network/Network.js';
 import {BoardStoreConstants, ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
 import Validator from '../../modules/Validator/Validator';
+import SettingsStore from '../SettingsStore/SettingsStore';
 
 /**
  * Класс, реализующий хранилище списка команд и досок
@@ -278,7 +279,8 @@ class BoardsStore extends BaseStore {
         const context = this._storage.get('add-team-member-popup');
         context.errors = null;
 
-        const team = this._storage.get('teams').find((team) => {
+        const teams = this._storage.get('teams');
+        const team = teams.find((team) => {
             return team.tid === context.tid;
         });
         const members = team.users.slice();
@@ -311,7 +313,11 @@ class BoardsStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             user.added = !member;
-            team.users = members;
+            if (user.userName === SettingsStore.getContext('login')) {
+                teams.splice(teams.indexOf(team), 1);
+            } else {
+                team.users = members;
+            }
             return;
 
         default:
