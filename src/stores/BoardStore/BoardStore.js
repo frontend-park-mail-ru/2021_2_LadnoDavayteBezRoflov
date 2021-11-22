@@ -930,7 +930,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            context.users = payload.users;
+            context.users = payload.data;
             return;
 
         default:
@@ -1101,7 +1101,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            context.users = payload.users;
+            context.users = payload.data;
             return;
 
         default:
