@@ -216,7 +216,7 @@ class BoardsStore extends BaseStore {
         context.users = this._storage.get('teams').find((team) => {
             return team.tid === data.tid;
         }).users?.map((member) => {
-            return {...member, added: true};
+            return {...member, userName: member.login, added: true};
         });
     }
 
@@ -260,7 +260,7 @@ class BoardsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            context.users = payload.users;
+            context.users = payload.data;
             return;
 
         default:
