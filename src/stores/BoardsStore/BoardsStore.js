@@ -315,6 +315,7 @@ class BoardsStore extends BaseStore {
             user.added = !member;
             if (user.userName === SettingsStore.getContext('login')) {
                 teams.splice(teams.indexOf(team), 1);
+                context.visible = false;
             } else {
                 team.users = members;
             }
