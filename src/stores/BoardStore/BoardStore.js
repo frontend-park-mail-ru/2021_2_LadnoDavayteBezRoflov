@@ -675,7 +675,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
-                assignee: [],
+                assignees: [],
             });
             return;
 
