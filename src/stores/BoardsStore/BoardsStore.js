@@ -216,7 +216,7 @@ class BoardsStore extends BaseStore {
         context.users = this._storage.get('teams').find((team) => {
             return team.tid === data.tid;
         }).users?.map((member) => {
-            return {...member, userName: member.login, added: true};
+            return {...member, userName: member.login || member.userName, added: true};
         });
     }
 
