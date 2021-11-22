@@ -32,6 +32,9 @@
     flex-direction: column;
     width: 95%;
     padding: 10px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 65vh;
 
     &__header {
         margin-left: 20px;

@@ -59,6 +59,7 @@ class BoardStore extends BaseStore {
             positionRange: null,
             card_name: null,
             errors: null,
+            checkLists: [],
         });
 
         this._storage.set('delete-card-popup', {
@@ -695,6 +696,9 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
+            cardList: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
+                return {...list, edit: false};
+            }),
         });
     }
 
