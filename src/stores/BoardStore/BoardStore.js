@@ -675,6 +675,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                assignee: [],
             });
             return;
 
@@ -884,7 +885,6 @@ class BoardStore extends BaseStore {
         context.searchString = null;
         const card = this._getCardById(this._storage.get('card-popup').clid,
                                        this._storage.get('card-popup').cid);
-        card.assignees = []; // @todo del!
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
@@ -974,7 +974,7 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network._updateCard(updatedCard, this._storage.get('card-popup').cid);
+            payload = await Network.toggleCardMember(this._storage.get('card-popup').cid, data.uid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -1001,7 +1001,6 @@ class BoardStore extends BaseStore {
         context.visible = true;
         context.errors = null;
         context.searchString = null;
-        this._storage.set('members', []); // @todo del!
         context.users = this._storage.get('members').map((member) => {
             return {...member, added: true};
         });
@@ -1052,6 +1051,7 @@ class BoardStore extends BaseStore {
 
         try {
             payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
+            payload = await Network.toggleBoardMember(this._storage.get('bid'), data.uid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
