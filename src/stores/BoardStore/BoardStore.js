@@ -699,7 +699,7 @@ class BoardStore extends BaseStore {
                 deadlineStatus: validator.validateDeadline(
                     data.deadline, false),
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
-                assignee: [],
+                assignees: [],
             });
             return;
 
