@@ -1144,11 +1144,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _saveChekListItem(data) {
-        console.log(data);
         const context = this._storage.get('card-popup');
         context.errors = null;
         const item = this._getCheckListItemById(data.chlid, data.chliid);
-
 
         const newItem = {...item};
         newItem.text = data.text;
