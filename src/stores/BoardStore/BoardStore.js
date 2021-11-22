@@ -663,6 +663,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                check_lists: [],
             });
             return;
 
@@ -719,7 +720,10 @@ class BoardStore extends BaseStore {
             description: card.description,
             errors: null,
             checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
-                return {...list, edit: false};
+                const items = list.check_list_items.map((item) => {
+                    return {...item, edit: false};
+                });
+                return {...list, check_list_items: items, edit: false};
             }),
         });
     }
@@ -865,6 +869,32 @@ class BoardStore extends BaseStore {
     }
 
     /**
+     * Метод выполняет поиск чеклиста по его ID
+     * @param {Number} chlid
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListById(chlid) {
+        const context = this._storage.get('card-popup');
+        return context.checkLists.find((list) => {
+            return list.chlid === chlid;
+        });
+    }
+
+    /**
+     * Метод выполняет поиск элемента чеклиста по паре id
+     * @param {Number} chlid - id чеклиста
+     * @param {Number} chliid - id элемента чеклиста
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListItemById(chlid, chliid) {
+        return this._getCheckListById(chlid).check_list_items.find((item) => {
+            return item.chliid === chliid;
+        });
+    }
+
+    /**
      * Создает чеклист
      * @private
      */
@@ -920,12 +950,11 @@ class BoardStore extends BaseStore {
     async _saveCheckList(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
-        const checkList = context.checkLists.find((list) => {
-            return list.chlid === data.chlid;
-        });
+        const checkList = this._getCheckListById(data.chlid);
 
         const newCheckList = {...checkList};
         newCheckList.title = data.title;
+        console.log(newCheckList);
 
         let payload;
 
@@ -986,7 +1015,35 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = this._getCheckListById(data.chlid);
 
+        const newCheckListItem = {
+            chlid: data.chlid,
+            text: CheckLists.CheckListItemDefaultTitle + ' ' + checkList.check_list_items.length,
+            status: false,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckListItem(newCheckListItem);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckListItem.chliid = payload.data.chliid;
+            checkList.check_list_items.push(newCheckListItem);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -995,7 +1052,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _editCheckListItem(data) {
-
+        this._getCheckListItemById(data.chlid, data.chliid).edit = true;
     }
 
     /**
@@ -1004,7 +1061,35 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _saveChekListItem(data) {
+        console.log(data);
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
 
+
+        const newItem = {...item};
+        newItem.text = data.text;
+        console.log(newItem);
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.text = data.text;
+            item.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -1013,7 +1098,29 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _deleteCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
 
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckListItem(data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const list = this._getCheckListById(data.chlid);
+            const item = this._getCheckListItemById(data.chlid, data.chliid);
+            list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -1022,7 +1129,31 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _toggleChekListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
 
+        const newItem = {...item};
+        newItem.status = !newItem.status;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.status = !item.status;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 }
 

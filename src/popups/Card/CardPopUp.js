@@ -49,6 +49,7 @@ export default class CardPopUp extends BaseComponent {
                 editBtn: document.querySelectorAll('.checklist-item-edit'),
                 saveBtn: document.querySelectorAll('.checklist-item-save'),
                 deleteBtn: document.querySelectorAll('.checklist-item-delete'),
+                label: document.querySelectorAll('.checklist-item__label'),
             },
         };
     }
@@ -89,6 +90,9 @@ export default class CardPopUp extends BaseComponent {
         });
         this._elements.checkListItem.deleteBtn?.forEach((element) => {
             element.addEventListener('click', this._onDeleteCheckListItem);
+        });
+        this._elements.checkListItem.label?.forEach((element) => {
+            element.addEventListener('click', this._onToggleChekListItem);
         });
     };
 
@@ -287,9 +291,10 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSaveChekListItem(event) {
         event.preventDefault();
+        const checkListItemContainer = event.target.closest('div.checklist-item');
         const chlid = event.target.closest('div.check-list').dataset.id;
-        const chliid = event.target.closest('div.checklist-item').dataset.id;
-        const text = event.target.previousSibling.querySelector('input.checklist-item__input').value;
+        const chliid = checkListItemContainer.dataset.id;
+        const text = checkListItemContainer.querySelector('input.checklist-item__input').value;
         checkListAction.saveChekListItem(parseInt(chlid, 10),
                                          parseInt(chliid, 10),
                                          text);

@@ -68,29 +68,27 @@
                                             <label class="checklist-item__label">
                                                 <input type="checkbox" {{#if this.status}}checked{{/if}}>
                                                 {{#if this.edit}}
+                                                </label>
                                                     <input class="simple-form-element checklist-item__input" type="text"
                                                            pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                                            value="{{this.text}}">
+                                                    <div class="material-icon-save checklist-item-save"></div>
                                                 {{else}}
                                                     <div class="checklist-item__title">{{this.text}}</div>
+                                                    </label>
+                                                    <div class="material-icon-edit checklist-item-edit"></div>
                                                 {{/if}}
-                                            </label>
-                                            {{#if this.edit}}
-                                                <div class="material-icon-save checklist-item-save"></div>
-                                            {{else}}
-                                                <div class="material-icon-edit checklist-item-edit"></div>
-                                            {{/if}}
                                             <div class="material-icon-delete checklist-item-delete"></div>
                                         </div>
                                     {{/each}}
                                 </div>
                             </div>
                         {{/each}}
-                        <button class="button" id="cardPopUpAddCheckListBtnId">Новый чек-лист</button>
                         {{#if errors}}
                             <div class="error">{{errors}}</div>
                         {{/if}}
                         {{# if edit }}
+                            <button class="button" id="cardPopUpAddCheckListBtnId">Новый чек-лист</button>
                             <button class="button" id="cardPopUpSaveBtnId">Сохранить</button>
                         {{ else }}
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>
