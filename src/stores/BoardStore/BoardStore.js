@@ -1038,7 +1038,6 @@ class BoardStore extends BaseStore {
 
         const newCheckList = {...checkList};
         newCheckList.title = data.title;
-        console.log(newCheckList);
 
         let payload;
 
@@ -1153,7 +1152,6 @@ class BoardStore extends BaseStore {
 
         const newItem = {...item};
         newItem.text = data.text;
-        console.log(newItem);
 
         let payload;
 
