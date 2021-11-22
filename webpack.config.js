@@ -24,6 +24,7 @@ const confDefs = {
     FRONTEND_PORT: confConst.FRONTEND_PORT,
     BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE),
     BACKEND_PORT: confConst.BACKEND_PORT,
+    DEBUG: confConst.DEBUG,
 };
 
 const devServer = {
@@ -88,17 +89,12 @@ const config = {
             template: 'src/index_template.html',
         }),
         new DefinePlugin(confDefs),
-        new CopyPlugin({patterns: [
-            {
-                from: path.resolve(__dirname, 'public', 'assets'),
-                to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
-            },
-        ]}),
-        new InjectManifest({
-            swSrc: './src/sw.js',
-            swDest: 'sw.js',
-            exclude: [
-                /\.m?js$/,
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'public', 'assets'),
+                    to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
+                },
             ],
         }),
     ],
@@ -106,5 +102,15 @@ const config = {
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
 };
+
+if (!confConst.DEBUG) {
+    config.plugins.push(new InjectManifest({
+        swSrc: './src/sw.js',
+        swDest: 'sw.js',
+        exclude: [
+            /\.m?js$/,
+        ],
+    }));
+}
 
 module.exports = config;
