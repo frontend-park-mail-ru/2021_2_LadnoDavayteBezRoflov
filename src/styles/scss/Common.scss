@@ -152,4 +152,11 @@ body {
     opacity: 1.0;
     cursor: pointer;
   }
+
+  &-add {
+    &::before {
+      content: 'save';
+    }
+  }
+
 }
