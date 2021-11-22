@@ -92,4 +92,5 @@ export const ConstantMessages = {
 
 export const CheckLists = {
     CheckListDefaultTitle: 'Check List',
+    CheckListItemDefaultTitle: 'Item',
 };

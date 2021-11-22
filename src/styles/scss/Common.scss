@@ -147,6 +147,7 @@ body {
 .material-icon {
     @extend .material-icons;
     opacity: 0.3;
+    cursor: pointer;
 
     &:hover {
         opacity: 1.0;

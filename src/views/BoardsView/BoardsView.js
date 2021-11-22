@@ -87,8 +87,6 @@ export default class BoardsView extends BaseView {
      * @param {object} context контекст отрисовки страницы
      */
     render() {
-        console.log('render boards');
-        console.log(this.context);
         super.render();
         this._registerElements();
         this.addEventListeners();

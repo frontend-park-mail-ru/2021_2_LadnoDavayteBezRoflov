@@ -21,7 +21,7 @@ class Network {
             card: 'api/cards',
             cardlist: 'api/cardLists',
             checklists: 'api/checkLists',
-            checklistsItems: 'api/checkListItems/',
+            checklistsItems: 'api/checkListItems',
         };
 
         this._defaultOptions = {
@@ -399,6 +399,48 @@ class Network {
         };
         return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
             `/${this._endpoints.checklists}/${chlid}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос POST /api/checkListItems.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async createCheckListItem(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
+            `/${this._endpoints.checklistsItems}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/checkListItems/:chliid
+     * @param {object} data полезная нагрузка запроса
+     * @param {Number} chliid - id элемента чеклиста
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateCheckListItem(data, chliid) {
+        const options = {
+            method: 'put',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
+            `/${this._endpoints.checklistsItems}/${chliid}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/checkListItems/:chliid
+     * @param {Number} chliid - id элемента чеклиста
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteCheckListItem(chliid) {
+        const options = {
+            method: 'delete',
+        };
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
+            `/${this._endpoints.checklistsItems}/${chliid}`, options);
     }
 }
 
