@@ -48,6 +48,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
+        this._elements.deadline?.addEventListener('click', this._onDeadlineClick);
     };
 
     /**
@@ -60,6 +61,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.removeEventListener('click', this._onCreate);
         this._elements.saveBtn?.removeEventListener('click', this._onSave);
+        this._elements.deadline?.removeEventListener('click', this._onDeadlineClick);
     }
 
     /**
@@ -70,6 +72,7 @@ export default class CardPopUp extends BaseComponent {
         this._onPopUpClose = this._onPopUpClose.bind(this);
         this._onCreate = this._onCreate.bind(this);
         this._onSave = this._onSave.bind(this);
+        this._onDeadlineClick = this._onDeadlineClick.bind(this);
     }
 
     /**
@@ -91,6 +94,11 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSave(event) {
         event.preventDefault();
+        const date = new Date(this._elements.deadline.value);
+        if (isNaN(date)) {
+            this._elements.deadline.value = '3000-12-31T23:59';
+        }
+
         const data = {
             position: parseInt(this._elements.positionSelect.value, 10),
             card_name: this._elements.card_name.value,
@@ -110,10 +118,31 @@ export default class CardPopUp extends BaseComponent {
      */
     _onCreate(event) {
         event.preventDefault();
+        const date = new Date(this._elements.deadline.value);
+        if (isNaN(date)) {
+            this._elements.deadline.value = '3000-12-31T23:59';
+        }
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,
             this._elements.deadline.value,
         );
+    }
+
+    /**
+     * Callback, вызываемый при редактировании дедлайна
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeadlineClick(event) {
+        event.preventDefault();
+        if (!this._elements.deadline.value) {
+            const date = new Date();
+            date.setDate(date.getDate() + 1);
+            this._elements.deadline.value = new Date(
+                date.getTime() - (date.getTimezoneOffset() * 60000))
+                .toISOString()
+                .substring(0, 16);
+        }
     }
 }

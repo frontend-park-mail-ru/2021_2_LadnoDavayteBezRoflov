@@ -27,7 +27,8 @@
                         <div>
                             <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
                             <input class="simple-form-element" type="datetime-local" id="cardPopUpDeadlineId" name="card-deadline"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                min="1970-01-01T00:00" max="3000-12-31T23:59" 
+                                pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
                         </div>
                         {{#if edit}}

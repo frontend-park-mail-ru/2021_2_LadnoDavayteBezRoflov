@@ -624,6 +624,8 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
+            const validator = new Validator();
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
             this._storage.get('card-popup').visible = false;
             this._getCardListById(data.clid).cards.push({
                 cid: payload.data.cid,
@@ -631,8 +633,11 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
-                deadline: null,
-                deadlineCheck: false,
+                deadline: data.deadline,
+                deadline_check: false,
+                deadlineStatus: validator.validateDeadline(
+                    data.deadline, false),
+                deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
             });
             return;
 
@@ -688,7 +693,7 @@ class BoardStore extends BaseStore {
             card_name: card.card_name,
             description: card.description,
             deadline: card.deadline,
-            deadlineCheck: card.deadlineCheck,
+            deadline_check: card.deadline_check,
             errors: null,
         });
     }
@@ -714,7 +719,7 @@ class BoardStore extends BaseStore {
             description: card.description,
             bid: card.bid,
             deadline: card.deadline,
-            deadline_check: !card.deadlineCheck,
+            deadline_check: !card.deadline_check,
         };
 
         try {
@@ -726,7 +731,10 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            card.deadlineCheck = data.deadlineCheck;
+            const validator = new Validator();
+            card.deadlineStatus = validator.validateDeadline(
+                payload.data.deadline, payload.data.deadline_check);
+            card.deadline_check = payload.data.deadline_check;
             return;
 
         case HttpStatusCodes.Forbidden:
@@ -764,7 +772,7 @@ class BoardStore extends BaseStore {
             description: data.description,
             bid: this._storage.get('card-popup').bid,
             deadline: data.deadline,
-            deadline_check: data.deadlineCheck,
+            deadline_check: data.deadline_check,
         };
 
         try {
@@ -800,8 +808,8 @@ class BoardStore extends BaseStore {
             card.pos = data.pos;
 
             card.deadline = data.deadline;
-            card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadlineCheck);
-            card.deadlineCheck = data.deadlineCheck;
+            card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadline_check);
+            card.deadline_check = data.deadline_check;
             card.deadlineDate = (new Date(data.deadline)).toLocaleDateString('ru-RU', options);
 
             // Переупорядочим списки
