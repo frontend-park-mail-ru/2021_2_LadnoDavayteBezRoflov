@@ -76,9 +76,7 @@ export const checkListAction = {
     createCheckListItem(chlid) {
         Dispatcher.dispatch({
             actionName: CheckListActionTypes.CHECKLIST_ITEM_CREATE,
-            data: {
-                chlid,
-            },
+            data: {chlid},
         });
     },
 
