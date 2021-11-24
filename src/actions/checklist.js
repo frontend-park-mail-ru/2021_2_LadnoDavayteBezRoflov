@@ -39,9 +39,7 @@ export const checkListAction = {
     deleteCheckList(chlid) {
         Dispatcher.dispatch({
             actionName: CheckListActionTypes.CHECKLIST_DELETE,
-            data: {
-                chlid,
-            },
+            data: {chlid},
         });
     },
 
@@ -52,9 +50,7 @@ export const checkListAction = {
     editCheckList(chlid) {
         Dispatcher.dispatch({
             actionName: CheckListActionTypes.CHECKLIST_EDIT,
-            data: {
-                chlid,
-            },
+            data: {chlid},
         });
     },
 
