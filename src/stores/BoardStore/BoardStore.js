@@ -60,7 +60,7 @@ class BoardStore extends BaseStore {
             positionRange: null,
             card_name: null,
             errors: null,
-            checkLists: [],
+            checkLists: undefined, // начальное состояние - "не инициализирован"
         });
 
         this._storage.set('delete-card-popup', {
@@ -745,12 +745,14 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
-            checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
-                const items = list.check_list_items.map((item) => {
-                    return {...item, edit: false};
-                });
-                return {...list, check_list_items: items, edit: false};
-            }),
+            checkLists: this._getCardById(data.clid, data.cid).check_lists,
+        });
+
+        this._getCardById(data.clid, data.cid).check_lists.forEach((list) => {
+            list.edit = false;
+            list.check_list_items.forEach((item) => {
+                item.edit = false;
+            });
         });
     }
 
