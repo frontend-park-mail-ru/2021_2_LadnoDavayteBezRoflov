@@ -72,6 +72,15 @@ body {
   height: 30px;
   width: 30px;
   border-radius: 50%;
+  border: 2px solid $main-theme-color;
+
+  &-navbar-edition {
+    @extend .avatar;
+    width: 35px;
+    height: 35px;
+    border: 2px solid $tertiary-bg-color;
+    margin-right: 10px;
+  }
 }
 
 .avatar:hover {
