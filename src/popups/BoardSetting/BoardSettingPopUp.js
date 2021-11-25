@@ -53,6 +53,7 @@ export default class BoardSettingPopUp extends BaseComponent {
         this._elements.confirmBtn?.addEventListener('click', this._onDeleteConfirm);
         this._elements.rejectBtn?.addEventListener('click', this._onRejectConfirm);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
+        this._elements.title?.focus();
     };
 
     /**

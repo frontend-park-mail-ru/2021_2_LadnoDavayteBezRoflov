@@ -45,6 +45,7 @@ export default class CreateBoardPopUp extends BaseComponent {
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
         this._elements.submitBtn?.addEventListener('click', this._onSaveBtnClick);
         document.addEventListener('click', this._onPopUpClose);
+        this._elements.name?.focus();
     };
 
     /**

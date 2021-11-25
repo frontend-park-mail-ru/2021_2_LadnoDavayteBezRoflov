@@ -72,7 +72,7 @@ export const ConstantMessages = {
     NoSpecialSymbolsPassword: 'Введите пароль, не содержащий специальных символов',
     UseOnlyLatinLettersPassword: 'Введите пароль, содержащий только латинские буквы',
 
-    AvatarTooBig: 'Аватар не должен превышать 500 МиБ',
+    AvatarTooBig: 'Аватар не должен превышать 500 КБ',
 
     BoardTitleTooLong: 'Название доски превышает 60 символов',
     BoardTitleTooShort: 'Название доски слишком короткое',
@@ -87,6 +87,9 @@ export const ConstantMessages = {
     CardListTitleTooLong: 'Название списка карточек слишком длинное',
     CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
 
+    CardTitleTooShort: 'Название карточки слишком короткое',
+    CardTitleTooLong: 'Название карточки слишком длинное',
+    CardErrorOnServer: 'Не удалось создать карточку, попробуйте позднее',
     UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
 };
 
