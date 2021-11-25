@@ -6,6 +6,7 @@ import {CardListActionTypes} from '../../actions/cardlist.js';
 import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
+import {CommentsActionTypes} from '../../actions/comments.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -18,6 +19,7 @@ import {CheckLists, ConstantMessages,
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
+import SettingsStore from '../SettingsStore/SettingsStore.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -202,6 +204,28 @@ class BoardStore extends BaseStore {
 
         case CardActionTypes.CARD_DELETE_HIDE:
             this._hideDeleteCardPopUp();
+            this._emitChange();
+            break;
+
+            /* Card comments */
+
+        case CommentsActionTypes.CARD_ADD_COMMENT:
+            await this._createCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_DELETE_COMMENT:
+            await this._deleteCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_EDIT_COMMENT:
+            await this._editCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_UPDATE_COMMENT:
+            await this._updateCardComment(action.data);
             this._emitChange();
             break;
 
@@ -745,6 +769,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                comments: [],
                 deadline: data.deadline,
                 deadline_check: false,
                 deadlineStatus: validator.validateDeadline(
@@ -782,9 +807,14 @@ class BoardStore extends BaseStore {
      * @private
      */
     _getCardById(clid, cid) {
-        return this._getCardListById(clid).cards.find((card) => {
+        const result = this._getCardListById(clid).cards.find((card) => {
             return card.cid === cid;
         });
+        if (!result) {
+            throw new Error(`BoardStore: ошибка в функции _getCardById' +
+             '(карточка в столбце ${clid} с айди ${cid} не найдена)`);
+        }
+        return result;
     }
 
     /**
@@ -806,6 +836,7 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
+            comments: card.comments,
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
@@ -1550,6 +1581,302 @@ class BoardStore extends BaseStore {
 
         default:
             context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Создает комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _createCardComment(data) {
+        const context = this._storage.get('card-popup');
+
+        const comment = {
+            cid: context.cid,
+            text: data.text,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createComment(comment);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.comments.push({
+                cmid: payload.data.cmid,
+                cid: this._storage.get('card-popup').cid,
+                user: {
+                    userName: SettingsStore.getContext('login'),
+                    avatar: SettingsStore.getContext('avatar'),
+                },
+                text: data.text,
+                date: payload.data.date,
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Переключает комментарий в режим редактирования
+     * @param {Object} data - данные по комменту
+     * @private
+     */
+    async _editCardComment(data) {
+        const comments = this._storage.get('card-popup').comments;
+        const comment = comments.find((comment) => {
+            return comment.cmid === data.cmid;
+        });
+        if (!comment) {
+            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
+        }
+        comment.edit = !comment.edit;
+    }
+
+    /**
+     * Обновляет комментарий
+     * @param {Object} data новые данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.updateComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const comments = this._storage.get('card-popup').comments;
+            const comment = comments.find((item) => {
+                return item.cmid === data.cmid;
+            });
+
+            if (!comment) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            comment.text = data.text;
+            comment.edit = false;
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _deleteCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.deleteComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(
+                this._storage.get('card-popup').clid,
+                this._storage.get('card-popup').cid,
+            );
+
+            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
+            if (cmid === -1) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            card.comments.splice(cmid, 1);
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+ * Создает комментарий
+ * @param {Object} data данные
+ * @return {Promise<void>}
+ * @private
+ */
+    async _createCardComment(data) {
+        const context = this._storage.get('card-popup');
+
+        const comment = {
+            cid: context.cid,
+            text: data.text,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createComment(comment);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.comments.push({
+                cmid: payload.data.cmid,
+                cid: this._storage.get('card-popup').cid,
+                user: {
+                    userName: SettingsStore.getContext('login'),
+                    avatar: SettingsStore.getContext('avatar'),
+                },
+                text: data.text,
+                date: payload.data.date,
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Переключает комментарий в режим редактирования
+     * @param {Object} data - данные по комменту
+     * @private
+     */
+    async _editCardComment(data) {
+        const comments = this._storage.get('card-popup').comments;
+        const comment = comments.find((comment) => {
+            return comment.cmid === data.cmid;
+        });
+        if (!comment) {
+            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
+        }
+        comment.edit = !comment.edit;
+    }
+
+    /**
+     * Обновляет комментарий
+     * @param {Object} data новые данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.updateComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const comments = this._storage.get('card-popup').comments;
+            const comment = comments.find((item) => {
+                return item.cmid === data.cmid;
+            });
+
+            if (!comment) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            comment.text = data.text;
+            comment.edit = false;
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _deleteCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.deleteComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(
+                this._storage.get('card-popup').clid,
+                this._storage.get('card-popup').cid,
+            );
+
+            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
+            if (cmid === -1) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            card.comments.splice(cmid, 1);
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
             return;
         }
     }

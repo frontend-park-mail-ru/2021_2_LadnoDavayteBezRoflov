@@ -1,4 +1,35 @@
 @import '../../styles/scss/Constants';
+@import '../../styles/scss/Common';
+
+.comments-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment {
+    display: flex;
+    flex-direction: row;
+
+    &__avatar {
+        @extend .avatar;
+        width: 25px;
+        height: 25px;
+    }
+
+    &__content {
+        margin-left: 10px;
+        flex-grow: 1;
+    }
+
+    &__text {
+        font-size: 16px;
+    }
+
+    &__btns {
+        display: flex;
+        flex-direction: row;
+    }
+}
 
 .check-list {
     display: flex;
