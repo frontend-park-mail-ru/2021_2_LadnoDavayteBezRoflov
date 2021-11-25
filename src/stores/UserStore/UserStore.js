@@ -9,6 +9,7 @@ import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
 import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
+import {settingsActions} from '../../actions/settings';
 
 /**
  * Класс, реализующий хранилище пользователя
@@ -174,8 +175,9 @@ class UserStore extends BaseStore {
 
         switch (response.status) {
         case HttpStatusCodes.Ok:
-            this._storage.set('userName', response.data.login);
+            this._storage.set('userName', data.login);
             this._storage.set('isAuthorized', true);
+            settingsActions.getSettings(this._storage.get('userName'));
             return;
 
         case HttpStatusCodes.Unauthorized:

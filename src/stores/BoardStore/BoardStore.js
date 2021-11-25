@@ -3,8 +3,10 @@ import BaseStore from '../BaseStore.js';
 // Actions
 import {BoardsActionTypes} from '../../actions/boards.js';
 import {CardListActionTypes} from '../../actions/cardlist.js';
+import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
+import {CommentsActionTypes} from '../../actions/comments.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -12,10 +14,12 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
+import {CheckLists, ConstantMessages,
+    HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
+import SettingsStore from '../SettingsStore/SettingsStore.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -59,11 +63,28 @@ class BoardStore extends BaseStore {
             positionRange: null,
             card_name: null,
             errors: null,
+            checkLists: [],
         });
 
         this._storage.set('delete-card-popup', {
             visible: false,
             cid: null,
+        });
+
+        this._storage.set('add-board-member-popup', {
+            visible: false,
+            errors: null,
+            searchString: null,
+            users: [],
+            header: 'Добавить пользователя в доску',
+        });
+
+        this._storage.set('add-card-member-popup', {
+            visible: false,
+            errors: null,
+            searchString: null,
+            users: [],
+            header: 'Добавить пользователя в карточку',
         });
     }
 
@@ -186,6 +207,119 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+            /* Card comments */
+
+        case CommentsActionTypes.CARD_ADD_COMMENT:
+            await this._createCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_DELETE_COMMENT:
+            await this._deleteCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_EDIT_COMMENT:
+            await this._editCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_UPDATE_COMMENT:
+            await this._updateCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_UPDATE_STATUS:
+            await this._updateDeadlineCheck(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_SHOW:
+            this._showAddCardAssigneePopUp();
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_CLOSE:
+            this._hideAddCardAssigneePopUp();
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_INPUT:
+            await this._refreshCardAssigneeSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_USER_CLICKED:
+            await this._toggleCardAssigneeInSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_SHOW:
+            this._showAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_CLOSE:
+            this._hideAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_INPUT:
+            await this._refreshBoardMemberSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_USER_CLICKED:
+            await this._toggleBoardMemberInSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_CREATE:
+            await this._createCheckList();
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_EDIT:
+            this._editCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_SAVE:
+            await this._saveCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_DELETE:
+            await this._deleteCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_CREATE:
+            await this._createCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_EDIT:
+            this._editCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_SAVE:
+            await this._saveChekListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_DELETE:
+            await this._deleteCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
+            await this._toggleChekListItem(action.data);
+            this._emitChange();
+            break;
+
+
         default:
             return;
         }
@@ -196,6 +330,9 @@ class BoardStore extends BaseStore {
      * @param {Object} data полезная нагрузка запроса
      */
     async _getBoard(data) {
+        const validator = new Validator();
+        const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
         let payload;
 
         try {
@@ -212,6 +349,16 @@ class BoardStore extends BaseStore {
             this._storage.set('board_name', payload.data.board_name);
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
+
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
+                    card.deadlineCheck = card.deadline_check;
+                    card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                });
+            });
+
+            this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -265,7 +412,10 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network.updateBoard(data, this._storage.get('bid'));
+            payload = await Network.updateBoard({
+                ...data,
+                members: this._storage.get('members'),
+            }, this._storage.get('bid'));
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
@@ -471,7 +621,7 @@ class BoardStore extends BaseStore {
             // Обновим позиции списков в storage
             const cardLists = this._storage.get('card_lists');
 
-            for (let index = bound.left; index < bound.right; index +=1) {
+            for (let index = bound.left; index < bound.right; index += 1) {
                 cardLists[index].pos += bound.increment;
             }
 
@@ -565,6 +715,7 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').edit = false;
         this._storage.get('card-popup').errors = null;
         this._storage.get('card-popup').clid = data.clid;
+        this._storage.get('card-popup').checkLists = [];
     }
 
     /**
@@ -588,6 +739,8 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
+        data.deadline = validator.validateDeadlineInput(data.deadline);
+
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
             return;
@@ -607,6 +760,8 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
+            const validator = new Validator();
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
             this._storage.get('card-popup').visible = false;
             this._getCardListById(data.clid).cards.push({
                 cid: payload.data.cid,
@@ -614,6 +769,14 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                comments: [],
+                deadline: data.deadline,
+                deadline_check: false,
+                deadlineStatus: validator.validateDeadline(
+                    data.deadline, false),
+                deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
+                assignees: [],
+                check_lists: [],
             });
             return;
 
@@ -644,9 +807,14 @@ class BoardStore extends BaseStore {
      * @private
      */
     _getCardById(clid, cid) {
-        return this._getCardListById(clid).cards.find((card) => {
+        const result = this._getCardListById(clid).cards.find((card) => {
             return card.cid === cid;
         });
+        if (!result) {
+            throw new Error(`BoardStore: ошибка в функции _getCardById' +
+             '(карточка в столбце ${clid} с айди ${cid} не найдена)`);
+        }
+        return result;
     }
 
     /**
@@ -668,8 +836,66 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
+            comments: card.comments,
+            deadline: card.deadline,
+            deadline_check: card.deadline_check,
             errors: null,
+            checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
+                const items = list.check_list_items.map((item) => {
+                    return {...item, edit: false};
+                });
+                return {...list, check_list_items: items, edit: false};
+            }),
         });
+    }
+
+    /**
+     * Меняет статус дедлайна (выполнено | не выполнено)
+     * @param {Object} data информация о карточке
+     * @private
+     */
+    async _updateDeadlineCheck(data) {
+        const card = this._getCardById(
+            data.clid,
+            data.cid,
+        );
+
+        let payload;
+
+        const _data = {
+            pos: card.pos,
+            cid: card.cid,
+            clid: card.clid,
+            card_name: card.card_name,
+            description: card.description,
+            bid: card.bid,
+            deadline: card.deadline,
+            deadline_check: !card.deadline_check,
+        };
+
+        try {
+            payload = await Network._updateCard(_data, card.cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const validator = new Validator();
+            card.deadlineStatus = validator.validateDeadline(
+                payload.data.deadline, payload.data.deadline_check);
+            card.deadline_check = payload.data.deadline_check;
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            // todo
+            return;
+
+        default:
+            // todo
+            return;
+        }
     }
 
     /**
@@ -681,6 +907,8 @@ class BoardStore extends BaseStore {
     async _updateCard(data) {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
+
+        data.deadline = validator.validateDeadlineInput(data.deadline);
 
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
@@ -696,6 +924,8 @@ class BoardStore extends BaseStore {
             card_name: data.card_name,
             description: data.description,
             bid: this._storage.get('card-popup').bid,
+            deadline: data.deadline,
+            deadline_check: data.deadline_check,
         };
 
         try {
@@ -719,14 +949,21 @@ class BoardStore extends BaseStore {
 
             const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
 
-            for (let index = bound.left; index < bound.right; index +=1) {
+            for (let index = bound.left; index < bound.right; index += 1) {
                 cards[index].pos += bound.increment;
             }
 
-            // Обновим cardList:
+            // Обновим card:
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
             card.card_name = data.card_name;
             card.description = data.description;
             card.pos = data.pos;
+
+            card.deadline = data.deadline;
+            card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadline_check);
+            card.deadline_check = data.deadline_check;
+            card.deadlineDate = (new Date(data.deadline)).toLocaleDateString('ru-RU', options);
 
             // Переупорядочим списки
             cards.sort((lhs, rhs) => {
@@ -808,6 +1045,838 @@ class BoardStore extends BaseStore {
             cardLists[clid].cards.splice(cid, 1);
 
         default:
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+    _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
+    }
+
+    /**
+     * Метод выполняет поиск чеклиста по его ID
+     * @param {Number} chlid
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListById(chlid) {
+        const context = this._storage.get('card-popup');
+        return context.checkLists.find((list) => {
+            return list.chlid === chlid;
+        });
+    }
+
+    /**
+     * Метод выполняет поиск элемента чеклиста по паре id
+     * @param {Number} chlid - id чеклиста
+     * @param {Number} chliid - id элемента чеклиста
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListItemById(chlid, chliid) {
+        return this._getCheckListById(chlid).check_list_items.find((item) => {
+            return item.chliid === chliid;
+        });
+    }
+
+    /**
+     * Создает чеклист
+     * @private
+     */
+    async _createCheckList() {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        const newCheckList = {
+            cid: context.cid,
+            title: CheckLists.CheckListDefaultTitle + ' ' + context.checkLists.length,
+            check_list_items: [],
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckList(newCheckList);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckList.chlid = payload.data.chlid;
+            context.checkLists.push(newCheckList);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Переключает чеклист в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckList(data) {
+        const checkLists = this._storage.get('card-popup').checkLists;
+        const checkList = checkLists.find((checkList) => {
+            return checkList.chlid === data.chlid;
+        });
+        checkList.edit = true;
+    }
+
+    /**
+     * Сохраняет новый заголовок чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = this._getCheckListById(data.chlid);
+
+        const newCheckList = {...checkList};
+        newCheckList.title = data.title;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckList(newCheckList, data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            checkList.title = data.title;
+            checkList.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет чеклист
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckList(data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const delCheckList = context.checkLists.find((checklist) => {
+                return checklist.chlid === data.chlid;
+            });
+            context.checkLists.splice(context.checkLists.indexOf(delCheckList), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Создает элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _createCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = this._getCheckListById(data.chlid);
+
+        const newCheckListItem = {
+            chlid: data.chlid,
+            text: CheckLists.CheckListItemDefaultTitle + ' ' + checkList.check_list_items.length,
+            status: false,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckListItem(newCheckListItem);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckListItem.chliid = payload.data.chliid;
+            checkList.check_list_items.push(newCheckListItem);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Перключает элемент чеклиста в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckListItem(data) {
+        this._getCheckListItemById(data.chlid, data.chliid).edit = true;
+    }
+
+    /**
+     * Сохраняет текст элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveChekListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
+
+        const newItem = {...item};
+        newItem.text = data.text;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.text = data.text;
+            item.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckListItem(data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const list = this._getCheckListById(data.chlid);
+            const item = this._getCheckListItemById(data.chlid, data.chliid);
+            list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Переключает чекбокс элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _toggleChekListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
+
+        const newItem = {...item};
+        newItem.status = !newItem.status;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.status = !item.status;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+    _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
+    }
+
+    /**
+     * Метод выключает popup добавления участника в карточку
+     * @private
+     */
+    _hideAddCardAssigneePopUp() {
+        this._storage.get('add-card-member-popup').visible = false;
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления участника карточки
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _refreshCardAssigneeSearchList(data) {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchCardMembers(searchString, this._storage.get('card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.data;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из карточки
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _toggleCardAssigneeInSearchList(data) {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        const assignees = card.assignees.slice();
+
+        // Найдем выбранного пользователя в списке assignees карточки
+        const assignee = card.assignees.find((assignee) => {
+            return assignee.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в assignees, исключим его от туда. Иначе - добавим.
+        if (assignee) {
+            assignees.splice(assignees.indexOf(assignee), 1);
+        } else {
+            assignees.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        const updatedCard = {...card};
+        updatedCard.assignees = assignees;
+        let payload;
+
+        try {
+            payload = await Network.toggleCardMember(this._storage.get('card-popup').cid, data.uid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !assignee;
+            card.assignees = assignees;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления опльзователя в доску и устанавливает контекст
+     * @private
+     */
+    _showAddBoardMemberPopUp() {
+        const context = this._storage.get('add-board-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        context.users = this._storage.get('members').map((member) => {
+            return {...member, added: true};
+        });
+    }
+
+    /**
+     * Метод скрывает popup добавления пользователя в доску
+     * @private
+     */
+    _hideAddBoardMemberPopUp() {
+        this._storage.get('add-board-member-popup').visible = false;
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из доски
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _toggleBoardMemberInSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        const members = this._storage.get('members').slice();
+        // Найдем выбранного пользователя в списке членов доски
+        const member = members.find((memeber) => {
+            return memeber.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в members, исключим его от туда. Иначе - добавим.
+        if (member) {
+            members.splice(members.indexOf(member), 1);
+        } else {
+            members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        const updatedBoard = {
+            description: this._storage.get('description'),
+            board_name: this._storage.get('board_name'),
+            members: members,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
+            payload = await Network.toggleBoardMember(this._storage.get('bid'), data.uid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !member;
+            this._storage.set('members', members);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления пользователя в доску
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _refreshBoardMemberSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchBoardMembers(searchString, this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.data;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Создает комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _createCardComment(data) {
+        const context = this._storage.get('card-popup');
+
+        const comment = {
+            cid: context.cid,
+            text: data.text,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createComment(comment);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.comments.push({
+                cmid: payload.data.cmid,
+                cid: this._storage.get('card-popup').cid,
+                user: {
+                    userName: SettingsStore.getContext('login'),
+                    avatar: SettingsStore.getContext('avatar'),
+                },
+                text: data.text,
+                date: payload.data.date,
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Переключает комментарий в режим редактирования
+     * @param {Object} data - данные по комменту
+     * @private
+     */
+    async _editCardComment(data) {
+        const comments = this._storage.get('card-popup').comments;
+        const comment = comments.find((comment) => {
+            return comment.cmid === data.cmid;
+        });
+        if (!comment) {
+            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
+        }
+        comment.edit = !comment.edit;
+    }
+
+    /**
+     * Обновляет комментарий
+     * @param {Object} data новые данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.updateComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const comments = this._storage.get('card-popup').comments;
+            const comment = comments.find((item) => {
+                return item.cmid === data.cmid;
+            });
+
+            if (!comment) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            comment.text = data.text;
+            comment.edit = false;
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _deleteCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.deleteComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(
+                this._storage.get('card-popup').clid,
+                this._storage.get('card-popup').cid,
+            );
+
+            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
+            if (cmid === -1) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            card.comments.splice(cmid, 1);
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+ * Создает комментарий
+ * @param {Object} data данные
+ * @return {Promise<void>}
+ * @private
+ */
+    async _createCardComment(data) {
+        const context = this._storage.get('card-popup');
+
+        const comment = {
+            cid: context.cid,
+            text: data.text,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createComment(comment);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.comments.push({
+                cmid: payload.data.cmid,
+                cid: this._storage.get('card-popup').cid,
+                user: {
+                    userName: SettingsStore.getContext('login'),
+                    avatar: SettingsStore.getContext('avatar'),
+                },
+                text: data.text,
+                date: payload.data.date,
+            });
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Переключает комментарий в режим редактирования
+     * @param {Object} data - данные по комменту
+     * @private
+     */
+    async _editCardComment(data) {
+        const comments = this._storage.get('card-popup').comments;
+        const comment = comments.find((comment) => {
+            return comment.cmid === data.cmid;
+        });
+        if (!comment) {
+            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
+        }
+        comment.edit = !comment.edit;
+    }
+
+    /**
+     * Обновляет комментарий
+     * @param {Object} data новые данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _updateCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.updateComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const comments = this._storage.get('card-popup').comments;
+            const comment = comments.find((item) => {
+                return item.cmid === data.cmid;
+            });
+
+            if (!comment) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            comment.text = data.text;
+            comment.edit = false;
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет комментарий
+     * @param {Object} data данные
+     * @return {Promise<void>}
+     * @private
+     */
+    async _deleteCardComment(data) {
+        let payload;
+
+        try {
+            payload = await Network.deleteComment(data);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(
+                this._storage.get('card-popup').clid,
+                this._storage.get('card-popup').cid,
+            );
+
+            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
+            if (cmid === -1) {
+                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
+            }
+
+            card.comments.splice(cmid, 1);
+
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
+            return;
+
+        default:
+            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
             return;
         }
     }

@@ -8,6 +8,7 @@ import {userActions} from '../../actions/user.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
@@ -19,19 +20,23 @@ import './LoginView.scss';
 import template from './LoginView.hbs';
 
 /**
-  * Класс, реализующий страницу с входа.
-  */
+ * Класс, реализующий страницу с входа.
+ */
 export default class LoginView extends BaseView {
     /**
      * @constructor
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
-    */
+     */
     constructor(parent) {
-        const context = UserStore.getContext();
+        const context = new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh); // + field
+        SettingsStore.addListener(this._onRefresh);
 
         this.formAuthorizationCallback = this.formAuthorization.bind(this);
 
@@ -45,6 +50,10 @@ export default class LoginView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]));
         this.render();
         this._isActive = true;
     }
@@ -54,7 +63,10 @@ export default class LoginView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this._setContext(UserStore.getContext());
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            {avatar: SettingsStore.getContext('avatar')},
+        ]));
 
         if (!this._isActive) {
             return;

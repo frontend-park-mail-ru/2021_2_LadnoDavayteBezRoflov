@@ -12,6 +12,10 @@ export const BoardsActionTypes = {
     BOARDS_CREATE: 'boards/create',
     BOARDS_POPUP_SHOW: 'boards/popup/show',
     BOARDS_POPUP_HIDE: 'boards/popup/hide',
+    BOARDS_ADD_MEMBER_SHOW: 'boards/member/show',
+    BOARDS_ADD_MEMBER_CLOSE: 'boards/member/close',
+    BOARDS_ADD_MEMBER_INPUT: 'boards/member/input',
+    BOARDS_ADD_MEMBER_USER_CLICKED: 'boards/member/clicked',
 };
 
 /**
@@ -41,27 +45,27 @@ export const boardsActions = {
     /**
      * Действие: создание доски.
      * @param {String} name - название доски
-     * @param {int} teamID - номер команды
+     * @param {Number} tid - номер команды
      */
-    createBoard(name, teamID) {
+    createBoard(name, tid) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_CREATE,
             data: {
                 name,
-                teamID,
+                tid,
             },
         });
     },
 
     /**
      * Действие: открытие модального окна для команды.
-     * @param {int} teamID - номер команды
+     * @param {Number} tid - номер команды
      */
-    showModal(teamID) {
+    showModal(tid) {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_POPUP_SHOW,
             data: {
-                teamID,
+                tid,
             },
         });
     },
@@ -69,6 +73,50 @@ export const boardsActions = {
     hidePopUp() {
         Dispatcher.dispatch({
             actionName: BoardsActionTypes.BOARDS_POPUP_HIDE,
+        });
+    },
+
+    /**
+     * Отобразить popup добавления пользователя в команду
+     * @param {Number} tid - id команды
+     */
+    showAddTeamMemberPopUp(tid) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_ADD_MEMBER_SHOW,
+            data: {
+                tid,
+            },
+        });
+    },
+
+    /**
+     * Скрыть popup добавления пользователя на карточку
+     */
+    hideAddTeamMemberPopUp() {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_ADD_MEMBER_CLOSE,
+        });
+    },
+
+    /**
+     * Обновить список пользователей на основании ввода пользователя
+     * @param {String} searchString - строка для поиска
+     */
+    refreshTeamSearchList(searchString) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_ADD_MEMBER_INPUT,
+            data: {searchString},
+        });
+    },
+
+    /**
+     * Добаваить/исключить пользователя из доски
+     * @param {Number} uid - id пользователя
+     */
+    toggleUserInSearchList(uid) {
+        Dispatcher.dispatch({
+            actionName: BoardsActionTypes.BOARDS_ADD_MEMBER_USER_CLICKED,
+            data: {uid},
         });
     },
 };

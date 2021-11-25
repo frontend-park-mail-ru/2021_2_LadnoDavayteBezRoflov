@@ -16,10 +16,12 @@ import CardListPopUp from '../../popups/CardList/CardListPopUp.js';
 import CardPopUp from '../../popups/Card/CardPopUp.js';
 import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp.js';
 import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
+import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
 import BoardStore from '../../stores/BoardStore/BoardStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
 // Modules
 import Router from '../../modules/Router/Router.js';
@@ -42,12 +44,17 @@ export default class BoardView extends BaseView {
      * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
      */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...BoardStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]);
         super(context, template, parent);
 
         this._bindCallBacks();
         UserStore.addListener(this._onRefresh); // + field
         BoardStore.addListener(this._onRefresh);
+        SettingsStore.addListener(this._onRefresh);
 
         // Добавить попапы
         this.addComponent('BoardSettingPopUp', new BoardSettingPopUp());
@@ -55,7 +62,13 @@ export default class BoardView extends BaseView {
         this.addComponent('CardPopUp', new CardPopUp());
         this.addComponent('DeleteCardListPopUp', new DeleteCardListPopUp());
         this.addComponent('DeleteCardPopUp', new DeleteCardPopUp());
+        this.addComponent('AddBoardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.board));
+        this.addComponent('AddCardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.card));
 
+        this._setContextByComponentName('AddBoardMemberPopUp',
+                                        BoardStore.getContext('add-board-member-popup'));
+        this._setContextByComponentName('AddCardMemberPopUp',
+                                        BoardStore.getContext('add-card-member-popup'));
         this.registerViewElements();
     }
 
@@ -76,7 +89,16 @@ export default class BoardView extends BaseView {
         this.removeEventListeners();
         this.removeComponentsList('_cardlists');
 
-        this._setContext(new Map([...UserStore.getContext(), ...BoardStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ...BoardStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]));
+        this._setContextByComponentName('AddBoardMemberPopUp',
+                                        BoardStore.getContext('add-board-member-popup'));
+        this._setContextByComponentName('AddCardMemberPopUp',
+                                        BoardStore.getContext('add-card-member-popup'));
+
         if (!this._isActive) {
             return;
         }
@@ -113,6 +135,7 @@ export default class BoardView extends BaseView {
         this._elements = {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
             showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
+            addMembersBtn: document.getElementById('showAddBoardMemberPopUpId'),
             cardLists: {
                 addCardBtns: document.querySelectorAll('.addCardToCardList'),
                 editBtns: document.querySelectorAll('.editCardList'),
@@ -121,6 +144,7 @@ export default class BoardView extends BaseView {
             cards: {
                 editAreas: document.querySelectorAll('.editCard'),
                 deleteBtns: document.querySelectorAll('.deleteCard'),
+                checkDeadlineCardBtns: document.querySelectorAll('.checkDeadlineCard'),
             },
         };
     }
@@ -141,15 +165,34 @@ export default class BoardView extends BaseView {
         /* Cards */
         this._onDeleteCard = this._onDeleteCard.bind(this);
         this._onEditCard = this._onEditCard.bind(this);
+        /* Add User PopUps */
+        this._onAddCardMemberInput = this._onAddCardMemberInput.bind(this);
+        this._onAddCardMemberUserClick = this._onAddCardMemberUserClick.bind(this);
+        this._onAddCardMemberClose = this._onAddCardMemberClose.bind(this);
+        this._addUserCallBacks = {
+            card: {
+                onInput: this._onAddCardMemberInput.bind(this),
+                onUserClick: this._onAddCardMemberUserClick.bind(this),
+                onClose: this._onAddCardMemberClose.bind(this),
+            },
+            board: {
+                onInput: this._onAddBoardMemberInput.bind(this),
+                onUserClick: this._onAddBoardMemberUserClick.bind(this),
+                onClose: this._onAddBoardMemberClose.bind(this),
+            },
+        };
+        this._onAddBoardMemberShow = this._onAddBoardMemberShow.bind(this);
     }
 
     /**
      * Метод, добавляющий обработчики событий для страницы.
+     * @register show add members
      */
     addEventListeners() {
         super.addEventListeners();
         this._elements.showSettingBtn?.addEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.addEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.addMembersBtn?.addEventListener('click', this._onAddBoardMemberShow);
         this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
             addCardBtn.addEventListener('click', this._onAddCardToCardList);
         });
@@ -165,6 +208,9 @@ export default class BoardView extends BaseView {
         this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
             deleteCardBtn.addEventListener('click', this._onDeleteCard);
         });
+        this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
+            checkDeadlineCardBtn.addEventListener('click', this._onCheckDeadlineCard);
+        });
     }
 
     /**
@@ -174,6 +220,7 @@ export default class BoardView extends BaseView {
         super.removeEventListeners();
         this._elements.showSettingBtn?.removeEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.removeEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.addMembersBtn?.removeEventListener('click', this._onAddBoardMemberShow);
         this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
             addCardBtn.removeEventListener('click', this._onAddCardToCardList);
         });
@@ -188,6 +235,9 @@ export default class BoardView extends BaseView {
         });
         this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
             deleteCardBtn.removeEventListener('click', this._onDeleteCard);
+        });
+        this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
+            checkDeadlineCardBtn.removeEventListener('click', this._onCheckDeadlineCard);
         });
     }
 
@@ -257,5 +307,91 @@ export default class BoardView extends BaseView {
             parseInt(event.target.dataset.id, 10),
         );
         event.stopPropagation();
+    }
+
+    /**
+     * Метод вызывается при нажатии на значок дедлайна
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCheckDeadlineCard(event) {
+        cardActions.updateDeadlineCard(
+            parseInt(event.target.closest('.column__content').dataset.id, 10),
+            parseInt(event.target.dataset.id, 10),
+        );
+        event.stopPropagation();
+    }
+
+
+    /**
+     * Callback вызывается при вводе текста в input поиска пользователя для карточки
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardMemberInput(event) {
+        cardActions.refreshUserSearchList(event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатие на строку с пользователем
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAddCardMemberUserClick(event) {
+        const user = event.target.closest('div.search-result');
+        cardActions.toggleUserInSearchList(parseInt(user.dataset.uid, 10));
+    }
+
+    /**
+     * Callback, вызываемый при закрытии окна добавления пользователя в карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddCardMemberClose(event) {
+        if (event.target.id === 'addUserPopUpCloseId' ||
+            event.target.id === 'addUserPopUpWrapperId') {
+            cardActions.hideAddCardAssigneePopUp();
+        }
+    }
+
+    /**
+     * Callback вызывается при вводе текста в input поиска пользователя для доски
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddBoardMemberInput(event) {
+        boardActions.refreshUserSearchList(event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатие на строку с пользователем в AddBoardMemberPopUp
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAddBoardMemberUserClick(event) {
+        const user = event.target.closest('div.search-result');
+        boardActions.toggleUserInSearchList(parseInt(user.dataset.uid, 10));
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Пригласить"
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAddBoardMemberShow(event) {
+        event.preventDefault();
+        boardActions.showAddBoardMemberPopUp();
+    }
+
+    /**
+     * Callback, вызываемый при закрытии окна добавления пользователя в доску
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddBoardMemberClose(event) {
+        if (event.target.id === 'addUserPopUpCloseId' ||
+            event.target.id === 'addUserPopUpWrapperId') {
+            boardActions.hideAddBoardMemberPopUp();
+        }
     }
 }

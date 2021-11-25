@@ -37,7 +37,7 @@ class SettingsStore extends BaseStore {
         this._storage.set('email', null);
         this._storage.set('password', null);
         this._storage.set('passwordRepeat', null);
-        this._storage.set('avatar', null);
+        this._storage.set('avatar', '/assets/nodata.webp');
     }
 
     /**
@@ -134,7 +134,7 @@ class SettingsStore extends BaseStore {
             this._emitChange();
             return;
 
-        case HttpStatusCodes.NotMofidied:
+        case HttpStatusCodes.NotModified:
             this._storage.set('validation', {
                 login: ConstantMessages.NotModified,
                 email: null,

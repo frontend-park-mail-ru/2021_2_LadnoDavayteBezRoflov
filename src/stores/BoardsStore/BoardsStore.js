@@ -2,9 +2,10 @@ import BaseStore from '../BaseStore.js';
 import {BoardsActionTypes} from '../../actions/boards.js';
 
 import Network from '../../modules/Network/Network.js';
-import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
+import {BoardStoreConstants, ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 import UserStore from '../UserStore/UserStore.js';
 import Validator from '../../modules/Validator/Validator';
+import SettingsStore from '../SettingsStore/SettingsStore';
 
 /**
  * Класс, реализующий хранилище списка команд и досок
@@ -23,22 +24,18 @@ class BoardsStore extends BaseStore {
         this._storage.set('teams', null);
         this._storage.set('create-popup', {
             visible: false,
-            teamID: null,
+            tid: null,
             errors: null,
         });
-    }
 
-    /**
-     * Возвращает контекст для boardSettingPopUp
-     * @return {Object} контекст
-     */
-    getCreateBoardPopUpContext() {
-        return {
-            ...this._storage.get('create-popup'),
-            teams: this._storage.get('teams'),
-        };
+        this._storage.set('add-team-member-popup', {
+            visible: false,
+            errors: null,
+            searchString: null,
+            users: [],
+            header: 'Добавить пользователя в команду',
+        });
     }
-
 
     /**
      * Метод, реализующий реакцию на рассылку Диспетчера.
@@ -50,18 +47,42 @@ class BoardsStore extends BaseStore {
             await this._get();
             this._emitChange();
             break;
+
         case BoardsActionTypes.BOARDS_CREATE:
             await this._create(action.data);
             this._emitChange();
             break;
+
         case BoardsActionTypes.BOARDS_POPUP_HIDE:
             this._hideModal();
             this._emitChange();
             break;
+
         case BoardsActionTypes.BOARDS_POPUP_SHOW:
             this._showModal(action.data);
             this._emitChange();
             break;
+
+        case BoardsActionTypes.BOARDS_ADD_MEMBER_SHOW:
+            this._showAddTeamMemberPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case BoardsActionTypes.BOARDS_ADD_MEMBER_CLOSE:
+            this._hideAddTeamMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardsActionTypes.BOARDS_ADD_MEMBER_INPUT:
+            await this._refreshTeamMemberSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardsActionTypes.BOARDS_ADD_MEMBER_USER_CLICKED:
+            await this._toggleTeamMemberInSearchList(action.data);
+            this._emitChange();
+            break;
+
         default:
             return;
         }
@@ -87,6 +108,7 @@ class BoardsStore extends BaseStore {
                 (first, second) => (first.id > second.id) ?
                     1 : ((second.id > first.id) ? -1 : 0)),
             );
+
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -119,7 +141,7 @@ class BoardsStore extends BaseStore {
 
         try {
             payload = await Network.createBoard({
-                tid: parseInt(data.teamID, 10),
+                tid: data.tid,
                 board_name: data.name,
             });
         } catch (error) {
@@ -130,14 +152,14 @@ class BoardsStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             const team = this._storage.get('teams').find((team) => {
-                return team.tid === parseInt(data.teamID, 10);
+                return team.tid === data.tid;
             });
 
             team.boards.push({
                 bid: payload.data.bid,
                 board_name: data.name,
                 description: '',
-                tid: data.teamID,
+                tid: data.tid,
             });
 
             return;
@@ -163,7 +185,7 @@ class BoardsStore extends BaseStore {
     _hideModal() {
         this._storage.set('create-popup', {
             visible: false,
-            teamID: null,
+            tid: null,
             errors: null,
         });
     }
@@ -176,9 +198,133 @@ class BoardsStore extends BaseStore {
     _showModal(data) {
         this._storage.set('create-popup', {
             visible: true,
-            teamID: data.teamID,
+            tid: data.tid,
             errors: null,
         });
+    }
+
+    /**
+     * Метод включает popup добавления опльзователя в команду и устанавливает контекст
+     * @param {Object} data - объект с полем tid
+     * @private
+     */
+    _showAddTeamMemberPopUp(data) {
+        const context = this._storage.get('add-team-member-popup');
+        context.visible = true;
+        context.tid = data.tid;
+        context.errors = null;
+        context.searchString = null;
+        context.users = this._storage.get('teams').find((team) => {
+            return team.tid === data.tid;
+        }).users?.map((member) => {
+            return {...member, userName: member.login || member.userName, added: true};
+        });
+    }
+
+    /**
+     * Метод скрывает popup добавления пользователя в команду
+     * @private
+     */
+    _hideAddTeamMemberPopUp() {
+        this._storage.get('add-team-member-popup').visible = false;
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из доски
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _refreshTeamMemberSearchList(data) {
+        const context = this._storage.get('add-team-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchTeamMembers(searchString, context.tid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.data;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления пользователя в команду
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _toggleTeamMemberInSearchList(data) {
+        const context = this._storage.get('add-team-member-popup');
+        context.errors = null;
+
+        const teams = this._storage.get('teams');
+        const team = teams.find((team) => {
+            return team.tid === context.tid;
+        });
+        const members = team.users.slice();
+        // Найдем выбранного пользователя в списке членов команды
+        const member = members.find((memeber) => {
+            return memeber.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в members, исключим его от туда. Иначе - добавим.
+        if (member) {
+            members.splice(members.indexOf(member), 1);
+        } else {
+            members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.toggleTeamMember(context.tid, data.uid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !member;
+            if (user.userName === SettingsStore.getContext('login')) {
+                teams.splice(teams.indexOf(team), 1);
+                context.visible = false;
+            } else {
+                team.users = members;
+            }
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 }
 
