@@ -86,6 +86,7 @@ $simple-form-radius: 10px;
 .avatar {
   height: 30px;
   border-radius: 50%;
+  border: 2px solid $main-theme-color;
 }
 
 .avatar:hover {
@@ -142,6 +143,43 @@ $simple-form-radius: 10px;
   }
 }
 
+.material-icon {
+  @extend .material-icons;
+  opacity: 0.3;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1.0;
+  }
+
+  &-delete {
+    @extend .material-icon;
+    &::before {
+      content: 'delete';
+    }
+  }
+
+  &-edit {
+    @extend .material-icon;
+    &::before {
+      content: 'edit';
+    }
+  }
+
+  &-add {
+    @extend .material-icon;
+    &::before {
+      content: 'add';
+    }
+  }
+
+  &-save {
+    @extend .material-icon;
+    &::before {
+      content: 'save';
+    }
+  }
+}
 
 .horizontal-line {
   border-bottom: solid 2px $tertiary-bg-color;

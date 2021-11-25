@@ -22,7 +22,7 @@ import BoardView from './views/BoardView/BoardView.js';
 import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && !DEBUG) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then((registration) => {
             console.log('SW registered with scope ', registration.scope);

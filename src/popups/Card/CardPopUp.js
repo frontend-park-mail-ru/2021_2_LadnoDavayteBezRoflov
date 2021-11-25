@@ -11,6 +11,9 @@ import {commentsActions} from '../../actions/comments.js';
 // Stores
 import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
+// Стили
+import './CardPopUp.scss';
+
 /**
  * Класс popup окна создания и редактирования карточки
  */

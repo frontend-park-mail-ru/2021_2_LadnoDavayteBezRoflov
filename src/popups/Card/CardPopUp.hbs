@@ -1,8 +1,8 @@
 {{#with card-popup}}
     {{#if visible }}
         <div class="popup-wrapper" id="cardPopUpWrapperId">
-            <div class="popup-content">
-                <form class="popup-form">
+            <div class="popup-content popup-content_width">
+                <form class="popup-form custom-scroll">
                     <div class="popup-form__header">
                         {{#if edit }}
                             Редактирование "{{card_name}}"
@@ -15,24 +15,26 @@
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
                             <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{card_name}}" {{/if}}>
                         </div>
                         <div>
                             <label for="cardPopUpDescriptionId" class>Описание карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId" name="card-description"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId"
+                                   name="card-description"
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{description}}" {{/if}}>
                         </div>
-{{!--                         <div>
-                            <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDeadlineId" name="card-deadline"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
-                                {{#if edit}} value="{{deadline}}" {{/if}}>
-                        </div> --}}
+                        {{!--                         <div>
+                                                    <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
+                                                    <input class="simple-form-element" type="text" id="cardPopUpDeadlineId" name="card-deadline"
+                                                        autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                                        {{#if edit}} value="{{deadline}}" {{/if}}>
+                                                </div> --}}
                         {{#if edit}}
                             <label for="cardPopUpPositionId">Позиция:</label>
-                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select" required>
+                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
+                                    required>
                                 {{#each positionRange}}
                                     {{#if (IsEqualHelper this ../position) }}
                                         <option value="{{this}}" selected>#{{this}}</option>
@@ -50,64 +52,52 @@
                         {{ else }}
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>
                         {{/if}}
+                        {{#if edit}}
+                            <div class="form-inline" role="form">
+                                <div class="form-group">
+                                    <input class="simple-form-element" type="text" id="newCommentText"
+                                           name="comment"
+                                           autocomplete="off" placeholder="Добавить комментарий" required>
+                                </div>
+                                <div class="form-group">
+                                    <button class="button button_small" id="createComment">Добавить</button>
+                                </div>
+                            </div>
+                            <div class="comments-wrapper">
+                                {{#each comments}}
+                                    <div class="comment">
+                                        <img width="25px" height="25px" class="comment__avatar" src="{{this.user.avatar}}"/>
+                                        <div class="comment__content">
+                                            {{#if this.edit}}
+                                                <input class="simple-form-element check-list__input" type="text"
+                                                       pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                                       value="{{this.text}}">
+                                            {{else}}
+                                                <div class="check-list__title">{{this.text}}</div>
+                                                <div class="date sub-text">{{this.date}}</div>
+                                            {{/if}}
+                                        </div>
+                                        <div class="comment__btns">
+                                            {{#if this.edit}}
+                                                <div class="material-icon-save saveComment"
+                                                     data-id="{{this.cmid}}"></div>
+                                            {{/if}}
+                                            {{#if (IsAuthorHelper this.user.userName)}}
+                                                <div class="material-icon-edit material-icon-add editComment"
+                                                     data-id="{{this.cmid}}"></div>
+                                                <div class="material-icon-delete material-icon-delete deleteComment"
+                                                     data-id="{{this.cmid}}"></div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{/if}}
                     </div>
+
                 </form>
                 <div class="close-button" id="cardPopUpCloseId"></div>
             </div>
-
-            {{#if edit}}
-            <div class="comments-wrapper">
-                <div class="custom-scroll">
-                    <ul class="comments">
-                        {{#each comments}}
-                        <div class="check-list__header-wrapper" data-id="{{this.cmid}}" data-author="{{this.user.userName}}">
-                                <div class="comment__avatar">
-                                    <img width="25px" height="25px" src="{{this.user.avatar}}"/>
-                                </div>
-                            {{#if this.edit}}
-                                <input class="simple-form-element check-list__input" type="text"
-                                    pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
-                                    value="{{this.text}}">
-                                <div class="material-icon-save saveComment" data-id="{{this.cmid}}"></div>
-                            {{else}}
-                                <div class="check-list__title">{{this.text}}</div>
-                                <span class="date sub-text">{{this.date}}</span>
-                            {{/if}}
-                            {{#if (IsAuthorHelper this.user.userName)}}
-                                <div class="column__edit material-icon-add editComment" data-id="{{this.cmid}}"></div>
-                                <div class="column__delete material-icon-delete deleteComment" data-id="{{this.cmid}}"></div>
-                            {{/if}}
-                            </div>
-                         {{!--<div class="comment" data-id="{{this.cmid}}">
-                            <li data-id="{{this.cmid}}" data-author="{{this.user.login}}">
-                                <div class="column__header">
-                                        <div class="comment__avatar">
-                                            <img width="25px" height="25px" src="{{this.user.avatar}}"/>
-                                        </div>
-                                        {{#if (IsAuthorHelper this.user.login)}}
-                                        <span class="column__edit material-icons editComment" data-id="{{this.cmid}}"></span>
-                                        <span class="column__delete material-icons deleteComment" data-id="{{this.cmid}}"></span>
-                                        {{/if}}
-                                </div>
-                                <div class="comment__text__wrapper">
-                                    <p class="comment__text" data-id="{{this.cmid}}">{{this.text}}</p> <span class="date sub-text">{{this.date}}</span>
-                                </div>
-                            </li>
-                        </div> --}}
-                        {{/each}}
-                    </ul>
-                    <form class="form-inline" role="form">
-                        <div class="form-group">
-                            <input class="simple-form-element" type="text" id="newCommentText" name="comment"
-                                autocomplete="off" placeholder="Добавить комментарий" required>
-                        </div>
-                        <div class="form-group">
-                            <button class="button_small" id="createComment">Добавить</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            {{/if}}
         </div>
     {{/if}}
 {{/with}}
