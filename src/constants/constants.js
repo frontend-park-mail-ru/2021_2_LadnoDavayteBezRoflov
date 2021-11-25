@@ -93,3 +93,8 @@ export const ConstantMessages = {
 export const BoardStoreConstants = {
     MinUserNameSearchLength: 3,
 };
+
+export const CheckLists = {
+    CheckListDefaultTitle: 'Check List',
+    CheckListItemDefaultTitle: 'Item',
+};

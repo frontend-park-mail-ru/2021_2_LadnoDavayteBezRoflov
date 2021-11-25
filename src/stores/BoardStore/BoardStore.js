@@ -3,6 +3,7 @@ import BaseStore from '../BaseStore.js';
 // Actions
 import {BoardsActionTypes} from '../../actions/boards.js';
 import {CardListActionTypes} from '../../actions/cardlist.js';
+import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
 
@@ -12,8 +13,7 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes,
-    Urls, BoardStoreConstants} from '../../constants/constants.js';
+import {CheckLists, ConstantMessages, HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -60,6 +60,7 @@ class BoardStore extends BaseStore {
             positionRange: null,
             card_name: null,
             errors: null,
+            checkLists: [],
         });
 
         this._storage.set('delete-card-popup', {
@@ -247,6 +248,52 @@ class BoardStore extends BaseStore {
             await this._toggleBoardMemberInSearchList(action.data);
             this._emitChange();
             break;
+
+        case CheckListActionTypes.CHECKLIST_CREATE:
+            await this._createCheckList();
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_EDIT:
+            this._editCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_SAVE:
+            await this._saveCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_DELETE:
+            await this._deleteCheckList(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_CREATE:
+            await this._createCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_EDIT:
+            this._editCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_SAVE:
+            await this._saveChekListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_DELETE:
+            await this._deleteCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
+            await this._toggleChekListItem(action.data);
+            this._emitChange();
+            break;
+
 
         default:
             return;
@@ -643,6 +690,7 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').edit = false;
         this._storage.get('card-popup').errors = null;
         this._storage.get('card-popup').clid = data.clid;
+        this._storage.get('card-popup').checkLists = [];
     }
 
     /**
@@ -700,6 +748,7 @@ class BoardStore extends BaseStore {
                     data.deadline, false),
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
                 assignees: [],
+                check_lists: [],
             });
             return;
 
@@ -757,6 +806,12 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
+            checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
+                const items = list.check_list_items.map((item) => {
+                    return {...item, edit: false};
+                });
+                return {...list, check_list_items: items, edit: false};
+            }),
         });
     }
 
@@ -963,6 +1018,306 @@ class BoardStore extends BaseStore {
      * @private
      */
     _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
+    }
+
+    /**
+     * Метод выполняет поиск чеклиста по его ID
+     * @param {Number} chlid
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListById(chlid) {
+        const context = this._storage.get('card-popup');
+        return context.checkLists.find((list) => {
+            return list.chlid === chlid;
+        });
+    }
+
+    /**
+     * Метод выполняет поиск элемента чеклиста по паре id
+     * @param {Number} chlid - id чеклиста
+     * @param {Number} chliid - id элемента чеклиста
+     * @return {Object} найденный элемент
+     * @private
+     */
+    _getCheckListItemById(chlid, chliid) {
+        return this._getCheckListById(chlid).check_list_items.find((item) => {
+            return item.chliid === chliid;
+        });
+    }
+
+    /**
+     * Создает чеклист
+     * @private
+     */
+    async _createCheckList() {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        const newCheckList = {
+            cid: context.cid,
+            title: CheckLists.CheckListDefaultTitle + ' ' + context.checkLists.length,
+            check_list_items: [],
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckList(newCheckList);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckList.chlid = payload.data.chlid;
+            context.checkLists.push(newCheckList);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Переключает чеклист в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckList(data) {
+        const checkLists = this._storage.get('card-popup').checkLists;
+        const checkList = checkLists.find((checkList) => {
+            return checkList.chlid === data.chlid;
+        });
+        checkList.edit = true;
+    }
+
+    /**
+     * Сохраняет новый заголовок чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = this._getCheckListById(data.chlid);
+
+        const newCheckList = {...checkList};
+        newCheckList.title = data.title;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckList(newCheckList, data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            checkList.title = data.title;
+            checkList.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет чеклист
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckList(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckList(data.chlid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const delCheckList = context.checkLists.find((checklist) => {
+                return checklist.chlid === data.chlid;
+            });
+            context.checkLists.splice(context.checkLists.indexOf(delCheckList), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Создает элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _createCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const checkList = this._getCheckListById(data.chlid);
+
+        const newCheckListItem = {
+            chlid: data.chlid,
+            text: CheckLists.CheckListItemDefaultTitle + ' ' + checkList.check_list_items.length,
+            status: false,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.createCheckListItem(newCheckListItem);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            newCheckListItem.chliid = payload.data.chliid;
+            checkList.check_list_items.push(newCheckListItem);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Перключает элемент чеклиста в режим редактирования
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    _editCheckListItem(data) {
+        this._getCheckListItemById(data.chlid, data.chliid).edit = true;
+    }
+
+    /**
+     * Сохраняет текст элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _saveChekListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
+
+        const newItem = {...item};
+        newItem.text = data.text;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.text = data.text;
+            item.edit = false;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет элемент чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _deleteCheckListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.deleteCheckListItem(data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const list = this._getCheckListById(data.chlid);
+            const item = this._getCheckListItemById(data.chlid, data.chliid);
+            list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Переключает чекбокс элемента чеклиста
+     * @param {Object} data - объект с данными action'a
+     * @private
+     */
+    async _toggleChekListItem(data) {
+        const context = this._storage.get('card-popup');
+        context.errors = null;
+        const item = this._getCheckListItemById(data.chlid, data.chliid);
+
+        const newItem = {...item};
+        newItem.status = !newItem.status;
+
+        let payload;
+
+        try {
+            payload = await Network.updateCheckListItem(newItem, data.chliid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            item.status = !item.status;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+     _showAddCardAssigneePopUp() {
         const context = this._storage.get('add-card-member-popup');
         context.visible = true;
         context.errors = null;
