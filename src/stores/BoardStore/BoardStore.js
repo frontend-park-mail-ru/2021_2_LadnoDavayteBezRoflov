@@ -3,6 +3,7 @@ import BaseStore from '../BaseStore.js';
 // Actions
 import {BoardsActionTypes} from '../../actions/boards.js';
 import {CardListActionTypes} from '../../actions/cardlist.js';
+import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
 
@@ -12,11 +13,11 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {CheckLists, ConstantMessages, HttpStatusCodes, Urls} from '../../constants/constants.js';
+import {CheckLists, ConstantMessages,
+    HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
-import {CheckListActionTypes} from '../../actions/checklist';
 
 /**
  * Класс, реализующий хранилище доски
@@ -66,6 +67,22 @@ class BoardStore extends BaseStore {
         this._storage.set('delete-card-popup', {
             visible: false,
             cid: null,
+        });
+
+        this._storage.set('add-board-member-popup', {
+            visible: false,
+            errors: null,
+            searchString: null,
+            users: [],
+            header: 'Добавить пользователя в доску',
+        });
+
+        this._storage.set('add-card-member-popup', {
+            visible: false,
+            errors: null,
+            searchString: null,
+            users: [],
+            header: 'Добавить пользователя в карточку',
         });
     }
 
@@ -193,6 +210,46 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case CardActionTypes.CARD_ADD_ASSIGNEE_SHOW:
+            this._showAddCardAssigneePopUp();
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_CLOSE:
+            this._hideAddCardAssigneePopUp();
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_INPUT:
+            await this._refreshCardAssigneeSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.CARD_ADD_ASSIGNEE_USER_CLICKED:
+            await this._toggleCardAssigneeInSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_SHOW:
+            this._showAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_CLOSE:
+            this._hideAddBoardMemberPopUp();
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_INPUT:
+            await this._refreshBoardMemberSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case BoardActionTypes.BOARD_ADD_MEMBER_USER_CLICKED:
+            await this._toggleBoardMemberInSearchList(action.data);
+            this._emitChange();
+            break;
+
         case CheckListActionTypes.CHECKLIST_CREATE:
             await this._createCheckList();
             this._emitChange();
@@ -277,6 +334,7 @@ class BoardStore extends BaseStore {
                 });
             });
 
+            this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -330,7 +388,10 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network.updateBoard(data, this._storage.get('bid'));
+            payload = await Network.updateBoard({
+                ...data,
+                members: this._storage.get('members'),
+            }, this._storage.get('bid'));
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error); // TODO pretty
             return;
@@ -536,7 +597,7 @@ class BoardStore extends BaseStore {
             // Обновим позиции списков в storage
             const cardLists = this._storage.get('card_lists');
 
-            for (let index = bound.left; index < bound.right; index +=1) {
+            for (let index = bound.left; index < bound.right; index += 1) {
                 cardLists[index].pos += bound.increment;
             }
 
@@ -654,6 +715,8 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
+        data.deadline = validator.validateDeadlineInput(data.deadline);
+
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
             return;
@@ -687,6 +750,7 @@ class BoardStore extends BaseStore {
                 deadlineStatus: validator.validateDeadline(
                     data.deadline, false),
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
+                assignees: [],
                 check_lists: [],
             });
             return;
@@ -813,6 +877,8 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
+        data.deadline = validator.validateDeadlineInput(data.deadline);
+
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
             return;
@@ -852,7 +918,7 @@ class BoardStore extends BaseStore {
 
             const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
 
-            for (let index = bound.left; index < bound.right; index +=1) {
+            for (let index = bound.left; index < bound.right; index += 1) {
                 cards[index].pos += bound.increment;
             }
 
@@ -950,6 +1016,22 @@ class BoardStore extends BaseStore {
         default:
             return;
         }
+    }
+
+    /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+    _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
     }
 
     /**
@@ -1228,6 +1310,242 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             item.status = !item.status;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+    _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
+    }
+
+    /**
+     * Метод выключает popup добавления участника в карточку
+     * @private
+     */
+    _hideAddCardAssigneePopUp() {
+        this._storage.get('add-card-member-popup').visible = false;
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления участника карточки
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _refreshCardAssigneeSearchList(data) {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchCardMembers(searchString, this._storage.get('card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.data;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из карточки
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _toggleCardAssigneeInSearchList(data) {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        const assignees = card.assignees.slice();
+
+        // Найдем выбранного пользователя в списке assignees карточки
+        const assignee = card.assignees.find((assignee) => {
+            return assignee.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в assignees, исключим его от туда. Иначе - добавим.
+        if (assignee) {
+            assignees.splice(assignees.indexOf(assignee), 1);
+        } else {
+            assignees.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        const updatedCard = {...card};
+        updatedCard.assignees = assignees;
+        let payload;
+
+        try {
+            payload = await Network.toggleCardMember(this._storage.get('card-popup').cid, data.uid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !assignee;
+            card.assignees = assignees;
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод включает popup добавления опльзователя в доску и устанавливает контекст
+     * @private
+     */
+    _showAddBoardMemberPopUp() {
+        const context = this._storage.get('add-board-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        context.users = this._storage.get('members').map((member) => {
+            return {...member, added: true};
+        });
+    }
+
+    /**
+     * Метод скрывает popup добавления пользователя в доску
+     * @private
+     */
+    _hideAddBoardMemberPopUp() {
+        this._storage.get('add-board-member-popup').visible = false;
+    }
+
+    /**
+     * Метод добавляет/исключает пользователя из доски
+     * @param {Object} data - объект с uid пользователя
+     * @private
+     */
+    async _toggleBoardMemberInSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        const members = this._storage.get('members').slice();
+        // Найдем выбранного пользователя в списке членов доски
+        const member = members.find((memeber) => {
+            return memeber.uid === data.uid;
+        });
+
+        // Найдем выбранного пользователя в списке пользователей popup'a
+        const user = context.users.find((user) => {
+            return user.uid === data.uid;
+        });
+
+        // Если пользователь был в members, исключим его от туда. Иначе - добавим.
+        if (member) {
+            members.splice(members.indexOf(member), 1);
+        } else {
+            members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
+        }
+
+        const updatedBoard = {
+            description: this._storage.get('description'),
+            board_name: this._storage.get('board_name'),
+            members: members,
+        };
+
+        let payload;
+
+        try {
+            payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
+            payload = await Network.toggleBoardMember(this._storage.get('bid'), data.uid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            user.added = !member;
+            this._storage.set('members', members);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Метод обновляет список пользователей в контексте popup'a добавления пользователя в доску
+     * @param {Object} data - объект с текстом поиска
+     * @private
+     */
+    async _refreshBoardMemberSearchList(data) {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+        const {searchString} = data;
+        context.searchString = searchString;
+
+        if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            return;
+        }
+
+        const validator = new Validator();
+        context.errors = validator.validateLogin(searchString);
+        if (context.errors) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network.searchBoardMembers(searchString, this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            context.users = payload.data;
             return;
 
         default:

@@ -38,6 +38,7 @@ export default class CardPopUp extends BaseComponent {
             card_name: document.getElementById('cardPopUpTitleId'),
             description: document.getElementById('cardPopUpDescriptionId'),
             deadline: document.getElementById('cardPopUpDeadlineId'),
+            assigneeBtn: document.getElementById('cardPopUpAddAssigneeBtnId'),
             checkList: {
                 createBtn: document.getElementById('cardPopUpAddCheckListBtnId'),
                 editBtn: document.querySelectorAll('.checklist-edit'),
@@ -66,6 +67,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
         this._elements.deadline?.addEventListener('click', this._onDeadlineClick);
+        this._elements.assigneeBtn?.addEventListener('click', this._onAssigneeClick);
 
         /* Check List */
         this._elements.checkList.createBtn?.addEventListener('click', this._onCreateCheckList);
@@ -108,6 +110,7 @@ export default class CardPopUp extends BaseComponent {
         this._elements.createBtn?.removeEventListener('click', this._onCreate);
         this._elements.saveBtn?.removeEventListener('click', this._onSave);
         this._elements.deadline?.removeEventListener('click', this._onDeadlineClick);
+        this._elements.assigneeBtn?.removeEventListener('click', this._onAssigneeClick);
 
         /* Check List */
         this._elements.checkList.createBtn?.removeEventListener('click', this._onCreateCheckList);
@@ -145,6 +148,7 @@ export default class CardPopUp extends BaseComponent {
         this._onCreate = this._onCreate.bind(this);
         this._onSave = this._onSave.bind(this);
         this._onDeadlineClick = this._onDeadlineClick.bind(this);
+        this._onAssigneeClick = this._onAssigneeClick.bind(this);
 
         /* CheckList */
         this._onCreateCheckList = this._onCreateCheckList.bind(this);
@@ -179,11 +183,6 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSave(event) {
         event.preventDefault();
-        const date = new Date(this._elements.deadline.value);
-        if (isNaN(date)) {
-            this._elements.deadline.value = '3000-12-31T23:59';
-        }
-
         const data = {
             position: parseInt(this._elements.positionSelect.value, 10),
             card_name: this._elements.card_name.value,
@@ -198,15 +197,11 @@ export default class CardPopUp extends BaseComponent {
 
     /**
      * Callback, вызываемый при нажатии "Создать"
-     * @param {Event} event объект события
+     * @param {Event} event - объект события
      * @private
      */
     _onCreate(event) {
         event.preventDefault();
-        const date = new Date(this._elements.deadline.value);
-        if (isNaN(date)) {
-            this._elements.deadline.value = '3000-12-31T23:59';
-        }
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,
@@ -231,6 +226,15 @@ export default class CardPopUp extends BaseComponent {
         }
     }
 
+    /**
+     * Callback, вызываемый при нажатии "Участники"
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAssigneeClick(event) {
+        event.preventDefault();
+        cardActions.showAddCardAssigneePopUp();
+    }
     /* CheckList */
     /**
      * CallBack на создание чеклиста

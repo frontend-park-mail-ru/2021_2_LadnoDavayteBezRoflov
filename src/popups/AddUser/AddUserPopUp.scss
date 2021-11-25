@@ -1,0 +1,56 @@
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Constants';
+
+.search-result-wrapper {
+    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.search-result {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 2px 5px;
+    border-radius: $common-radius;
+    background-color: $secondary-bg-color;
+    border: 4px solid $tertiary-bg-color;
+
+    &:focus,
+    &:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px 2px $default-box-shadow-color;
+    }
+}
+
+.user-name {
+    margin-left: 5px;
+    flex-grow: 1;
+}
+
+.check {
+    @extend .material-icon-base;
+    &::before {
+        content: 'check';
+    }
+
+    &_padded {
+        padding: 0 10px;
+    }
+}
+
+.add {
+    @extend .material-icon-base;
+    &::before {
+        content: 'add';
+    }
+
+    &_padded {
+        padding: 0 10px;
+    }
+}

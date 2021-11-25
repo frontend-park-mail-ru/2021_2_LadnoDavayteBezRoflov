@@ -17,6 +17,8 @@ import './BoardsView.scss';
 // Шаблон
 import template from './BoardsView.hbs';
 import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
+import AddUserPopUp from '../../popups/AddUser/AddUserPopUp';
+
 
 /**
  * Класс, реализующий страницу с досками.
@@ -30,6 +32,7 @@ export default class BoardsView extends BaseView {
         const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
         super(context, template, parent);
 
+        this._elements = {};
         this._bindCallBacks();
 
         UserStore.addListener(this._onRefresh);
@@ -37,6 +40,9 @@ export default class BoardsView extends BaseView {
         SettingsStore.addListener(this._onRefresh);
 
         this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
+        this.addComponent('AddTeamMemberPopUp', new AddUserPopUp(this._addUserCallBacks));
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
     }
 
     /**
@@ -49,6 +55,10 @@ export default class BoardsView extends BaseView {
             ...BoardsStore.getContext(),
             ...SettingsStore.getContext()],
         ));
+
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
+
         if (!this._isActive) {
             return;
         }
@@ -71,6 +81,9 @@ export default class BoardsView extends BaseView {
             ...SettingsStore.getContext(),
         ]));
 
+        this._setContextByComponentName('AddTeamMemberPopUp',
+                                        BoardsStore.getContext('add-team-member-popup'));
+
         if (!this.context.get('isAuthorized')) {
             Router.go(Urls.Login, true);
             return;
@@ -84,7 +97,6 @@ export default class BoardsView extends BaseView {
 
     /**
      * Метод, отрисовывающий страницу.
-     * @param {object} context контекст отрисовки страницы
      */
     render() {
         super.render();
@@ -97,8 +109,11 @@ export default class BoardsView extends BaseView {
      */
     addEventListeners() {
         super.addEventListeners();
-        this._addBoardBtns?.forEach((item) => {
-            item.addEventListener('click', this._showCreateBoardModal);
+        this._elements.addBoardBtns?.forEach((item) => {
+            item.addEventListener('click', this._onShowCreateBoardPopUp);
+        });
+        this._elements.inviteMembersBtns?.forEach((item) => {
+            item.addEventListener('click', this._onShowAddTeamMemberPopUp);
         });
     }
 
@@ -107,8 +122,11 @@ export default class BoardsView extends BaseView {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._addBoardBtns?.forEach((item) => {
-            item.removeEventListener('click', this._showCreateBoardModal);
+        this._elements.addBoardBtns?.forEach((item) => {
+            item.removeEventListener('click', this._onShowCreateBoardPopUp);
+        });
+        this._elements.inviteMembersBtns?.forEach((item) => {
+            item.removeEventListener('click', this._onShowAddTeamMemberPopUp);
         });
     }
 
@@ -118,7 +136,13 @@ export default class BoardsView extends BaseView {
      */
     _bindCallBacks() {
         this._onRefresh = this._onRefresh.bind(this);
-        this._showCreateBoardModal = this._showCreateBoardModal.bind(this);
+        this._onShowCreateBoardPopUp = this._onShowCreateBoardPopUp.bind(this);
+        this._onShowAddTeamMemberPopUp = this._onShowAddTeamMemberPopUp.bind(this);
+        this._addUserCallBacks = {
+            onInput: this._onAddTeamMemberInput.bind(this),
+            onUserClick: this._onAddTeamMemberUserClick.bind(this),
+            onClose: this._onAddTeamMemberClose.bind(this),
+        };
     }
 
     /**
@@ -126,7 +150,10 @@ export default class BoardsView extends BaseView {
      * @private
      */
     _registerElements() {
-        this._addBoardBtns = document.querySelectorAll('.add-board');
+        this._elements = {
+            addBoardBtns: document.querySelectorAll('.add-board'),
+            inviteMembersBtns: document.querySelectorAll('.invite-board'),
+        };
     }
 
     /**
@@ -134,8 +161,48 @@ export default class BoardsView extends BaseView {
      * @param {Object} event
      * @private
      */
-    _showCreateBoardModal(event) {
-        this.teamID = event.target.dataset.id;
-        boardsActions.showModal(this.teamID);
+    _onShowCreateBoardPopUp(event) {
+        boardsActions.showModal(parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Callback вызывается при вводе текста в input поиска AddTeamMemberPopUp
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddTeamMemberInput(event) {
+        boardsActions.refreshTeamSearchList(event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатие на строку с пользователем в AddTeamMemberPopUp
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onAddTeamMemberUserClick(event) {
+        const user = event.target.closest('div.search-result');
+        boardsActions.toggleUserInSearchList(parseInt(user.dataset.uid, 10));
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на значек приглашения в команду
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onShowAddTeamMemberPopUp(event) {
+        event.preventDefault();
+        boardsActions.showAddTeamMemberPopUp(parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Callback, вызываемый при закрытии AddTeamMemberPopUp
+     * @param {Event} event объект события
+     * @private
+     */
+    _onAddTeamMemberClose(event) {
+        if (event.target.id === 'addUserPopUpCloseId' ||
+            event.target.id === 'addUserPopUpWrapperId') {
+            boardsActions.hideAddTeamMemberPopUp();
+        }
     }
 }

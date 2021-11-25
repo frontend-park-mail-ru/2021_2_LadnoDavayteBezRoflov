@@ -20,6 +20,12 @@ class Network {
             board: 'api/boards',
             card: 'api/cards',
             cardlist: 'api/cardLists',
+            usersearch: {
+                card: 'api/usersearch/card',
+                board: 'api/usersearch/board',
+                team: 'api/usersearch/team',
+            },
+            team: 'api/teams',
             checklists: 'api/checkLists',
             checklistsItems: 'api/checkListItems',
         };
@@ -153,16 +159,11 @@ class Network {
 
     /**
      * Метод, реализующий запрос GET /api/boards.
-     * @param {object} data полезная нагрузка запроса
      * @return {Promise<Response>} промис запроса
      */
-    async getBoards(data) {
+    async getBoards() {
         const options = {
             method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}`,
@@ -359,6 +360,101 @@ class Network {
             options);
     }
 
+    /**
+     * Метод, реализующий GET /api/usersearch/card/:cid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} cid - id карточки
+     */
+    async searchCardMembers(searchString, cid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.card}` +
+            `/${cid}/${searchString}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий GET /api/usersearch/board/:bid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} bid - id доски
+     */
+    async searchBoardMembers(searchString, bid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.board}` +
+            `/${bid}/${searchString}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий GET /api/usersearch/team/:tid/:search_text
+     * @param {String} searchString - строка для поиска
+     * @param {Number} tid - id команды
+     */
+    async searchTeamMembers(searchString, tid) {
+        const options = {
+            method: 'get',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.usersearch.team}` +
+            `/${tid}/${searchString}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/teams/:tid/toggleuser/:uid
+     * @param {Number} tid - id команды
+     * @param {Number} uid - id переключаемого пользователя
+     */
+    async toggleTeamMember(tid, uid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}` +
+            `/toggleuser/${uid}`, options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/boards/:bid/toggleuser/:uid
+     * @param {Number} bid - id доски
+     * @param {Number} uid - id переключаемого пользователя
+     */
+    async toggleBoardMember(bid, uid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}` +
+            `/toggleuser/${uid}`, options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/cards/:cid/toggleuser/:uid
+     * @param {Number} cid - id карточки
+     * @param {Number} uid - id переключаемого пользователя
+     */
+    async toggleCardMember(cid, uid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}` +
+            `/toggleuser/${uid}`, options);
+    }
     /**
      * Метод, реализующий запрос POST /api/checkLists.
      * @param {object} data полезная нагрузка запроса
