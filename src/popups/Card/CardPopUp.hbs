@@ -55,25 +55,25 @@
                         {{#if edit}}
                             <div class="form-inline" role="form">
                                 <div class="form-group">
-                                    <input class="simple-form-element" type="text" id="newCommentText"
-                                           name="comment"
-                                           autocomplete="off" placeholder="Добавить комментарий" required>
+                                    <input class="simple-form-element" type="text" id="newCommentTextId"
+                                           name="comment" autocomplete="off"
+                                           placeholder="Добавить комментарий" required>
                                 </div>
                                 <div class="form-group">
-                                    <button class="button button_small" id="createComment">Добавить</button>
+                                    <button class="button button_small" id="createCommentId">Добавить</button>
                                 </div>
                             </div>
                             <div class="comments-wrapper">
                                 {{#each comments}}
                                     <div class="comment">
-                                        <img width="25px" height="25px" class="comment__avatar" src="{{this.user.avatar}}"/>
+                                        <img class="comment__avatar" src="{{this.user.avatar}}"/>
                                         <div class="comment__content">
                                             {{#if this.edit}}
                                                 <input class="simple-form-element check-list__input" type="text"
                                                        pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                                        value="{{this.text}}">
                                             {{else}}
-                                                <div class="check-list__title">{{this.text}}</div>
+                                                <div class="comment__text">{{this.text}}</div>
                                                 <div class="date sub-text">{{this.date}}</div>
                                             {{/if}}
                                         </div>
@@ -83,7 +83,7 @@
                                                      data-id="{{this.cmid}}"></div>
                                             {{/if}}
                                             {{#if (IsAuthorHelper this.user.userName)}}
-                                                <div class="material-icon-edit material-icon-add editComment"
+                                                <div class="material-icon-edit material-icon-edit editComment"
                                                      data-id="{{this.cmid}}"></div>
                                                 <div class="material-icon-delete material-icon-delete deleteComment"
                                                      data-id="{{this.cmid}}"></div>

@@ -21,6 +21,10 @@
         flex-grow: 1;
     }
 
+    &__text {
+        font-size: 16px;
+    }
+
     &__btns {
         display: flex;
         flex-direction: row;

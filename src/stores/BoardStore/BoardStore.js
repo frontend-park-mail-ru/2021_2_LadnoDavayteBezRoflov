@@ -638,6 +638,7 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                comments: [],
             });
             return;
 
@@ -869,10 +870,17 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCardComment(data) {
+        const context = this._storage.get('card-popup');
+
+        const comment = {
+            cid: context.cid,
+            text: data.text,
+        };
+
         let payload;
 
         try {
-            payload = await Network.createComment(data);
+            payload = await Network.createComment(comment);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;

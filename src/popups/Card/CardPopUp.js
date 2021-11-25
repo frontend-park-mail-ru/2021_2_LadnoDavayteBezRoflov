@@ -47,8 +47,8 @@ export default class CardPopUp extends BaseComponent {
                 saveBtns: document.querySelectorAll('.saveComment'),
                 deleteBtns: document.querySelectorAll('.deleteComment'),
             },
-            newCommentText: document.getElementById('newCommentText'),
-            addCommentBtn: document.getElementById('createComment'),
+            newCommentText: document.getElementById('newCommentTextId'),
+            addCommentBtn: document.getElementById('createCommentId'),
         };
     }
 
@@ -163,7 +163,6 @@ export default class CardPopUp extends BaseComponent {
     _onCreateComment(event) {
         event.preventDefault();
         commentsActions.createComment(
-            BoardStore.getContext('card-popup').cid,
             this._elements.newCommentText.value,
         );
     }
@@ -181,7 +180,7 @@ export default class CardPopUp extends BaseComponent {
     }
 
     /**
-     * Callback, вызываемый при нажатии "Создать комментарий"
+     * Callback, вызываемый при нажатии "Обновить комментарий"
      * @param {Event} event объект события
      * @private
      */
@@ -203,6 +202,5 @@ export default class CardPopUp extends BaseComponent {
         commentsActions.deleteComment(
             parseInt(event.target.dataset.id, 10),
         );
-        //event.stopPropagation();
     }
 }
