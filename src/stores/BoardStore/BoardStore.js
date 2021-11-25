@@ -872,7 +872,7 @@ class BoardStore extends BaseStore {
                 cmid: payload.data.cmid,
                 cid: this._storage.get('card-popup').cid,
                 user: {
-                    userName: SettingsStore.getContext('userName'),
+                    userName: SettingsStore.getContext('login'),
                     avatar: SettingsStore.getContext('avatar'),
                 },
                 text: data.text,
