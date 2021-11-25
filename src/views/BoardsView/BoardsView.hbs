@@ -14,9 +14,17 @@
                         <span class="material-icons material-icons-colored material-icons-colored_disabled">edit</span>
                     </div>
                     <div>
-                        <span class="team__member-counter">{{this.users.length}}</span>
-                        <span class="material-icons material-icons-colored invite-board" data-id="{{this.tid}}">group_add</span>
-                        <span class="material-icons material-icons-colored add-board" data-id="{{this.tid}}">add</span>
+                        <!-- Обычная команда-->
+                        {{#if (IsEqualHelper this.team_type 3)}}
+                            <span class="team__member-counter">{{this.users.length}}</span>
+                            <span class="material-icons material-icons-colored invite-board" data-id="{{this.tid}}">group_add</span>
+                            <span class="material-icons material-icons-colored add-board" data-id="{{this.tid}}">add</span>
+                        <!-- Личное пространство-->
+                        {{else if (IsEqualHelper this.team_type 2)}}
+                            <span class="material-icons material-icons-colored add-board" data-id="{{this.tid}}">add</span>
+                        <!-- Остальные доски -->
+                        {{else if (IsEqualHelper this.team_type 1)}}
+                        {{/if}}
                         <span class="material-icons material-icons-colored material-icons-colored_disabled">menu</span>
                     </div>
                 </div>
