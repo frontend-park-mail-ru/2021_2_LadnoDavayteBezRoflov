@@ -86,4 +86,11 @@ export const ConstantMessages = {
     CardListTitleTooShort: 'Название списка карточек слишком короткое',
     CardListTitleTooLong: 'Название списка карточек слишком длинное',
     CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
+
+    UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
+};
+
+export const CheckLists = {
+    CheckListDefaultTitle: 'Check List',
+    CheckListItemDefaultTitle: 'Item',
 };

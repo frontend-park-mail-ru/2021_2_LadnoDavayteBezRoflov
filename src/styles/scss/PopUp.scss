@@ -25,6 +25,10 @@
     align-items: flex-start;
     box-shadow: 0 0 10px 10px $default-box-shadow-color;
     min-width: 300px;
+
+    &_width {
+        min-width: 500px;
+    }
 }
 
 .popup-form {
@@ -32,6 +36,9 @@
     flex-direction: column;
     width: 95%;
     padding: 10px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 65vh;
 
     &__header {
         margin-left: 20px;

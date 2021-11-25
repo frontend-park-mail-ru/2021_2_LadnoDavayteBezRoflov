@@ -1,8 +1,8 @@
 {{#with card-popup}}
     {{#if visible }}
         <div class="popup-wrapper" id="cardPopUpWrapperId">
-            <div class="popup-content">
-                <form class="popup-form">
+            <div class="popup-content popup-content_width">
+                <form class="popup-form custom-scroll">
                     <div class="popup-form__header">
                         {{#if edit }}
                             Редактирование "{{card_name}}"
@@ -15,25 +15,27 @@
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
                             <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{card_name}}" {{/if}}>
                         </div>
                         <div>
                             <label for="cardPopUpDescriptionId" class>Описание карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId" name="card-description"
-                                autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                            <input class="simple-form-element" type="text" id="cardPopUpDescriptionId"
+                                   name="card-description"
+                                   autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{description}}" {{/if}}>
                         </div>
                         <div>
                             <label for="cardPopUpDeadlineId" class>Дедлайн карточки:</label>
                             <input class="simple-form-element" type="datetime-local" id="cardPopUpDeadlineId" name="card-deadline"
-                                min="1970-01-01T00:00" max="3000-12-31T23:59" 
+                                min="1970-01-01T00:00" max="3000-12-31T23:59"
                                 pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
                         </div>
                         {{#if edit}}
                             <label for="cardPopUpPositionId">Позиция:</label>
-                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select" required>
+                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
+                                    required>
                                 {{#each positionRange}}
                                     {{#if (IsEqualHelper this ../position) }}
                                         <option value="{{this}}" selected>#{{this}}</option>
@@ -43,10 +45,51 @@
                                 {{/each}}
                             </select>
                         {{/if}}
+                        {{# if checkLists}}
+                            <span class="check-list-separator">Чек листы</span>
+                        {{/if}}
+                        {{# each checkLists}}
+                            <div class="check-list" data-id="{{this.chlid}}">
+                                <div class="check-list__header-wrapper">
+                                    {{#if this.edit}}
+                                        <input class="simple-form-element check-list__input" type="text"
+                                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                               value="{{this.title}}">
+                                        <div class="material-icon-save checklist-save"></div>
+                                    {{else}}
+                                        <div class="check-list__title">{{this.title}}</div>
+                                        <div class="material-icon-edit checklist-edit"></div>
+                                    {{/if}}
+                                    <div class="material-icon-add checklist-add"></div>
+                                    <div class="material-icon-delete checklist-delete"></div>
+                                </div>
+                                <div class="check-list__items-wrapper">
+                                    {{#each this.check_list_items }}
+                                        <div class="checklist-item" data-id="{{this.chliid}}">
+                                            <label class="checklist-item__label">
+                                                <input type="checkbox" {{#if this.status}}checked{{/if}}>
+                                                {{#if this.edit}}
+                                                </label>
+                                                    <input class="simple-form-element checklist-item__input" type="text"
+                                                           pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                                           value="{{this.text}}">
+                                                    <div class="material-icon-save checklist-item-save"></div>
+                                                {{else}}
+                                                    <div class="checklist-item__title">{{this.text}}</div>
+                                                    </label>
+                                                    <div class="material-icon-edit checklist-item-edit"></div>
+                                                {{/if}}
+                                            <div class="material-icon-delete checklist-item-delete"></div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        {{/each}}
                         {{#if errors}}
                             <div class="error">{{errors}}</div>
                         {{/if}}
                         {{# if edit }}
+                            <button class="button" id="cardPopUpAddCheckListBtnId">Новый чек-лист</button>
                             <button class="button" id="cardPopUpSaveBtnId">Сохранить</button>
                         {{ else }}
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>
