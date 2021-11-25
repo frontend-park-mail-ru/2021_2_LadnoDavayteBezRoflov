@@ -203,6 +203,11 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case CardActionTypes.CARD_UPDATE_STATUS:
+            await this._updateDeadlineCheck(action.data);
+            this._emitChange();
+            break;
+
         case CardActionTypes.CARD_ADD_ASSIGNEE_SHOW:
             this._showAddCardAssigneePopUp();
             this._emitChange();
@@ -253,6 +258,9 @@ class BoardStore extends BaseStore {
      * @param {Object} data полезная нагрузка запроса
      */
     async _getBoard(data) {
+        const validator = new Validator();
+        const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
         let payload;
 
         try {
@@ -269,6 +277,15 @@ class BoardStore extends BaseStore {
             this._storage.set('board_name', payload.data.board_name);
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
+
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
+                    card.deadlineCheck = card.deadline_check;
+                    card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                });
+            });
+
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
 
@@ -668,6 +685,8 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
+            const validator = new Validator();
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
             this._storage.get('card-popup').visible = false;
             this._getCardListById(data.clid).cards.push({
                 cid: payload.data.cid,
@@ -675,6 +694,11 @@ class BoardStore extends BaseStore {
                 card_name: data.card_name,
                 description: data.description,
                 pos: this._getCardListById(data.clid).cards.length + 1,
+                deadline: data.deadline,
+                deadline_check: false,
+                deadlineStatus: validator.validateDeadline(
+                    data.deadline, false),
+                deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
                 assignees: [],
             });
             return;
@@ -730,8 +754,59 @@ class BoardStore extends BaseStore {
                 (_, index) => index + 1),
             card_name: card.card_name,
             description: card.description,
+            deadline: card.deadline,
+            deadline_check: card.deadline_check,
             errors: null,
         });
+    }
+
+    /**
+     * Меняет статус дедлайна (выполнено | не выполнено)
+     * @param {Object} data информация о карточке
+     * @private
+     */
+    async _updateDeadlineCheck(data) {
+        const card = this._getCardById(
+            data.clid,
+            data.cid,
+        );
+
+        let payload;
+
+        const _data = {
+            pos: card.pos,
+            cid: card.cid,
+            clid: card.clid,
+            card_name: card.card_name,
+            description: card.description,
+            bid: card.bid,
+            deadline: card.deadline,
+            deadline_check: !card.deadline_check,
+        };
+
+        try {
+            payload = await Network._updateCard(_data, card.cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const validator = new Validator();
+            card.deadlineStatus = validator.validateDeadline(
+                payload.data.deadline, payload.data.deadline_check);
+            card.deadline_check = payload.data.deadline_check;
+            return;
+
+        case HttpStatusCodes.Forbidden:
+            // todo
+            return;
+
+        default:
+            // todo
+            return;
+        }
     }
 
     /**
@@ -758,6 +833,8 @@ class BoardStore extends BaseStore {
             card_name: data.card_name,
             description: data.description,
             bid: this._storage.get('card-popup').bid,
+            deadline: data.deadline,
+            deadline_check: data.deadline_check,
         };
 
         try {
@@ -785,10 +862,17 @@ class BoardStore extends BaseStore {
                 cards[index].pos += bound.increment;
             }
 
-            // Обновим cardList:
+            // Обновим card:
+            const options = {year: 'numeric', month: 'short', day: '2-digit'};
+
             card.card_name = data.card_name;
             card.description = data.description;
             card.pos = data.pos;
+
+            card.deadline = data.deadline;
+            card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadline_check);
+            card.deadline_check = data.deadline_check;
+            card.deadlineDate = (new Date(data.deadline)).toLocaleDateString('ru-RU', options);
 
             // Переупорядочим списки
             cards.sort((lhs, rhs) => {
