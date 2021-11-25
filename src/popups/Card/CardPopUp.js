@@ -183,11 +183,6 @@ export default class CardPopUp extends BaseComponent {
      */
     _onSave(event) {
         event.preventDefault();
-        const date = new Date(this._elements.deadline.value);
-        if (isNaN(date)) {
-            this._elements.deadline.value = '3000-12-31T23:59';
-        }
-
         const data = {
             position: parseInt(this._elements.positionSelect.value, 10),
             card_name: this._elements.card_name.value,
@@ -207,10 +202,6 @@ export default class CardPopUp extends BaseComponent {
      */
     _onCreate(event) {
         event.preventDefault();
-        const date = new Date(this._elements.deadline.value);
-        if (isNaN(date)) {
-            this._elements.deadline.value = '3000-12-31T23:59';
-        }
         cardActions.createCard(
             this._elements.card_name.value,
             this._elements.description.value,

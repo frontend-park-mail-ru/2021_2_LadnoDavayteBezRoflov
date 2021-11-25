@@ -13,7 +13,8 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {CheckLists, ConstantMessages, HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
+import {CheckLists, ConstantMessages,
+    HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -714,6 +715,8 @@ class BoardStore extends BaseStore {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
+        data.deadline = validator.validateDeadlineInput(data.deadline);
+
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
             return;
@@ -873,6 +876,8 @@ class BoardStore extends BaseStore {
     async _updateCard(data) {
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
+
+        data.deadline = validator.validateDeadlineInput(data.deadline);
 
         this._storage.get('card-popup').errors = validator.validateCardTitle(data.card_name);
         if (this._storage.get('card-popup').errors) {
@@ -1317,7 +1322,7 @@ class BoardStore extends BaseStore {
      * Метод включает popup добавления участника в карточку и устанавливает контекст
      * @private
      */
-     _showAddCardAssigneePopUp() {
+    _showAddCardAssigneePopUp() {
         const context = this._storage.get('add-card-member-popup');
         context.visible = true;
         context.errors = null;
