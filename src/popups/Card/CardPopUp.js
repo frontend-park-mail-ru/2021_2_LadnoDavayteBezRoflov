@@ -6,6 +6,9 @@ import template from './CardPopUp.hbs';
 
 // Actions
 import {cardActions} from '../../actions/card.js';
+import {commentsActions} from '../../actions/comments.js';
+
+// Stores
 import BoardStore from '../../stores/BoardStore/BoardStore.js';
 
 /**
@@ -38,6 +41,7 @@ export default class CardPopUp extends BaseComponent {
             // deadline: document.getElementById('cardPopUpDeadlineId'),
             comments: {
                 editBtns: document.querySelectorAll('.editComment'),
+                saveBtns: document.querySelectorAll('.saveComment'),
                 deleteBtns: document.querySelectorAll('.deleteComment'),
             },
             newCommentText: document.getElementById('newCommentText'),
@@ -59,6 +63,9 @@ export default class CardPopUp extends BaseComponent {
         this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
             editCommentBtn.addEventListener('click', this._onEditComment);
         });
+        this._elements.comments?.saveBtns?.forEach((saveCommentBtn)=>{
+            saveCommentBtn.addEventListener('click', this._onUpdateComment);
+        });
         this._elements.comments?.deleteBtns?.forEach((deleteCommentBtn)=>{
             deleteCommentBtn.addEventListener('click', this._onDeleteComment);
         });
@@ -78,6 +85,9 @@ export default class CardPopUp extends BaseComponent {
         this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
             editCommentBtn.removeEventListener('click', this._onEditComment);
         });
+        this._elements.comments?.saveBtns?.forEach((saveCommentBtn)=>{
+            saveCommentBtn.removeEventListener('click', this._onUpdateComment);
+        });
         this._elements.comments?.deleteBtns?.forEach((deleteCommentBtn)=>{
             deleteCommentBtn.removeEventListener('click', this._onDeleteComment);
         });
@@ -96,6 +106,7 @@ export default class CardPopUp extends BaseComponent {
         /* Comments */
         this._onDeleteComment = this._onDeleteComment.bind(this);
         this._onEditComment = this._onEditComment.bind(this);
+        this._onUpdateComment = this._onUpdateComment.bind(this);
         this._onCreateComment = this._onCreateComment.bind(this);
     }
 
@@ -148,18 +159,10 @@ export default class CardPopUp extends BaseComponent {
      */
     _onCreateComment(event) {
         event.preventDefault();
-        if (this.commentEdit === -1) {
-            cardActions.createComment(
-                BoardStore.getContext('card-popup').cid,
-                this._elements.newCommentText.value,
-            );
-            return;
-        }
-        cardActions.updateComment(
+        commentsActions.createComment(
+            BoardStore.getContext('card-popup').cid,
             this._elements.newCommentText.value,
-            this.commentEdit,
         );
-        this.commentEdit = -1;
     }
 
     /**
@@ -169,11 +172,22 @@ export default class CardPopUp extends BaseComponent {
      */
     _onEditComment(event) {
         event.preventDefault();
-        const commentId = event.target.dataset.id;
-        this.commentEdit = parseInt(commentId, 10);
-        const comment = Array.from(document.querySelectorAll('.comment__text'))
-            .find((element) => element.dataset.id === commentId);
-        this._elements.newCommentText.value = comment.innerHTML;
+        commentsActions.editComment(
+            parseInt(event.target.dataset.id, 10),
+        );
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Создать комментарий"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onUpdateComment(event) {
+        event.preventDefault();
+        commentsActions.updateComment(
+            this._elements.newCommentText.value,
+            parseInt(event.target.dataset.id, 10),
+        );
     }
 
     /**
@@ -183,9 +197,9 @@ export default class CardPopUp extends BaseComponent {
      */
     _onDeleteComment(event) {
         event.preventDefault();
-        cardActions.deleteComment(
+        commentsActions.deleteComment(
             parseInt(event.target.dataset.id, 10),
         );
-        event.stopPropagation();
+        //event.stopPropagation();
     }
 }

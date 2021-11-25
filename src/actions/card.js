@@ -15,9 +15,6 @@ export const CardActionTypes = {
     CARD_DELETE_SHOW: 'card/delete/show',
     CARD_DELETE_CHOOSE: 'card/delete/choose',
     CARD_DELETE_HIDE: 'card/delete/hide',
-    CARD_ADD_COMMENT: 'card/comment/add',
-    CARD_EDIT_COMMENT: 'card/comment/edit',
-    CARD_DELETE_COMMENT: 'card/comment/delete',
 };
 
 /**
@@ -130,47 +127,6 @@ export const cardActions = {
     hideDeleteCardPopUp() {
         Dispatcher.dispatch({
             actionName: CardActionTypes.CARD_DELETE_HIDE,
-        });
-    },
-
-    /**
-     * Создает комментарий
-     * @param {Number} cid id карточки
-     * @param {String} text текст комментария
-     */
-    createComment(cid, text) {
-        Dispatcher.dispatch({
-            actionName: CardActionTypes.CARD_ADD_COMMENT,
-            data: {
-                cid,
-                text,
-            },
-        });
-    },
-
-    /**
-     * Удалить комментарий (не спрашиваем, хотим ли)
-     * @param {Number} cmid id комментария
-     */
-    deleteComment(cmid) {
-        Dispatcher.dispatch({
-            actionName: CardActionTypes.CARD_DELETE_COMMENT,
-            data: {cmid},
-        });
-    },
-
-    /**
-     * Обновляет список карточек
-     * @param {String} text текст комментария
-     * @param {Number} cmid id комментария
-     */
-    updateComment(text, cmid) {
-        Dispatcher.dispatch({
-            actionName: CardActionTypes.CARD_EDIT_COMMENT,
-            data: {
-                text,
-                cmid,
-            },
         });
     },
 };

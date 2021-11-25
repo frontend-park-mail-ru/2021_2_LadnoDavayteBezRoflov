@@ -5,6 +5,7 @@ import {BoardsActionTypes} from '../../actions/boards.js';
 import {CardListActionTypes} from '../../actions/cardlist.js';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
+import {CommentsActionTypes} from '../../actions/comments.js';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -189,18 +190,23 @@ class BoardStore extends BaseStore {
 
             /* Card comments */
 
-        case CardActionTypes.CARD_ADD_COMMENT:
+        case CommentsActionTypes.CARD_ADD_COMMENT:
             await this._createCardComment(action.data);
             this._emitChange();
             break;
 
-        case CardActionTypes.CARD_DELETE_COMMENT:
+        case CommentsActionTypes.CARD_DELETE_COMMENT:
             await this._deleteCardComment(action.data);
             this._emitChange();
             break;
 
-        case CardActionTypes.CARD_EDIT_COMMENT:
+        case CommentsActionTypes.CARD_EDIT_COMMENT:
             await this._editCardComment(action.data);
+            this._emitChange();
+            break;
+
+        case CommentsActionTypes.CARD_UPDATE_COMMENT:
+            await this._updateCardComment(action.data);
             this._emitChange();
             break;
 
@@ -662,9 +668,13 @@ class BoardStore extends BaseStore {
      * @private
      */
     _getCardById(clid, cid) {
-        return this._getCardListById(clid).cards.find((card) => {
+        const result = this._getCardListById(clid).cards.find((card) => {
             return card.cid === cid;
         });
+        if (!result) {
+            throw new Error(`BoardStore: ошибка в функции _getCardById (карточка в столбце ${clid} с айди ${cid} не найдена)`);
+        }
+        return result;
     }
 
     /**
@@ -879,12 +889,14 @@ class BoardStore extends BaseStore {
                 cmid: payload.data.cmid,
                 cid: this._storage.get('card-popup').cid,
                 user: {
-                    login: UserStore.getContext('userName'),
+                    userName: SettingsStore.getContext('userName'),
                     avatar: SettingsStore.getContext('avatar'),
                 },
                 text: data.text,
                 date: payload.data.date,
             });
+
+            console.log(card.comments);
 
             return;
 
@@ -898,13 +910,24 @@ class BoardStore extends BaseStore {
         }
     }
 
+    async _editCardComment(data) {
+        const comments = this._storage.get('card-popup').comments;
+        const comment = comments.find((comment) => {
+            return comment.cmid === data.cmid;
+        });
+        if (!comment) {
+            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
+        }
+        comment.edit = !comment.edit;
+    }
+
     /**
      * Обновляет комментарий
      * @param {Object} data новые данные
      * @return {Promise<void>}
      * @private
      */
-    async _editCardComment(data) {
+    async _updateCardComment(data) {
         let payload;
 
         try {
@@ -927,6 +950,7 @@ class BoardStore extends BaseStore {
             }
 
             card.comments[cmid].text = data.text;
+            card.comments[cmid].edit = false;
 
             return;
 
@@ -968,7 +992,7 @@ class BoardStore extends BaseStore {
                 throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
             }
 
-            card.comments[cmid].splice(cmid, 1);
+            card.comments.splice(cmid, 1);
 
             return;
 

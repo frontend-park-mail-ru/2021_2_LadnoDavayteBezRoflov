@@ -55,11 +55,30 @@
                 <div class="close-button" id="cardPopUpCloseId"></div>
             </div>
 
+            {{#if edit}}
             <div class="comments-wrapper">
                 <div class="custom-scroll">
                     <ul class="comments">
                         {{#each comments}}
-                        <div class="comment" data-id="{{this.cmid}}">
+                        <div class="check-list__header-wrapper" data-id="{{this.cmid}}" data-author="{{this.user.userName}}">
+                                <div class="comment__avatar">
+                                    <img width="25px" height="25px" src="{{this.user.avatar}}"/>
+                                </div>
+                            {{#if this.edit}}
+                                <input class="simple-form-element check-list__input" type="text"
+                                    pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
+                                    value="{{this.text}}">
+                                <div class="material-icon-save saveComment" data-id="{{this.cmid}}"></div>
+                            {{else}}
+                                <div class="check-list__title">{{this.text}}</div>
+                                <span class="date sub-text">{{this.date}}</span>
+                            {{/if}}
+                            {{#if (IsAuthorHelper this.user.userName)}}
+                                <div class="column__edit material-icon-add editComment" data-id="{{this.cmid}}"></div>
+                                <div class="column__delete material-icon-delete deleteComment" data-id="{{this.cmid}}"></div>
+                            {{/if}}
+                            </div>
+                         {{!--<div class="comment" data-id="{{this.cmid}}">
                             <li data-id="{{this.cmid}}" data-author="{{this.user.login}}">
                                 <div class="column__header">
                                         <div class="comment__avatar">
@@ -74,7 +93,7 @@
                                     <p class="comment__text" data-id="{{this.cmid}}">{{this.text}}</p> <span class="date sub-text">{{this.date}}</span>
                                 </div>
                             </li>
-                        </div>
+                        </div> --}}
                         {{/each}}
                     </ul>
                     <form class="form-inline" role="form">
@@ -88,6 +107,7 @@
                     </form>
                 </div>
             </div>
-                </div>
+            {{/if}}
+        </div>
     {{/if}}
 {{/with}}

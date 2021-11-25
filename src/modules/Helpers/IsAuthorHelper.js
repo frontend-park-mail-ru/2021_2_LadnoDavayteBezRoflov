@@ -1,4 +1,4 @@
-import UserStore from '../../stores/UserStore/UserStore';
+import UserStore from '../../stores/UserStore/UserStore.js';
 
 /**
  * Handelbars helper, проверяет авторство комментария
