@@ -186,8 +186,10 @@ export default class CardPopUp extends BaseComponent {
      */
     _onUpdateComment(event) {
         event.preventDefault();
+        const newComment = event.target.closest('.comment')
+            .querySelector('.commentInput').value;
         commentsActions.updateComment(
-            this._elements.newCommentText.value,
+            newComment,
             parseInt(event.target.dataset.id, 10),
         );
     }

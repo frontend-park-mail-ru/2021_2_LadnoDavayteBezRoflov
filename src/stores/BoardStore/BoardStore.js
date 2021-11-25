@@ -673,7 +673,8 @@ class BoardStore extends BaseStore {
             return card.cid === cid;
         });
         if (!result) {
-            throw new Error(`BoardStore: ошибка в функции _getCardById (карточка в столбце ${clid} с айди ${cid} не найдена)`);
+            throw new Error(`BoardStore: ошибка в функции _getCardById' +
+             '(карточка в столбце ${clid} с айди ${cid} не найдена)`);
         }
         return result;
     }
@@ -701,27 +702,6 @@ class BoardStore extends BaseStore {
             errors: null,
         });
     }
-
-    /* [
-                {
-                    cmid: 1,
-                    author: 'test',
-                    text: 'test comment #1',
-                    date: '2013-00-00',
-                },
-                {
-                    cmid: 6,
-                    author: 'DPesh',
-                    text: 'test comment by DPesh',
-                    date: '2004-00-00',
-                },
-                {
-                    cmid: 2,
-                    author: 'me',
-                    text: 'test comment #2',
-                    date: '2004-00-00',
-                },
-            ],*/
 
     /**
      * Обновляет текущий card
@@ -888,12 +868,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
-            );
-
-            card.comments.push({
+            context.comments.push({
                 cmid: payload.data.cmid,
                 cid: this._storage.get('card-popup').cid,
                 user: {
@@ -903,8 +878,6 @@ class BoardStore extends BaseStore {
                 text: data.text,
                 date: payload.data.date,
             });
-
-            console.log(card.comments);
 
             return;
 
@@ -918,6 +891,11 @@ class BoardStore extends BaseStore {
         }
     }
 
+    /**
+     * Переключает комментарий в режим редактирования
+     * @param {Object} data - данные по комменту
+     * @private
+     */
     async _editCardComment(data) {
         const comments = this._storage.get('card-popup').comments;
         const comment = comments.find((comment) => {
@@ -947,18 +925,17 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
-            );
+            const comments = this._storage.get('card-popup').comments;
+            const comment = comments.find((item) => {
+                return item.cmid === data.cmid;
+            });
 
-            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
-            if (cmid === -1) {
+            if (!comment) {
                 throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
             }
 
-            card.comments[cmid].text = data.text;
-            card.comments[cmid].edit = false;
+            comment.text = data.text;
+            comment.edit = false;
 
             return;
 
