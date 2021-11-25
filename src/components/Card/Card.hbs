@@ -9,6 +9,12 @@
         <span class="column__delete material-icons deleteCard" data-id="{{cid}}"></span>
     </div>
     <div class="card__badges" data-id="{{cid}}">
+        {{#if (IsEmptyDeadlineHelper deadline)}}
+            <div class="badge-due-date-wrapper badge-due-date__text-{{deadlineStatus}} checkDeadlineCard" data-id="{{cid}}">
+                <div class="material-icons badge-due-date__icon" data-id="{{cid}}"></div>
+                <div class="badge-due-date__text badge-due-date__text-{{deadlineStatus}}" data-id="{{cid}}">{{deadlineDate}}</div>
+            </div>
+        {{/if}}
         {{#if description}}
             <div class="material-icons badge-description" data-id="{{cid}}"></div>
         {{/if}}

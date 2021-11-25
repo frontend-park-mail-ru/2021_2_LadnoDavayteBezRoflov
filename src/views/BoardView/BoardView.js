@@ -132,6 +132,7 @@ export default class BoardView extends BaseView {
             cards: {
                 editAreas: document.querySelectorAll('.editCard'),
                 deleteBtns: document.querySelectorAll('.deleteCard'),
+                checkDeadlineCardBtns: document.querySelectorAll('.checkDeadlineCard'),
             },
         };
     }
@@ -176,6 +177,9 @@ export default class BoardView extends BaseView {
         this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
             deleteCardBtn.addEventListener('click', this._onDeleteCard);
         });
+        this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
+            checkDeadlineCardBtn.addEventListener('click', this._onCheckDeadlineCard);
+        });
     }
 
     /**
@@ -199,6 +203,9 @@ export default class BoardView extends BaseView {
         });
         this._elements.cards.deleteBtns.forEach((deleteCardBtn)=>{
             deleteCardBtn.removeEventListener('click', this._onDeleteCard);
+        });
+        this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
+            checkDeadlineCardBtn.removeEventListener('click', this._onCheckDeadlineCard);
         });
     }
 
@@ -264,6 +271,19 @@ export default class BoardView extends BaseView {
      */
     _onDeleteCard(event) {
         cardActions.showDeleteCardPopUp(
+            parseInt(event.target.closest('.column__content').dataset.id, 10),
+            parseInt(event.target.dataset.id, 10),
+        );
+        event.stopPropagation();
+    }
+
+    /**
+     * Метод вызывается при нажатии на значок дедлайна
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCheckDeadlineCard(event) {
+        cardActions.updateDeadlineCard(
             parseInt(event.target.closest('.column__content').dataset.id, 10),
             parseInt(event.target.dataset.id, 10),
         );
