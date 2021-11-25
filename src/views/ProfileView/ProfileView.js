@@ -28,7 +28,10 @@ export default class ProfileView extends BaseView {
     * @param {Element} parent HTML-элемент, в который будет осуществлена отрисовка
     */
     constructor(parent) {
-        const context = new Map([...UserStore.getContext(), ...SettingsStore.getContext()]);
+        const context = new Map([
+            ...UserStore.getContext(),
+            ...SettingsStore.getContext(),
+        ]);
         super(context, template, parent);
 
         this._onRefresh = this._onRefresh.bind(this);
@@ -64,7 +67,10 @@ export default class ProfileView extends BaseView {
      */
     _onRefresh() {
         this.removeEventListeners();
-        this._setContext(new Map([...UserStore.getContext(), ...SettingsStore.getContext()]));
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ...SettingsStore.getContext()],
+        ));
 
         if (!this._isActive) {
             return;

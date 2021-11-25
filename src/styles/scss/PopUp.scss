@@ -26,6 +26,9 @@
     box-shadow: 0 0 10px 10px $default-box-shadow-color;
     min-width: 300px;
 
+    &_sized {
+        min-width: 450px;
+    }
     &_width {
         min-width: 500px;
     }

@@ -89,12 +89,14 @@ const config = {
             template: 'src/index_template.html',
         }),
         new DefinePlugin(confDefs),
-        new CopyPlugin({patterns: [
-            {
-                from: path.resolve(__dirname, 'public', 'assets'),
-                to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
-            },
-        ]}),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'public', 'assets'),
+                    to: path.resolve(__dirname, DEPLOY_DIR, 'assets'),
+                },
+            ],
+        }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,

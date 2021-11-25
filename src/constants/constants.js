@@ -44,7 +44,7 @@ export const BackendAddress = {
 export const HttpStatusCodes = {
     Ok: 200,
     Created: 201,
-    NotMofidied: 304,
+    NotModified: 304,
     BadRequest: 400,
     Unauthorized: 401,
     InternalServerError: 500,
@@ -86,4 +86,15 @@ export const ConstantMessages = {
     CardListTitleTooShort: 'Название списка карточек слишком короткое',
     CardListTitleTooLong: 'Название списка карточек слишком длинное',
     CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
+
+    UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
+};
+
+export const BoardStoreConstants = {
+    MinUserNameSearchLength: 3,
+};
+
+export const CheckLists = {
+    CheckListDefaultTitle: 'Check List',
+    CheckListItemDefaultTitle: 'Item',
 };

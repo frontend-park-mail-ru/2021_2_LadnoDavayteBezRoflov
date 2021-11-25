@@ -41,6 +41,15 @@ export default class BaseComponent {
     }
 
     /**
+     * Метод, обновляет контекст у компонента с заданным именем.
+     * @param {String} componentName - название компонента
+     * @param {Object} context - новый контекст
+     */
+    _setContextByComponentName(componentName, context) {
+        this.subComponents.get(componentName)._setContext(context);
+    }
+
+    /**
      * Метод, отрисовывающий HTML компонента.
      * @return {String} HTML-код компонента
      */

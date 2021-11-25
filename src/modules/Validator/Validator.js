@@ -137,4 +137,39 @@ export default class Validator {
         }
         return null;
     }
+
+    /**
+     * Метод, валидирующий дату дедлайна
+     * @param {String} deadline дедлайн в строковом формате
+     * @param {boolean} deadlineCheck статус дедлайна (выполнено | не выполнено)
+     * @return {String} 'invalid' или 'valid'
+     */
+    validateDeadline(deadline, deadlineCheck) {
+        const deadlineDate = new Date(deadline);
+        const timeNow = new Date();
+
+        if (deadlineCheck) {
+            return 'completed';
+        }
+
+        return (deadlineDate <= timeNow) ?
+            'invalid' :
+            'valid';
+    }
+
+    /**
+     * Метод, валидирующий дедлайн
+     * @param {String} deadline
+     * @return {String} дедлайн, максимальный дедлайн или пустая строка.
+     */
+    validateDeadlineInput(deadline) {
+        if (deadline) {
+            const date = new Date(deadline);
+            if (isNaN(date)) {
+                return '3000-12-31T23:59';
+            }
+            return deadline;
+        }
+        return '';
+    }
 }

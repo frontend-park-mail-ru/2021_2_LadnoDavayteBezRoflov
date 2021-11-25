@@ -1,0 +1,34 @@
+{{# if visible }}
+    <div class="popup-wrapper" id="addUserPopUpWrapperId">
+        <div class="popup-content popup-content_sized">
+            <div class="popup-form">
+                <div class="popup-form__header">
+                    {{header}}
+                </div>
+                <div class="horizontal-line"></div>
+                <div class="popup-form__elements-wrapper">
+                    <div>
+                        <input class="simple-form-element" type="text" id="addUserPopUpSearchInputId"
+                               name="search-input" {{# if searchString}}value="{{searchString}}"{{/if}}
+                               placeholder="Введите имя пользователя..."
+                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                    </div>
+                    {{#if errors}}
+                        <div class="error">{{errors}}</div>
+                    {{/if}}
+                    <div class="search-result-wrapper custom-scroll">
+                        {{#each users}}
+                            <div class="search-result" data-uid="{{this.uid}}">
+                                <img class="avatar" src="{{this.avatar}}"/>
+                                <div class="user-name">{{this.userName}}</div>
+                                <div class="{{#if this.added}}check check_padded{{else}}add add_padded{{/if}}"></div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="horizontal-line horizontal-line_aligned"></div>
+            </div>
+            <div class="close-button" id="addUserPopUpCloseId"></div>
+        </div>
+    </div>
+{{/if}}

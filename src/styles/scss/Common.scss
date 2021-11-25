@@ -7,140 +7,137 @@
 @import 'PopUp';
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 textarea {
-  resize: vertical;
+    resize: vertical;
 }
 
 body {
-  margin: 0;
-  background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
-  height: 100%;
-  font-family: 'Montserrat', sans-serif;
-  min-width: 400px;
-}
-
-.horizontal-line {
-  border-bottom: solid 2px $tertiary-bg-color;
-  margin: 5px;
-}
-
-.vertical-line {
-  height: 25px;
-  border-left: solid 2px $tertiary-bg-color;
-  margin-left: 5px;
-  margin-right: 5px;
+    margin: 0;
+    background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .close-button {
-  @extend .material-icons;
-  opacity: 0.8;
+    @extend .material-icons;
+    opacity: 0.8;
 
-  &::before {
-    content: 'close';
-  }
-  &:hover {
-    opacity: 1.0;
-    cursor: pointer;
-  }
+    &::before {
+        content: 'close';
+    }
+
+    &:hover {
+        opacity: 1.0;
+        cursor: pointer;
+    }
 }
 
-$simple-form-radius: 10px;
-
 .simple-form-element {
-  font: inherit;
-  font-size: 24px;
-  width: 100%;
-  border-radius: $simple-form-radius;
-  background-color: $secondary-bg-color;
-  border: 4px solid $tertiary-bg-color;
-  padding: 2px 10px;
-  &:focus {
-    box-shadow: 0 0 10px 2px $default-box-shadow-color;
-    outline: none;
-  }
+    font: inherit;
+    font-size: 24px;
+    width: 100%;
+    border-radius: $common-radius;
+    background-color: $secondary-bg-color;
+    border: 4px solid $tertiary-bg-color;
+    padding: 2px 10px;
+
+    &:focus {
+        box-shadow: 0 0 10px 2px $default-box-shadow-color;
+        outline: none;
+    }
 }
 
 /* контейнер для ошибок */
 .error {
-  padding: 5px 10px;
-  border-radius: 16px;
+    padding: 5px 10px;
+    border-radius: 16px;
 
-  border: 2px solid $error-color;
-  background: $error-bg-color;
-  color: $error-color;
+    border: 2px solid $error-color;
+    background: $error-bg-color;
+    color: $error-color;
 
-  &::before {
-    @extend .material-icons;
-    font-size: 30px;
-    display: inline;
-    position: relative;
-    color: $error-bg-color;
-    background-color: $error-color;
-    border-radius: 100%;
-  }
+    &::before {
+        @extend .material-icons;
+        font-size: 30px;
+        display: inline;
+        position: relative;
+        color: $error-bg-color;
+        background-color: $error-color;
+        border-radius: 100%;
+    }
 }
 
 .avatar {
   height: 30px;
+  width: 30px;
   border-radius: 50%;
   border: 2px solid $main-theme-color;
+
+  &-navbar-edition {
+    @extend .avatar;
+    width: 35px;
+    height: 35px;
+    border: 2px solid $tertiary-bg-color;
+    margin-right: 10px;
+  }
 }
 
 .avatar:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .card-tag {
-  background: darkred;  // будет в шаблоне
-  width: 50px;
-  height: 10px;
-  border-radius: 5px;
+    background: darkred; // будет в шаблоне
+    width: 50px;
+    height: 10px;
+    border-radius: 5px;
 }
 
 .button {
-  padding: 16px 24px;
+    padding: 16px 24px;
 
-  color: rgb(255, 255, 255);
-  background-color: $main-theme-color;
+    color: rgb(255, 255, 255);
+    background-color: $main-theme-color;
 
-  border: none;
-  outline: none;
-  border-radius: 5px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
 
-  letter-spacing: 1px;
-  font-size: 16px;
+    letter-spacing: 1px;
+    font-size: 16px;
 
-  cursor: pointer;
+    cursor: pointer;
 
-  transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
-  &_small {
-    padding: 8px 12px;
-  }
+    &_small {
+        padding: 8px 12px;
+    }
 
-  &_red {
-    background-color: $delete-color;
-  }
+    &_red {
+        background-color: $delete-color;
+    }
 
-  &_full-space {
-    flex: 1;
-  }
+    &_full-space {
+        flex: 1;
+    }
 
-  &:focus,
-  &:hover {
-    background-color: $main-theme-color__focus;
-  }
-
-  &_disabled {
-    background-color: gray;
     &:focus,
     &:hover {
-      background-color: gray;
+        background-color: $main-theme-color__focus;
     }
-  }
+
+    &_disabled {
+        background-color: gray;
+
+        &:focus,
+        &:hover {
+            background-color: gray;
+        }
+    }
 }
 
 .material-icon {
@@ -184,11 +181,78 @@ $simple-form-radius: 10px;
 .horizontal-line {
   border-bottom: solid 2px $tertiary-bg-color;
   margin: 5px;
+  &_aligned {
+    margin-top: 25px;
+  }
 }
 
 .vertical-line {
-  height: 25px;
-  border-left: solid 2px $tertiary-bg-color;
-  margin-left: 5px;
-  margin-right: 5px;
+    height: 25px;
+    border-left: solid 2px $tertiary-bg-color;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.material-icon {
+    @extend .material-icons;
+    opacity: 0.3;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1.0;
+    }
+
+    &-delete {
+        @extend .material-icon;
+        &::before {
+            content: 'delete';
+        }
+    }
+
+    &-edit {
+        @extend .material-icon;
+        &::before {
+            content: 'edit';
+        }
+    }
+
+    &-add {
+        @extend .material-icon;
+        &::before {
+            content: 'add';
+        }
+    }
+
+    &-save {
+        @extend .material-icon;
+        &::before {
+            content: 'save';
+        }
+    }
+}
+
+
+.check-box {
+    &__lable {
+        cursor: pointer;
+        color: #383A3F;
+        display: block;
+    }
+}
+
+.material-icon-base {
+  @extend .material-icons;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1.0;
+    cursor: pointer;
+  }
+
+  &-add {
+    &::before {
+      content: 'save';
+    }
+  }
+
 }
