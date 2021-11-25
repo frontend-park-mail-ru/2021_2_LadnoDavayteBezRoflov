@@ -8,9 +8,6 @@ import template from './CardPopUp.hbs';
 import {cardActions} from '../../actions/card.js';
 import {commentsActions} from '../../actions/comments.js';
 
-// Stores
-import BoardStore from '../../stores/BoardStore/BoardStore.js';
-
 // Стили
 import './CardPopUp.scss';
 

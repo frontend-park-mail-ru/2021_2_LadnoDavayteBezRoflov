@@ -19,7 +19,6 @@ import RegisterView from './views/RegisterView/RegisterView.js';
 import LoginView from './views/LoginView/LoginView.js';
 import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
-import CardComponent from './components/Card/Card.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 import {settingsActions} from './actions/settings';
 
