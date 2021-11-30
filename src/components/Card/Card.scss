@@ -72,6 +72,10 @@ $card-due-date-done: forestgreen;
   &-completed {
     background-color: rgb(107, 148, 99);
   }
+
+  &-expiring {
+    background-color: rgb(255, 153, 0);
+  }
 }
 
 .badge-due-date-wrapper_overdue {

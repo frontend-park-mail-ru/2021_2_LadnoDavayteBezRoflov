@@ -208,6 +208,13 @@ div#root {
             content: 'menu';
         }
     }
+
+  &-remove {
+    @extend .material-icon;
+    &::before {
+      content: 'cancel';
+    }
+  }
 }
 
 .horizontal-line {

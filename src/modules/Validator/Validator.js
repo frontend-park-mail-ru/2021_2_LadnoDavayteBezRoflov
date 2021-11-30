@@ -152,9 +152,13 @@ export default class Validator {
             return 'completed';
         }
 
+        const dateDiff = (deadlineDate.getTime() - timeNow.getTime()) / (1000 * 3600 * 24);
+
         return (deadlineDate <= timeNow) ?
             'invalid' :
-            'valid';
+            (dateDiff > 1.0) ?
+                'valid' :
+                'expiring';
     }
 
     /**

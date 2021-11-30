@@ -5,15 +5,15 @@
                 <form class="popup-form">
                     <div class="popup-form__header">
                         {{#if edit }}
-                            Редактирование "{{cardList_name}}"
+                            Колонка "{{cardList_name}}"
                         {{else}}
-                            Создание списка карточек
+                            Создание колонки
                         {{/if}}
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
                         <div>
-                            <label for="cardListPopUpTitleId" class>Название списка:</label>
+                            <label for="cardListPopUpTitleId" class>Название колонки:</label>
                             <input class="simple-form-element" type="text" id="cardListPopUpTitleId" name="cardlist-name"
                                 autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{cardList_name}}" {{/if}}>
