@@ -13,9 +13,6 @@ import Router from '../../modules/Router/Router.js';
 
 import {Urls} from '../../constants/constants.js';
 
-// Стили
-import './RegisterView.scss';
-
 // Шаблон
 import template from './RegisterView.hbs';
 
@@ -62,8 +59,8 @@ export default class RegisterView extends BaseView {
      */
     _onRefresh() {
         this._setContext(new Map([
-            ...UserStore.getContext(),
             ...SettingsStore.getContext(),
+            ...UserStore.getContext(),
         ]));
 
         if (!this._isActive) {
@@ -82,6 +79,8 @@ export default class RegisterView extends BaseView {
             Router.go(Urls.Boards, true);
             return;
         }
+
+        console.log(this.context);
 
         super.render();
 
