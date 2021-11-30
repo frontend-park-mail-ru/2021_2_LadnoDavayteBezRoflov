@@ -2,7 +2,6 @@
 $container-min-width: 320px;
 $container-max-width: 600px;
 
-
 /* заголовки во всем view */
 .view {
 
@@ -21,10 +20,12 @@ $container-max-width: 600px;
     &__wrapper {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        //justify-content: center;
         align-items: center;
 
         padding-top: 2vh;
+        margin-bottom: 60px;
+        flex: 1;
     }
 
     /* контейнер с содержимым */

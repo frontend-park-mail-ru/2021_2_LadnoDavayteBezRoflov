@@ -14,11 +14,21 @@ textarea {
     resize: vertical;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     margin: 0;
     background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
     height: 100%;
     font-family: 'Montserrat', sans-serif;
+}
+
+div#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .close-button {
