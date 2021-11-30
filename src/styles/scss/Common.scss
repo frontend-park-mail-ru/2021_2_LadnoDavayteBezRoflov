@@ -89,18 +89,18 @@ div#root {
 }
 
 .avatar {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  border: 2px solid $main-theme-color;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 2px solid $main-theme-color;
 
-  &-navbar-edition {
-    @extend .avatar;
-    width: 35px;
-    height: 35px;
-    border: 2px solid $tertiary-bg-color;
-    margin-right: 10px;
-  }
+    &-navbar-edition {
+        @extend .avatar;
+        width: 35px;
+        height: 35px;
+        border: 2px solid $tertiary-bg-color;
+        margin-right: 10px;
+    }
 }
 
 .avatar:hover {
@@ -159,49 +159,64 @@ div#root {
 }
 
 .material-icon {
-  @extend .material-icons;
-  opacity: 0.3;
-  cursor: pointer;
+    @extend .material-icons;
+    opacity: 0.3;
+    cursor: pointer;
 
-  &:hover {
-    opacity: 1.0;
-  }
-
-  &-delete {
-    @extend .material-icon;
-    &::before {
-      content: 'delete';
+    &:hover {
+        opacity: 1.0;
     }
-  }
 
-  &-edit {
-    @extend .material-icon;
-    &::before {
-      content: 'edit';
-    }
-  }
+    &-delete {
+        @extend .material-icon;
 
-  &-add {
-    @extend .material-icon;
-    &::before {
-      content: 'add';
+        &::before {
+            content: 'delete';
+        }
     }
-  }
 
-  &-save {
-    @extend .material-icon;
-    &::before {
-      content: 'save';
+    &-edit {
+        @extend .material-icon;
+
+        &::before {
+            content: 'edit';
+        }
     }
-  }
+
+    &-add {
+        @extend .material-icon;
+
+        &::before {
+            content: 'add';
+        }
+    }
+
+    &-save {
+        @extend .material-icon;
+
+        &::before {
+            content: 'save';
+        }
+    }
+
+    &-hamburger {
+        @extend .material-icon;
+        color: white;
+        opacity: 1.0;
+
+        &::before {
+            content: 'menu';
+        }
+    }
 }
 
 .horizontal-line {
-  border-bottom: solid 2px $tertiary-bg-color;
-  margin: 5px;
-  &_aligned {
-    margin-top: 25px;
-  }
+    border-bottom: solid 2px $tertiary-bg-color;
+    margin: 5px;
+
+    &_aligned {
+        margin-top: 25px;
+    }
 }
 
 .vertical-line {
@@ -222,6 +237,7 @@ div#root {
 
     &-delete {
         @extend .material-icon;
+
         &::before {
             content: 'delete';
         }
@@ -229,6 +245,7 @@ div#root {
 
     &-edit {
         @extend .material-icon;
+
         &::before {
             content: 'edit';
         }
@@ -236,6 +253,7 @@ div#root {
 
     &-add {
         @extend .material-icon;
+
         &::before {
             content: 'add';
         }
@@ -243,6 +261,7 @@ div#root {
 
     &-save {
         @extend .material-icon;
+
         &::before {
             content: 'save';
         }
@@ -259,18 +278,18 @@ div#root {
 }
 
 .material-icon-base {
-  @extend .material-icons;
-  opacity: 0.8;
+    @extend .material-icons;
+    opacity: 0.8;
 
-  &:hover {
-    opacity: 1.0;
-    cursor: pointer;
-  }
-
-  &-add {
-    &::before {
-      content: 'save';
+    &:hover {
+        opacity: 1.0;
+        cursor: pointer;
     }
-  }
+
+    &-add {
+        &::before {
+            content: 'save';
+        }
+    }
 
 }

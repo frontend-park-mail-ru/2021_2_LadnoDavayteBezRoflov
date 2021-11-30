@@ -64,6 +64,7 @@ class BoardStore extends BaseStore {
             card_name: null,
             errors: null,
             checkLists: [],
+            scroll: 0,
         });
 
         this._storage.set('delete-card-popup', {
@@ -316,6 +317,11 @@ class BoardStore extends BaseStore {
 
         case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
             await this._toggleChekListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.SCROLL_CHANGED:
+            this._changeCardPopUpScroll(action.data);
             this._emitChange();
             break;
 
@@ -846,6 +852,7 @@ class BoardStore extends BaseStore {
                 });
                 return {...list, check_list_items: items, edit: false};
             }),
+            scroll: 0,
         });
     }
 
@@ -1063,6 +1070,10 @@ class BoardStore extends BaseStore {
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
+
+        if (!context.users.length) {
+            context.users = this._storage.get('members').slice();
+        }
     }
 
     /**
@@ -1347,22 +1358,6 @@ class BoardStore extends BaseStore {
             context.errors = ConstantMessages.UnsuccessfulRequest;
             return;
         }
-    }
-
-    /**
-     * Метод включает popup добавления участника в карточку и устанавливает контекст
-     * @private
-     */
-    _showAddCardAssigneePopUp() {
-        const context = this._storage.get('add-card-member-popup');
-        context.visible = true;
-        context.errors = null;
-        context.searchString = null;
-        const card = this._getCardById(this._storage.get('card-popup').clid,
-                                       this._storage.get('card-popup').cid);
-        context.users = card.assignees.map((assignee) => {
-            return {...assignee, added: true};
-        });
     }
 
     /**
@@ -1879,6 +1874,15 @@ class BoardStore extends BaseStore {
             this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
             return;
         }
+    }
+
+    /**
+     * Сохраняет скролл
+     * @param {Object} data данные
+     * @private
+     */
+    _changeCardPopUpScroll(data) {
+        this._storage.get('card-popup').scroll = data.scrollValue;
     }
 }
 
