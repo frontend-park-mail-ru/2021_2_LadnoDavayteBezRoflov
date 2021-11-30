@@ -27,7 +27,8 @@ export default class LoginView extends BaseView {
     constructor(parent) {
         const context = new Map([
             ...UserStore.getContext(),
-            {avatar: SettingsStore.getContext('avatar')},
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
         ]);
         super(context, template, parent);
 
@@ -49,7 +50,8 @@ export default class LoginView extends BaseView {
     _onShow() {
         this._setContext(new Map([
             ...UserStore.getContext(),
-            {avatar: SettingsStore.getContext('avatar')},
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
         ]));
         this.render();
         this._isActive = true;
@@ -62,7 +64,8 @@ export default class LoginView extends BaseView {
         this.removeEventListeners();
         this._setContext(new Map([
             ...UserStore.getContext(),
-            {avatar: SettingsStore.getContext('avatar')},
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
         ]));
 
         if (!this._isActive) {
