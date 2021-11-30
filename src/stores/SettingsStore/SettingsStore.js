@@ -38,6 +38,9 @@ class SettingsStore extends BaseStore {
         this._storage.set('password', null);
         this._storage.set('passwordRepeat', null);
         this._storage.set('avatar', '/assets/nodata.webp');
+        this._storage.set('navbar', {
+            linksVisible: true,
+        });
     }
 
     /**
@@ -58,6 +61,11 @@ class SettingsStore extends BaseStore {
 
         case SettingsActionTypes.AVATAR_UPLOAD:
             await this._uploadAvatar(action.data);
+            this._emitChange();
+            break;
+
+        case SettingsActionTypes.NAVBAR_MENU_BTN_CLICK:
+            this._toggleNavbarMenu();
             this._emitChange();
             break;
 
@@ -281,6 +289,15 @@ class SettingsStore extends BaseStore {
             return avatarUrl;
         }
         return new File([avatar], 'avatar');
+    }
+
+    /**
+     * Метод переключает видимсоть ссылок в navbar
+     * @private
+     */
+    _toggleNavbarMenu() {
+        const navbar = this._storage.get('navbar');
+        navbar.linksVisible = !navbar.linksVisible;
     }
 }
 

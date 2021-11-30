@@ -13,9 +13,6 @@ import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 // Modules
 import Router from '../../modules/Router/Router.js';
 
-// Стили
-import './LoginView.scss';
-
 // Шаблон
 import template from './LoginView.hbs';
 

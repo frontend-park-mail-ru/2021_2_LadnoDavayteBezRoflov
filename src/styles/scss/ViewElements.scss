@@ -1,0 +1,179 @@
+@import 'Constants';
+$container-min-width: 320px;
+$container-max-width: 600px;
+
+/* заголовки во всем view */
+.view {
+
+    /* заголовки во всем view */
+    &__caption{
+        text-align: center;
+    }
+
+    /* текст во всем view */
+    &__text {
+        text-align: center;
+        font-size: 18px;
+    }
+
+    /* внешняя обертка под контейнер с содержимым */
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        padding-top: 2vh;
+        margin-bottom: 60px;
+        flex: 1;
+    }
+
+    /* контейнер с содержимым */
+    &__container {
+        min-width: $container-min-width;
+        max-width: $container-max-width;
+
+        background: $transparent-bg-color;
+        padding: 2em;
+
+        border-radius: 24px;
+        border-left: 1px solid $transparent-bg-color;
+        border-top: 1px solid $transparent-bg-color;
+        box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
+
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+
+    /* внешняя обертка под поля ввода */
+    &__input-wrapper {
+        position: relative;
+        margin: 2.4em 0 1.5em 1.5em;
+    }
+
+    /* заголовок поля ввода  */
+    &__input-caption {
+        position: absolute;
+
+        left: 4%;
+        top: 10px;
+
+        color: $input-color;
+
+        font-size: 15px;
+        font-weight: 300;
+
+        pointer-events: none;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* само поле ввода  */
+    &__input-input {
+        display: block;
+        outline: none;
+        border: none;
+
+        padding: 10px 0 10px 7px;
+        border-bottom: 1px solid rgb(209, 209, 209);
+        border-radius: 5px;
+
+        width: 100%;
+
+        color: $input__input-color;
+
+        font-size: 15px;
+    }
+
+    /* в случае активации поля ввода заголовок съезжает наверх */
+    &__input-input:focus ~ &__input-caption,
+    &__input-input:not(:placeholder-shown) ~ &__input-caption {
+        top: -20px;
+        font-size: 13px;
+        color: rgb(174, 82, 82);
+    }
+
+    /* в случае валидного ввода перекрашиваем заголовок */
+    &__input-input:valid ~ &__input-caption,
+    &__input-input:valid:not(:placeholder-shown) ~ &__input-caption {
+        color: rgb(79, 194, 79);
+    }
+
+    /* полоса, подчеркивающая поле ввода  */
+    &__input__bar {
+        position: relative;
+        display: block;
+    }
+
+    /* удлинняем полосу при активном поле ввода */
+    &__input-input:focus ~ &__input-bar:before,
+    &__input-input:focus ~ &__input-bar:after {
+        width: 100%;
+    }
+
+    /* удлинняем полосу под полем ввода */
+    &__input-bar:after {
+        position: absolute;
+        content: "";
+
+        height: 2px;
+        bottom: -1px;
+        left: 0;
+        width: 0;
+        right: -50%;
+
+        background: $main-theme-color;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* секция обработки ошибок */
+    /* контейнер для ошибок */
+    &__input-error {
+        margin: 8px 0;
+        padding: 1em 2em;
+
+        border-radius: 16px;
+
+        color: $error-color;
+        background-color: $error-bg-color;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* иконка ошибки */
+    &__input-error-fa {
+        margin: 8px 8px;
+        padding: 8px;
+
+        font-size: 2em;
+        vertical-align: middle;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+}
+
+
+/* Стиль для сообщения в боксе*/
+.message {
+    position: relative;
+
+    margin-top: 2em;
+    padding: 2em;
+    height: 5em;
+
+    background-color: $light-white-color;
+
+    border-radius: 16px;
+    border-left: 1px solid $transparent-bg-color;
+    border-top: 1px solid $transparent-bg-color;
+    box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
+
+    text-align: center;
+
+    transition: all 0.3s ease-in-out;
+
+    &-link {
+        color: $main-theme-color__focus;
+    }
+}

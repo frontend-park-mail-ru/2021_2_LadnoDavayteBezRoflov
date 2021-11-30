@@ -1,8 +1,8 @@
 {{{Navbar}}}
 
-<div class="wrapper">
+<div class="view__wrapper">
     <form id="profile" name="profile" novalidate autocomplete="off" method="post">
-        <div class="profile-box">
+        <div class="profile-box profile__wrapper">
             <div class="profile-box__column-left">
                 <div class="profile-container">
                     <img class="profile-box__user-picture" src="{{avatar}}" alt="User Picture" id="avatar-img">
@@ -11,84 +11,60 @@
                         <span class="profile-box__upload-icon-wrapper"><img class="profile-box__upload-icon" src="assets/icons/upload.webp" alt="Выбрать файл" width="25"></span>
                         <span class="profile-box__upload-button-text">Выберите файл</span>
                     </label>
-
                     {{#if validation.avatar}}
-                    <div class="profile__input__error" id="avatar-validation-box">
-                        <i class="fa fa-times-circle profile__input__error__fa"></i>
-                        <label class="profile__input__error-label" id="avatar-validation-message">{{validation.avatar}}</label>
-                    </div>
+                    <div class="error error_margin" id="avatar-validation-box">{{validation.avatar}}</div>
                     {{/if}}
                 </div>
             </div>
 
             <div class="profile-box__column-right">
-                <div class="profile-box__container">
-                    <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{login}}" required>
-                        <label class="profile__input__caption">Логин</label>
-                        <span class="profile__input__bar"></span>
-
-                        {{#if validation.login}}
-                        <div class="profile__input__error" id="login-validation-box">
-                            <i class="fa fa-times-circle profile__input__error__fa"></i>
-                            <label class="profile__input__error-label" id="login-validation-message">{{validation.login}}</label>
-                        </div>
-                        {{/if}}
+                <div class="view__container">
+                    <div class="view__input-wrapper">
+                        <input class="view__input-input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{login}}" required>
+                        <label class="view__input-caption">Логин</label>
+                        <span class="view__input-bar"></span>
                     </div>
+                    {{#if validation.login}}
+                        <div class="error error_margin" id="login-validation-box">{{validation.login}}</div>
+                    {{/if}}
 
-                    <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{email}}" required>
-                        <label class="profile__input__caption">Почта</label>
-                        <span class="profile__input__bar"></span>
-
-                        {{#if validation.email}}
-                        <div class="profile__input__error">
-                            <i class="fa fa-times-circle profile__input__error__fa"></i>
-                            <label class="profile__input__error-label">{{validation.email}}</label>
-                        </div>
-                        {{/if}}
+                    <div class="view__input-wrapper">
+                        <input class="view__input-input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{email}}" required>
+                        <label class="view__input-caption">Почта</label>
+                        <span class="view__input-bar"></span>
                     </div>
+                    {{#if validation.email}}
+                        <div class="error error_margin">{{validation.email}}</div>
+                    {{/if}}
 
-                    <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{password}}">
-                        <label class="profile__input__caption">Новый пароль</label>
-                        <span class="profile__input__bar"></span>
-
-                        {{#if validation.password}}
-                        <div class="profile__input__error">
-                            <i class="fa fa-times-circle profile__input__error__fa"></i>
-                            <label class="profile__input__error-label">{{validation.password}}</label>
-                        </div>
-                        {{/if}}
+                    <div class="view__input-wrapper">
+                        <input class="view__input-input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{password}}">
+                        <label class="view__input-caption">Новый пароль</label>
+                        <span class="view__input-bar"></span>
                     </div>
+                    {{#if validation.password}}
+                        <div class="error error_margin">{{validation.password}}</div>
+                    {{/if}}
 
-                    <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{passwordRepeat}}">
-                        <label class="profile__input__caption">Повторите пароль</label>
-                        <span class="profile__input__bar"></span>
-
-                        {{#if validation.passwordRepeat}}
-                        <div class="profile__input__error">
-                            <i class="fa fa-times-circle profile__input__error__fa"></i>
-                            <label class="profile__input__error-label">{{validation.passwordRepeat}}</label>
-                        </div>
-                        {{/if}}
+                    <div class="view__input-wrapper">
+                        <input class="view__input-input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{passwordRepeat}}">
+                        <label class="view__input-caption">Повторите пароль</label>
+                        <span class="view__input-bar"></span>
                     </div>
+                    {{#if validation.passwordRepeat}}
+                        <div class="error error_margin">{{validation.passwordRepeat}}</div>
+                    {{/if}}
 
-                    <div class="profile__input__wrapper">
-                        <input class="profile__input__input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{oldPassword}}" required>
-                        <label class="profile__input__caption">Старый пароль</label>
-                        <span class="profile__input__bar"></span>
-
-                        {{#if validation.oldPassword}}
-                        <div class="profile__input__error">
-                            <i class="fa fa-times-circle profile__input__error__fa"></i>
-                            <label class="profile__input__error-label">{{validation.oldPassword}}</label>
-                        </div>
-                        {{/if}}
+                    <div class="view__input-wrapper">
+                        <input class="view__input-input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{oldPassword}}" required>
+                        <label class="view__input-caption">Старый пароль</label>
+                        <span class="view__input-bar"></span>
                     </div>
+                    {{#if validation.oldPassword}}
+                        <div class="error error_margin">{{validation.oldPassword}}</div>
+                    {{/if}}
 
-                    <button class="profile-box__button">Обновить</button>
+                    <button class="button">Обновить</button>
                 </div>
             </div>
         </div>

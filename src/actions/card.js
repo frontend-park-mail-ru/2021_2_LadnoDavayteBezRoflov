@@ -20,6 +20,7 @@ export const CardActionTypes = {
     CARD_ADD_ASSIGNEE_CLOSE: 'card/assignee/close',
     CARD_ADD_ASSIGNEE_INPUT: 'card/assignee/input',
     CARD_ADD_ASSIGNEE_USER_CLICKED: 'card/assignee/clicked',
+    SCROLL_CHANGED: 'card/scroll',
 };
 
 /**
@@ -180,4 +181,14 @@ export const cardActions = {
         });
     },
 
+    /**
+     * Передает в стор значение скрола
+     * @param {Number} scrollValue - значение top скрола в px
+     */
+    changeScroll(scrollValue) {
+        Dispatcher.dispatch({
+            actionName: CardActionTypes.SCROLL_CHANGED,
+            data: {scrollValue},
+        });
+    },
 };

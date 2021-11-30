@@ -14,11 +14,21 @@ textarea {
     resize: vertical;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     margin: 0;
     background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
     height: 100%;
     font-family: 'Montserrat', sans-serif;
+}
+
+div#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .close-button {
@@ -59,6 +69,8 @@ body {
     background: $error-bg-color;
     color: $error-color;
 
+    max-width: 100%;
+
     &::before {
         @extend .material-icons;
         font-size: 30px;
@@ -68,21 +80,27 @@ body {
         background-color: $error-color;
         border-radius: 100%;
     }
+
+    &_margin {
+        margin: 5px 0 10px 1.5em;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
 }
 
 .avatar {
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  border: 2px solid $main-theme-color;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 2px solid $main-theme-color;
 
-  &-navbar-edition {
-    @extend .avatar;
-    width: 35px;
-    height: 35px;
-    border: 2px solid $tertiary-bg-color;
-    margin-right: 10px;
-  }
+    &-navbar-edition {
+        @extend .avatar;
+        width: 35px;
+        height: 35px;
+        border: 2px solid $tertiary-bg-color;
+        margin-right: 10px;
+    }
 }
 
 .avatar:hover {
@@ -141,41 +159,55 @@ body {
 }
 
 .material-icon {
-  @extend .material-icons;
-  opacity: 0.3;
-  cursor: pointer;
+    @extend .material-icons;
+    opacity: 0.3;
+    cursor: pointer;
 
-  &:hover {
-    opacity: 1.0;
-  }
-
-  &-delete {
-    @extend .material-icon;
-    &::before {
-      content: 'delete';
+    &:hover {
+        opacity: 1.0;
     }
-  }
 
-  &-edit {
-    @extend .material-icon;
-    &::before {
-      content: 'edit';
-    }
-  }
+    &-delete {
+        @extend .material-icon;
 
-  &-add {
-    @extend .material-icon;
-    &::before {
-      content: 'add';
+        &::before {
+            content: 'delete';
+        }
     }
-  }
 
-  &-save {
-    @extend .material-icon;
-    &::before {
-      content: 'save';
+    &-edit {
+        @extend .material-icon;
+
+        &::before {
+            content: 'edit';
+        }
     }
-  }
+
+    &-add {
+        @extend .material-icon;
+
+        &::before {
+            content: 'add';
+        }
+    }
+
+    &-save {
+        @extend .material-icon;
+
+        &::before {
+            content: 'save';
+        }
+    }
+
+    &-hamburger {
+        @extend .material-icon;
+        color: white;
+        opacity: 1.0;
+
+        &::before {
+            content: 'menu';
+        }
+    }
 
   &-remove {
     @extend .material-icon;
@@ -186,11 +218,12 @@ body {
 }
 
 .horizontal-line {
-  border-bottom: solid 2px $tertiary-bg-color;
-  margin: 5px;
-  &_aligned {
-    margin-top: 25px;
-  }
+    border-bottom: solid 2px $tertiary-bg-color;
+    margin: 5px;
+
+    &_aligned {
+        margin-top: 25px;
+    }
 }
 
 .vertical-line {
@@ -211,6 +244,7 @@ body {
 
     &-delete {
         @extend .material-icon;
+
         &::before {
             content: 'delete';
         }
@@ -218,6 +252,7 @@ body {
 
     &-edit {
         @extend .material-icon;
+
         &::before {
             content: 'edit';
         }
@@ -225,6 +260,7 @@ body {
 
     &-add {
         @extend .material-icon;
+
         &::before {
             content: 'add';
         }
@@ -232,6 +268,7 @@ body {
 
     &-save {
         @extend .material-icon;
+
         &::before {
             content: 'save';
         }
@@ -248,18 +285,18 @@ body {
 }
 
 .material-icon-base {
-  @extend .material-icons;
-  opacity: 0.8;
+    @extend .material-icons;
+    opacity: 0.8;
 
-  &:hover {
-    opacity: 1.0;
-    cursor: pointer;
-  }
-
-  &-add {
-    &::before {
-      content: 'save';
+    &:hover {
+        opacity: 1.0;
+        cursor: pointer;
     }
-  }
+
+    &-add {
+        &::before {
+            content: 'save';
+        }
+    }
 
 }
