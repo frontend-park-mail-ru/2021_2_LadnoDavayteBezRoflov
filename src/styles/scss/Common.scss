@@ -176,6 +176,13 @@ body {
       content: 'save';
     }
   }
+
+  &-remove {
+    @extend .material-icon;
+    &::before {
+      content: 'cancel';
+    }
+  }
 }
 
 .horizontal-line {

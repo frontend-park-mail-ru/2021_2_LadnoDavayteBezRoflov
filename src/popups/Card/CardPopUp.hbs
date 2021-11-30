@@ -5,7 +5,7 @@
                 <form class="popup-form custom-scroll">
                     <div class="popup-form__header">
                         {{#if edit }}
-                            Редактирование "{{card_name}}"
+                            Карточка "{{card_name}}"
                         {{else}}
                             Создание карточки
                         {{/if}}
@@ -14,9 +14,9 @@
                     <div class="popup-form__elements-wrapper">
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
+                            <textarea class="simple-form-element" type="text" id="cardPopUpDescriptionId" name="card-name"
                                    autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
-                                {{#if edit}} value="{{card_name}}" {{/if}}>
+                                >{{#if edit}}{{description}}{{/if}}</textarea>
                         </div>
                         <div>
                             <label for="cardPopUpDescriptionId" class>Описание карточки:</label>
