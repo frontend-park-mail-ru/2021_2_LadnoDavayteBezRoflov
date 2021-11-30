@@ -1,31 +1,5 @@
 @import '../../styles/scss/Constants';
 
-body {
-    margin: 0;
-
-    background: linear-gradient(45deg, $primary-bg-color, $secondary-bg-color);
-
-    height: 100%;
-
-    font-family: 'Montserrat', sans-serif;
-
-    --profile__min-width: 320px;
-    --profile__max-width: 600px;
-}
-  
-/* profile box style */
-
-.wrapper {
-    min-width: var(profile__min-width);
-    max-width: var(profile__max-width);
-
-    position: absolute;
-    transform: translate(-50%,-25%);
-
-    padding-top: 16em;
-    left: 50%;
-}
-
 .profile-box {
     display: grid;
     gap: 10px;
@@ -41,218 +15,67 @@ body {
     box-shadow: 24px 24px 40px -8px $default-box-shadow-color;
     text-align: center;
     transition: all 0.3s ease-in-out;
-}
 
-  
-.profile-box__column-left {
-    display: grid;
-    padding: 15px;
-    justify-content: center;
-}
-  
-.profile-box__column-right {
-    display: grid;
-    padding: 15px;
-    justify-content: center;
-}
-  
-.profile-box__container {
-    display: flex;
-    flex-direction: column;
-}
 
-.profile-box__button:focus,
-.profile-box__button:hover {
-    background-color: $main-theme-color__focus;
-}
-  
-.profile-box__user-picture {
-    width: 150px;
-    height: 150px;
-}
-  
-.profile-box__user-avatar {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-}
-  
-.profile-box__upload-icon-wrapper {
-    height: 60px;
-    width: 60px;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid rgb(255, 255, 255);
-}
-  
-.profile-box__upload-button-text {
-    line-height: 1;
-    margin-top: 1px;
-}
-  
-.profile-box__upload-button {
-    width: 90%;
-    max-width: 290px;
-    height: 60px;
-    position: relative;
-    left: 5%;
-    background: $main-theme-color;
-    color: rgb(255, 255, 255);
-    font-size: 0.75rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 5px;
-}
+    &__column-left {
+        display: grid;
+        padding: 15px;
+        justify-content: center;
+    }
 
-.profile-box__upload-button:hover {
-    background: $main-theme-color__focus;
-    transition: all 0.3s ease-in-out;
-}
+    &__column-right {
+        display: grid;
+        padding: 15px;
+        justify-content: center;
+    }
 
-/* заголовки во всей регистрации */
-.profile__caption{
-    text-align: center;
-}
 
-/* текст во всем регистрации */
-.profile__text {
-    text-align: center;
-    font-size: 18px;
-}
+    &__user-picture {
+        width: 150px;
+        height: 150px;
+    }
 
-/* внешняя обертка под поля регистрации */
-.profile__input__wrapper {
-    position: relative;
-    margin: 2.4em 0 1.5em;
-}
+    &__user-avatar {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+    }
 
-/* заголовок поля регистрации  */
-.profile__input__caption {
-    position: absolute;
+    &__upload-icon-wrapper {
+        height: 60px;
+        width: 60px;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid rgb(255, 255, 255);
+    }
 
-    left: 4%;
-    top: 10px;
+    &__upload-button-text {
+        line-height: 1;
+        margin-top: 1px;
+    }
 
-    color: $input-color;
+    &__upload-button {
+        width: 90%;
+        max-width: 290px;
+        height: 60px;
+        position: relative;
+        left: 5%;
+        background: $main-theme-color;
+        color: rgb(255, 255, 255);
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
 
-    font-size: 15px;
-    font-weight: 300;
-
-    pointer-events: none;
-    transition: all 0.3s ease-in-out;
-}
-
-/* само поле регистрации */
-.profile__input__input {
-    display: block;
-    outline: none;
-    border: none;
-
-    padding: 10px 0 10px 0;
-    border-bottom: 1px solid rgb(209, 209, 209);
-
-    width: 100%;
-
-    color: $input__input-color;
-
-    font-size: 15px;
-}
-
-/* в случае активации поля ввода заголовок съезжает наверх */
-.profile__input__input:focus ~ .profile__input__caption,
-.profile__input__input:not(:placeholder-shown) ~ .profile__input__caption {
-    top: -20px;
-    font-size: 13px;
-    color: rgb(174, 82, 82);
-}
-
-/* в случае валидного ввода перекрашиваем заголовок */
-.profile__input__input:valid ~ .profile__input__caption,
-.profile__input__input:valid:not(:placeholder-shown) ~ .profile__input__caption {
-    color: rgb(79, 194, 79);
-}
-
-/* полоса, подчеркивающая поле ввода */
-.profile__input__bar {
-    position: relative;
-    display: block;
-}
-
-/* удлинняем полосу при активном поле ввода */
-.profile__input__input:focus ~ .profile__input__bar:before,
-.profile__input__input:focus ~ .profile__input__bar:after {
-    width: 100%;
-}
-
-/* удлинняем полосу под полем ввода */
-.profile__input__bar:after {
-    position: absolute;
-    content: "";
-    
-    height: 2px;
-    bottom: -1px;
-    left: 0;
-    width: 0;
-    right: -50%;
-
-    background: $main-theme-color;
-
-    transition: all 0.3s ease-in-out;
-}
-
-/* кнопка регистрации */
-.profile-box__button {
-    padding: 16px 24px;
-
-    color: rgb(255, 255, 255);
-    background-color: $main-theme-color;
-
-    border: none;
-    outline: none;
-    border-radius: 5px;
-
-    letter-spacing: 1px;
-    font-size: 16px;
-    
-    cursor: pointer;
-
-    transition: all 0.3s ease-in-out;
-}
-
-/* в случае активизации кнопки регистрации */
-.profile-box__button:focus,
-.profile-box__button:hover {
-    background-color: $main-theme-color__focus;
-}
-
-/* секция обработки ошибок */
-
-/* контейнер для ошибок */
-.profile__input__error {
-    margin: 8px 0;
-    padding: 1em 2em;
-
-    border-radius: 16px;
-
-    color: $error-color;
-    background-color: $error-bg-color;
-
-    transition: all 0.3s ease-in-out;
-}
-
-/* иконка ошибки */
-.profile__input__error__fa {
-    margin: 8px 8px;
-    padding: 8px;
-
-    font-size: 2em;
-    vertical-align: middle;
-
-    transition: all 0.3s ease-in-out;
+    &__upload-button:hover {
+        background: $main-theme-color__focus;
+        transition: all 0.3s ease-in-out;
+    }
 }

@@ -80,8 +80,6 @@ export default class RegisterView extends BaseView {
             return;
         }
 
-        console.log(this.context);
-
         super.render();
 
         this.addEventListeners();

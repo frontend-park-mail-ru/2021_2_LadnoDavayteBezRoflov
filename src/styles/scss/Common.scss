@@ -59,6 +59,8 @@ body {
     background: $error-bg-color;
     color: $error-color;
 
+    max-width: 100%;
+
     &::before {
         @extend .material-icons;
         font-size: 30px;
@@ -67,6 +69,12 @@ body {
         color: $error-bg-color;
         background-color: $error-color;
         border-radius: 100%;
+    }
+
+    &_margin {
+        margin: 5px 0 10px 1.5em;
+        box-sizing: border-box;
+        max-width: 100%;
     }
 }
 

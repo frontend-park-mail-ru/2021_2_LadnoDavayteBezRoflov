@@ -1,47 +1,35 @@
 {{{Navbar}}}
 
-<div class="login__wrapper">
+<div class="view__wrapper">
     <form id="auth" name="auth" novalidate autocomplete="off" method="post">
-        <div class="login__container">
-            <h1 class="login__caption">Вход</h1>
-            <p class="login__text">Пожалуйста, заполните эту форму, чтобы войти.</p>
+        <div class="view__container">
+            <h1 class="view__caption">Вход</h1>
+            <p class="view__text">Пожалуйста, заполните эту форму, чтобы войти.</p>
 
-            <div class="login__input__wrapper">
-                <input class="login__input__input" type="text" placeholder=" " id="login" name="login" autofocus
+            <div class="view__input-wrapper">
+                <input class="view__input-input" type="text" placeholder=" " id="login" name="login" autofocus
                        pattern="^[a-zA-Z\d]{3,20}$" value="{{userLoginData.login}}" required>
-                <label class="login__input__caption">Логин</label>
-                <span class="login__input__bar"></span>
-
-                {{#if validation.userLoginData.login}}
-                    <div class="login__input__error" id="login-validation-box">
-                        <i class="fa fa-times-circle login__input__error__fa"></i>
-                        <label class="login__input__error-label"
-                               id="login-validation-message">{{validation.userLoginData.login}}</label>
-                    </div>
-                {{/if}}
+                <label class="view__input-caption">Логин</label>
+                <span class="view__input-bar"></span>
             </div>
+            {{#if validation.userLoginData.login}}
+                <div class="error error_margin" id="login-validation-box">{{validation.userLoginData.login}}</div>
+            {{/if}}
 
-            <div class="login__input__wrapper">
-                <input class="login__input__input" type="password" placeholder=" " id="password" name="password"
+            <div class="view__input-wrapper">
+                <input class="view__input-input" type="password" placeholder=" " id="password" name="password"
                        pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userLoginData.password}}" required>
-                <label class="login__input__caption">Пароль</label>
-                <span class="login__input__bar"></span>
-
-                {{#if validation.userLoginData.password}}
-                    <div class="login__input__error" id="password-validation-box">
-                        <i class="fa fa-times-circle login__input__error__fa"></i>
-                        <label class="login__input__error-label"
-                               id="password-validation-message">{{validation.userLoginData.password}}</label>
-                    </div>
-                {{/if}}
+                <label class="view__input-caption">Пароль</label>
+                <span class="view__input-bar"></span>
             </div>
-
+            {{#if validation.userLoginData.password}}
+                <div class="error error_margin" id="password-validation-box">{{validation.userLoginData.password}}</div>
+            {{/if}}
             <button type="submit" class="button" id="login-button">Войти</button>
         </div>
     </form>
-    <div class="login__register-message">
-        <p class="login__text">Впервые в Brrrello? <a class="login__register-message__link" href="/register">Создать
-            аккаунт</a></p>
+    <div class="message">
+        <p class="view__text">Впервые в Brrrello? <a class="message-link" href="/register">Создать аккаунт</a></p>
     </div>
 </div>
 
