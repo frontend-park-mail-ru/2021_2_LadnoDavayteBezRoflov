@@ -1,5 +1,6 @@
 @import 'Constants';
-$container-min-width: 320px;
+$container-min-width: 200px;
+$container-min-width-desktop: 320px;
 $container-max-width: 600px;
 
 /* заголовки во всем view */
@@ -29,7 +30,7 @@ $container-max-width: 600px;
 
     /* контейнер с содержимым */
     &__container {
-        min-width: $container-min-width;
+        min-width: $container-min-width-desktop;
         max-width: $container-max-width;
 
         background: $transparent-bg-color;
@@ -194,5 +195,13 @@ $container-max-width: 600px;
 
     &__second-text {
         font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .view {
+        &__container {
+            min-width: $container-min-width;
+        }
     }
 }

@@ -1,11 +1,16 @@
 @import '../../styles/scss/Constants';
 
 .profile-box {
-    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    width: 95vw;
     height: max-content;
     max-width: 650px;
     background: $transparent-bg-color;
-    padding: 2em;
+    padding: 10px 0 10px 0;
     border-radius: 24px;
     border-left: 1px solid $transparent-bg-color;
     border-top: 1px solid $transparent-bg-color;
@@ -13,17 +18,18 @@
     text-align: center;
     transition: all 0.3s ease-in-out;
 
-
     &__column-left {
         padding: 15px;
-        justify-content: center;
     }
 
     &__column-right {
-        padding: 15px;
-        justify-content: center;
+        //padding: 15px;
     }
 
+    &-container {
+        display: flex;
+        flex-direction: column;
+    }
 
     &__user-picture {
         width: 150px;
@@ -31,9 +37,7 @@
     }
 
     &__user-avatar {
-        opacity: 0;
-        visibility: hidden;
-        position: absolute;
+        display: none;
     }
 
     &__upload-icon-wrapper {
@@ -55,8 +59,6 @@
         width: 90%;
         max-width: 290px;
         height: 60px;
-        position: relative;
-        left: 5%;
         background: $main-theme-color;
         color: rgb(255, 255, 255);
         font-size: 0.75rem;
@@ -73,11 +75,4 @@
         background: $main-theme-color__focus;
         transition: all 0.3s ease-in-out;
     }
-}
-
-.profile__wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
 }
