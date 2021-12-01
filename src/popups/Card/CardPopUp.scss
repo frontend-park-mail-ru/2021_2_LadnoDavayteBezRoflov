@@ -4,6 +4,7 @@
 .comments-wrapper {
     display: flex;
     flex-direction: column;
+    gap: inherit;
 }
 
 .comment {

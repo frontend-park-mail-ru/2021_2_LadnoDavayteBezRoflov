@@ -98,17 +98,11 @@
                             <button class="button" id="cardPopUpCreateBtnId">Создать</button>
                         {{/if}}
                         {{#if edit}}
-                            <div class="form-inline" role="form">
-                                <div class="form-group">
-                                    <input class="simple-form-element" type="text" id="newCommentTextId"
-                                           name="comment" autocomplete="off"
-                                           placeholder="Добавить комментарий" required>
-                                </div>
-                                <div class="form-group">
-                                    <button class="button" id="createCommentId">Добавить</button>
-                                </div>
-                            </div>
                             <div class="comments-wrapper">
+                                <textarea class="simple-form-element" type="text" id="newCommentTextId"
+                                           name="comment" autocomplete="off"
+                                           placeholder="Добавить комментарий" required></textarea>
+                                <button class="button" id="createCommentId">Добавить</button>
                                 {{#each comments}}
                                     <div class="comment">
                                         <img class="comment__avatar" src="{{this.user.avatar}}"/>
