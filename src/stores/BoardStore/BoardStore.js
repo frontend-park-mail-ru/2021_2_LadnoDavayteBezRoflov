@@ -14,8 +14,10 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {CheckLists, ConstantMessages,
-    HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
+import {
+    CheckLists, ConstantMessages,
+    HttpStatusCodes, Urls, BoardStoreConstants,
+} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -1057,26 +1059,6 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Метод включает popup добавления участника в карточку и устанавливает контекст
-     * @private
-     */
-    _showAddCardAssigneePopUp() {
-        const context = this._storage.get('add-card-member-popup');
-        context.visible = true;
-        context.errors = null;
-        context.searchString = null;
-        const card = this._getCardById(this._storage.get('card-popup').clid,
-                                       this._storage.get('card-popup').cid);
-        context.users = card.assignees.map((assignee) => {
-            return {...assignee, added: true};
-        });
-
-        if (!context.users.length) {
-            context.users = this._storage.get('members').slice();
-        }
-    }
-
-    /**
      * Метод выполняет поиск чеклиста по его ID
      * @param {Number} chlid
      * @return {Object} найденный элемент
@@ -1361,6 +1343,26 @@ class BoardStore extends BaseStore {
     }
 
     /**
+     * Метод включает popup добавления участника в карточку и устанавливает контекст
+     * @private
+     */
+    _showAddCardAssigneePopUp() {
+        const context = this._storage.get('add-card-member-popup');
+        context.visible = true;
+        context.errors = null;
+        context.searchString = null;
+        const card = this._getCardById(this._storage.get('card-popup').clid,
+                                       this._storage.get('card-popup').cid);
+        context.users = card.assignees.map((assignee) => {
+            return {...assignee, added: true};
+        });
+
+        if (!context.users.length) {
+            context.users = this._storage.get('members').slice();
+        }
+    }
+
+    /**
      * Метод выключает popup добавления участника в карточку
      * @private
      */
@@ -1380,6 +1382,11 @@ class BoardStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            const card = this._getCardById(this._storage.get('card-popup').clid,
+                                           this._storage.get('card-popup').cid);
+            context.users = card.assignees.map((assignee) => {
+                return {...assignee, added: true};
+            });
             return;
         }
 
@@ -1551,6 +1558,9 @@ class BoardStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            context.users = this._storage.get('members').map((member) => {
+                return {...member, added: true};
+            });
             return;
         }
 
@@ -1586,154 +1596,6 @@ class BoardStore extends BaseStore {
      * @return {Promise<void>}
      * @private
      */
-    async _createCardComment(data) {
-        const context = this._storage.get('card-popup');
-
-        const comment = {
-            cid: context.cid,
-            text: data.text,
-        };
-
-        let payload;
-
-        try {
-            payload = await Network.createComment(comment);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            context.comments.push({
-                cmid: payload.data.cmid,
-                cid: this._storage.get('card-popup').cid,
-                user: {
-                    userName: SettingsStore.getContext('login'),
-                    avatar: SettingsStore.getContext('avatar'),
-                },
-                text: data.text,
-                date: payload.data.date,
-            });
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
-    }
-
-    /**
-     * Переключает комментарий в режим редактирования
-     * @param {Object} data - данные по комменту
-     * @private
-     */
-    async _editCardComment(data) {
-        const comments = this._storage.get('card-popup').comments;
-        const comment = comments.find((comment) => {
-            return comment.cmid === data.cmid;
-        });
-        if (!comment) {
-            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
-        }
-        comment.edit = !comment.edit;
-    }
-
-    /**
-     * Обновляет комментарий
-     * @param {Object} data новые данные
-     * @return {Promise<void>}
-     * @private
-     */
-    async _updateCardComment(data) {
-        let payload;
-
-        try {
-            payload = await Network.updateComment(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            const comments = this._storage.get('card-popup').comments;
-            const comment = comments.find((item) => {
-                return item.cmid === data.cmid;
-            });
-
-            if (!comment) {
-                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
-            }
-
-            comment.text = data.text;
-            comment.edit = false;
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
-    }
-
-    /**
-     * Удаляет комментарий
-     * @param {Object} data данные
-     * @return {Promise<void>}
-     * @private
-     */
-    async _deleteCardComment(data) {
-        let payload;
-
-        try {
-            payload = await Network.deleteComment(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
-            );
-
-            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
-            if (cmid === -1) {
-                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
-            }
-
-            card.comments.splice(cmid, 1);
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
-    }
-
-    /**
- * Создает комментарий
- * @param {Object} data данные
- * @return {Promise<void>}
- * @private
- */
     async _createCardComment(data) {
         const context = this._storage.get('card-popup');
 
