@@ -319,7 +319,6 @@ class SettingsStore extends BaseStore {
         /* Если вышли за границы мобильной версии: */
         if (prevWidth <= SettingStoreConstants.MobileNavWidth &&
             data.width > SettingStoreConstants.MobileNavWidth) {
-            console.log('full');
             context.linksVisible = true;
             context.isMobile = false;
             this._emitChange();
@@ -329,7 +328,6 @@ class SettingsStore extends BaseStore {
         /* Если вошли в границы мобильной версии: */
         if (prevWidth >= SettingStoreConstants.MobileNavWidth &&
             data.width < SettingStoreConstants.MobileNavWidth) {
-            console.log('mobile ');
             context.linksVisible = false;
             context.isMobile = true;
             this._emitChange();

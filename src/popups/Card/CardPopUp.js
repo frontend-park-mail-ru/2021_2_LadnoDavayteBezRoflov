@@ -75,7 +75,6 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
-        this._elements.card_name?.focus();
         this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
             editCommentBtn.addEventListener('click', this._onEditComment);
         });
@@ -117,6 +116,8 @@ export default class CardPopUp extends BaseComponent {
         this._elements.checkListItem.label?.forEach((element) => {
             element.addEventListener('click', this._onToggleChekListItem);
         });
+
+        this._elements.card_name?.focus();
 
         if (this._elements.scrollZone) {
             this._elements.scrollZone.scrollTop = this.context.get('card-popup').scroll;
