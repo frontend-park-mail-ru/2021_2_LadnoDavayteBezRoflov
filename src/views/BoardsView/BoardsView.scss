@@ -83,6 +83,7 @@ $team-font-size: 25px;
         align-items: flex-end;
         justify-content: space-between;
         padding: 4px 5px;
+        flex-wrap: wrap;
     }
 
     &__team-name {
