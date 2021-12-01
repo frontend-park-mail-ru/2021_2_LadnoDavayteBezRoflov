@@ -318,7 +318,7 @@ class BoardStore extends BaseStore {
             break;
 
         case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
-            await this._toggleChekListItem(action.data);
+            await this._toggleCheckListItem(action.data);
             this._emitChange();
             break;
 
@@ -1339,10 +1339,10 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с данными action'a
      * @private
      */
-    async _toggleChekListItem(data) {
+    async _toggleCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
-        const item = this._getCheckListItemById(data.chlid, data.chliid);
+        let item = this._getCheckListItemById(data.chlid, data.chliid);
 
         const newItem = {...item};
         newItem.status = !newItem.status;
@@ -1359,6 +1359,11 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             item.status = !item.status;
+            item = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.find((checkLstItem) => {
+                return checkLstItem.chliid === data.chliid;
+            }).status = !item.status;
             return;
 
         default:
@@ -1522,7 +1527,6 @@ class BoardStore extends BaseStore {
      * @private
      */
     _removeUserFromCards(uid) {
-        console.log(this._storage);
         this._storage.get('card_lists').forEach((cardList) => {
             cardList.cards.forEach((card) => {
                 const cardMember = card.assignees.find((assignee) => {
@@ -1554,6 +1558,11 @@ class BoardStore extends BaseStore {
         const user = context.users.find((user) => {
             return user.uid === data.uid;
         });
+
+        if (user.userName === SettingsStore.getContext('login')) {
+            console.log('todo: попытка удалить самого себя из доски');
+            return;
+        }
 
         // Если пользователь был в members, исключим его от туда. Иначе - добавим.
         if (member) {
