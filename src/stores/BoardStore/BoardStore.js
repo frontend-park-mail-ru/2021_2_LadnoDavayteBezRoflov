@@ -308,7 +308,7 @@ class BoardStore extends BaseStore {
             break;
 
         case CheckListActionTypes.CHECKLIST_ITEM_SAVE:
-            await this._saveChekListItem(action.data);
+            await this._saveCheckListItem(action.data);
             this._emitChange();
             break;
 
@@ -1111,6 +1111,7 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             newCheckList.chlid = payload.data.chlid;
             context.checkLists.push(newCheckList);
+            this._getCardById(context.clid, context.cid).check_lists.push(newCheckList);
             return;
 
         default:
@@ -1158,6 +1159,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             checkList.title = data.title;
             checkList.edit = false;
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).title = data.title;
             return;
 
         default:
@@ -1186,10 +1190,15 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const delCheckList = context.checkLists.find((checklist) => {
+            let delCheckList = context.checkLists.find((checklist) => {
                 return checklist.chlid === data.chlid;
             });
             context.checkLists.splice(context.checkLists.indexOf(delCheckList), 1);
+            delCheckList = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            });
+            this._getCardById(context.clid, context.cid).check_lists
+                .splice(context.checkLists.indexOf(delCheckList), 1);
             return;
 
         default:
@@ -1249,7 +1258,7 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с данными action'a
      * @private
      */
-    async _saveChekListItem(data) {
+    async _saveCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
         const item = this._getCheckListItemById(data.chlid, data.chliid);
