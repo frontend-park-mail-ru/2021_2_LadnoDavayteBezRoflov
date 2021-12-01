@@ -1,4 +1,4 @@
-[![CI](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml)
+[![CI](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml) ![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=http%3A%2F%2F95.163.213.142%2F) ![GitHub repo size](https://img.shields.io/github/repo-size/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov)
 
 # Trello
 
@@ -46,9 +46,7 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 |
 |--public
 |  |--assets #Pictures and icons
-|  |--css #CSS files
 |  |--fonts #Font files
-|  |-index.html
 |
 |--server #Static-server
 |  |-server.js
@@ -60,13 +58,19 @@ Trello frontend repository for Ladno Davayte Bez Roflov team, autumn of 2021.
 |  |--modules #Modules
 |  |  |--Dispatcher
 |  |  |--EventBus 
+|  |  |--Helpers
 |  |  |--Network
 |  |  |--Router
 |  |  |--Validator
 |  |
+|  |--popups
 |  |--stores #Stores & main logic
+|  |--styles
+|  |  |--scss
 |  |--views #Project pages
+|  |-index_template.html
 |  |-index.js
+|  |-sw.js
 ```
 
 ### Versions
@@ -77,7 +81,7 @@ Versions are updated via two ways:
 
 2. **Minor updates**: minor fixes and changes to server and modules. Example: *refactoring Network module*.
 
-Latest version: `0.2.0`: *Transferred to Flux architecture, refactored every module*.
+Latest version: `0.2.1`: *Service worker*.
 
 ### Code style
 The project is written using slightly modified [Google ESling config](https://github.com/google/eslint-config-google). Code style changes:
