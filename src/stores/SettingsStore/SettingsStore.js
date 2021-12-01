@@ -33,6 +33,7 @@ class SettingsStore extends BaseStore {
             avatar: null,
         });
 
+        this._storage.set('uid', null);
         this._storage.set('login', null);
         this._storage.set('email', null);
         this._storage.set('password', null);
@@ -100,6 +101,7 @@ class SettingsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
+            this._storage.set('uid', payload.data.uid);
             this._storage.set('login', payload.data.login);
             this._storage.set('email', payload.data.email);
             this._storage.set('avatar', payload.data.avatar);
