@@ -7,7 +7,7 @@
 export default function DateFormatHelper(date) {
     if (date) {
         const contextDate = new Date(date.substr(0, 19));
-        return contextDate.toLocaleTimeString('ru-RU');
+        return contextDate.toLocaleString('ru-RU');
     }
     return '';
 };
