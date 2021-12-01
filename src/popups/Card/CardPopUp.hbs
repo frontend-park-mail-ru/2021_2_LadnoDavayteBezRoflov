@@ -104,7 +104,7 @@
                                            placeholder="Добавить комментарий" required></textarea>
                                 <button class="button" id="createCommentId">Добавить</button>
                                 {{#each comments}}
-                                    <div class="comment">
+                                    <div class="comment" data-author="{{this.uid}}">
                                         <img class="comment__avatar" title="{{this.user.userName}}" src="{{this.user.avatar}}"/>
                                         <div class="comment__content">
                                             {{#if this.edit}}
