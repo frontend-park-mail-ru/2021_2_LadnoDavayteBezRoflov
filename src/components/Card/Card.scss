@@ -60,7 +60,8 @@ $card-due-date-done: forestgreen;
   line-height: normal;
   color: rgb(255, 255, 255);
   padding-top: 3px;
-    
+  cursor: pointer;
+
   &-invalid {
     background-color: rgb(235, 90, 70);
   }
