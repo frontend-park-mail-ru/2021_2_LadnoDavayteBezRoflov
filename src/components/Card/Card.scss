@@ -47,6 +47,7 @@ $card-due-date-done: forestgreen;
   flex-direction: row;
   padding-right: 5px;
   background: $secondary-bg-color;
+  cursor: pointer;
 }
 
 .badge-due-date__icon::before {

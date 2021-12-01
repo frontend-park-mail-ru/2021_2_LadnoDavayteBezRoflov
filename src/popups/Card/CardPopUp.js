@@ -117,7 +117,9 @@ export default class CardPopUp extends BaseComponent {
             element.addEventListener('click', this._onToggleChekListItem);
         });
 
-        this._elements.card_name?.focus();
+        if (!this.context.get('card-popup').edit) {
+            this._elements.card_name?.focus();
+        }
 
         if (this._elements.scrollZone) {
             this._elements.scrollZone.scrollTop = this.context.get('card-popup').scroll;
