@@ -1492,6 +1492,25 @@ class BoardStore extends BaseStore {
     }
 
     /**
+     * Удаляет пользоватлея из карточки
+     * @param {Number} uid id удаляемого юзера
+     * @private
+     */
+    _removeUserFromCards(uid) {
+        console.log(this._storage);
+        this._storage.get('card_lists').forEach((cardList) => {
+            cardList.cards.forEach((card) => {
+                const cardMember = card.assignees.find((assignee) => {
+                    return assignee.uid === uid;
+                });
+                if (cardMember) {
+                    card.assignees.splice(card.assignees.indexOf(cardMember), 1);
+                }
+            });
+        });
+    }
+
+    /**
      * Метод добавляет/исключает пользователя из доски
      * @param {Object} data - объект с uid пользователя
      * @private
@@ -1518,16 +1537,9 @@ class BoardStore extends BaseStore {
             members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
         }
 
-        const updatedBoard = {
-            description: this._storage.get('description'),
-            board_name: this._storage.get('board_name'),
-            members: members,
-        };
-
         let payload;
 
         try {
-            payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
             payload = await Network.toggleBoardMember(this._storage.get('bid'), data.uid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
@@ -1538,6 +1550,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             user.added = !member;
             this._storage.set('members', members);
+            if (!user.added) {
+                this._removeUserFromCards(user.uid);
+            }
             return;
 
         default:
