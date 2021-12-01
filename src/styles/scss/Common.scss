@@ -132,8 +132,11 @@ div#root {
     font-size: 16px;
 
     cursor: pointer;
-
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: all 0.3s ease-in-out;
+
+    max-width: 90vw;
 
     &_small {
         padding: 8px 12px;
@@ -145,6 +148,10 @@ div#root {
 
     &_full-space {
         flex: 1;
+    }
+
+    &_no-overflow-hiding {
+        overflow: visible;
     }
 
     &:focus,
@@ -304,3 +311,10 @@ div#root {
     }
 
 }
+
+@media screen and (max-width: $mobile-threshold) {
+    .button {
+        padding: 8px 12px;
+    }
+}
+

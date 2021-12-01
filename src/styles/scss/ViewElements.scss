@@ -198,7 +198,7 @@ $container-max-width: 600px;
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: $mobile-threshold) {
     .view {
         &__container {
             min-width: $container-min-width;

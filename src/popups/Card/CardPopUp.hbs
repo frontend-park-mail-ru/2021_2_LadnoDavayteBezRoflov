@@ -1,7 +1,7 @@
 {{#with card-popup}}
     {{#if visible }}
         <div class="popup-wrapper" id="cardPopUpWrapperId">
-            <div class="popup-content popup-content_width">
+            <div class="popup-content popup-content_card">
                 <form class="popup-form custom-scroll" id="cardPopUpScrollZoneId">
                     <div class="popup-form__header">
                         {{#if edit }}
@@ -33,6 +33,7 @@
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
                         </div>
                         {{#if edit}}
+                        <div>
                             <label for="cardPopUpPositionId">Позиция:</label>
                             <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
                                     required>
@@ -44,6 +45,7 @@
                                     {{/if}}
                                 {{/each}}
                             </select>
+                        </div>
                         {{/if}}
                         {{# if checkLists}}
                             <span class="check-list-separator">Чек листы</span>
