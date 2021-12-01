@@ -13,7 +13,7 @@
             {{# if navbar.linksVisible }}
                 <div class="navbar__links">
                     {{#if isAuthorized}}
-                        <div class="navbar__link-wrapper"><a href="/boards" class="navbar__link">Доски</a></div>
+                        <a class="navbar__link-wrapper" href="/boards" ><div class="navbar__link">Доски</div></a>
                         <a href="/profile" class="avatar-wrapper">
                             {{#if navbar.isMobile }}
                                 <span id="navbarUserNameId">{{userName}}</span>
@@ -28,12 +28,10 @@
                             {{/if}}
                         </a>
 
-                        <div class="navbar__link-wrapper"><a id="logout" class="navbar__link">Выход</a></div>
+                        <a id="logout" class="navbar__link-wrapper"><div class="navbar__link">Выход</div></a>
                     {{else}}
-                        <div class="navbar__link-wrapper"><a href="/login" class="navbar__link">Войти</a></div>
-                        <div class="navbar__link-wrapper"><a href="/register"
-                                                             class="navbar__link">Зарегистрироваться</a>
-                        </div>
+                        <a class="navbar__link-wrapper" href="/login"><div class="navbar__link">Войти</div></a>
+                        <a class="navbar__link-wrapper" href="/register"><div class="navbar__link">Зарегистрироваться</div></a>
                     {{/if}}
                 </div>
             {{/if}}

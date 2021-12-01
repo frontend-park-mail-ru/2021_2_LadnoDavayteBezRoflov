@@ -44,6 +44,7 @@
         align-items: center;
         cursor: pointer;
         min-height: $nav-bar-height;
+        text-decoration: none;
 
         &:hover {
             background-color: $nav-bar-hover;
