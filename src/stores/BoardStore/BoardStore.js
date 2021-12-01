@@ -1417,7 +1417,6 @@ class BoardStore extends BaseStore {
             context.users = card.assignees.map((assignee) => {
                 return {...assignee, added: true};
             });
-            //context.users = {...this._storage.get('members').slice(), ...context.users};
             return;
         }
 
