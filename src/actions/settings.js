@@ -10,6 +10,8 @@ export const SettingsActionTypes = {
     SETTINGS_GET: 'settings/get',
     SETTINGS_UPDATE: 'settings/put',
     AVATAR_UPLOAD: 'avatar/post',
+    NAVBAR_MENU_BTN_CLICK: 'navbar/menu-btn/click',
+    WINDOW_RESIZED: 'window/resized',
 };
 
 /**
@@ -46,6 +48,27 @@ export const settingsActions = {
         Dispatcher.dispatch({
             actionName: SettingsActionTypes.AVATAR_UPLOAD,
             data: {avatar},
+        });
+    },
+
+    /**
+     * Действие: переключение видимости navbar menu
+     */
+    toggleNavbarMenu() {
+        Dispatcher.dispatch({
+            actionName: SettingsActionTypes.NAVBAR_MENU_BTN_CLICK,
+        });
+    },
+
+    /**
+     * Действие: изменился размер окна браузера
+     * @param {Number} width - ширина окна
+     * @param {Number} height - высота окна
+     */
+    windowResized(width, height) {
+        Dispatcher.dispatch({
+            actionName: SettingsActionTypes.WINDOW_RESIZED,
+            data: {width, height},
         });
     },
 };

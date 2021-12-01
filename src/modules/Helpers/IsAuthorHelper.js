@@ -1,11 +1,11 @@
-import UserStore from '../../stores/UserStore/UserStore.js';
+import SettingsStore from '../../stores/SettingsStore/SettingsStore.js';
 
 /**
  * Handelbars helper, проверяет авторство комментария
- * @param {any} author - логин автора комментария
+ * @param {any} author - id автора комментария
  * @return {boolean} - результат сравнения
  * @constructor
  */
 export default function IsAuthorHelper(author) {
-    return author === UserStore.getContext('userName');
+    return author === SettingsStore.getContext('uid');
 };

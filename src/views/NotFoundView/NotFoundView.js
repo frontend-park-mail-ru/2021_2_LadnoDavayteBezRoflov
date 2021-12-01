@@ -17,7 +17,8 @@ export default class NotFoundView extends BaseView {
     constructor(parent) {
         const context = new Map([
             ...UserStore.getContext(),
-            ...SettingsStore.getContext(),
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
         ]);
         super(context, template, parent);
 
@@ -39,6 +40,12 @@ export default class NotFoundView extends BaseView {
      * Метод, вызывающийся по умолчанию при открытии страницы.
      */
     _onShow() {
+        this._setContext(new Map([
+            ...UserStore.getContext(),
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
+        ]));
+
         this.render();
         this._isActive = true;
     }
@@ -49,7 +56,8 @@ export default class NotFoundView extends BaseView {
     _onRefresh() {
         this._setContext(new Map([
             ...UserStore.getContext(),
-            ...SettingsStore.getContext(),
+            ['avatar', SettingsStore.getContext('avatar')],
+            ['navbar', SettingsStore.getContext('navbar')],
         ]));
     }
 }

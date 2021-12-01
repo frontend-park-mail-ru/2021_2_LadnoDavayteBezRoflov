@@ -1,7 +1,7 @@
 {{#with delete-card-popup}}
     {{# if visible }}
         <div class="popup-wrapper" id="deleteCardPopUpWrapperId">
-            <div class="popup-content">
+            <div class="popup-content popup-content_delete">
                 <form class="popup-form">
                     <div class="popup-form__header">
                             Удалить "{{card_name}}"?
@@ -9,8 +9,8 @@
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
                         <div class="confirm-delete-wrapper">
-                            <button class="button button_red button_full-space" id="deleteCardPopUpConfirmBtnId">Да, удалить</button>
-                            <button class="button button_full-space" id="deleteCardPopUpRejectBtnId">Нет, отменить</button>
+                            <button class="button button_red button_full-space button_no-overflow-hiding" id="deleteCardPopUpConfirmBtnId">Да, удалить</button>
+                            <button class="button button_full-space button_no-overflow-hiding" id="deleteCardPopUpRejectBtnId">Нет, отменить</button>
                         </div>
                     </div>
                 </form>

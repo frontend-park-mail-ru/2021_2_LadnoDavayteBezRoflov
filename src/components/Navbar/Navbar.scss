@@ -44,10 +44,32 @@
         align-items: center;
         cursor: pointer;
         min-height: $nav-bar-height;
+        text-decoration: none;
 
         &:hover {
             background-color: $nav-bar-hover;
         }
+    }
+
+    &__hamburger-wrapper {
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-height: $nav-bar-height;
+        min-width: $nav-bar-height;
+
+        &:hover {
+            background-color: $nav-bar-hover;
+        }
+    }
+
+    &__logo-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
     }
 
     &__link {
@@ -80,11 +102,14 @@
     text-decoration: none;
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 500px) {
     .navbar {
         flex-direction: column;
         &__links {
             flex-direction: column;
+        }
+        &__hamburger-wrapper {
+            display: flex;
         }
     }
 }

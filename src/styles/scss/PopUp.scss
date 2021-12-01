@@ -17,20 +17,42 @@
     padding: 20px;
     border: 2px solid $tertiary-bg-color;
     border-radius: 16px;
-    width: 35%;
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     box-shadow: 0 0 10px 10px $default-box-shadow-color;
-    min-width: 300px;
+    min-width: $popup-min-width;
+    width: 100vw;
+    max-width: 300px;
 
-    &_sized {
-        min-width: 450px;
-    }
     &_width {
         min-width: 500px;
+    }
+
+    &_settings {
+        max-width: 600px;
+    }
+
+    &_card {
+        max-width: 650px;
+    }
+
+    &_card-list {
+        max-width: 450px;
+    }
+
+    &_create-board {
+        max-width: 450px;
+    }
+
+    &_delete {
+        max-width: 380px;
+    }
+
+    &_invite {
+        max-width: 450px;
     }
 }
 
@@ -57,7 +79,15 @@
 }
 
 .sub-text {
-    color:rgb(170, 170, 170);
-    font-family:verdana;
-    font-size:11px;
+    color: rgb(170, 170, 170);
+    font-family: verdana;
+    font-size: 11px;
 }
+
+
+@media screen and (max-width: $mobile-threshold) {
+    .popup-content {
+        padding: 10px;
+    }
+}
+

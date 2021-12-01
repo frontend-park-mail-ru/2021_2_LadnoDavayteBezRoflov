@@ -60,6 +60,7 @@ export default class CardPopUp extends BaseComponent {
                 deleteBtn: document.querySelectorAll('.checklist-item-delete'),
                 label: document.querySelectorAll('.checklist-item__label'),
             },
+            scrollZone: document.getElementById('cardPopUpScrollZoneId'),
         };
     }
 
@@ -74,7 +75,6 @@ export default class CardPopUp extends BaseComponent {
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
         this._elements.createBtn?.addEventListener('click', this._onCreate);
         this._elements.saveBtn?.addEventListener('click', this._onSave);
-        this._elements.card_name?.focus();
         this._elements.comments?.editBtns?.forEach((editCommentBtn)=>{
             editCommentBtn.addEventListener('click', this._onEditComment);
         });
@@ -116,6 +116,14 @@ export default class CardPopUp extends BaseComponent {
         this._elements.checkListItem.label?.forEach((element) => {
             element.addEventListener('click', this._onToggleChekListItem);
         });
+
+        if (!this.context.get('card-popup').edit) {
+            this._elements.card_name?.focus();
+        }
+
+        if (this._elements.scrollZone) {
+            this._elements.scrollZone.scrollTop = this.context.get('card-popup').scroll;
+        }
     };
 
     /**
@@ -254,6 +262,7 @@ export default class CardPopUp extends BaseComponent {
         commentsActions.createComment(
             this._elements.newCommentText.value,
         );
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -266,6 +275,7 @@ export default class CardPopUp extends BaseComponent {
         commentsActions.editComment(
             parseInt(event.target.dataset.id, 10),
         );
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -281,6 +291,7 @@ export default class CardPopUp extends BaseComponent {
             newComment,
             parseInt(event.target.dataset.id, 10),
         );
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -293,6 +304,7 @@ export default class CardPopUp extends BaseComponent {
         commentsActions.deleteComment(
             parseInt(event.target.dataset.id, 10),
         );
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
     /**
      * Callback, вызываемый при редактировании дедлайна
@@ -329,6 +341,7 @@ export default class CardPopUp extends BaseComponent {
     _onCreateCheckList(event) {
         event.preventDefault();
         checkListAction.createCheckList();
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -340,6 +353,7 @@ export default class CardPopUp extends BaseComponent {
         event.preventDefault();
         const chlid = event.target.closest('div.check-list').dataset.id;
         checkListAction.deleteCheckList(parseInt(chlid, 10));
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -351,6 +365,7 @@ export default class CardPopUp extends BaseComponent {
         event.preventDefault();
         const chlid = event.target.closest('div.check-list').dataset.id;
         checkListAction.editCheckList(parseInt(chlid, 10));
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -364,6 +379,7 @@ export default class CardPopUp extends BaseComponent {
         const chlid = checkListContainer.dataset.id;
         const title = checkListContainer.querySelector('.check-list__input').value;
         checkListAction.saveCheckList(parseInt(chlid, 10), title);
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
 
@@ -377,6 +393,7 @@ export default class CardPopUp extends BaseComponent {
         event.preventDefault();
         const chlid = event.target.closest('div.check-list').dataset.id;
         checkListAction.createCheckListItem(parseInt(chlid, 10));
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -390,6 +407,7 @@ export default class CardPopUp extends BaseComponent {
         const chliid = event.target.closest('div.checklist-item').dataset.id;
         checkListAction.deleteCheckListItem(parseInt(chlid, 10),
                                             parseInt(chliid, 10));
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -403,6 +421,7 @@ export default class CardPopUp extends BaseComponent {
         const chliid = event.target.closest('div.checklist-item').dataset.id;
         checkListAction.editCheckListItem(parseInt(chlid, 10),
                                           parseInt(chliid, 10));
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -419,6 +438,7 @@ export default class CardPopUp extends BaseComponent {
         checkListAction.saveChekListItem(parseInt(chlid, 10),
                                          parseInt(chliid, 10),
                                          text);
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 
     /**
@@ -434,5 +454,6 @@ export default class CardPopUp extends BaseComponent {
         checkListAction.toggleChekListItem(parseInt(chlid, 10),
                                            parseInt(chliid, 10),
                                            status);
+        cardActions.changeScroll(this._elements.scrollZone.scrollTop);
     }
 }

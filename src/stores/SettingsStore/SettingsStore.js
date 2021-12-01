@@ -9,7 +9,7 @@ import Network from '../../modules/Network/Network.js';
 import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes, SettingStoreConstants} from '../../constants/constants.js';
 
 /**
  * Класс, реализующий хранилище настроек.
@@ -33,11 +33,17 @@ class SettingsStore extends BaseStore {
             avatar: null,
         });
 
+        this._storage.set('uid', null);
         this._storage.set('login', null);
         this._storage.set('email', null);
         this._storage.set('password', null);
         this._storage.set('passwordRepeat', null);
         this._storage.set('avatar', '/assets/nodata.webp');
+        this._storage.set('navbar', {
+            linksVisible: window.innerWidth > SettingStoreConstants.MobileNavWidth,
+            prevWidth: window.innerWidth,
+            isMobile: window.innerWidth < SettingStoreConstants.MobileNavWidth,
+        });
     }
 
     /**
@@ -59,6 +65,15 @@ class SettingsStore extends BaseStore {
         case SettingsActionTypes.AVATAR_UPLOAD:
             await this._uploadAvatar(action.data);
             this._emitChange();
+            break;
+
+        case SettingsActionTypes.NAVBAR_MENU_BTN_CLICK:
+            this._toggleNavbarMenu();
+            this._emitChange();
+            break;
+
+        case SettingsActionTypes.WINDOW_RESIZED:
+            this._windowResized(action.data);
             break;
 
         default:
@@ -86,6 +101,7 @@ class SettingsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
+            this._storage.set('uid', payload.data.uid);
             this._storage.set('login', payload.data.login);
             this._storage.set('email', payload.data.email);
             this._storage.set('avatar', payload.data.avatar);
@@ -281,6 +297,43 @@ class SettingsStore extends BaseStore {
             return avatarUrl;
         }
         return new File([avatar], 'avatar');
+    }
+
+    /**
+     * Метод переключает видимсоть ссылок в navbar
+     * @private
+     */
+    _toggleNavbarMenu() {
+        const navbar = this._storage.get('navbar');
+        navbar.linksVisible = !navbar.linksVisible;
+    }
+
+    /**
+     * Метод вызывается при изменении размера окна
+     * @param {Object} data - объект с новой геометрией окна
+     * @private
+     */
+    _windowResized(data) {
+        const context = this._storage.get('navbar');
+        const prevWidth = context.prevWidth;
+        context.prevWidth = data.width;
+
+        /* Если вышли за границы мобильной версии: */
+        if (prevWidth <= SettingStoreConstants.MobileNavWidth &&
+            data.width > SettingStoreConstants.MobileNavWidth) {
+            context.linksVisible = true;
+            context.isMobile = false;
+            this._emitChange();
+            return;
+        }
+
+        /* Если вошли в границы мобильной версии: */
+        if (prevWidth >= SettingStoreConstants.MobileNavWidth &&
+            data.width < SettingStoreConstants.MobileNavWidth) {
+            context.linksVisible = false;
+            context.isMobile = true;
+            this._emitChange();
+        }
     }
 }
 

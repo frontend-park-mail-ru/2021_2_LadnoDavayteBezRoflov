@@ -241,6 +241,11 @@ class BoardsStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            context.users = this._storage.get('teams').find((team) => {
+                return team.tid === context.tid;
+            }).users?.map((member) => {
+                return {...member, userName: member.login || member.userName, added: true};
+            });
             return;
         }
 

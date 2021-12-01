@@ -9,6 +9,7 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 
 // Шаблон
 import template from './Navbar.hbs';
+import {settingsActions} from '../../actions/settings';
 
 
 /**
@@ -25,7 +26,8 @@ export default class NavbarComponent extends BaseComponent {
         this._onRefresh = this._onRefresh.bind(this);
         UserStore.addListener(this._onRefresh);
 
-        this._logoutCallback = this._logout.bind(this);
+        this._elements = {};
+        this._bindCallBacks();
     }
 
     /**
@@ -36,10 +38,40 @@ export default class NavbarComponent extends BaseComponent {
     }
 
     /**
+     * Метод биндит callback'и к this
+     * @private
+     */
+    _bindCallBacks() {
+        this._logout = this._logout.bind(this);
+        this._onHamburgerClick = this._onHamburgerClick.bind(this);
+    }
+
+    /**
+     * Метод сохраняет элементы DOM связанные с navbar
+     * @private
+     */
+    _registerElements() {
+        this._elements = {
+            logOutBtn: document.getElementById('logout'),
+            hamburgerBtn: document.getElementById('hamburgerBtnId'),
+        };
+    }
+
+    /**
      * Метод, добавляющий обработчики событий для компонента.
      */
     addEventListeners() {
-        document.getElementById('logout')?.addEventListener('click', this._logoutCallback);
+        this._registerElements();
+        this._elements.logOutBtn?.addEventListener('click', this._logout);
+        this._elements.hamburgerBtn?.addEventListener('click', this._onHamburgerClick);
+    }
+
+    /**
+     * Метод, удаляющий обработчики событий для компонента.
+     */
+    removeEventListeners() {
+        this._elements.logOutBtn?.removeEventListener('click', this._logout);
+        this._elements.hamburgerBtn?.removeEventListener('click', this._onHamburgerClick);
     }
 
     /**
@@ -52,9 +84,14 @@ export default class NavbarComponent extends BaseComponent {
     }
 
     /**
-     * Метод, удаляющий обработчики событий для компонента.
+     * Метод, срабатывающий при клике на кнопку меню
+     * @private
      */
-    removeEventListeners() {
-        document.getElementById('logout')?.removeEventListener('click', this._logoutCallback);
+    _onHamburgerClick() {
+        const links = document.querySelector('.navbar__links');
+        if (links && this.context.get('navbar').is) {
+            links.style.display = 'flex';
+        }
+        settingsActions.toggleNavbarMenu();
     }
 }

@@ -83,9 +83,9 @@ export const ConstantMessages = {
     BoardUpdateErrorOnServer: 'Не удалось обновить доску, попробуйте позднее',
     BoardNoAccess: 'Нет доступа к доске',
 
-    CardListTitleTooShort: 'Название списка карточек слишком короткое',
-    CardListTitleTooLong: 'Название списка карточек слишком длинное',
-    CardListErrorOnServer: 'Не удалось создать список, попробуйте позднее',
+    CardListTitleTooShort: 'Название колонки слишком короткое',
+    CardListTitleTooLong: 'Название колонки слишком длинное',
+    CardListErrorOnServer: 'Не удалось создать колонку, попробуйте позднее',
 
     CardTitleTooShort: 'Название карточки слишком короткое',
     CardTitleTooLong: 'Название карточки слишком длинное',
@@ -100,4 +100,8 @@ export const BoardStoreConstants = {
 export const CheckLists = {
     CheckListDefaultTitle: 'Check List',
     CheckListItemDefaultTitle: 'Item',
+};
+
+export const SettingStoreConstants = {
+    MobileNavWidth: 500,
 };

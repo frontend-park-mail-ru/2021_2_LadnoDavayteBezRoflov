@@ -14,8 +14,10 @@ import Router from '../../modules/Router/Router.js';
 import Validator from '../../modules/Validator/Validator';
 
 // Constants
-import {CheckLists, ConstantMessages,
-    HttpStatusCodes, Urls, BoardStoreConstants} from '../../constants/constants.js';
+import {
+    CheckLists, ConstantMessages,
+    HttpStatusCodes, Urls, BoardStoreConstants,
+} from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
@@ -64,6 +66,7 @@ class BoardStore extends BaseStore {
             card_name: null,
             errors: null,
             checkLists: [],
+            scroll: 0,
         });
 
         this._storage.set('delete-card-popup', {
@@ -305,7 +308,7 @@ class BoardStore extends BaseStore {
             break;
 
         case CheckListActionTypes.CHECKLIST_ITEM_SAVE:
-            await this._saveChekListItem(action.data);
+            await this._saveCheckListItem(action.data);
             this._emitChange();
             break;
 
@@ -315,7 +318,12 @@ class BoardStore extends BaseStore {
             break;
 
         case CheckListActionTypes.CHECKLIST_ITEM_TOGGLE:
-            await this._toggleChekListItem(action.data);
+            await this._toggleCheckListItem(action.data);
+            this._emitChange();
+            break;
+
+        case CardActionTypes.SCROLL_CHANGED:
+            this._changeCardPopUpScroll(action.data);
             this._emitChange();
             break;
 
@@ -846,6 +854,7 @@ class BoardStore extends BaseStore {
                 });
                 return {...list, check_list_items: items, edit: false};
             }),
+            scroll: 0,
         });
     }
 
@@ -1050,22 +1059,6 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Метод включает popup добавления участника в карточку и устанавливает контекст
-     * @private
-     */
-    _showAddCardAssigneePopUp() {
-        const context = this._storage.get('add-card-member-popup');
-        context.visible = true;
-        context.errors = null;
-        context.searchString = null;
-        const card = this._getCardById(this._storage.get('card-popup').clid,
-                                       this._storage.get('card-popup').cid);
-        context.users = card.assignees.map((assignee) => {
-            return {...assignee, added: true};
-        });
-    }
-
-    /**
      * Метод выполняет поиск чеклиста по его ID
      * @param {Number} chlid
      * @return {Object} найденный элемент
@@ -1118,6 +1111,7 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             newCheckList.chlid = payload.data.chlid;
             context.checkLists.push(newCheckList);
+            this._getCardById(context.clid, context.cid).check_lists.push(newCheckList);
             return;
 
         default:
@@ -1165,6 +1159,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             checkList.title = data.title;
             checkList.edit = false;
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).title = data.title;
             return;
 
         default:
@@ -1193,10 +1190,15 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const delCheckList = context.checkLists.find((checklist) => {
+            let delCheckList = context.checkLists.find((checklist) => {
                 return checklist.chlid === data.chlid;
             });
             context.checkLists.splice(context.checkLists.indexOf(delCheckList), 1);
+            delCheckList = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            });
+            this._getCardById(context.clid, context.cid).check_lists
+                .splice(context.checkLists.indexOf(delCheckList), 1);
             return;
 
         default:
@@ -1234,6 +1236,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             newCheckListItem.chliid = payload.data.chliid;
             checkList.check_list_items.push(newCheckListItem);
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.push(newCheckListItem);
             return;
 
         default:
@@ -1256,7 +1261,7 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с данными action'a
      * @private
      */
-    async _saveChekListItem(data) {
+    async _saveCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
         const item = this._getCheckListItemById(data.chlid, data.chliid);
@@ -1277,6 +1282,11 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             item.text = data.text;
             item.edit = false;
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.find((chLstItem) => {
+                return chLstItem.chliid === data.chliid;
+            }).text = data.text;
             return;
 
         default:
@@ -1305,8 +1315,16 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const list = this._getCheckListById(data.chlid);
-            const item = this._getCheckListItemById(data.chlid, data.chliid);
+            let list = this._getCheckListById(data.chlid);
+            let item = this._getCheckListItemById(data.chlid, data.chliid);
+            list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
+
+            list = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            });
+            item = list.check_list_items.find((checkLstItem) => {
+                return checkLstItem.chliid === data.chliid;
+            });
             list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
             return;
 
@@ -1321,10 +1339,10 @@ class BoardStore extends BaseStore {
      * @param {Object} data - объект с данными action'a
      * @private
      */
-    async _toggleChekListItem(data) {
+    async _toggleCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
-        const item = this._getCheckListItemById(data.chlid, data.chliid);
+        let item = this._getCheckListItemById(data.chlid, data.chliid);
 
         const newItem = {...item};
         newItem.status = !newItem.status;
@@ -1341,6 +1359,11 @@ class BoardStore extends BaseStore {
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             item.status = !item.status;
+            item = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.find((checkLstItem) => {
+                return checkLstItem.chliid === data.chliid;
+            }).status = !item.status;
             return;
 
         default:
@@ -1363,6 +1386,10 @@ class BoardStore extends BaseStore {
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
+
+        if (!context.users.length) {
+            context.users = this._storage.get('members').slice();
+        }
     }
 
     /**
@@ -1385,6 +1412,11 @@ class BoardStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            const card = this._getCardById(this._storage.get('card-popup').clid,
+                                           this._storage.get('card-popup').cid);
+            context.users = card.assignees.map((assignee) => {
+                return {...assignee, added: true};
+            });
             return;
         }
 
@@ -1490,6 +1522,24 @@ class BoardStore extends BaseStore {
     }
 
     /**
+     * Удаляет пользоватлея из карточки
+     * @param {Number} uid id удаляемого юзера
+     * @private
+     */
+    _removeUserFromCards(uid) {
+        this._storage.get('card_lists').forEach((cardList) => {
+            cardList.cards.forEach((card) => {
+                const cardMember = card.assignees.find((assignee) => {
+                    return assignee.uid === uid;
+                });
+                if (cardMember) {
+                    card.assignees.splice(card.assignees.indexOf(cardMember), 1);
+                }
+            });
+        });
+    }
+
+    /**
      * Метод добавляет/исключает пользователя из доски
      * @param {Object} data - объект с uid пользователя
      * @private
@@ -1509,6 +1559,11 @@ class BoardStore extends BaseStore {
             return user.uid === data.uid;
         });
 
+        if (user.userName === SettingsStore.getContext('login')) {
+            console.log('todo: попытка удалить самого себя из доски');
+            return;
+        }
+
         // Если пользователь был в members, исключим его от туда. Иначе - добавим.
         if (member) {
             members.splice(members.indexOf(member), 1);
@@ -1516,16 +1571,9 @@ class BoardStore extends BaseStore {
             members.push({uid: user.uid, userName: user.userName, avatar: user.avatar});
         }
 
-        const updatedBoard = {
-            description: this._storage.get('description'),
-            board_name: this._storage.get('board_name'),
-            members: members,
-        };
-
         let payload;
 
         try {
-            payload = await Network.updateBoard(updatedBoard, this._storage.get('bid'));
             payload = await Network.toggleBoardMember(this._storage.get('bid'), data.uid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
@@ -1536,6 +1584,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             user.added = !member;
             this._storage.set('members', members);
+            if (!user.added) {
+                this._removeUserFromCards(user.uid);
+            }
             return;
 
         default:
@@ -1556,6 +1607,9 @@ class BoardStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
+            context.users = this._storage.get('members').map((member) => {
+                return {...member, added: true};
+            });
             return;
         }
 
@@ -1734,151 +1788,12 @@ class BoardStore extends BaseStore {
     }
 
     /**
- * Создает комментарий
- * @param {Object} data данные
- * @return {Promise<void>}
- * @private
- */
-    async _createCardComment(data) {
-        const context = this._storage.get('card-popup');
-
-        const comment = {
-            cid: context.cid,
-            text: data.text,
-        };
-
-        let payload;
-
-        try {
-            payload = await Network.createComment(comment);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            context.comments.push({
-                cmid: payload.data.cmid,
-                cid: this._storage.get('card-popup').cid,
-                user: {
-                    userName: SettingsStore.getContext('login'),
-                    avatar: SettingsStore.getContext('avatar'),
-                },
-                text: data.text,
-                date: payload.data.date,
-            });
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
-    }
-
-    /**
-     * Переключает комментарий в режим редактирования
-     * @param {Object} data - данные по комменту
-     * @private
-     */
-    async _editCardComment(data) {
-        const comments = this._storage.get('card-popup').comments;
-        const comment = comments.find((comment) => {
-            return comment.cmid === data.cmid;
-        });
-        if (!comment) {
-            throw new Error(`BoardStore: комментарий с индексом ${data.cmid} не найден`);
-        }
-        comment.edit = !comment.edit;
-    }
-
-    /**
-     * Обновляет комментарий
-     * @param {Object} data новые данные
-     * @return {Promise<void>}
-     * @private
-     */
-    async _updateCardComment(data) {
-        let payload;
-
-        try {
-            payload = await Network.updateComment(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            const comments = this._storage.get('card-popup').comments;
-            const comment = comments.find((item) => {
-                return item.cmid === data.cmid;
-            });
-
-            if (!comment) {
-                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
-            }
-
-            comment.text = data.text;
-            comment.edit = false;
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
-    }
-
-    /**
-     * Удаляет комментарий
+     * Сохраняет скролл
      * @param {Object} data данные
-     * @return {Promise<void>}
      * @private
      */
-    async _deleteCardComment(data) {
-        let payload;
-
-        try {
-            payload = await Network.deleteComment(data);
-        } catch (error) {
-            console.log('Unable to connect to backend, reason: ', error);
-            return;
-        }
-
-        switch (payload.status) {
-        case HttpStatusCodes.Ok:
-            const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
-            );
-
-            const cmid = card.comments.findIndex(({cmid}) => cmid === data.cmid);
-            if (cmid === -1) {
-                throw new Error(`BoardStore: комментарий ${data.cmid} не найден.`);
-            }
-
-            card.comments.splice(cmid, 1);
-
-            return;
-
-        case HttpStatusCodes.Forbidden:
-            this._storage.get('card-popup').errors = ConstantMessages.BoardNoAccess;
-            return;
-
-        default:
-            this._storage.get('card-popup').errors = ConstantMessages.CardListErrorOnServer;
-            return;
-        }
+    _changeCardPopUpScroll(data) {
+        this._storage.get('card-popup').scroll = data.scrollValue;
     }
 }
 

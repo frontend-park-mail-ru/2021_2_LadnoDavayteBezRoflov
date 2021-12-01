@@ -6,7 +6,7 @@
     </div>
     <div class="card__header" data-id="{{cid}}">
         <span class="card__title" data-id="{{cid}}">{{card_name}}</span>
-        <span class="column__delete material-icons deleteCard" data-id="{{cid}}"></span>
+        <span class="material-icon-remove deleteCard" data-id="{{cid}}"></span>
     </div>
     <div class="card__badges" data-id="{{cid}}">
         {{#if (IsEmptyDeadlineHelper deadline)}}
@@ -21,7 +21,7 @@
         {{#if attachments}}
             <div class="material-icons badge-attachments" data-id="{{cid}}"></div>
         {{/if}}
-        {{#if checklist}}
+        {{#if check_lists}}
             <div class="material-icons badge-checklist" data-id="{{cid}}"></div>
         {{/if}}
         <div class="card__assignees" data-id="{{cid}}">
