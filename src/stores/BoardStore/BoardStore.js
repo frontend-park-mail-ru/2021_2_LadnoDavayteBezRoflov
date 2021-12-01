@@ -1236,6 +1236,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             newCheckListItem.chliid = payload.data.chliid;
             checkList.check_list_items.push(newCheckListItem);
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.push(newCheckListItem);
             return;
 
         default:
@@ -1279,6 +1282,11 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             item.text = data.text;
             item.edit = false;
+            this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            }).check_list_items.find((chLstItem) => {
+                return chLstItem.chliid === data.chliid;
+            }).text = data.text;
             return;
 
         default:
@@ -1307,8 +1315,16 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            const list = this._getCheckListById(data.chlid);
-            const item = this._getCheckListItemById(data.chlid, data.chliid);
+            let list = this._getCheckListById(data.chlid);
+            let item = this._getCheckListItemById(data.chlid, data.chliid);
+            list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
+
+            list = this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
+                return checkLst.chlid === data.chlid;
+            });
+            item = list.check_list_items.find((checkLstItem) => {
+                return checkLstItem.chliid === data.chliid;
+            });
             list.check_list_items.splice(list.check_list_items.indexOf(item), 1);
             return;
 
