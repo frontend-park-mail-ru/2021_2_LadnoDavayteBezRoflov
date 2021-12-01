@@ -241,7 +241,6 @@ class BoardsStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
-            console.log(context);
             context.users = this._storage.get('teams').find((team) => {
                 return team.tid === context.tid;
             }).users?.map((member) => {

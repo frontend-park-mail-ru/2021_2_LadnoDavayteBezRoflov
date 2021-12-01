@@ -105,7 +105,7 @@
                                 <button class="button" id="createCommentId">Добавить</button>
                                 {{#each comments}}
                                     <div class="comment">
-                                        <img class="comment__avatar" src="{{this.user.avatar}}"/>
+                                        <img class="comment__avatar" title="{{this.user.userName}}" src="{{this.user.avatar}}"/>
                                         <div class="comment__content">
                                             {{#if this.edit}}
                                                 <input class="simple-form-element commentInput" type="text"
@@ -113,7 +113,7 @@
                                                        value="{{this.text}}">
                                             {{else}}
                                                 <div class="comment__text">{{this.text}}</div>
-                                                <div class="date sub-text">{{this.date}}</div>
+                                                <div class="date sub-text">{{DateFormatHelper this.date}}</div>
                                             {{/if}}
                                         </div>
                                         <div class="comment__btns">
@@ -121,7 +121,7 @@
                                                 <div class="material-icon-save saveComment"
                                                      data-id="{{this.cmid}}"></div>
                                             {{/if}}
-                                            {{#if (IsAuthorHelper this.user.userName)}}
+                                            {{#if (IsAuthorHelper this.uid)}}
                                                 <div class="material-icon-edit material-icon-edit editComment"
                                                      data-id="{{this.cmid}}"></div>
                                                 <div class="material-icon-delete material-icon-delete deleteComment"
