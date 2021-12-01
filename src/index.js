@@ -63,3 +63,18 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+
+window.addEventListener('resize', (() => {
+    /* Callback на ресайз будет срабатывать раз в 200 мс,
+     * т.к. иначе слишком часто будет вызываться при движении
+     * "рамки" браузера */
+    let resizeTimeout = null;
+    return () => {
+        if (!resizeTimeout) {
+            resizeTimeout = setTimeout(() => {
+                resizeTimeout = null;
+                settingsActions.windowResized(window.innerWidth, window.innerHeight);
+            }, 100);
+        }
+    };
+})(), false);

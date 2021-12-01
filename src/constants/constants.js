@@ -101,3 +101,7 @@ export const CheckLists = {
     CheckListDefaultTitle: 'Check List',
     CheckListItemDefaultTitle: 'Item',
 };
+
+export const SettingStoreConstants = {
+    MobileNavWidth: 500,
+};

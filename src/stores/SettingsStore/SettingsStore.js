@@ -9,7 +9,7 @@ import Network from '../../modules/Network/Network.js';
 import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
+import {ConstantMessages, HttpStatusCodes, SettingStoreConstants} from '../../constants/constants.js';
 
 /**
  * Класс, реализующий хранилище настроек.
@@ -39,7 +39,9 @@ class SettingsStore extends BaseStore {
         this._storage.set('passwordRepeat', null);
         this._storage.set('avatar', '/assets/nodata.webp');
         this._storage.set('navbar', {
-            linksVisible: true,
+            linksVisible: window.innerWidth > SettingStoreConstants.MobileNavWidth,
+            prevWidth: window.innerWidth,
+            isMobile: window.innerWidth < SettingStoreConstants.MobileNavWidth,
         });
     }
 
@@ -67,6 +69,10 @@ class SettingsStore extends BaseStore {
         case SettingsActionTypes.NAVBAR_MENU_BTN_CLICK:
             this._toggleNavbarMenu();
             this._emitChange();
+            break;
+
+        case SettingsActionTypes.WINDOW_RESIZED:
+            this._windowResized(action.data);
             break;
 
         default:
@@ -298,6 +304,40 @@ class SettingsStore extends BaseStore {
     _toggleNavbarMenu() {
         const navbar = this._storage.get('navbar');
         navbar.linksVisible = !navbar.linksVisible;
+    }
+
+    /**
+     * Метод вызывается при изменении размера окна
+     * @param {Object} data - объект с новой геометрией окна
+     * @private
+     */
+    _windowResized(data) {
+        const context = this._storage.get('navbar');
+        const prevWidth = context.prevWidth;
+        context.prevWidth = data.width;
+
+        /* Если вышли за границы мобильной версии: */
+        if (prevWidth <= SettingStoreConstants.MobileNavWidth &&
+            data.width > SettingStoreConstants.MobileNavWidth) {
+            console.log('full');
+            context.linksVisible = true;
+            context.isMobile = false;
+            this._emitChange();
+            return;
+        }
+
+        /* Если вошли в границы мобильной версии: */
+        if (prevWidth >= SettingStoreConstants.MobileNavWidth &&
+            data.width < SettingStoreConstants.MobileNavWidth) {
+            console.log('mobile ');
+            context.linksVisible = false;
+            context.isMobile = true;
+            this._emitChange();
+            return;
+        }
+
+        console.log('resized');
+        console.log(data);
     }
 }
 

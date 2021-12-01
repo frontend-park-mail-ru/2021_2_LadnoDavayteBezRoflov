@@ -10,6 +10,7 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 // Шаблон
 import template from './Navbar.hbs';
 import {settingsActions} from '../../actions/settings';
+import {SettingStoreConstants} from '../../constants/constants';
 
 
 /**
