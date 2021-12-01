@@ -1111,7 +1111,9 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             newCheckList.chlid = payload.data.chlid;
             context.checkLists.push(newCheckList);
-            this._getCardById(context.clid, context.cid).check_lists.push(newCheckList);
+            this._getCardById(context.clid, context.cid).check_lists.push(
+                JSON.parse(JSON.stringify(newCheckList)),
+            );
             return;
 
         default:
@@ -1126,11 +1128,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _editCheckList(data) {
-        const checkLists = this._storage.get('card-popup').checkLists;
-        const checkList = checkLists.find((checkList) => {
-            return checkList.chlid === data.chlid;
-        });
-        checkList.edit = true;
+        this._getCheckListById(data.chlid).edit = true;
     }
 
     /**
@@ -1238,7 +1236,7 @@ class BoardStore extends BaseStore {
             checkList.check_list_items.push(newCheckListItem);
             this._getCardById(context.clid, context.cid).check_lists.find((checkLst) => {
                 return checkLst.chlid === data.chlid;
-            }).check_list_items.push(newCheckListItem);
+            }).check_list_items.push(JSON.parse(JSON.stringify(newCheckListItem)));
             return;
 
         default:
@@ -1253,6 +1251,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _editCheckListItem(data) {
+        console.log('_editCheckListItem');
         this._getCheckListItemById(data.chlid, data.chliid).edit = true;
     }
 
