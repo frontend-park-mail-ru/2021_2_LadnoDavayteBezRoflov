@@ -100,6 +100,10 @@ div#root {
         height: 35px;
         border: 2px solid $tertiary-bg-color;
         margin-right: 10px;
+
+        &_margin_left {
+            margin-left: 10px;
+        }
     }
 }
 

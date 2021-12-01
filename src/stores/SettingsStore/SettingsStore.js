@@ -333,11 +333,7 @@ class SettingsStore extends BaseStore {
             context.linksVisible = false;
             context.isMobile = true;
             this._emitChange();
-            return;
         }
-
-        console.log('resized');
-        console.log(data);
     }
 }
 

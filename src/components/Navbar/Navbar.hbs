@@ -15,10 +15,17 @@
                     {{#if isAuthorized}}
                         <div class="navbar__link-wrapper"><a href="/boards" class="navbar__link">Доски</a></div>
                         <a href="/profile" class="avatar-wrapper">
-                            <img id="navbarAvatarId" class="avatar-navbar-edition"
-                                 src="{{avatar}}"
-                                 alt="{{userName}}">
-                            <span id="navbarUserNameId">{{userName}}</span>
+                            {{#if navbar.isMobile }}
+                                <span id="navbarUserNameId">{{userName}}</span>
+                                <img id="navbarAvatarId" class="avatar-navbar-edition avatar-navbar-edition_margin_left"
+                                     src="{{avatar}}"
+                                     alt="{{userName}}">
+                            {{else}}
+                                <img id="navbarAvatarId" class="avatar-navbar-edition"
+                                     src="{{avatar}}"
+                                     alt="{{userName}}">
+                                <span id="navbarUserNameId">{{userName}}</span>
+                            {{/if}}
                         </a>
 
                         <div class="navbar__link-wrapper"><a id="logout" class="navbar__link">Выход</a></div>
