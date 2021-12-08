@@ -21,6 +21,7 @@ import template from './BoardsView.hbs';
 import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
 import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
 import DeleteDialogPopUp from '../../popups/DeleteDialog/DeleteDialogPopUp.js';
+import {teamsActions} from '../../actions/teams';
 
 
 /**
@@ -104,7 +105,6 @@ export default class BoardsView extends BaseView {
      */
     render() {
         super.render();
-        this._registerElements();
         this.addEventListeners();
     }
 
@@ -113,11 +113,20 @@ export default class BoardsView extends BaseView {
      */
     addEventListeners() {
         super.addEventListeners();
+        this._registerElements();
         this._elements.addBoardBtns?.forEach((item) => {
             item.addEventListener('click', this._onShowCreateBoardPopUp);
         });
         this._elements.inviteMembersBtns?.forEach((item) => {
             item.addEventListener('click', this._onShowAddTeamMemberPopUp);
+        });
+
+        this._elements.createTeamBtn?.addEventListener('click', this._onShowCreateTeamPopUp);
+        this._elements.editTeamBtns?.forEach((item) => {
+            item.addEventListener('click', this._onShowEditTeamPopUp);
+        });
+        this._elements.deleteTeamBtns?.forEach((item) => {
+            item.addEventListener('click', this._onShowDeleteTeamPopUp);
         });
     }
 
@@ -131,6 +140,13 @@ export default class BoardsView extends BaseView {
         });
         this._elements.inviteMembersBtns?.forEach((item) => {
             item.removeEventListener('click', this._onShowAddTeamMemberPopUp);
+        });
+        this._elements.createTeamBtn?.removeEventListener('click', this._onShowCreateTeamPopUp);
+        this._elements.editTeamBtns?.forEach((item) => {
+            item.removeEventListener('click', this._onShowEditTeamPopUp);
+        });
+        this._elements.deleteTeamBtns?.forEach((item) => {
+            item.removeEventListener('click', this._onShowDeleteTeamPopUp);
         });
     }
 
@@ -152,6 +168,10 @@ export default class BoardsView extends BaseView {
             onConfirm: this._onDeleteTeamConfirm.bind(this),
             onReject: this._onDeleteTeamReject.bind(this),
         };
+
+        this._onShowDeleteTeamPopUp = this._onShowDeleteTeamPopUp.bind(this);
+        this._onShowEditTeamPopUp = this._onShowEditTeamPopUp.bind(this);
+        this._onShowCreateTeamPopUp = this._onShowCreateTeamPopUp.bind(this);
     }
 
     /**
@@ -162,6 +182,10 @@ export default class BoardsView extends BaseView {
         this._elements = {
             addBoardBtns: document.querySelectorAll('.add-board'),
             inviteMembersBtns: document.querySelectorAll('.invite-board'),
+
+            createTeamBtn: document.getElementById('createTeamBtnId'),
+            deleteTeamBtns: document.querySelectorAll('.team-delete-btn'),
+            editTeamBtns: document.querySelectorAll('.team-edit-btn'),
         };
     }
 
@@ -224,7 +248,7 @@ export default class BoardsView extends BaseView {
     _onDeleteTeamPopUpClose(event) {
         if (event.target.id === 'deletePopUpWrapperId' ||
             event.target.id === 'deletePopUpCloseId') {
-            boardsActions.hideAddTeamMemberPopUp();
+            teamsActions.hideTeamPopUp();
         }
     }
 
@@ -235,7 +259,7 @@ export default class BoardsView extends BaseView {
      */
     _onDeleteTeamConfirm(event) {
         event.preventDefault();
-        cardListActions.deleteCardList(true);
+        teamsActions.deleteTeam(true);
     }
 
     /**
@@ -245,6 +269,20 @@ export default class BoardsView extends BaseView {
      */
     _onDeleteTeamReject(event) {
         event.preventDefault();
-        cardListActions.deleteCardList(false);
+        teamsActions.deleteTeam(false);
+    }
+
+    /* Создание/редактирование команды */
+    _onShowDeleteTeamPopUp() {
+
+    }
+
+
+    _onShowEditTeamPopUp() {
+
+    }
+
+    _onShowCreateTeamPopUp() {
+
     }
 }

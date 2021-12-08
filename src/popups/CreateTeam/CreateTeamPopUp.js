@@ -30,6 +30,7 @@ export default class CreateTeamPopUp extends BaseComponent {
             wrapper: document.getElementById('createTeamPopUpWrapperId'),
             name: document.getElementById('createTeamPopUpNameId'),
             submitBtn: document.getElementById('createTeamPopUpSubmitId'),
+
         };
     }
 
@@ -62,8 +63,9 @@ export default class CreateTeamPopUp extends BaseComponent {
      * @private
      */
     _bindCallBacks() {
-        this._onPopUpClose = this._onPopUpClose.bind(this);
-        this._onSaveBtnClick = this._onSaveBtnClick.bind(this);
+        this._onCloseTeamPopUp = this._onCloseTeamPopUp.bind(this);
+        this._onSubmitEditTeamPopUp = this._onSubmitEditTeamPopUp.bind(this);
+        this._onSubmitCreateTeamPopUp = this._onSubmitCreateTeamPopUp.bind(this);
     }
 
     /**

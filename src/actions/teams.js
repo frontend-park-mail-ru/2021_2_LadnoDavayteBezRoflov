@@ -105,7 +105,7 @@ export const teamsActions = {
     /**
      * Скрыть pop удаления команды
      */
-    hideDeleteCardListPopUp() {
+    hideDeleteTeamPopUp() {
         Dispatcher.dispatch({
             actionName: TeamsActionTypes.POPUP_DELETE_TEAM_CLOSE,
         });
