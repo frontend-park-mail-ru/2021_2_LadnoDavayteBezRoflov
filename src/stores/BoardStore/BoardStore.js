@@ -1251,7 +1251,6 @@ class BoardStore extends BaseStore {
      * @private
      */
     _editCheckListItem(data) {
-        console.log('_editCheckListItem');
         this._getCheckListItemById(data.chlid, data.chliid).edit = true;
     }
 

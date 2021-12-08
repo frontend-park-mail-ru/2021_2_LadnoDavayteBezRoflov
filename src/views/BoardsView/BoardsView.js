@@ -16,8 +16,11 @@ import './BoardsView.scss';
 
 // Шаблон
 import template from './BoardsView.hbs';
+
+// PopUp
 import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
-import AddUserPopUp from '../../popups/AddUser/AddUserPopUp';
+import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
+import DeleteDialogPopUp from '../../popups/DeleteDialog/DeleteDialogPopUp.js';
 
 
 /**
@@ -41,6 +44,7 @@ export default class BoardsView extends BaseView {
 
         this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
         this.addComponent('AddTeamMemberPopUp', new AddUserPopUp(this._addUserCallBacks));
+        this.addComponent('DeleteTeam', new DeleteDialogPopUp(this._deleteTeamCallBacks));
         this._setContextByComponentName('AddTeamMemberPopUp',
                                         BoardsStore.getContext('add-team-member-popup'));
     }
@@ -143,6 +147,11 @@ export default class BoardsView extends BaseView {
             onUserClick: this._onAddTeamMemberUserClick.bind(this),
             onClose: this._onAddTeamMemberClose.bind(this),
         };
+        this._deleteTeamCallBacks = {
+            onClose: this._onDeleteTeamPopUpClose.bind(this),
+            onConfirm: this._onDeleteTeamConfirm.bind(this),
+            onReject: this._onDeleteTeamReject.bind(this),
+        };
     }
 
     /**
@@ -204,5 +213,38 @@ export default class BoardsView extends BaseView {
             event.target.id === 'addUserPopUpWrapperId') {
             boardsActions.hideAddTeamMemberPopUp();
         }
+    }
+
+    /* Удаление команды: */
+    /**
+     * Callback, вызываемый при закрытии окна
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteTeamPopUpClose(event) {
+        if (event.target.id === 'deletePopUpWrapperId' ||
+            event.target.id === 'deletePopUpCloseId') {
+            boardsActions.hideAddTeamMemberPopUp();
+        }
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Удалить"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteTeamConfirm(event) {
+        event.preventDefault();
+        cardListActions.deleteCardList(true);
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Не удалять"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onDeleteTeamReject(event) {
+        event.preventDefault();
+        cardListActions.deleteCardList(false);
     }
 }
