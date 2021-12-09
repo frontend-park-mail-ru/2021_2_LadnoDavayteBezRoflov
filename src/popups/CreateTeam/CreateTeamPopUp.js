@@ -76,16 +76,26 @@ export default class CreateTeamPopUp extends BaseComponent {
     _onPopUpClose(event) {
         if (event.target === this._elements.closeBtn ||
             event.target === this._elements.wrapper) {
-            teamsActions.hideAddTeamPopUp();
+            teamsActions.hideTeamPopUp();
         }
     }
 
     /**
-     * Обработчик события отправки формы создания команды
-     * @param {Object} event
+     * Обработчик события отправки формы сохранения названия команды
+     * @param {Object} event объект события
      * @private
      */
     _onSaveBtnClick(event) {
+        event.preventDefault();
+        teamsActions.submitEditTeamPopUp(this._elements.name.value);
+    }
+
+    /**
+     * Обработчик события отправки формы создания команды
+     * @param {Object} event объект события
+     * @private
+     */
+    _onCreateBtnClick(event) {
         event.preventDefault();
         teamsActions.submitAddTeamPopUp(this._elements.name.value);
     }

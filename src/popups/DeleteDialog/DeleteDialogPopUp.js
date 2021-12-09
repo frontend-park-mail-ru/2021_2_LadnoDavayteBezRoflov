@@ -14,7 +14,6 @@ export default class DeleteCardListPopUp extends BaseComponent {
      */
     constructor(callbacks) {
         super(null, template);
-        this._bindCallBacks();
         this._callbacks = callbacks;
         this._elements = {};
     }
@@ -55,37 +54,5 @@ export default class DeleteCardListPopUp extends BaseComponent {
         this._elements.closeBtn?.removeEventListener('click', this._callbacks.onClose);
         this._elements.confirmBtn?.removeEventListener('click', this._callbacks.onConfirm);
         this._elements.rejectBtn?.removeEventListener('click', this._callbacks.onReject);
-    }
-
-    /**
-     * Callback, вызываемый при закрытии окна
-     * @param {Event} event объект события
-     * @private
-     */
-    _onPopUpClose(event) {
-        if (event.target === this._elements.closeBtn ||
-            event.target === this._elements.wrapper) {
-            cardListActions.hideDeleteCardListPopUp();
-        }
-    }
-
-    /**
-     * Callback, вызываемый при нажатии "Удалить"
-     * @param {Event} event объект события
-     * @private
-     */
-    _onConfirm(event) {
-        event.preventDefault();
-        cardListActions.deleteCardList(true);
-    }
-
-    /**
-     * Callback, вызываемый при нажатии "Не удалять"
-     * @param {Event} event объект события
-     * @private
-     */
-    _onReject(event) {
-        event.preventDefault();
-        cardListActions.deleteCardList(false);
     }
 }

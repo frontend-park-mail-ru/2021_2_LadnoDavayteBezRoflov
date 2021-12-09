@@ -34,10 +34,12 @@ export const teamsActions = {
 
     /**
      * Отобразить popup редактирования команды
+     * @param {Number} tid id команды
      */
-    showEditTeamPopUp() {
+    showEditTeamPopUp(tid) {
         Dispatcher.dispatch({
             actionName: TeamsActionTypes.POPUP_EDIT_TEAM_SHOW,
+            data: {tid},
         });
     },
 
@@ -83,9 +85,7 @@ export const teamsActions = {
     showDeleteTeamPopUp(tid) {
         Dispatcher.dispatch({
             actionName: TeamsActionTypes.POPUP_DELETE_TEAM_SHOW,
-            data: {
-                tid,
-            },
+            data: {tid},
         });
     },
 
@@ -96,9 +96,7 @@ export const teamsActions = {
     deleteTeam(confirm) {
         Dispatcher.dispatch({
             actionName: TeamsActionTypes.POPUP_DELETE_TEAM_CHOOSE,
-            data: {
-                confirm,
-            },
+            data: {confirm},
         });
     },
 

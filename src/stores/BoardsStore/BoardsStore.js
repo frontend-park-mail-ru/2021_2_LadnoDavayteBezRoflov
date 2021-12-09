@@ -6,6 +6,7 @@ import {BoardStoreConstants, ConstantMessages, HttpStatusCodes} from '../../cons
 import UserStore from '../UserStore/UserStore.js';
 import Validator from '../../modules/Validator/Validator';
 import SettingsStore from '../SettingsStore/SettingsStore';
+import {TeamsActionTypes} from '../../actions/teams';
 
 /**
  * Класс, реализующий хранилище списка команд и досок
@@ -34,6 +35,20 @@ class BoardsStore extends BaseStore {
             searchString: null,
             users: [],
             header: 'Добавить пользователя в команду',
+        });
+
+        this._storage.set('delete-dialog', {
+            tid: null,
+            name: null,
+            visible: false,
+        });
+
+        this._storage.set('team-popup', {
+            tid: null,
+            team_name: null,
+            edit: false,
+            visible: false,
+            errors: null,
         });
     }
 
@@ -80,6 +95,46 @@ class BoardsStore extends BaseStore {
 
         case BoardsActionTypes.BOARDS_ADD_MEMBER_USER_CLICKED:
             await this._toggleTeamMemberInSearchList(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_TEAM_HIDE:
+            this._hideTeamPopUp();
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_CREATE_TEAM_SHOW:
+            this._showAddTeamPopUp();
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_CREATE_TEAM_SUBMIT:
+            await this._submitAddTeamPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_EDIT_TEAM_SHOW:
+            this._showEditTeamPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_EDIT_TEAM_SUBMIT:
+            await this._submitEditTeamPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_DELETE_TEAM_CHOOSE:
+            await this._deleteTeam(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_DELETE_TEAM_SHOW:
+            this._showDeleteTeamPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TeamsActionTypes.POPUP_DELETE_TEAM_CLOSE:
+            this._hideDeleteTeamPopUp();
             this._emitChange();
             break;
 
@@ -330,6 +385,115 @@ class BoardsStore extends BaseStore {
             context.errors = ConstantMessages.UnsuccessfulRequest;
             return;
         }
+    }
+
+    /**
+     * Выполняет поиск команды
+     * @param {Number} tid - номер команды
+     * @return {Object} ссылку на объект команды из поля teams
+     * @private
+     */
+    _getTeamById(tid) {
+        const teams = this._storage.get('teams');
+        return teams.find((team) => {
+            return team.tid === tid;
+        });
+    }
+
+    /**
+     * Скрывает popup связанный с C/U команды
+     * @private
+     */
+    _hideTeamPopUp() {
+
+    }
+
+    /**
+     * Отображает popup создания команды
+     * @private
+     */
+    _showAddTeamPopUp() {
+
+    }
+
+    /**
+     * Создает новую команду
+     * @param {Object} data - объект с именем команды
+     * @return {Promise<void>}
+     * @private
+     */
+    async _submitAddTeamPopUp(data) {
+
+    }
+
+    /**
+     * Отображает popup редактирования команды
+     * @param {Object} data объект с tid
+     * @private
+     */
+    _showEditTeamPopUp(data) {
+
+    }
+
+    /**
+     * Обновляет параметры команды
+     * @param {Object} data объект с новым названием команды
+     * @return {Promise<void>}
+     * @private
+     */
+    async _submitEditTeamPopUp(data) {
+
+    }
+
+    /**
+     * Удаляет связанную с popup'ом команду
+     * @param {Object} data результат диалога удаления
+     * @private
+     */
+    async _deleteTeam(data) {
+        this._hideDeleteTeamPopUp();
+        if (!data.confirm) {
+            return;
+        }
+
+        let payload;
+
+        try {
+            payload = await Network._deleteTeam(this._storage.get('delete-dialog').tid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            // Удалим из storage
+            // cardLists[clid].cards.splice(cid, 1);
+
+        default:
+            return;
+        }
+    }
+
+    /**
+     * Отображает popup удаления команды
+     * @param {Object} data информация о команде
+     * @private
+     */
+    _showDeleteTeamPopUp(data) {
+        this._storage.set('delete-dialog', {
+            visible: true,
+            tid: data.tid,
+            card_name: this._getCardById(data.clid, data.cid).card_name,
+        });
+    }
+
+    /**
+     * Скрывает popup удаления команды
+     * @private
+     */
+    _hideDeleteTeamPopUp() {
+        this._storage.get('delete-dialog').visible = false;
     }
 }
 

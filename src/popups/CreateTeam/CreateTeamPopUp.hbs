@@ -1,4 +1,4 @@
-{{#with create-team-popup}}
+{{#with team-popup}}
     {{# if visible }}
         <div class="popup-wrapper" id="createTeamPopUpWrapperId">
             <div class="popup-content popup-content_create-board">
@@ -9,7 +9,7 @@
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
                         <div>
-                            <label for="team-name" class>Название доски:</label>
+                            <label for="team-name" class>Название команды:</label>
                             <input class="simple-form-element" type="text" id="createTeamPopUpNameId" name="team-name" autofocus
                                    pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off"
                                    {{#if edit}} value="{{team_name}}" {{/if}} required>

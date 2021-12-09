@@ -182,7 +182,6 @@ export default class BoardsView extends BaseView {
         this._elements = {
             addBoardBtns: document.querySelectorAll('.add-board'),
             inviteMembersBtns: document.querySelectorAll('.invite-board'),
-
             createTeamBtn: document.getElementById('createTeamBtnId'),
             deleteTeamBtns: document.querySelectorAll('.team-delete-btn'),
             editTeamBtns: document.querySelectorAll('.team-edit-btn'),
@@ -248,7 +247,7 @@ export default class BoardsView extends BaseView {
     _onDeleteTeamPopUpClose(event) {
         if (event.target.id === 'deletePopUpWrapperId' ||
             event.target.id === 'deletePopUpCloseId') {
-            teamsActions.hideTeamPopUp();
+            teamsActions.hideDeleteTeamPopUp();
         }
     }
 
@@ -272,17 +271,33 @@ export default class BoardsView extends BaseView {
         teamsActions.deleteTeam(false);
     }
 
-    /* Создание/редактирование команды */
-    _onShowDeleteTeamPopUp() {
-
+    /**
+     * Callback, вызываемый при нажатии "уалить команду"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onShowDeleteTeamPopUp(event) {
+        event.preventDefault();
+        teamsActions.showDeleteTeamPopUp(parseInt(event.target.dataset.id, 10));
     }
 
-
-    _onShowEditTeamPopUp() {
-
+    /**
+     * Callback, вызываемый при нажатии "редактировать команду"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onShowEditTeamPopUp(event) {
+        event.preventDefault();
+        teamsActions.showEditTeamPopUp(parseInt(event.target.dataset.id, 10));
     }
 
-    _onShowCreateTeamPopUp() {
-
+    /**
+     * Callback, вызываемый при нажатии "создать команду"
+     * @param {Event} event объект события
+     * @private
+     */
+    _onShowCreateTeamPopUp(event) {
+        event.preventDefault();
+        teamsActions.showAddTeamPopUp();
     }
 }
