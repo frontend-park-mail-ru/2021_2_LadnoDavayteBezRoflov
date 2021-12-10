@@ -29,7 +29,8 @@ export default class CreateTeamPopUp extends BaseComponent {
             closeBtn: document.getElementById('createTeamPopUpCloseId'),
             wrapper: document.getElementById('createTeamPopUpWrapperId'),
             name: document.getElementById('createTeamPopUpNameId'),
-            submitBtn: document.getElementById('createTeamPopUpSubmitId'),
+            createBtn: document.getElementById('createTeamPopUpSubmitId'),
+            saveBtn: document.getElementById('editTeamPopUpSubmitId'),
 
         };
     }
@@ -43,7 +44,8 @@ export default class CreateTeamPopUp extends BaseComponent {
         super.addEventListeners();
         this._elements.wrapper?.addEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.addEventListener('click', this._onPopUpClose);
-        this._elements.submitBtn?.addEventListener('click', this._onSaveBtnClick);
+        this._elements.createBtn?.addEventListener('click', this._onCreateBtnClick);
+        this._elements.saveBtn?.addEventListener('click', this._onSaveBtnClick);
         this._elements.name?.focus();
     };
 
@@ -55,7 +57,8 @@ export default class CreateTeamPopUp extends BaseComponent {
         super.removeEventListeners();
         this._elements.wrapper?.removeEventListener('click', this._onPopUpClose);
         this._elements.closeBtn?.removeEventListener('click', this._onPopUpClose);
-        this._elements.submitBtn?.removeEventListener('click', this._onSaveBtnClick);
+        this._elements.createBtn?.removeEventListener('click', this._onCreateBtnClick);
+        this._elements.saveBtn?.removeEventListener('click', this._onSaveBtnClick);
     }
 
     /**
@@ -63,9 +66,9 @@ export default class CreateTeamPopUp extends BaseComponent {
      * @private
      */
     _bindCallBacks() {
-        this._onCloseTeamPopUp = this._onCloseTeamPopUp.bind(this);
-        this._onSubmitEditTeamPopUp = this._onSubmitEditTeamPopUp.bind(this);
-        this._onSubmitCreateTeamPopUp = this._onSubmitCreateTeamPopUp.bind(this);
+        this._onPopUpClose = this._onPopUpClose.bind(this);
+        this._onSaveBtnClick = this._onSaveBtnClick.bind(this);
+        this._onCreateBtnClick = this._onCreateBtnClick.bind(this);
     }
 
     /**

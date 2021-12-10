@@ -405,7 +405,10 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _hideTeamPopUp() {
-
+        const context = this._storage.get('team-popup');
+        context.visible = false;
+        context.errors = null;
+        context.edit = false;
     }
 
     /**
@@ -413,7 +416,11 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _showAddTeamPopUp() {
-
+        console.log('_showAddTeamPopUp');
+        const context = this._storage.get('team-popup');
+        context.visible = true;
+        context.errors = null;
+        context.edit = false;
     }
 
     /**
@@ -423,7 +430,51 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _submitAddTeamPopUp(data) {
+        const validator = new Validator();
+        const validatorStatus = validator.validateTeamTitle(data.team_name);
+        this._storage.get('team-popup').errors = validatorStatus;
+        if (validatorStatus) {
+            return;
+        }
+        this._hideTeamPopUp();
 
+        let payload;
+
+        try {
+            payload = await Network.createTeam({
+                team_name: data.team_name,
+            });
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const newTeam = {
+                boards: [],
+                team_name: data.team_name,
+                team_type: 0,
+                tid: payload.data.tid,
+                users: [
+                    {
+                        avatar: SettingsStore.getContext('avatar'),
+                        login: SettingsStore.getContext('login'),
+                    },
+                ],
+            };
+
+            this._storage.get('teams').push(newTeam);
+            return;
+
+        case HttpStatusCodes.InternalServerError:
+            this._showAddTeamPopUp();
+            this._storage.get('team-popup').errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
     }
 
     /**
@@ -432,7 +483,12 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _showEditTeamPopUp(data) {
-
+        console.log(data);
+        const context = this._storage.get('team-popup');
+        context.visible = true;
+        context.errors = null;
+        context.team_name = this._getTeamById(data.tid).team_name;
+        context.edit = true;
     }
 
     /**
@@ -442,7 +498,41 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _submitEditTeamPopUp(data) {
+        console.log('submit');
+        const context = this._storage.get('team-popup');
+        const validator = new Validator();
+        const validatorStatus = validator.validateTeamTitle(data.team_name);
+        context.errors = validatorStatus;
+        if (validatorStatus) {
+            return;
+        }
+        this._hideTeamPopUp();
 
+        let payload;
+
+        try {
+            payload = await Network.updateTeam(context.tid, {
+                team_name: data.team_name,
+            });
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const team = this._getTeamById(context.tid);
+            team.team_name = data.team_name;
+            return;
+
+        case HttpStatusCodes.InternalServerError:
+            this._showEditTeamPopUp(context.tid);
+            this._storage.get('team-popup').errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+
+        default:
+            console.log('Undefined error');
+        }
     }
 
     /**
@@ -467,8 +557,8 @@ class BoardsStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            // Удалим из storage
-            // cardLists[clid].cards.splice(cid, 1);
+            this._storage.get('teams').splice(
+                this._getTeamById(this._storage.get('delete-dialog').tid), 1);
 
         default:
             return;
@@ -484,7 +574,7 @@ class BoardsStore extends BaseStore {
         this._storage.set('delete-dialog', {
             visible: true,
             tid: data.tid,
-            card_name: this._getCardById(data.clid, data.cid).card_name,
+            name: this._getTeamById(data.tid).team_name,
         });
     }
 

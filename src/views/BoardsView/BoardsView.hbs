@@ -12,13 +12,13 @@
                 <div class="team__header">
                     <div>
                         <span class="team__team-name">{{this.team_name}}</span>
-                        {{#if (IsEqualHelper this.team_type 3)}}
-                            <span class="material-icon-edit team-edit-btn"></span>
+                        {{#if (IsEqualHelper this.team_type 0)}}
+                            <span class="material-icon-edit team-edit-btn" data-id="{{this.tid}}"></span>
                         {{/if}}
                     </div>
                     <div>
                         <!-- Обычная команда-->
-                        {{#if (IsEqualHelper this.team_type 3)}}
+                        {{#if (IsEqualHelper this.team_type 0)}}
                             <span class="team__member-counter">{{this.users.length}}</span>
                             <span class="material-icon-group_add invite-board" data-id="{{this.tid}}"></span>
                             <span class="material-icon-add add-board" data-id="{{this.tid}}"></span>
@@ -49,6 +49,7 @@
 
 {{{CreateBoardPopUp}}}
 {{{AddTeamMemberPopUp}}}
+{{{TeamPopUp}}}
 {{{DeleteTeam}}}
 
 {{{Footer}}}

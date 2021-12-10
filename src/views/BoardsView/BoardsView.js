@@ -1,6 +1,6 @@
 // Базовая страница
 import BaseView from '../BaseView.js';
-
+import {Urls} from '../../constants/constants.js';
 import Router from '../../modules/Router/Router.js';
 
 // Сторы
@@ -8,8 +8,10 @@ import UserStore from '../../stores/UserStore/UserStore.js';
 import BoardsStore from '../../stores/BoardsStore/BoardsStore.js';
 import SettingsStore from '../../stores/SettingsStore/SettingsStore';
 
-import {Urls} from '../../constants/constants.js';
+
+// Actions
 import {boardsActions} from '../../actions/boards.js';
+import {teamsActions} from '../../actions/teams';
 
 // Стили
 import './BoardsView.scss';
@@ -21,8 +23,7 @@ import template from './BoardsView.hbs';
 import CreateBoardPopUp from '../../popups/CreateBoard/CreateBoardPopUp.js';
 import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
 import DeleteDialogPopUp from '../../popups/DeleteDialog/DeleteDialogPopUp.js';
-import {teamsActions} from '../../actions/teams';
-
+import CreateTeamPopUp from '../../popups/CreateTeam/CreateTeamPopUp';
 
 /**
  * Класс, реализующий страницу с досками.
@@ -45,6 +46,7 @@ export default class BoardsView extends BaseView {
 
         this.addComponent('CreateBoardPopUp', new CreateBoardPopUp());
         this.addComponent('AddTeamMemberPopUp', new AddUserPopUp(this._addUserCallBacks));
+        this.addComponent('TeamPopUp', new CreateTeamPopUp());
         this.addComponent('DeleteTeam', new DeleteDialogPopUp(this._deleteTeamCallBacks));
         this._setContextByComponentName('AddTeamMemberPopUp',
                                         BoardsStore.getContext('add-team-member-popup'));

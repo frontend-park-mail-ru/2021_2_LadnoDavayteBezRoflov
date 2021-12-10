@@ -74,6 +74,9 @@ export const ConstantMessages = {
 
     AvatarTooBig: 'Аватар не должен превышать 500 КБ',
 
+    TeamTitleTooLong: 'Название команды превышает 60 символов',
+    TeamTitleTooShort: 'Название команды слишком короткое',
+
     BoardTitleTooLong: 'Название доски превышает 60 символов',
     BoardTitleTooShort: 'Название доски слишком короткое',
     BoardDescriptionTooLong: 'Описание доски превышает 500 символов',
