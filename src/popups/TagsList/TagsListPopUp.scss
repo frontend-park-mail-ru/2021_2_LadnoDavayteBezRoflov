@@ -1,0 +1,35 @@
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Constants';
+
+$tags-list-tag-height: 25px;
+
+.tags-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+
+    &__tag-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: $tags-list-tag-height;
+    }
+
+    &__tag {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &__tag-name {
+        flex-grow: 1;
+        font-size: $small-font-size;
+    }
+
+    &__edit-btn {
+        height: $tags-list-tag-height;
+        width: $tags-list-tag-height;
+    }
+}

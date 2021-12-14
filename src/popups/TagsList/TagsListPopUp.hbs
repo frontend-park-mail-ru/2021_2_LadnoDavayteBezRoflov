@@ -1,0 +1,36 @@
+{{#with tag-popup}}
+    {{# if visible }}
+        <div class="popup-wrapper" id="tagListPopUpWrapperId">
+            <div class="popup-content popup-content_tag-list">
+                <div class="popup-form">
+                    <div class="popup-form__header">Теги</div>
+                    <div class="horizontal-line"></div>
+                    <div class="popup-form__elements-wrapper">
+                        <div class="tags-list">
+                            {{#each tag}}
+                                <div class="tags-list__tag-wrapper" data-id="{{this.tgid}}">
+                                    <div class="tags-list__tag tag-colors__{{this.color.color_name}}
+                                    tag-colors__default_color">
+                                        <div class="tags-list__tag-name">{{this.tag_name}}</div>
+                                        {{#if ../edit}}
+                                        {{#if this.selected}}
+                                            <div class="check"></div>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="tags-list__edit-btn edit"></div>
+                                </div>
+                            {{/each}}
+                        </div>
+                        {{#if errors}}
+                            <div class="error">{{errors}}</div>
+                        {{/if}}
+                    </div>
+                    <div class="horizontal-line horizontal-line_aligned"></div>
+                    <button class="button" id="showTagPopUpBtnId">Добавить тег</button>
+                </div>
+                <div class="close-button" id="tagListPopUpCloseId"></div>
+            </div>
+        </div>
+    {{/if}}
+{{/with}}
