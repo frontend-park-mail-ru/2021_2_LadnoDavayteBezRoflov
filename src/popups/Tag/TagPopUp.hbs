@@ -1,0 +1,47 @@
+{{#with tag-popup}}
+{{# if visible }}
+    <div class="popup-wrapper" id="tagPopUpWrapperId">
+        <div class="popup-content popup-content_tag">
+            <div class="popup-form">
+                <div class="popup-form__header">
+                    {{#if edit}}Редактирование тега{{else}}Создание тега{{/if}}
+                </div>
+                <div class="horizontal-line"></div>
+                <div class="popup-form__elements-wrapper">
+                    <div>
+                        <label for="tagNameInputId" class>Название:</label>
+                        <input class="simple-form-element" type="text" id="tagNameInputId"
+                               name="tag-input" {{# if edit }}value="{{name}}"{{/if}}
+                               placeholder="Введите имя тега..."
+                               pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                    </div>
+                    <div>
+                        <label>Цвет:</label>
+                        <div class="tag-colors">
+                            {{#each color}}
+                                <div class="tag-colors__color tag-colors__{{this.color_name}} tag-colors__default_color"
+                                     data-id="{{this.clrid}}">
+                                    {{#if this.selected}}<div class="check"></div>{{/if}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{#if errors}}
+                        <div class="error">{{errors}}</div>
+                    {{/if}}
+                </div>
+                <div class="horizontal-line horizontal-line_aligned"></div>
+                {{# if edit }}
+                    <div class="tag-popup-edit-btns">
+                        <button class="button" id="tagPopUpSaveBtnId">Сохранить</button>
+                        <button class="button" id="tagPopUpDeleteBtnId">Удалить</button>
+                    </div>
+                {{ else }}
+                    <button class="button" id="tagPopUpCreateBtnId">Создать</button>
+                {{/if}}
+            </div>
+            <div class="close-button" id="tagPopUpCloseId"></div>
+        </div>
+    </div>
+{{/if}}
+{{/with}}

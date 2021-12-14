@@ -1,0 +1,89 @@
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Constants';
+
+$tag-color-width: 25px;
+$tag-color-height: 15px;
+
+.base_tag_color {
+    !important;
+}
+
+.tag-colors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    &__color {
+        width: $tag-color-width;
+        height: $tag-color-height;
+        border-radius: 5px;
+        align-items: center;
+
+        &:hover {
+            border: 2px solid $main-theme-color;
+        }
+    }
+
+    &__green {
+        @extend .base_tag_color;
+        background-color: green;
+    }
+
+    &__yellow {
+        @extend .base_tag_color;
+        background-color: yellow;
+    }
+
+    &__orange {
+        @extend .base_tag_color;
+        background-color: orange;
+    }
+
+    &__red {
+        @extend .base_tag_color;
+        background-color: red;
+    }
+
+    &__purple {
+        @extend .base_tag_color;
+        background-color: purple;
+    }
+
+    &__darkblue {
+        @extend .base_tag_color;
+        background-color: darkblue;
+    }
+
+    &__blue {
+        @extend .base_tag_color;
+        background-color: blue;
+    }
+
+    &__pink {
+        @extend .base_tag_color;
+        background-color: pink;
+    }
+
+    &__pink {
+        @extend .base_tag_color;
+        background-color: darkolivegreen;
+    }
+
+    &__grey {
+        @extend .base_tag_color;
+        background-color: grey;
+    }
+
+    &__default_color {
+        background: linear-gradient(to bottom right, blue, pink);
+    }
+}
+
+.tag-popup-edit-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
