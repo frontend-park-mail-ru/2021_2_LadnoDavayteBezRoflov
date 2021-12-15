@@ -112,7 +112,7 @@ export const tagsActions = {
     /**
      * Обновляет тег
      */
-    updateTag(tagName) {
+    updateTag() {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.UPDATE_TAG,
         });
