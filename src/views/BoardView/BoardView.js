@@ -544,7 +544,6 @@ export default class BoardView extends BaseView {
                 cardListActions.updateCardList(
                     position + 1, cardList.cardList_name, parseInt(element.dataset.id, 10),
                 );
-
             } catch (error) {
                 throw new Error(`BoardView: не получилось переместить колонку (причина: ${error})`);
             }
