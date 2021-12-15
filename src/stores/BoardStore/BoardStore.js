@@ -7,6 +7,7 @@ import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
 import {CommentsActionTypes} from '../../actions/comments.js';
+import {TagsActionTypes} from '../../actions/tags';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -103,6 +104,7 @@ class BoardStore extends BaseStore {
             edit: false,
             tag_name: null,
             colors: [],
+            picked_color: null,
         });
     }
 
@@ -342,6 +344,61 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case TagsActionTypes.SHOW_LIST_POPUP_BOARD:
+            this._showTagListPopUpBoard();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_LIST_POPUP_CARD:
+            this._showTagListPopUpCard();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.HIDE_LIST_POPUP:
+            this._hideTagListPopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_TAG_POPUP_EDIT:
+            this._showTagEditPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_TAG_POPUP_CREATE:
+            this._showTagCreatePopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.HIDE_TAG_POPUP:
+            this._hideTagPopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.CREATE_TAG:
+            await this._createTag(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.DELETE_TAG:
+            await this._deleteTag();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.UPDATE_TAG:
+            await this._updateTag(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.TOGGLE_TAG:
+            await this._toggleTag(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.PICK_COLOR:
+            this._pickColor(action.data);
+            this._emitChange();
+            break;
+
 
         default:
             return;
@@ -378,7 +435,7 @@ class BoardStore extends BaseStore {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
-                    // todo moc
+                    // todo network
                     card.tags = [
                         {
                             tgid: 1,
@@ -407,6 +464,61 @@ class BoardStore extends BaseStore {
                     ];
                 });
             });
+
+            // todo network + selected = false, переключаем при отображение card
+            this._storage.get('tags-list-popup').tags = [
+                {
+                    tgid: 1,
+                    tag_name: 'tagg',
+                    selected: false,
+                    color: {
+                        color_name: 'orange',
+                        clrid: 1,
+                    },
+                },
+                {
+                    tgid: 2,
+                    tag_name: 'superpuper tag',
+                    selected: false,
+                    color: {
+                        color_name: 'red',
+                        clrid: 2,
+                    },
+                },
+                {
+                    tgid: 3,
+                    tag_name: 'tagg',
+                    selected: false,
+                    color: {
+                        color_name: 'blue',
+                        clrid: 3,
+                    },
+                },
+            ];
+
+            // todo network, переключаем selected при tagpopup
+            this._storage.get('tag-popup').colors = [
+                {
+                    color_name: 'yellow',
+                    clrid: 1,
+                    selected: false,
+                },
+                {
+                    color_name: 'orange',
+                    clrid: 2,
+                    selected: false,
+                },
+                {
+                    color_name: 'blue',
+                    clrid: 3,
+                    selected: false,
+                },
+                {
+                    color_name: 'green',
+                    clrid: 4,
+                    selected: false,
+                },
+            ];
 
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
@@ -1836,6 +1948,134 @@ class BoardStore extends BaseStore {
      */
     _changeCardPopUpScroll(data) {
         this._storage.get('card-popup').scroll = data.scrollValue;
+    }
+
+    /**
+     * Отображает окно со списком тегов, при нажатии на кнопку тегов на доске
+     * @private
+     */
+    _showTagListPopUpBoard() {
+        const context = this._storage.get('tags-list-popup');
+        context.visible = true;
+        context.toggle_mode = false;
+        context.errors = null;
+    }
+
+    /**
+     * Отображает окно со списком тегов, при нажатии на кнопку добавить тег на карточке
+     */
+    _showTagListPopUpCard() {
+        const context = this._storage.get('tags-list-popup');
+        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
+                                              this._storage.get('card-popup').cid);
+        context.visible = true;
+        context.toggle_mode = true;
+        context.errors = null;
+        /* Отметим теги указанные для текущей карточки */
+        context.tags.forEach((tag) => {
+            tag.selected = !!currentCard.tags.find((cardTag) => {
+                return cardTag.tgid === tag.tgid;
+            });
+        });
+    }
+
+    /**
+     * Скрывает окно со списком тегов
+     */
+    _hideTagListPopUp() {
+        const context = this._storage.get('tags-list-popup');
+        context.visible = false;
+        context.toggle_mode = false;
+        context.errors = null;
+    }
+
+    /**
+     * Отображает окно редактирования тега
+     * @param {Object} data данные
+     */
+    _showTagEditPopUp(data) {
+        const context = this._storage.get('tag-popup');
+        console.log(this._storage.get('tags-list-popup').tags);
+        console.log(data.tgid);
+        const currentTag = this._storage.get('tags-list-popup').tags.find((tag) => {
+            return tag.tgid === data.tgid;
+        });
+        context.visible = true;
+        context.errors = null;
+        context.edit = true;
+        context.picked_color = null;
+        context.tag_name = currentTag.tag_name;
+        /* Отметим текущий цвет тега */
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === currentTag.color.clrid);
+        });
+    }
+
+    /**
+     * Отображает окно создания тега
+     */
+    _showTagCreatePopUp() {
+        const context = this._storage.get('tag-popup');
+        context.visible = true;
+        context.errors = null;
+        context.edit = false;
+        context.picked_color = context.colors[Math.floor(Math.random() * (context.colors.length))].clrid;
+        console.log(context.picked_color);
+        context.tag_name = null;
+        /* Отметим текущий цвет тега */
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === context.picked_color);
+        });
+        console.log(context.colors);
+    }
+
+    /**
+     * Скрывает окно тега
+     */
+    _hideTagPopUp() {
+        const context = this._storage.get('tag-popup');
+        context.visible = false;
+        context.errors = null;
+        context.edit = false;
+    }
+
+    /**
+     * Создает тег
+     * @param {Object} data данные c названием тега
+     */
+    async _createTag(data) {
+
+    }
+
+    /**
+     * Удаляет текущий тег
+     */
+    async _deleteTag() {
+
+    }
+
+    /**
+     * Обновляет тег
+     * @param {Object} data данные c названием тега
+     */
+    async _updateTag(data) {
+
+    }
+
+    /**
+     * Переключает тег у карточки
+     * @param {Object} data данные
+     */
+    async _toggleTag(data) {
+
+    }
+
+    /**
+     * Выбирает цвет для текущего, редактируемого тега
+     * @param {Object} data данные
+     */
+    _pickColor(data) {
+
     }
 }
 

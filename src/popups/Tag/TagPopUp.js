@@ -9,6 +9,7 @@ import './TagPopUp.scss';
 
 // Actions
 import {tagsActions} from '../../actions/tags.js';
+import {boardsActions} from '../../actions/boards';
 
 /**
  * Класс popup окна редактирования/создания тега.
@@ -92,7 +93,10 @@ export default class TagPopUp extends BaseComponent {
      */
     onHideTagPopUp(event) {
         event.preventDefault();
-        tagsActions.hideTagPopUp();
+        if (event.target === this._elements.closeBtn ||
+            event.target === this._elements.wrapper) {
+            tagsActions.hideTagPopUp();
+        }
     }
 
     /**

@@ -102,7 +102,8 @@ export default class TagsListPopUp extends BaseComponent {
      */
     onShowTagEditPopUp(event) {
         event.preventDefault();
-        const tgid = event.target.closest('div.tags-list__tag-wrapper').dataset.id;
+        const tgid = Number.parseInt(event.target.closest('div.tags-list__tag-wrapper')
+            .dataset.id, 10);
         tagsActions.showTagEditPopUp(tgid);
     }
 
@@ -123,7 +124,8 @@ export default class TagsListPopUp extends BaseComponent {
      */
     onToggleTag(event) {
         event.preventDefault();
-        const tgid = event.target.closest('div.tags-list__tag-wrapper').dataset.id;
+        const tgid = Number.parseInt(event.target.closest('div.tags-list__tag-wrapper')
+            .dataset.id, 10);
         tagsActions.toggleTag(tgid);
     }
 
@@ -134,6 +136,9 @@ export default class TagsListPopUp extends BaseComponent {
      */
     onHideTagListPopUp(event) {
         event.preventDefault();
-        tagsActions.hideTagListPopUp();
+        if (event.target === this._elements.closeBtn ||
+            event.target === this._elements.wrapper) {
+            tagsActions.hideTagListPopUp();
+        }
     }
 }

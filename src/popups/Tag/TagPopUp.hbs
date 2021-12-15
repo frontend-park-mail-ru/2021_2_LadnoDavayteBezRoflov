@@ -19,9 +19,9 @@
                         <label>Цвет:</label>
                         <div class="tag-colors">
                             {{#each colors}}
-                                <div class="tag-colors__color tag-colors__{{this.color_name}} tag-colors__default_color"
+                                <div class="tag-colors__color tag-colors__{{this.color_name}}"
                                      data-id="{{this.clrid}}">
-                                    {{#if this.selected}}<div class="check"></div>{{/if}}
+                                    {{#if this.selected}}<div class="material-icon-check"></div>{{/if}}
                                 </div>
                             {{/each}}
                         </div>
@@ -29,16 +29,15 @@
                     {{#if errors}}
                         <div class="error">{{errors}}</div>
                     {{/if}}
+                    {{# if edit }}
+                        <div class="tag-popup-edit-btns">
+                            <button class="button button_full-space" id="tagPopUpSaveBtnId">Сохранить</button>
+                            <button class="button button_red button_full-space" id="tagPopUpDeleteBtnId">Удалить</button>
+                        </div>
+                    {{ else }}
+                        <button class="button" id="tagPopUpCreateBtnId">Создать</button>
+                    {{/if}}
                 </div>
-                <div class="horizontal-line horizontal-line_aligned"></div>
-                {{# if edit }}
-                    <div class="tag-popup-edit-btns">
-                        <button class="button" id="tagPopUpSaveBtnId">Сохранить</button>
-                        <button class="button button_red" id="tagPopUpDeleteBtnId">Удалить</button>
-                    </div>
-                {{ else }}
-                    <button class="button" id="tagPopUpCreateBtnId">Создать</button>
-                {{/if}}
             </div>
             <div class="close-button" id="tagPopUpCloseId"></div>
         </div>

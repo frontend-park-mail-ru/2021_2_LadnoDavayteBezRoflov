@@ -6,12 +6,15 @@
     display: flex;
     flex-direction: column;
     justify-content: stretch;
+    row-gap: 3px;
 
     &__tag-wrapper {
         display: flex;
         flex-direction: row;
         align-items: center;
         height: $tags-list-tag-height;
+
+        column-gap: 5px;
     }
 
     &__tag {
@@ -25,6 +28,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
+
+        &:hover {
+            box-shadow: 0 0 5px $dark-box-shadow;
+        }
     }
 
     &__tag_compact {
@@ -40,5 +47,16 @@
     &__edit-btn {
         height: $tags-list-tag-height;
         width: $tags-list-tag-height;
+        border-radius: 5px;
+        border: 2px solid $main-theme-color;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            box-shadow: 0 0 5px $dark-box-shadow;
+        }
     }
 }

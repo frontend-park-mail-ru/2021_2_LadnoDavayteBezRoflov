@@ -89,7 +89,6 @@ export const tagsActions = {
     /**
      * Создает тег
      * @param {String} tagName название тега
-     * @param {Number} clrid id цвета
      */
     createTag(tagName) {
         Dispatcher.dispatch({
@@ -102,7 +101,6 @@ export const tagsActions = {
 
     /**
      * Удаляет тег
-     * @param {Number} tgid id тега
      */
     deleteTag() {
         Dispatcher.dispatch({
@@ -112,12 +110,12 @@ export const tagsActions = {
 
     /**
      * Обновляет тег
-     * @param {String} name название тега
+     * @param {String} tagName название тега
      */
-    updateTag(name) {
+    updateTag(tagName) {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.UPDATE_TAG,
-            data: {name},
+            data: {tag_name: tagName},
         });
     },
 

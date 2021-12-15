@@ -10,24 +10,26 @@
                             {{#each tags}}
                                 <div class="tags-list__tag-wrapper" data-id="{{this.tgid}}">
                                     <div class="tags-list__tag tag-colors__{{this.color.color_name}}
-                                    tag-colors__default_color tags-list__tag_clickable">
+                                                tags-list__tag_clickable">
                                         <div class="tags-list__tag-name">{{this.tag_name}}</div>
                                         {{#if ../toggle_mode}}
                                         {{#if this.selected}}
-                                            <div class="check"></div>
+                                            <div class="material-icon-check"></div>
                                         {{/if}}
                                         {{/if}}
                                     </div>
-                                    <div class="tags-list__edit-btn edit"></div>
+                                    <div class="tags-list__edit-btn">
+                                        <div class="material-icon-edit"></div>
+                                    </div>
                                 </div>
                             {{/each}}
                         </div>
                         {{#if errors}}
                             <div class="error">{{errors}}</div>
                         {{/if}}
+                        <button class="button" id="showTagPopUpBtnId">Добавить тег</button>
+
                     </div>
-                    <div class="horizontal-line horizontal-line_aligned"></div>
-                    <button class="button" id="showTagPopUpBtnId">Добавить тег</button>
                 </div>
                 <div class="close-button" id="tagListPopUpCloseId"></div>
             </div>
