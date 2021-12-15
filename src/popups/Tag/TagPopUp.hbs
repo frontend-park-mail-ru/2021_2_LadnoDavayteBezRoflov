@@ -11,7 +11,7 @@
                     <div>
                         <label for="tagNameInputId" class>Название:</label>
                         <input class="simple-form-element" type="text" id="tagNameInputId"
-                               name="tag-input" {{# if edit }}value="{{tag_name}}"{{/if}}
+                               name="tag-input" {{# if tag_name }}value="{{tag_name}}"{{/if}}
                                placeholder="Введите имя тега..."
                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                     </div>

@@ -16,6 +16,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
 
         &:hover {
             border: 2px solid $main-theme-color;

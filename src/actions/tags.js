@@ -23,6 +23,7 @@ export const TagsActionTypes = {
 
     /* Переключение тега у карточки */
     TOGGLE_TAG: 'tags/toggle',
+    EDIT_TAG_NAME: 'tags/editname',
 };
 
 /**
@@ -110,12 +111,10 @@ export const tagsActions = {
 
     /**
      * Обновляет тег
-     * @param {String} tagName название тега
      */
     updateTag(tagName) {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.UPDATE_TAG,
-            data: {tag_name: tagName},
         });
     },
 
@@ -138,6 +137,17 @@ export const tagsActions = {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.PICK_COLOR,
             data: {clrid},
+        });
+    },
+
+    /**
+     * Обновляет в сторе редактируемое имя тега
+     * @param {String} tagName название тега
+     */
+    editTagName(tagName) {
+        Dispatcher.dispatch({
+            actionName: TagsActionTypes.EDIT_TAG_NAME,
+            data: {tag_name: tagName},
         });
     },
 };

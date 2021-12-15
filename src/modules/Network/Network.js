@@ -28,6 +28,7 @@ class Network {
             team: 'api/teams',
             checklists: 'api/checkLists',
             checklistsItems: 'api/checkListItems',
+            tags: 'api/tags',
         };
 
         this._defaultOptions = {
@@ -588,6 +589,68 @@ class Network {
         };
         return this.httpRequest(
             `https://${this.BackendUrl}/${this._endpoints.comments}/${data.cmid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий PUT /api/cards/:cid/toggletag/:tgid
+     * @param {Number} cid - id карточки
+     * @param {Number} tgid - id переключаемого тега
+     */
+    async toggleCardTag(cid, tgid) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}` +
+            `/toggletag/${tgid}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/tags/:tgid
+     * @param {Number} tgid - id тега
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteTag(tgid) {
+        const options = {
+            method: 'delete',
+        };
+        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
+            `/${this._endpoints.tags}/${tgid}`, options);
+    }
+
+
+    /**
+     * Метод, реализующий запрос POST /api/tags.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async createTag(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.tags}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/tag/:tgid.
+     * @param {Object} data полезная нагрузка запроса
+     * @param {Number} tgid id обновляемого тега
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateTag(data, tgid) {
+        const options = {
+            method: 'put',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.tags}/${tgid}`,
             options);
     }
 }

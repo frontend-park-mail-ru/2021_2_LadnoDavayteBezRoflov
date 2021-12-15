@@ -24,6 +24,9 @@ import {
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
 
+// todo delete когда будет api на теги
+let cnttgid = 100;
+
 /**
  * Класс, реализующий хранилище доски
  */
@@ -105,6 +108,7 @@ class BoardStore extends BaseStore {
             tag_name: null,
             colors: [],
             picked_color: null,
+            tgid: null,
         });
     }
 
@@ -385,7 +389,7 @@ class BoardStore extends BaseStore {
             break;
 
         case TagsActionTypes.UPDATE_TAG:
-            await this._updateTag(action.data);
+            await this._updateTag();
             this._emitChange();
             break;
 
@@ -399,11 +403,39 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        case TagsActionTypes.EDIT_TAG_NAME:
+            this._editTagName(action.data);
+            break;
 
         default:
             return;
         }
     }
+
+    /**
+     * Ищет тег среди полученных вместе с доской тегов
+     * @param {Number} tgid id тега
+     * @return {Object} объект тега
+     * @private
+     */
+    _getTagById(tgid) {
+        return this._storage.get('tags-list-popup').tags.find((tag) => {
+            return tag.tgid === tgid;
+        });
+    }
+
+    /**
+     * Ищет цвет среди полученных вместе с доской цветов тегов
+     * @param {Number} clrid id цвета
+     * @return {Object} объект цвета
+     * @private
+     */
+    _getTagColorById(clrid) {
+        return this._storage.get('tag-popup').colors.find((color) => {
+            return color.clrid === clrid;
+        });
+    }
+
 
     /**
      * Метод, реализующий реакцию на запрос доски с id.
@@ -429,41 +461,6 @@ class BoardStore extends BaseStore {
             this._storage.set('board_name', payload.data.board_name);
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
-
-            this._storage.get('card_lists').forEach((cardlist) => {
-                cardlist.cards.forEach((card) => {
-                    card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
-                    card.deadlineCheck = card.deadline_check;
-                    card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
-                    // todo network
-                    card.tags = [
-                        {
-                            tgid: 1,
-                            tag_name: 'tagg',
-                            color: {
-                                color_name: 'orange',
-                                clrid: 1,
-                            },
-                        },
-                        {
-                            tgid: 2,
-                            tag_name: 'superpuper tag',
-                            color: {
-                                color_name: 'red',
-                                clrid: 2,
-                            },
-                        },
-                        {
-                            tgid: 3,
-                            tag_name: 'tagg',
-                            color: {
-                                color_name: 'blue',
-                                clrid: 3,
-                            },
-                        },
-                    ];
-                });
-            });
 
             // todo network + selected = false, переключаем при отображение card
             this._storage.get('tags-list-popup').tags = [
@@ -494,7 +491,30 @@ class BoardStore extends BaseStore {
                         clrid: 3,
                     },
                 },
+                {
+                    tgid: 4,
+                    tag_name: 'purple tag',
+                    selected: false,
+                    color: {
+                        color_name: 'purple',
+                        clrid: 5,
+                    },
+                },
             ];
+
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
+                    card.deadlineCheck = card.deadline_check;
+                    card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                    // todo network по сети получаем только id тегов
+                    card.tags = [1, 2, 3];
+                    const tags = card.tags.map((tgid) => {
+                        return this._getTagById(tgid);
+                    });
+                    card.tags = tags;
+                });
+            });
 
             // todo network, переключаем selected при tagpopup
             this._storage.get('tag-popup').colors = [
@@ -516,6 +536,11 @@ class BoardStore extends BaseStore {
                 {
                     color_name: 'green',
                     clrid: 4,
+                    selected: false,
+                },
+                {
+                    color_name: 'purple',
+                    clrid: 5,
                     selected: false,
                 },
             ];
@@ -1995,15 +2020,12 @@ class BoardStore extends BaseStore {
      */
     _showTagEditPopUp(data) {
         const context = this._storage.get('tag-popup');
-        console.log(this._storage.get('tags-list-popup').tags);
-        console.log(data.tgid);
-        const currentTag = this._storage.get('tags-list-popup').tags.find((tag) => {
-            return tag.tgid === data.tgid;
-        });
+        const currentTag = this._getTagById(data.tgid);
         context.visible = true;
         context.errors = null;
         context.edit = true;
-        context.picked_color = null;
+        context.tgid = data.tgid;
+        context.picked_color = currentTag.color.clrid;
         context.tag_name = currentTag.tag_name;
         /* Отметим текущий цвет тега */
         context.colors.forEach((color) => {
@@ -2044,22 +2066,165 @@ class BoardStore extends BaseStore {
      * @param {Object} data данные c названием тега
      */
     async _createTag(data) {
+        const contextTagPopUp = this._storage.get('tag-popup');
+        const contextTagListPopUp = this._storage.get('tags-list-popup');
 
+        // todo удалить после появления api
+        const newTag = {
+            tgid: cnttgid++, // payload
+            tag_name: contextTagPopUp.tag_name,
+            selected: false,
+            color: {
+                color_name: this._getTagColorById(contextTagPopUp.picked_color).color_name,
+                clrid: contextTagPopUp.picked_color,
+            },
+        };
+        contextTagListPopUp.tags.push(newTag);
+        this._hideTagPopUp();
+        return;
+
+        let payload;
+
+        const newTagNetwork = {
+            tag_name: context.tag_name,
+            clrid: contextTagPopUp.picked_color,
+        };
+
+        try {
+            payload = await Network.createTag(newTagNetwork);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const color = this._getTagColorById(contextTagPopUp.picked_color);
+            const newTag = {
+                tgid: payload.data.tgid,
+                tag_name: contextTagPopUp.tag_name,
+                selected: false,
+                color: {
+                    color_name: color.color_name,
+                    clrid: color.clrid,
+                },
+            };
+            contextTagListPopUp.tags.push(newTag);
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
      * Удаляет текущий тег
      */
     async _deleteTag() {
+        const contextTagPopUp = this._storage.get('tag-popup');
+        const contextTagListPopUp = this._storage.get('tags-list-popup');
 
+        // todo удалить после появления api
+        /* Удалим из карточек */
+        this._storage.get('card_lists').forEach((cardlist) => {
+            cardlist.cards.forEach((card) => {
+                card.tags.splice(contextTagListPopUp.tags.indexOf(
+                    this._getTagById(contextTagPopUp.tgid)), 1);
+            });
+        });
+        /* Удалим из списка тегов */
+        contextTagListPopUp.tags.splice(contextTagListPopUp.tags.indexOf(
+            this._getTagById(contextTagPopUp.tgid)), 1);
+        this._hideTagPopUp();
+        return;
+
+        let payload;
+
+        try {
+            payload = await Network.deleteTag(contextTagPopUp.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            /* Удалим из карточек */
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.tags.splice(contextTagListPopUp.tags.indexOf(
+                        this._getTagById(contextTagPopUp.tgid)), 1);
+                });
+            });
+            /* Удалим из списка тегов */
+            contextTagListPopUp.tags.splice(contextTagListPopUp.tags.indexOf(
+                this._getTagById(contextTagPopUp.tgid)), 1);
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
      * Обновляет тег
-     * @param {Object} data данные c названием тега
      */
-    async _updateTag(data) {
+    async _updateTag() {
+        const context = this._storage.get('tag-popup');
+        const color = this._getTagColorById(context.picked_color);
+        // todo validate name length
 
+        // todo удалить после появления api
+        const tag = this._getTagById(context.tgid);
+        tag.tag_name = context.tag_name;
+        tag.color.clrid = color.clrid;
+        tag.color.color_name = color.color_name;
+        this._hideTagPopUp();
+        return;
+
+        let payload;
+
+        const updatedTag = {
+            tag_name: context.tag_name,
+            clrid: color.clrid,
+        };
+
+        try {
+            payload = await Network.updateTag(updatedTag, context.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const tag = this._getTagById(context.tgid);
+            tag.tag_name = context.tag_name;
+            tag.color.clrid = color.clrid;
+            tag.color.color_name = color.color_name;
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            context.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -2067,7 +2232,60 @@ class BoardStore extends BaseStore {
      * @param {Object} data данные
      */
     async _toggleTag(data) {
+        const context = this._storage.get('tags-list-popup');
+        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
+                                              this._storage.get('card-popup').cid);
 
+        // todo удалить после появления api
+        const tagPopUp = context.tags.find((tag) => {
+            return tag.tgid === data.tgid;
+        });
+        tagPopUp.selected = !tagPopUp.selected;
+
+        if (tagPopUp.selected) {
+            currentCard.tags.push(tagPopUp);
+        } else {
+            currentCard.tags.splice(currentCard.tags.indexOf(currentCard.tags.find((tag) => {
+                return tag.tgid === data.tgid;
+            })), 1);
+        }
+        return;
+
+        let payload;
+
+        try {
+            payload = await Network.toggleCardTag(this._storage.get('card-popup').cid,
+                                                  data.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const tagPopUp = context.tags.find((tag) => {
+                return tag.tgid === data.tgid;
+            });
+            tagPopUp.selected = !tagPopUp.selected;
+
+            if (tagPopUp.selected) {
+                currentCard.tags.push(tagPopUp);
+            } else {
+                currentCard.tags.splice(currentCard.tags.indexOf(currentCard.tags.find((tag) => {
+                    return tag.tgid === data.tgid;
+                })), 1);
+            }
+
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            context.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -2075,7 +2293,20 @@ class BoardStore extends BaseStore {
      * @param {Object} data данные
      */
     _pickColor(data) {
+        const context = this._storage.get('tag-popup');
+        context.picked_color = data.clrid;
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === context.picked_color);
+        });
+    }
 
+    /**
+     * Обновляет в сторе редактируемое имя тега
+     * @param {Object} data данные c название тега
+     */
+    _editTagName(data) {
+        const context = this._storage.get('tag-popup');
+        context.tag_name = data.tag_name;
     }
 }
 

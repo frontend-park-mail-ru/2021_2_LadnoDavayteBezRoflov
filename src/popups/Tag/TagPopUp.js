@@ -9,7 +9,6 @@ import './TagPopUp.scss';
 
 // Actions
 import {tagsActions} from '../../actions/tags.js';
-import {boardsActions} from '../../actions/boards';
 
 /**
  * Класс popup окна редактирования/создания тега.
@@ -52,6 +51,7 @@ export default class TagPopUp extends BaseComponent {
         this._elements.createBtn?.addEventListener('click', this.onCreateTag);
         this._elements.deleteBtn?.addEventListener('click', this.onDeleteTag);
         this._elements.updateBtn?.addEventListener('click', this.onUpdateTag);
+        this._elements.input?.addEventListener('input', this.onEditTagName);
         this._elements.colors?.forEach((color) => {
             color.addEventListener('click', this.onPickColor);
         });
@@ -68,6 +68,7 @@ export default class TagPopUp extends BaseComponent {
         this._elements.createBtn?.removeEventListener('click', this.onCreateTag);
         this._elements.deleteBtn?.removeEventListener('click', this.onDeleteTag);
         this._elements.updateBtn?.removeEventListener('click', this.onUpdateTag);
+        this._elements.input?.removeEventListener('input', this.onEditTagName);
         this._elements.colors?.forEach((color) => {
             color.removeEventListener('click', this.onPickColor);
         });
@@ -83,6 +84,7 @@ export default class TagPopUp extends BaseComponent {
         this.onDeleteTag = this.onDeleteTag.bind(this);
         this.onUpdateTag = this.onUpdateTag.bind(this);
         this.onPickColor = this.onPickColor.bind(this);
+        this.onEditTagName = this.onEditTagName.bind(this);
     }
 
 
@@ -126,7 +128,7 @@ export default class TagPopUp extends BaseComponent {
      */
     onUpdateTag(event) {
         event.preventDefault();
-        tagsActions.updateTag(event.target.value);
+        tagsActions.updateTag();
     }
 
     /**
@@ -137,5 +139,15 @@ export default class TagPopUp extends BaseComponent {
     onPickColor(event) {
         event.preventDefault();
         tagsActions.pickColor(Number.parseInt(event.target.dataset.id, 10));
+    }
+
+    /**
+     * Callback, вызываемый при изменении текста в инпуте
+     * @param {Event} event объект события
+     * @private
+     */
+    onEditTagName(event) {
+        event.preventDefault();
+        tagsActions.editTagName(this._elements.input.value);
     }
 }
