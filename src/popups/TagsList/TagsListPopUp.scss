@@ -2,8 +2,6 @@
 @import '../../styles/scss/Common';
 @import '../../styles/scss/Constants';
 
-$tags-list-tag-height: 25px;
-
 .tags-list {
     display: flex;
     flex-direction: column;
@@ -21,6 +19,9 @@ $tags-list-tag-height: 25px;
         display: flex;
         flex-direction: row;
         align-items: center;
+        padding: 2px 5px 2px 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &_clickable {
             cursor: pointer;

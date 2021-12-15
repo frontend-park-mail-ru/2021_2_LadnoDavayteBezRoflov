@@ -34,6 +34,7 @@ import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
+import {tagsActions} from '../../actions/tags';
 
 /**
  * Класс, реализующий страницу доски.
@@ -136,6 +137,7 @@ export default class BoardView extends BaseView {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
             showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
             addMembersBtn: document.getElementById('showAddBoardMemberPopUpId'),
+            showTagsBtn: document.getElementById('showTagsBoardPopUpId'),
             cardLists: {
                 addCardBtns: document.querySelectorAll('.addCardToCardList'),
                 editBtns: document.querySelectorAll('.editCardList'),
@@ -182,6 +184,7 @@ export default class BoardView extends BaseView {
             },
         };
         this._onAddBoardMemberShow = this._onAddBoardMemberShow.bind(this);
+        this._onShowTagListPopUpBoard = this._onShowTagListPopUpBoard.bind(this);
     }
 
     /**
@@ -211,6 +214,7 @@ export default class BoardView extends BaseView {
         this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
             checkDeadlineCardBtn.addEventListener('click', this._onCheckDeadlineCard);
         });
+        this._elements.showTagsBtn?.addEventListener('click', this._onShowTagListPopUpBoard);
     }
 
     /**
@@ -239,6 +243,7 @@ export default class BoardView extends BaseView {
         this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
             checkDeadlineCardBtn.removeEventListener('click', this._onCheckDeadlineCard);
         });
+        this._elements.showTagsBtn?.removeEventListener('click', this._onShowTagListPopUpBoard);
     }
 
     /**
@@ -393,5 +398,15 @@ export default class BoardView extends BaseView {
             event.target.id === 'addUserPopUpWrapperId') {
             boardActions.hideAddBoardMemberPopUp();
         }
+    }
+
+    /**
+     * CallBack на отображение тегов
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onShowTagListPopUpBoard(event) {
+        event.preventDefault();
+        tagsActions.showTagListPopUpBoard();
     }
 }

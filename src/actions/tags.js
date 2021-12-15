@@ -41,12 +41,10 @@ export const tagsActions = {
 
     /**
      * Отображает окно со списком тегов, при нажатии на кнопку добавить тег на карточке
-     * @param {Number} cid id карточки
      */
-    showTagListPopUpCard(cid) {
+    showTagListPopUpCard() {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.SHOW_LIST_POPUP_CARD,
-            data: {cid},
         });
     },
 

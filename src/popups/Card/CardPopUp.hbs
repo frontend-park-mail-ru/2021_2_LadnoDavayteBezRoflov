@@ -12,6 +12,12 @@
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
+                        <div class="card-popup-tags">
+                            {{#each}}
+                                <div class="card-popup-tag">{{tag_name}}</div>
+                            {{/each}}
+                            <div class="button button_small add" id="addTagCardPopUpId"></div>
+                        </div>
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
                             <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
