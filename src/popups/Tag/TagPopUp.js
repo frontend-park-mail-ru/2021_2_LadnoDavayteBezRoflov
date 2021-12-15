@@ -8,7 +8,7 @@ import template from './TagPopUp.hbs';
 import './TagPopUp.scss';
 
 // Actions
-
+import {tagsActions} from '../../actions/tags.js';
 
 /**
  * Класс popup окна редактирования/создания тега.
@@ -19,6 +19,7 @@ export default class TagPopUp extends BaseComponent {
      */
     constructor() {
         super(null, template);
+        this._bindCallBacks();
         this._elements = {};
     }
 
@@ -27,15 +28,14 @@ export default class TagPopUp extends BaseComponent {
      * @private
      */
     _registerPopUpElements() {
-        if (!this.context.visible) {
-            this._elements = {};
-            return;
-        }
         this._elements = {
-            wrapper: document.getElementById('addUserPopUpWrapperId'),
-            input: document.getElementById('addUserPopUpSearchInputId'),
-            users: document.querySelectorAll('.search-result'),
-            closeBtn: document.getElementById('addUserPopUpCloseId'),
+            wrapper: document.getElementById('tagPopUpWrapperId'),
+            closeBtn: document.getElementById('tagPopUpCloseId'),
+            createBtn: document.getElementById('tagPopUpCreateBtnId'),
+            deleteBtn: document.getElementById('tagPopUpDeleteBtnId'),
+            updateBtn: document.getElementById('tagPopUpSaveBtnId'),
+            input: document.getElementById('tagNameInputId'),
+            colors: document.querySelectorAll('.tag-colors__color'),
         };
     }
 
@@ -45,13 +45,14 @@ export default class TagPopUp extends BaseComponent {
      */
     addEventListeners() {
         this._registerPopUpElements();
-        this._setUpSearchInput();
         super.addEventListeners();
-        this._elements.wrapper?.addEventListener('click', this._callbacks.onClose);
-        this._elements.closeBtn?.addEventListener('click', this._callbacks.onClose);
-        this._elements.input?.addEventListener('input', this._callbacks.onInput);
-        this._elements.users?.forEach((user)=>{
-            user.addEventListener('click', this._callbacks.onUserClick);
+        this._elements.wrapper.addEventListeners('click', this.onHideTagPopUp);
+        this._elements.closeBtn.addEventListeners('click', this.onHideTagPopUp);
+        this._elements.createBtn.addEventListeners('click', this.onCreateTag);
+        this._elements.deleteBtn.addEventListeners('click', this.onDeleteTag);
+        this._elements.updateBtn.addEventListeners('click', this.onUpdateTag);
+        this._elements.colors.forEach((color) => {
+            color.addEventListeners('click', this.onPickColor);
         });
     };
 
@@ -61,21 +62,76 @@ export default class TagPopUp extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._elements.wrapper?.removeEventListener('click', this._callbacks.onClose);
-        this._elements.closeBtn?.removeEventListener('click', this._callbacks.onClose);
-        this._elements.input?.removeEventListener('click', this._callbacks.onInput);
-        this._elements.users?.forEach((user)=>{
-            user.removeEventListener('click', this._callbacks.onUserClick);
+        this._elements.wrapper.removeEventListeners('click', this.onHideTagPopUp);
+        this._elements.closeBtn.removeEventListeners('click', this.onHideTagPopUp);
+        this._elements.createBtn.removeEventListeners('click', this.onCreateTag);
+        this._elements.deleteBtn.removeEventListeners('click', this.onDeleteTag);
+        this._elements.updateBtn.removeEventListeners('click', this.onUpdateTag);
+        this._elements.colors.forEach((color) => {
+            color.removeEventListeners('click', this.onPickColor);
         });
     }
 
     /**
-     * Метод устанавливает курсор в конце строки внутри input тэга
+     * Метод биндит this контекст к callback методам
      * @private
      */
-    _setUpSearchInput() {
-        this._elements.input?.focus();
-        this._elements.input?.setSelectionRange(this._elements.input.value.length,
-                                                this._elements.input.value.length);
+    _bindCallBacks() {
+        this.onHideTagPopUp = this.onHideTagPopUp.bind(this);
+        this.onCreateTag = this.onCreateTag.bind(this);
+        this.onDeleteTag = this.onDeleteTag.bind(this);
+        this.onUpdateTag = this.onUpdateTag.bind(this);
+        this.onPickColor = this.onPickColor.bind(this);
+    }
+
+
+    /**
+     * Callback, вызываемый при закрытии окна
+     * @param {Event} event объект события
+     * @private
+     */
+    onHideTagPopUp(event) {
+        event.preventDefault();
+        tagsActions.hideTagPopUp();
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на "создать"
+     * @param {Event} event объект события
+     * @private
+     */
+    onCreateTag(event) {
+        event.preventDefault();
+        tagsActions.createTag(event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на "удалить"
+     * @param {Event} event объект события
+     * @private
+     */
+    onDeleteTag(event) {
+        event.preventDefault();
+        tagsActions.deleteTag();
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на "сохранить"
+     * @param {Event} event объект события
+     * @private
+     */
+    onUpdateTag(event) {
+        event.preventDefault();
+        tagsActions.updateTag(event.target.value);
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на цвет
+     * @param {Event} event объект события
+     * @private
+     */
+    onPickColor(event) {
+        event.preventDefault();
+        tagsActions.pickColor(Number.parseInt(event.target.dataset.id, 10));
     }
 }

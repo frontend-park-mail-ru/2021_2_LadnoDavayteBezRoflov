@@ -19,6 +19,7 @@ export const TagsActionTypes = {
     CREATE_TAG: 'tags/create',
     DELETE_TAG: 'tags/delete',
     UPDATE_TAG: 'tags/update',
+    PICK_COLOR: 'tags/pick-color',
 
     /* Переключение тега у карточки */
     TOGGLE_TAG: 'tags/toggle',
@@ -89,13 +90,15 @@ export const tagsActions = {
 
     /**
      * Создает тег
-     * @param {String} name название тега
+     * @param {String} tagName название тега
      * @param {Number} clrid id цвета
      */
-    createTag(name, clrid) {
+    createTag(tagName) {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.CREATE_TAG,
-            data: {name, clrid},
+            data: {
+                tag_name: tagName,
+            },
         });
     },
 
@@ -103,35 +106,42 @@ export const tagsActions = {
      * Удаляет тег
      * @param {Number} tgid id тега
      */
-    deleteTag(tgid) {
+    deleteTag() {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.DELETE_TAG,
-            data: {tgid},
         });
     },
 
     /**
      * Обновляет тег
      * @param {String} name название тега
-     * @param {Number} clrid id цвета
-     * @param {Number} tgid id тега
      */
-    updateTag(name, clrid, tgid) {
+    updateTag(name) {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.UPDATE_TAG,
-            data: {name, clrid, tgid},
+            data: {name},
         });
     },
 
     /**
      * Переключает тег у карточки
      * @param {Number} tgid id тега
-     * @param {Number} cid id карточки
      */
-    toggleTag(tgid, cid) {
+    toggleTag(tgid) {
         Dispatcher.dispatch({
             actionName: TagsActionTypes.TOGGLE_TAG,
-            data: {tgid, cid},
+            data: {tgid},
+        });
+    },
+
+    /**
+     * Выбирает цвет для текущего, редактируемого тега
+     * @param {Number} clrid id цвета
+     */
+    pickColor(clrid) {
+        Dispatcher.dispatch({
+            actionName: TagsActionTypes.PICK_COLOR,
+            data: {clrid},
         });
     },
 };

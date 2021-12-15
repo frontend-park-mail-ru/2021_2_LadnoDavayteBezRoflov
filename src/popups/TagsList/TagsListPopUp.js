@@ -8,10 +8,10 @@ import template from './TagsListPopUp.hbs';
 import './TagsListPopUp.scss';
 
 // Actions
-
+import {tagsActions} from '../../actions/tags.js';
 
 /**
- * Класс popup окна редактирования/создания тега.
+ * Класс popup окна просмотра тегов.
  */
 export default class TagsListPopUp extends BaseComponent {
     /**
@@ -19,6 +19,7 @@ export default class TagsListPopUp extends BaseComponent {
      */
     constructor() {
         super(null, template);
+        this._bindCallBacks();
         this._elements = {};
     }
 
@@ -27,15 +28,12 @@ export default class TagsListPopUp extends BaseComponent {
      * @private
      */
     _registerPopUpElements() {
-        if (!this.context.visible) {
-            this._elements = {};
-            return;
-        }
         this._elements = {
-            wrapper: document.getElementById('addUserPopUpWrapperId'),
-            input: document.getElementById('addUserPopUpSearchInputId'),
-            users: document.querySelectorAll('.search-result'),
-            closeBtn: document.getElementById('addUserPopUpCloseId'),
+            wrapper: document.getElementById('tagListPopUpWrapperId'),
+            closeBtn: document.getElementById('tagListPopUpCloseId'),
+            createBtn: document.getElementById('showTagPopUpBtnId'),
+            tags: document.querySelectorAll('.tags-list__tag'),
+            editTagBtns: document.querySelectorAll('.tags-list__edit-btn'),
         };
     }
 
@@ -45,13 +43,21 @@ export default class TagsListPopUp extends BaseComponent {
      */
     addEventListeners() {
         this._registerPopUpElements();
-        this._setUpSearchInput();
         super.addEventListeners();
-        this._elements.wrapper?.addEventListener('click', this._callbacks.onClose);
-        this._elements.closeBtn?.addEventListener('click', this._callbacks.onClose);
-        this._elements.input?.addEventListener('input', this._callbacks.onInput);
-        this._elements.users?.forEach((user)=>{
-            user.addEventListener('click', this._callbacks.onUserClick);
+        this._elements.wrapper.addEventListeners('click', this.onHideTagListPopUp);
+        this._elements.closeBtn.addEventListeners('click', this.onHideTagListPopUp);
+        this._elements.createBtn.addEventListeners('click', this.onShowTagCreatePopUp);
+        if (this.context.get('tag-popup').toggle_mode) {
+            this._elements.tags.forEach((tag) => {
+                tag.addEventListener('click', this.onToggleTag);
+            });
+        } else {
+            this._elements.tags.forEach((tag) => {
+                tag.addEventListener('click', this.onShowTagEditPopUp);
+            });
+        }
+        this._elements.editTagBtns.forEach((btn) => {
+            btn.addEventListener('click', this.onShowTagEditPopUp);
         });
     };
 
@@ -61,21 +67,73 @@ export default class TagsListPopUp extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._elements.wrapper?.removeEventListener('click', this._callbacks.onClose);
-        this._elements.closeBtn?.removeEventListener('click', this._callbacks.onClose);
-        this._elements.input?.removeEventListener('click', this._callbacks.onInput);
-        this._elements.users?.forEach((user)=>{
-            user.removeEventListener('click', this._callbacks.onUserClick);
+        this._elements.wrapper.removeEventListeners('click', this.onHideTagListPopUp);
+        this._elements.closeBtn.removeEventListeners('click', this.onHideTagListPopUp);
+        this._elements.createBtn.removeEventListeners('click', this.onShowTagCreatePopUp);
+        if (this.context.get('tag-popup').toggle_mode) {
+            this._elements.tags.forEach((tag) => {
+                tag.removeEventListeners('click', this.onToggleTag);
+            });
+        } else {
+            this._elements.tags.forEach((tag) => {
+                tag.removeEventListeners('click', this.onShowTagEditPopUp);
+            });
+        }
+        this._elements.editTagBtns.forEach((btn) => {
+            btn.removeEventListeners('click', this.onShowTagEditPopUp);
         });
+    };
+
+    /**
+     * Метод биндит this контекст к callback методам
+     * @private
+     */
+    _bindCallBacks() {
+        this.onShowTagEditPopUp = this.onShowTagEditPopUp.bind(this);
+        this.onShowTagCreatePopUp = this.onShowTagCreatePopUp.bind(this);
+        this.onToggleTag = this.onToggleTag.bind(this);
+        this.onHideTagListPopUp = this.onHideTagListPopUp.bind(this);
     }
 
     /**
-     * Метод устанавливает курсор в конце строки внутри input тэга
+     * Callback, вызываемый при нажатии на редактирование тега
+     * @param {Event} event объект события
      * @private
      */
-    _setUpSearchInput() {
-        this._elements.input?.focus();
-        this._elements.input?.setSelectionRange(this._elements.input.value.length,
-                                                this._elements.input.value.length);
+    onShowTagEditPopUp(event) {
+        event.preventDefault();
+        const tgid = event.target.closest('div.tags-list__tag-wrapper').dataset.id;
+        tagsActions.showTagEditPopUp(tgid);
+    }
+
+    /**
+     * Callback, вызываемый при нажатии "Добавить тег"
+     * @param {Event} event объект события
+     * @private
+     */
+    onShowTagCreatePopUp(event) {
+        event.preventDefault();
+        tagsActions.showTagCreatePopUp();
+    }
+
+    /**
+     * Callback, вызываемый при нажатии на тег (в режиме toggle-mod)
+     * @param {Event} event объект события
+     * @private
+     */
+    onToggleTag(event) {
+        event.preventDefault();
+        const tgid = event.target.closest('div.tags-list__tag-wrapper').dataset.id;
+        tagsActions.toggleTag(tgid);
+    }
+
+    /**
+     * Callback, вызываемый при закрытии окна
+     * @param {Event} event объект события
+     * @private
+     */
+    onHideTagListPopUp(event) {
+        event.preventDefault();
+        tagsActions.hideTagListPopUp();
     }
 }

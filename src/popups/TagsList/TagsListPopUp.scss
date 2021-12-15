@@ -21,6 +21,10 @@ $tags-list-tag-height: 25px;
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        &_clickable {
+            cursor: pointer;
+        }
     }
 
     &__tag-name {

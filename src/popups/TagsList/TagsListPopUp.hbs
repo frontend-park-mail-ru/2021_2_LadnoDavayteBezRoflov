@@ -10,9 +10,9 @@
                             {{#each tag}}
                                 <div class="tags-list__tag-wrapper" data-id="{{this.tgid}}">
                                     <div class="tags-list__tag tag-colors__{{this.color.color_name}}
-                                    tag-colors__default_color">
+                                    tag-colors__default_color tags-list__tag_clickable">
                                         <div class="tags-list__tag-name">{{this.tag_name}}</div>
-                                        {{#if ../edit}}
+                                        {{#if ../toggle_mode}}
                                         {{#if this.selected}}
                                             <div class="check"></div>
                                         {{/if}}
