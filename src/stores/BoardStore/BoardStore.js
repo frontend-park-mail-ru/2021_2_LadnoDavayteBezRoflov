@@ -610,8 +610,10 @@ class BoardStore extends BaseStore {
 
         let payload;
 
+        const clid = (data.clid? data.clid : this._storage.get('cardlist-popup').clid);
+
         try {
-            payload = await Network._updateCardList(data, this._storage.get('cardlist-popup').clid);
+            payload = await Network._updateCardList(data, clid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -621,7 +623,7 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('cardlist-popup').visible = false;
 
-            const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
+            const cardList = this._getCardListById(clid);
             const bound = data.pos > cardList.pos ?
                 {left: cardList.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
@@ -629,13 +631,18 @@ class BoardStore extends BaseStore {
             // Обновим позиции списков в storage
             const cardLists = this._storage.get('card_lists');
 
+            if (data.pos !== cardList.pos) {
+                const cardListIndex = cardLists.indexOf(cardList);
+                cardLists.splice(data.pos - 1, 0, cardLists.splice(cardListIndex, 1)[0]);
+            }
+
             for (let index = bound.left; index < bound.right; index += 1) {
                 cardLists[index].pos += bound.increment;
             }
 
             // Обновим cardList:
             cardList.cardList_name = data.cardList_name;
-            cardList.pos = data.pos;
+            cardList.pos = cardLists.indexOf(cardList) + 1;
 
             // Переупорядочим списки
             cardLists.sort((lhs, rhs) => {
@@ -927,18 +934,19 @@ class BoardStore extends BaseStore {
         let payload;
 
         const _data = {
+            position: data.position,
             pos: data.pos,
-            cid: this._storage.get('card-popup').cid,
-            clid: this._storage.get('card-popup').clid,
+            cid: (data.cid? data.cid : this._storage.get('card-popup').cid),
+            clid: (data.clid? data.clid : this._storage.get('card-popup').clid),
             card_name: data.card_name,
             description: data.description,
-            bid: this._storage.get('card-popup').bid,
+            bid: (data.bid? data.bid : this._storage.get('card-popup').bid),
             deadline: data.deadline,
             deadline_check: data.deadline_check,
         };
 
         try {
-            payload = await Network._updateCard(_data, this._storage.get('card-popup').cid);
+            payload = await Network._updateCard(_data, _data.cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -949,14 +957,25 @@ class BoardStore extends BaseStore {
             this._storage.get('card-popup').visible = false;
 
             const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
+                (data.clidPrev? data.clidPrev : _data.clid),
+                _data.cid,
             );
             const bound = data.pos > card.pos ?
                 {left: card.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: card.pos - 1, increment: 1};
 
-            const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
+            const cards = this._getCardListById(_data.clid).cards;
+
+            if (data.clidPrev) {
+                if (data.clidPrev !== _data.clid) {
+                    const oldCards = this._getCardListById(data.clidPrev).cards;
+                    oldCards.splice(oldCards.indexOf(card), 1);
+                    cards.splice(card.pos - 1, 0, card);
+                } else {
+                    const cardIndex = cards.indexOf(card);
+                    cards.splice(card.pos - 1, 0, cards.splice(cardIndex, 1)[0]);
+                }
+            }
 
             for (let index = bound.left; index < bound.right; index += 1) {
                 cards[index].pos += bound.increment;
@@ -967,7 +986,8 @@ class BoardStore extends BaseStore {
 
             card.card_name = data.card_name;
             card.description = data.description;
-            card.pos = data.pos;
+            card.position = data.pos;
+            card.pos = cards.indexOf(card) + 1;
 
             card.deadline = data.deadline;
             card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadline_check);

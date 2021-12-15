@@ -227,7 +227,7 @@ export default class CardPopUp extends BaseComponent {
     _onSave(event) {
         event.preventDefault();
         const data = {
-            position: parseInt(this._elements.positionSelect.value, 10),
+            pos: parseInt(this._elements.positionSelect.value, 10),
             card_name: this._elements.card_name.value,
             description: this._elements.description.value,
             cid: this.context.cid,
