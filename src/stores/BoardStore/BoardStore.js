@@ -2086,6 +2086,7 @@ class BoardStore extends BaseStore {
         let payload;
 
         const newTagNetwork = {
+            bid: this._storage.get('bid'),
             tag_name: context.tag_name,
             clrid: contextTagPopUp.picked_color,
         };
