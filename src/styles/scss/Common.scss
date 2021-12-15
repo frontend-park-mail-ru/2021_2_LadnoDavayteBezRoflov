@@ -284,6 +284,22 @@ div#root {
             content: 'save';
         }
     }
+
+    &-download {
+        @extend .material-icon;
+
+        &::before {
+            content: 'download';
+        }
+    }
+
+    &-file {
+        @extend .material-icon;
+
+        &::before {
+            content: 'description';
+        }
+    }
 }
 
 

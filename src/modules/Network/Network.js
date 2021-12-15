@@ -29,6 +29,7 @@ class Network {
             team: 'api/teams',
             checklists: 'api/checkLists',
             checklistsItems: 'api/checkListItems',
+            attachments: 'api/attachments',
         };
 
         this._defaultOptions = {
@@ -589,6 +590,39 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.comments}/${data.cmid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/attachments.
+     * @param {Object} data файл аттача
+     * @return {Promise<Response>} промис запроса
+     */
+    async uploadAttachment(data) {
+        const options = {
+            method: 'put',
+            body: data,
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/` +
+            `${this._endpoints.attachments}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/attachments/:atid.
+     * @param {Number} atid id аттача
+     * @return {Promise<Response>} промис запроса
+     */
+    async deleteAttachment(atid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.attachments}/${atid}`,
             options);
     }
 }
