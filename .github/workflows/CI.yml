@@ -58,4 +58,4 @@ jobs:
             username: ubuntu
             key: ${{ secrets.PRIVATE_KEY }}
             source: "dist/*"
-            target: "/home/ubuntu/01-frontend/dist"
+            target: "/home/ubuntu/01-frontend/"
