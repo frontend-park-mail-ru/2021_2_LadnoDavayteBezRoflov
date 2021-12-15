@@ -90,12 +90,19 @@ input.checklist-item__input {
     flex-wrap: wrap;
     align-items: center;
     justify-content: start;
+    gap: 5px;
 }
 
 .card-popup-tag {
     height: $tags-list-tag-height;
+    color: $main-theme-color;
     padding: 2px 5px 2px 5px;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 

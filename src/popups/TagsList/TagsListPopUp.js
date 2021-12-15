@@ -44,19 +44,19 @@ export default class TagsListPopUp extends BaseComponent {
     addEventListeners() {
         this._registerPopUpElements();
         super.addEventListeners();
-        this._elements.wrapper.addEventListeners('click', this.onHideTagListPopUp);
-        this._elements.closeBtn.addEventListeners('click', this.onHideTagListPopUp);
-        this._elements.createBtn.addEventListeners('click', this.onShowTagCreatePopUp);
-        if (this.context.get('tag-popup').toggle_mode) {
-            this._elements.tags.forEach((tag) => {
+        this._elements.wrapper?.addEventListener('click', this.onHideTagListPopUp);
+        this._elements.closeBtn?.addEventListener('click', this.onHideTagListPopUp);
+        this._elements.createBtn?.addEventListener('click', this.onShowTagCreatePopUp);
+        if (this.context?.get('tags-list-popup').toggle_mode) {
+            this._elements.tags?.forEach((tag) => {
                 tag.addEventListener('click', this.onToggleTag);
             });
         } else {
-            this._elements.tags.forEach((tag) => {
+            this._elements.tags?.forEach((tag) => {
                 tag.addEventListener('click', this.onShowTagEditPopUp);
             });
         }
-        this._elements.editTagBtns.forEach((btn) => {
+        this._elements.editTagBtns?.forEach((btn) => {
             btn.addEventListener('click', this.onShowTagEditPopUp);
         });
     };
@@ -67,20 +67,20 @@ export default class TagsListPopUp extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._elements.wrapper.removeEventListeners('click', this.onHideTagListPopUp);
-        this._elements.closeBtn.removeEventListeners('click', this.onHideTagListPopUp);
-        this._elements.createBtn.removeEventListeners('click', this.onShowTagCreatePopUp);
-        if (this.context.get('tag-popup').toggle_mode) {
-            this._elements.tags.forEach((tag) => {
-                tag.removeEventListeners('click', this.onToggleTag);
+        this._elements.wrapper?.removeEventListener('click', this.onHideTagListPopUp);
+        this._elements.closeBtn?.removeEventListener('click', this.onHideTagListPopUp);
+        this._elements.createBtn?.removeEventListener('click', this.onShowTagCreatePopUp);
+        if (this.context?.get('tags-list-popup').toggle_mode) {
+            this._elements.tags?.forEach((tag) => {
+                tag.removeEventListener('click', this.onToggleTag);
             });
         } else {
-            this._elements.tags.forEach((tag) => {
-                tag.removeEventListeners('click', this.onShowTagEditPopUp);
+            this._elements.tags?.forEach((tag) => {
+                tag.removeEventListener('click', this.onShowTagEditPopUp);
             });
         }
-        this._elements.editTagBtns.forEach((btn) => {
-            btn.removeEventListeners('click', this.onShowTagEditPopUp);
+        this._elements.editTagBtns?.forEach((btn) => {
+            btn.removeEventListener('click', this.onShowTagEditPopUp);
         });
     };
 

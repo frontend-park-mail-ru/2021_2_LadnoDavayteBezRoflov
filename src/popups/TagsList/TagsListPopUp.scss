@@ -15,17 +15,21 @@
     }
 
     &__tag {
+        height: $tags-list-tag-height;
         flex-grow: 1;
         display: flex;
         flex-direction: row;
         align-items: center;
         padding: 2px 5px 2px 5px;
+        border-radius: 5px;
         overflow: hidden;
         text-overflow: ellipsis;
+        cursor: pointer;
+    }
 
-        &_clickable {
-            cursor: pointer;
-        }
+    &__tag_compact {
+        @extend .tags-list__tag;
+        flex-grow: 0;
     }
 
     &__tag-name {

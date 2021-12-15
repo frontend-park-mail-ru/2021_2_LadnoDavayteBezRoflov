@@ -1,4 +1,4 @@
-{{#with tag-popup}}
+{{#with tags-list-popup}}
     {{# if visible }}
         <div class="popup-wrapper" id="tagListPopUpWrapperId">
             <div class="popup-content popup-content_tag-list">
@@ -7,7 +7,7 @@
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
                         <div class="tags-list">
-                            {{#each tag}}
+                            {{#each tags}}
                                 <div class="tags-list__tag-wrapper" data-id="{{this.tgid}}">
                                     <div class="tags-list__tag tag-colors__{{this.color.color_name}}
                                     tag-colors__default_color tags-list__tag_clickable">

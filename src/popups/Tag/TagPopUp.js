@@ -46,13 +46,13 @@ export default class TagPopUp extends BaseComponent {
     addEventListeners() {
         this._registerPopUpElements();
         super.addEventListeners();
-        this._elements.wrapper.addEventListeners('click', this.onHideTagPopUp);
-        this._elements.closeBtn.addEventListeners('click', this.onHideTagPopUp);
-        this._elements.createBtn.addEventListeners('click', this.onCreateTag);
-        this._elements.deleteBtn.addEventListeners('click', this.onDeleteTag);
-        this._elements.updateBtn.addEventListeners('click', this.onUpdateTag);
-        this._elements.colors.forEach((color) => {
-            color.addEventListeners('click', this.onPickColor);
+        this._elements.wrapper?.addEventListener('click', this.onHideTagPopUp);
+        this._elements.closeBtn?.addEventListener('click', this.onHideTagPopUp);
+        this._elements.createBtn?.addEventListener('click', this.onCreateTag);
+        this._elements.deleteBtn?.addEventListener('click', this.onDeleteTag);
+        this._elements.updateBtn?.addEventListener('click', this.onUpdateTag);
+        this._elements.colors?.forEach((color) => {
+            color.addEventListener('click', this.onPickColor);
         });
     };
 
@@ -62,13 +62,13 @@ export default class TagPopUp extends BaseComponent {
      */
     removeEventListeners() {
         super.removeEventListeners();
-        this._elements.wrapper.removeEventListeners('click', this.onHideTagPopUp);
-        this._elements.closeBtn.removeEventListeners('click', this.onHideTagPopUp);
-        this._elements.createBtn.removeEventListeners('click', this.onCreateTag);
-        this._elements.deleteBtn.removeEventListeners('click', this.onDeleteTag);
-        this._elements.updateBtn.removeEventListeners('click', this.onUpdateTag);
-        this._elements.colors.forEach((color) => {
-            color.removeEventListeners('click', this.onPickColor);
+        this._elements.wrapper?.removeEventListener('click', this.onHideTagPopUp);
+        this._elements.closeBtn?.removeEventListener('click', this.onHideTagPopUp);
+        this._elements.createBtn?.removeEventListener('click', this.onCreateTag);
+        this._elements.deleteBtn?.removeEventListener('click', this.onDeleteTag);
+        this._elements.updateBtn?.removeEventListener('click', this.onUpdateTag);
+        this._elements.colors?.forEach((color) => {
+            color.removeEventListener('click', this.onPickColor);
         });
     }
 

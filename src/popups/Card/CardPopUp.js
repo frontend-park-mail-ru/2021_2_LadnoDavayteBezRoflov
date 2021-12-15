@@ -122,9 +122,9 @@ export default class CardPopUp extends BaseComponent {
 
         /* Tags */
         this._elements.tags?.forEach((tag) => {
-            tag.addEventListeners('click', this._onShowTagListPopUpCard);
+            tag.addEventListener('click', this._onShowTagListPopUpCard);
         });
-        this._elements.addTagBtn?.addEventListeners('click', this._onShowTagListPopUpCard);
+        this._elements.addTagBtn?.addEventListener('click', this._onShowTagListPopUpCard);
 
         if (!this.context.get('card-popup').edit) {
             this._elements.card_name?.focus();

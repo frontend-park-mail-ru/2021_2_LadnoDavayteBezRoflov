@@ -17,6 +17,8 @@ import CardPopUp from '../../popups/Card/CardPopUp.js';
 import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp.js';
 import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
 import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
+import TagsListPopUp from '../../popups/TagsList/TagsListPopUp.js';
+import TagPopUp from '../../popups/Tag/TagPopUp.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -65,6 +67,8 @@ export default class BoardView extends BaseView {
         this.addComponent('DeleteCardPopUp', new DeleteCardPopUp());
         this.addComponent('AddBoardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.board));
         this.addComponent('AddCardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.card));
+        this.addComponent('TagsListPopUp', new TagsListPopUp());
+        this.addComponent('TagPopUp', new TagPopUp());
 
         this._setContextByComponentName('AddBoardMemberPopUp',
                                         BoardStore.getContext('add-board-member-popup'));

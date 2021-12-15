@@ -89,6 +89,21 @@ class BoardStore extends BaseStore {
             users: [],
             header: 'Добавить пользователя в карточку',
         });
+
+        this._storage.set('tags-list-popup', {
+            visible: false,
+            errors: null,
+            toggle_mode: false,
+            tags: [],
+        });
+
+        this._storage.set('tag-popup', {
+            visible: false,
+            errors: null,
+            edit: false,
+            tag_name: null,
+            colors: [],
+        });
     }
 
     /**
@@ -363,6 +378,33 @@ class BoardStore extends BaseStore {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                    // todo moc
+                    card.tags = [
+                        {
+                            tgid: 1,
+                            tag_name: 'tagg',
+                            color: {
+                                color_name: 'orange',
+                                clrid: 1,
+                            },
+                        },
+                        {
+                            tgid: 2,
+                            tag_name: 'superpuper tag',
+                            color: {
+                                color_name: 'red',
+                                clrid: 2,
+                            },
+                        },
+                        {
+                            tgid: 3,
+                            tag_name: 'tagg',
+                            color: {
+                                color_name: 'blue',
+                                clrid: 3,
+                            },
+                        },
+                    ];
                 });
             });
 
@@ -848,6 +890,7 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
+            tags: card.tags,
             checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
                 const items = list.check_list_items.map((item) => {
                     return {...item, edit: false};
