@@ -1,4 +1,4 @@
-[![CI](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml) ![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=http%3A%2F%2F95.163.213.142%2F) ![GitHub repo size](https://img.shields.io/github/repo-size/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov)
+[![CI](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov/actions/workflows/CI.yml) ![Website](https://img.shields.io/website?url=https%3A%2F%2Fbrrrello.ru) ![GitHub repo size](https://img.shields.io/github/repo-size/frontend-park-mail-ru/2021_2_LadnoDavayteBezRoflov)
 
 # Trello
 
