@@ -16,16 +16,16 @@ import Validator from '../../modules/Validator/Validator';
 
 // Constants
 import {
-    CheckLists, ConstantMessages,
-    HttpStatusCodes, Urls, BoardStoreConstants,
+    BoardStoreConstants,
+    CheckLists,
+    ConstantMessages,
+    HttpStatusCodes,
+    Urls,
 } from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
-
-// todo delete когда будет api на теги
-let cnttgid = 100;
 
 /**
  * Класс, реализующий хранилище доски
@@ -463,87 +463,27 @@ class BoardStore extends BaseStore {
             this._storage.set('card_lists', payload.data.card_lists);
 
             // todo network + selected = false, переключаем при отображение card
-            this._storage.get('tags-list-popup').tags = [
-                {
-                    tgid: 1,
-                    tag_name: 'tagg',
-                    selected: false,
-                    color: {
-                        color_name: 'orange',
-                        clrid: 1,
-                    },
-                },
-                {
-                    tgid: 2,
-                    tag_name: 'superpuper tag',
-                    selected: false,
-                    color: {
-                        color_name: 'red',
-                        clrid: 2,
-                    },
-                },
-                {
-                    tgid: 3,
-                    tag_name: 'tagg',
-                    selected: false,
-                    color: {
-                        color_name: 'blue',
-                        clrid: 3,
-                    },
-                },
-                {
-                    tgid: 4,
-                    tag_name: 'purple tag',
-                    selected: false,
-                    color: {
-                        color_name: 'purple',
-                        clrid: 5,
-                    },
-                },
-            ];
+            this._storage.get('tags-list-popup').tags = payload.data.tags.map((tag) => {
+                tag.selected = false;
+                return tag;
+            });
+
+            this._storage.get('tag-popup').colors = payload.data.colors.map((color) => {
+                color.selected = false;
+                return color;
+            });
 
             this._storage.get('card_lists').forEach((cardlist) => {
                 cardlist.cards.forEach((card) => {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
-                    // todo network по сети получаем только id тегов
-                    card.tags = [1, 2, 3];
-                    const tags = card.tags.map((tgid) => {
-                        return this._getTagById(tgid);
+                    // Сохраним в карточке ссылки на теже теги, что и в списке тегов
+                    card.tags = card.tags.map((tag) => {
+                        return this._getTagById(tag.tgid);
                     });
-                    card.tags = tags;
                 });
             });
-
-            // todo network, переключаем selected при tagpopup
-            this._storage.get('tag-popup').colors = [
-                {
-                    color_name: 'yellow',
-                    clrid: 1,
-                    selected: false,
-                },
-                {
-                    color_name: 'orange',
-                    clrid: 2,
-                    selected: false,
-                },
-                {
-                    color_name: 'blue',
-                    clrid: 3,
-                    selected: false,
-                },
-                {
-                    color_name: 'green',
-                    clrid: 4,
-                    selected: false,
-                },
-                {
-                    color_name: 'purple',
-                    clrid: 5,
-                    selected: false,
-                },
-            ];
 
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
             return;
@@ -963,6 +903,7 @@ class BoardStore extends BaseStore {
                     data.deadline, false),
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
                 assignees: [],
+                tags: [],
                 check_lists: [],
             });
             return;
@@ -2042,7 +1983,6 @@ class BoardStore extends BaseStore {
         context.errors = null;
         context.edit = false;
         context.picked_color = context.colors[Math.floor(Math.random() * (context.colors.length))].clrid;
-        console.log(context.picked_color);
         context.tag_name = null;
         /* Отметим текущий цвет тега */
         context.colors.forEach((color) => {
@@ -2069,26 +2009,14 @@ class BoardStore extends BaseStore {
         const contextTagPopUp = this._storage.get('tag-popup');
         const contextTagListPopUp = this._storage.get('tags-list-popup');
 
-        // todo удалить после появления api
-        const newTag = {
-            tgid: cnttgid++, // payload
-            tag_name: contextTagPopUp.tag_name,
-            selected: false,
-            color: {
-                color_name: this._getTagColorById(contextTagPopUp.picked_color).color_name,
-                clrid: contextTagPopUp.picked_color,
-            },
-        };
-        contextTagListPopUp.tags.push(newTag);
-        this._hideTagPopUp();
-        return;
-
         let payload;
 
         const newTagNetwork = {
             bid: this._storage.get('bid'),
-            tag_name: context.tag_name,
-            clrid: contextTagPopUp.picked_color,
+            tag_name: contextTagPopUp.tag_name,
+            color: {
+                clrid: contextTagPopUp.picked_color,
+            },
         };
 
         try {
@@ -2131,20 +2059,6 @@ class BoardStore extends BaseStore {
         const contextTagPopUp = this._storage.get('tag-popup');
         const contextTagListPopUp = this._storage.get('tags-list-popup');
 
-        // todo удалить после появления api
-        /* Удалим из карточек */
-        this._storage.get('card_lists').forEach((cardlist) => {
-            cardlist.cards.forEach((card) => {
-                card.tags.splice(contextTagListPopUp.tags.indexOf(
-                    this._getTagById(contextTagPopUp.tgid)), 1);
-            });
-        });
-        /* Удалим из списка тегов */
-        contextTagListPopUp.tags.splice(contextTagListPopUp.tags.indexOf(
-            this._getTagById(contextTagPopUp.tgid)), 1);
-        this._hideTagPopUp();
-        return;
-
         let payload;
 
         try {
@@ -2184,22 +2098,23 @@ class BoardStore extends BaseStore {
      */
     async _updateTag() {
         const context = this._storage.get('tag-popup');
+        context.errors = null;
+        if (context.tag_name.length === 0 || context.tag_name.length > 40) {
+            context.errors = ConstantMessages.WrongTagNameLength;
+            return;
+        }
         const color = this._getTagColorById(context.picked_color);
-        // todo validate name length
-
-        // todo удалить после появления api
-        const tag = this._getTagById(context.tgid);
-        tag.tag_name = context.tag_name;
-        tag.color.clrid = color.clrid;
-        tag.color.color_name = color.color_name;
-        this._hideTagPopUp();
-        return;
+        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
+                                              this._storage.get('card-popup').cid);
 
         let payload;
 
         const updatedTag = {
+            bid: this._storage.get('bid'),
             tag_name: context.tag_name,
-            clrid: color.clrid,
+            color: {
+                clrid: color.clrid,
+            },
         };
 
         try {
@@ -2236,21 +2151,6 @@ class BoardStore extends BaseStore {
         const context = this._storage.get('tags-list-popup');
         const currentCard = this._getCardById(this._storage.get('card-popup').clid,
                                               this._storage.get('card-popup').cid);
-
-        // todo удалить после появления api
-        const tagPopUp = context.tags.find((tag) => {
-            return tag.tgid === data.tgid;
-        });
-        tagPopUp.selected = !tagPopUp.selected;
-
-        if (tagPopUp.selected) {
-            currentCard.tags.push(tagPopUp);
-        } else {
-            currentCard.tags.splice(currentCard.tags.indexOf(currentCard.tags.find((tag) => {
-                return tag.tgid === data.tgid;
-            })), 1);
-        }
-        return;
 
         let payload;
 
