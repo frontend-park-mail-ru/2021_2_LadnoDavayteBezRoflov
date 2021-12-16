@@ -1903,7 +1903,6 @@ class BoardStore extends BaseStore {
             return;
         }
 
-        console.log(payload);
         switch (payload.status) {
         case HttpStatusCodes.Ok:
             Router.go(`/board/${this._storage.get('bid')}`, true);

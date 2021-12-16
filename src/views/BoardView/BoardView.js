@@ -35,7 +35,6 @@ import './BoardView.scss';
 // Шаблон
 import template from './BoardView.hbs';
 import {inviteActions} from '../../actions/invite';
-import Dispatcher from '../../modules/Dispatcher/Dispatcher';
 
 /**
  * Класс, реализующий страницу доски.
