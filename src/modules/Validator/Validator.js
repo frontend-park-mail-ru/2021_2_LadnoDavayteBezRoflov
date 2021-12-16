@@ -191,4 +191,16 @@ export default class Validator {
         }
         return '';
     }
+
+    /**
+     * Метод, валидирующий название тега
+     * @param {String} title заглавие на проверку
+     * @return {String | null}
+     */
+    validateTagTitle(title) {
+        if (!title || title.length === 0 || title.length > 40) {
+            return ConstantMessages.WrongTagNameLength;
+        }
+        return null;
+    }
 }

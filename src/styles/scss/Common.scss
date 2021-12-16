@@ -112,7 +112,6 @@ div#root {
 }
 
 .card-tag {
-    background: darkred; // будет в шаблоне
     width: 50px;
     height: 10px;
     border-radius: 5px;
@@ -228,12 +227,37 @@ div#root {
         }
     }
 
-  &-remove {
-    @extend .material-icon;
-    &::before {
-      content: 'cancel';
+    &-copy {
+        @extend .material-icon;
+
+        &::before {
+            content: 'content_copy';
+        }
     }
-  }
+
+    &-reload {
+        @extend .material-icon;
+
+        &::before {
+            content: 'autorenew';
+        }
+    }
+
+    &-check {
+        @extend .material-icon;
+
+        &::before {
+            content: 'check';
+        }
+
+    }
+
+    &-remove {
+        @extend .material-icon;
+        &::before {
+        content: 'cancel';
+        }
+    }
 }
 
 .horizontal-line {
@@ -290,6 +314,22 @@ div#root {
 
         &::before {
             content: 'save';
+        }
+    }
+
+    &-download {
+        @extend .material-icon;
+
+        &::before {
+            content: 'download';
+        }
+    }
+
+    &-file {
+        @extend .material-icon;
+
+        &::before {
+            content: 'description';
         }
     }
 }

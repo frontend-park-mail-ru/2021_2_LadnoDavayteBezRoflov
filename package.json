@@ -1,6 +1,6 @@
 {
     "name": "ladnodavaytebezroflov-frontend",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "LadnoDavayteBezRoflov team, Technopark, autumn of 2021",
     "main": "./server/server.js",
     "scripts": {

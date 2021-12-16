@@ -99,7 +99,7 @@
 .login__input__bar:after {
     position: absolute;
     content: "";
-    
+
     height: 2px;
     bottom: -1px;
     left: 0;
@@ -110,9 +110,6 @@
 
     transition: all 0.3s ease-in-out;
 }
-
-
-
 
 /* кнопка входа */
 .login__button {
@@ -127,7 +124,7 @@
 
     letter-spacing: 1px;
     font-size: 16px;
-    
+
     cursor: pointer;
 
     transition: all 0.3s ease-in-out;

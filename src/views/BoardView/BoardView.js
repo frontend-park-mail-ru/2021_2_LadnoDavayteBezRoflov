@@ -17,6 +17,8 @@ import CardPopUp from '../../popups/Card/CardPopUp.js';
 import DeleteCardListPopUp from '../../popups/DeleteCardList/DeleteCardListPopUp.js';
 import DeleteCardPopUp from '../../popups/DeleteCard/DeleteCardPopUp.js';
 import AddUserPopUp from '../../popups/AddUser/AddUserPopUp.js';
+import TagsListPopUp from '../../popups/TagsList/TagsListPopUp.js';
+import TagPopUp from '../../popups/Tag/TagPopUp.js';
 
 // Stores
 import UserStore from '../../stores/UserStore/UserStore.js';
@@ -34,6 +36,8 @@ import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
+import {inviteActions} from '../../actions/invite';
+import {tagsActions} from '../../actions/tags';
 
 /**
  * Класс, реализующий страницу доски.
@@ -64,6 +68,8 @@ export default class BoardView extends BaseView {
         this.addComponent('DeleteCardPopUp', new DeleteCardPopUp());
         this.addComponent('AddBoardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.board));
         this.addComponent('AddCardMemberPopUp', new AddUserPopUp(this._addUserCallBacks.card));
+        this.addComponent('TagsListPopUp', new TagsListPopUp());
+        this.addComponent('TagPopUp', new TagPopUp());
 
         this._setContextByComponentName('AddBoardMemberPopUp',
                                         BoardStore.getContext('add-board-member-popup'));
@@ -77,8 +83,19 @@ export default class BoardView extends BaseView {
      * @param {Object} urlData параметры адресной строки
      */
     _onShow(urlData) {
-        this.urlData = urlData;
-        boardsActions.getBoard(urlData.pathParams.id);
+        if (!UserStore.getContext('isAuthorized')) {
+            Router.go(Urls.Login, true);
+            return;
+        }
+
+        if ('accessPathBoard' in urlData.pathParams) {
+            inviteActions.openBoardInvite(urlData.pathParams.accessPathBoard);
+        } else if ('accessPathCard' in urlData.pathParams) {
+            inviteActions.openCardInvite(urlData.pathParams.accessPathCard);
+        } else {
+            boardsActions.getBoard(urlData.pathParams.id);
+        }
+
         this.render();
     }
 
@@ -136,15 +153,20 @@ export default class BoardView extends BaseView {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
             showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
             addMembersBtn: document.getElementById('showAddBoardMemberPopUpId'),
+            showTagsBtn: document.getElementById('showTagsBoardPopUpId'),
             cardLists: {
+                dragAreas: document.querySelectorAll('.dragCardList'),
                 addCardBtns: document.querySelectorAll('.addCardToCardList'),
                 editBtns: document.querySelectorAll('.editCardList'),
                 deleteBtns: document.querySelectorAll('.deleteCardList'),
+                cardListsDropZones: document.querySelectorAll('.cardListDropZone'),
             },
             cards: {
+                dragAreas: document.querySelectorAll('.dragCard'),
                 editAreas: document.querySelectorAll('.editCard'),
                 deleteBtns: document.querySelectorAll('.deleteCard'),
                 checkDeadlineCardBtns: document.querySelectorAll('.checkDeadlineCard'),
+                cardDropZones: document.querySelectorAll('.cardDropZone'),
             },
         };
     }
@@ -174,14 +196,22 @@ export default class BoardView extends BaseView {
                 onInput: this._onAddCardMemberInput.bind(this),
                 onUserClick: this._onAddCardMemberUserClick.bind(this),
                 onClose: this._onAddCardMemberClose.bind(this),
+                onRefreshInvite: this._onRefreshCardInvite.bind(this),
+                onCopyInvite: this._onCopyCardInvite.bind(this),
             },
             board: {
                 onInput: this._onAddBoardMemberInput.bind(this),
                 onUserClick: this._onAddBoardMemberUserClick.bind(this),
                 onClose: this._onAddBoardMemberClose.bind(this),
+                onRefreshInvite: this._onRefreshBoardInvite.bind(this),
+                onCopyInvite: this._onCopyBoardInvite.bind(this),
             },
         };
         this._onAddBoardMemberShow = this._onAddBoardMemberShow.bind(this);
+        /* DnD */
+        this._onCardDrop = this._onCardDrop.bind(this);
+        this._onDragOver = this._onDragOver.bind(this);
+        this._onShowTagListPopUpBoard = this._onShowTagListPopUpBoard.bind(this);
     }
 
     /**
@@ -211,6 +241,27 @@ export default class BoardView extends BaseView {
         this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
             checkDeadlineCardBtn.addEventListener('click', this._onCheckDeadlineCard);
         });
+        /* DnD: card */
+        this._elements.cards.cardDropZones.forEach((cardDropZone)=>{
+            cardDropZone.addEventListener('drop', this._onCardDrop);
+        });
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.addEventListener('dragover', this._onDragOver);
+        });
+        this._elements.cards.dragAreas.forEach((dragArea)=>{
+            dragArea.addEventListener('dragstart', this._onCardDrag);
+        });
+        /* DnD: cardList */
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.addEventListener('drop', this._onCardListDrop);
+        });
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.addEventListener('dragover', this._onDragOver);
+        });
+        this._elements.cardLists.dragAreas.forEach((dragArea)=>{
+            dragArea.addEventListener('dragstart', this._onCardListDrag);
+        });
+        this._elements.showTagsBtn?.addEventListener('click', this._onShowTagListPopUpBoard);
     }
 
     /**
@@ -239,6 +290,27 @@ export default class BoardView extends BaseView {
         this._elements.cards.checkDeadlineCardBtns.forEach((checkDeadlineCardBtn)=>{
             checkDeadlineCardBtn.removeEventListener('click', this._onCheckDeadlineCard);
         });
+        /* DnD: card */
+        this._elements.cards.cardDropZones.forEach((cardDropZone)=>{
+            cardDropZone.removeEventListener('drop', this._onCardDrop);
+        });
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.removeEventListener('dragover', this._onDragOver);
+        });
+        this._elements.cards.dragAreas.forEach((dragArea)=>{
+            dragArea.removeEventListener('dragstart', this._onCardDrag);
+        });
+        /* DnD: cardList */
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.removeEventListener('drop', this._onCardListDrop);
+        });
+        this._elements.cardLists.cardListsDropZones.forEach((cardListDropZone)=>{
+            cardListDropZone.removeEventListener('dragover', this._onDragOver);
+        });
+        this._elements.cardLists.dragAreas.forEach((dragArea)=>{
+            dragArea.removeEventListener('dragstart', this._onCardListDrag);
+        });
+        this._elements.showTagsBtn?.removeEventListener('click', this._onShowTagListPopUpBoard);
     }
 
     /**
@@ -393,5 +465,162 @@ export default class BoardView extends BaseView {
             event.target.id === 'addUserPopUpWrapperId') {
             boardActions.hideAddBoardMemberPopUp();
         }
+    }
+
+    /**
+     * Callback, вызываемый при перемещении карточки
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onCardDrop(event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData('brr/card');
+        const clidPrev = parseInt(event.dataTransfer.getData('brr/card/cardList'), 10);
+        if (data && clidPrev) {
+            try {
+                const element = document.querySelector(`.card [data-id="${data}"]`);
+                const cardElement = event.target.closest('.card');
+                const target = event.target.closest('.cardDropZone');
+
+                target.insertBefore(element, cardElement);
+
+                const position = Array.from(target.children).findIndex((card) =>
+                    card.attributes.getNamedItem('data-id').value === element.dataset.id);
+                if (position === -1) {
+                    throw new Error(`BoardView: карточка ${data} не найдена`);
+                }
+                const card = BoardStore._getCardById(clidPrev, parseInt(data, 10));
+
+                card.cid = parseInt(data, 10);
+                card.clid = parseInt(element.closest('.cardDropZone').dataset.id, 10);
+                card.pos = position + 1;
+                card.clidPrev = clidPrev;
+
+                cardActions.updateCard(
+                    card,
+                );
+            } catch (error) {
+                throw new Error(`BoardView: не получилось переместить карточку (причина: ${error})`);
+            }
+        }
+    }
+
+    /**
+     * Callback, вызываемый при завершении D&D
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        event.target.style.opacity = 1;
+        event.target.style.transform = 'translate(0, 0)';
+    }
+
+    /**
+     * Callback, вызываемый при перетаскивании карточки
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onCardDrag(event) {
+        event.dataTransfer.setData('brr/card', event.target.closest('.card').dataset.id);
+        event.dataTransfer.setData('brr/card/cardList',
+                                   event.target.closest('.cardDropZone').dataset.id);
+        event.dataTransfer.effectAllowed = 'move';
+        event.target.style.opacity = 0.6;
+        event.target.style.transform = 'translate(10px, 10px)';
+    }
+
+    /**
+     * Callback, вызываемый при перетаскивании колонки
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onCardListDrag(event) {
+        event.dataTransfer.setData('brr/cardList', event.target.closest('.column').dataset.id);
+        event.dataTransfer.effectAllowed = 'move';
+        event.target.style.opacity = 0.6;
+        event.target.style.transform = 'translate(10px, 10px)';
+    }
+
+    /**
+     * Callback, вызываемый при перемещении колонки
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onCardListDrop(event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData('brr/cardList');
+        if (data && !event.dataTransfer.getData('brr/card')) {
+            try {
+                const element = document.querySelector(`.column [data-id="${data}"]`);
+                const cardListElement = event.target.closest('.column');
+                const target = event.target.closest('.cardListDropZone');
+
+                target.insertBefore(element, cardListElement);
+
+                const position = Array.from(target.children).findIndex((cardList) =>
+                    cardList.attributes.getNamedItem('data-id').value === element.dataset.id);
+                if (position === -1) {
+                    throw new Error(`BoardView: колонка ${data} не найдена`);
+                }
+                const cardList = BoardStore._getCardListById(parseInt(data, 10));
+
+                cardListActions.updateCardList(
+                    position + 1, cardList.cardList_name, parseInt(element.dataset.id, 10),
+                );
+            } catch (error) {
+                throw new Error(`BoardView: не получилось переместить колонку (причина: ${error})`);
+            }
+        }
+    }
+    /**
+     * Callback, вызываемый при обновлении ссылки приглашение на доску
+     * @param {Event} event объект события
+     * @private
+     */
+    _onRefreshBoardInvite(event) {
+        event.preventDefault();
+        inviteActions.refreshBoardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при обновлении ссылки приглашение на карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onRefreshCardInvite(event) {
+        event.preventDefault();
+        inviteActions.refreshCardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при копировании приглашения на доску
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCopyBoardInvite(event) {
+        event.preventDefault();
+        inviteActions.copyBoardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при копировании приглашения на карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCopyCardInvite(event) {
+        event.preventDefault();
+        inviteActions.copyCardInvite();
+    }
+
+    /**
+     * CallBack на отображение тегов
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onShowTagListPopUpBoard(event) {
+        event.preventDefault();
+        tagsActions.showTagListPopUpBoard();
     }
 }

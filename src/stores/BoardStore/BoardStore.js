@@ -7,6 +7,7 @@ import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
 import {CommentsActionTypes} from '../../actions/comments.js';
+import {TagsActionTypes} from '../../actions/tags';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -15,13 +16,19 @@ import Validator from '../../modules/Validator/Validator';
 
 // Constants
 import {
-    CheckLists, ConstantMessages,
-    HttpStatusCodes, Urls, BoardStoreConstants,
+    BoardStoreConstants,
+    CheckLists,
+    ConstantMessages,
+    HttpStatusCodes,
+    SelfAddress,
+    Urls,
 } from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
+import {AttachmentsActionTypes} from '../../actions/attachments';
+
 
 /**
  * Класс, реализующий хранилище доски
@@ -80,6 +87,8 @@ class BoardStore extends BaseStore {
             searchString: null,
             users: [],
             header: 'Добавить пользователя в доску',
+            inviteLink: null,
+            selectInvite: false,
         });
 
         this._storage.set('add-card-member-popup', {
@@ -88,6 +97,25 @@ class BoardStore extends BaseStore {
             searchString: null,
             users: [],
             header: 'Добавить пользователя в карточку',
+            inviteLink: null,
+            selectInvite: false,
+        });
+
+        this._storage.set('tags-list-popup', {
+            visible: false,
+            errors: null,
+            toggle_mode: false,
+            tags: [],
+        });
+
+        this._storage.set('tag-popup', {
+            visible: false,
+            errors: null,
+            edit: false,
+            tag_name: null,
+            colors: [],
+            picked_color: null,
+            tgid: null,
         });
     }
 
@@ -327,11 +355,159 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        /* Attachments */
+        case AttachmentsActionTypes.UPLOAD:
+            await this._uploadAttachment(action.data);
+            this._emitChange();
+            break;
+
+        case AttachmentsActionTypes.DELETE:
+            await this._deleteAttachment(action.data);
+            this._emitChange();
+            break;
+
+        case AttachmentsActionTypes.DOWNLOAD:
+            this._downloadAttachment(action.data);
+            break;
+
+        /* Invite: */
+        case InviteActionTypes.GO_BOARD_INVITE:
+            await this._openBoardInvite(action.data);
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.GO_CARD_INVITE:
+            await this._openCardInvite(action.data);
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.REFRESH_BOARD_LINK:
+            await this._refreshBoardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.REFRESH_CARD_LINK:
+            await this._refreshCardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.COPY_BOARD_LINK:
+            await this._copyBoardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.COPY_CARD_LINK:
+            await this._copyCardInvite();
+            this._emitChange();
+            break;
+        case TagsActionTypes.SHOW_LIST_POPUP_BOARD:
+            this._showTagListPopUpBoard();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_LIST_POPUP_CARD:
+            this._showTagListPopUpCard();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.HIDE_LIST_POPUP:
+            this._hideTagListPopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_TAG_POPUP_EDIT:
+            this._showTagEditPopUp(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.SHOW_TAG_POPUP_CREATE:
+            this._showTagCreatePopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.HIDE_TAG_POPUP:
+            this._hideTagPopUp();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.CREATE_TAG:
+            await this._createTag(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.DELETE_TAG:
+            await this._deleteTag();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.UPDATE_TAG:
+            await this._updateTag();
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.TOGGLE_TAG:
+            await this._toggleTag(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.PICK_COLOR:
+            this._pickColor(action.data);
+            this._emitChange();
+            break;
+
+        case TagsActionTypes.EDIT_TAG_NAME:
+            this._editTagName(action.data);
+            break;
 
         default:
             return;
         }
     }
+
+    /**
+     * Создает приглашение на карточку
+     * @param {String} accessPath - путь
+     * @private
+     */
+    _setCardInvite(accessPath) {
+        this._storage.get('add-card-member-popup').inviteLink =
+            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.CardPath + accessPath;
+    }
+
+    /**
+     * Создает приглашение на доску
+     * @param {String} accessPath - путь
+     * @private
+     */
+    _setBoardInvite(accessPath) {
+        this._storage.get('add-board-member-popup').inviteLink =
+            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.BoardPath + accessPath;
+    }
+
+    /**
+     * Ищет тег среди полученных вместе с доской тегов
+     * @param {Number} tgid id тега
+     * @return {Object} объект тега
+     * @private
+     */
+    _getTagById(tgid) {
+        return this._storage.get('tags-list-popup').tags.find((tag) => {
+            return tag.tgid === tgid;
+        });
+    }
+
+    /**
+     * Ищет цвет среди полученных вместе с доской цветов тегов
+     * @param {Number} clrid id цвета
+     * @return {Object} объект цвета
+     * @private
+     */
+    _getTagColorById(clrid) {
+        return this._storage.get('tag-popup').colors.find((color) => {
+            return color.clrid === clrid;
+        });
+    }
+
 
     /**
      * Метод, реализующий реакцию на запрос доски с id.
@@ -358,15 +534,32 @@ class BoardStore extends BaseStore {
             this._storage.set('description', payload.data.description);
             this._storage.set('card_lists', payload.data.card_lists);
 
+            // todo network + selected = false, переключаем при отображение card
+            this._storage.get('tags-list-popup').tags = payload.data.tags.map((tag) => {
+                tag.selected = false;
+                return tag;
+            });
+
+            this._storage.get('tag-popup').colors = payload.data.colors.map((color) => {
+                color.selected = false;
+                return color;
+            });
+
             this._storage.get('card_lists').forEach((cardlist) => {
                 cardlist.cards.forEach((card) => {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                    card.attachments = card.attachments || [];
+                    // Сохраним в карточке ссылки на теже теги, что и в списке тегов
+                    card.tags = card.tags.map((tag) => {
+                        return this._getTagById(tag.tgid);
+                    });
                 });
             });
 
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
+            this._setBoardInvite(payload.data.access_path);
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -610,8 +803,10 @@ class BoardStore extends BaseStore {
 
         let payload;
 
+        const clid = (data.clid? data.clid : this._storage.get('cardlist-popup').clid);
+
         try {
-            payload = await Network._updateCardList(data, this._storage.get('cardlist-popup').clid);
+            payload = await Network._updateCardList(data, clid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -621,7 +816,7 @@ class BoardStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('cardlist-popup').visible = false;
 
-            const cardList = this._getCardListById(this._storage.get('cardlist-popup').clid);
+            const cardList = this._getCardListById(clid);
             const bound = data.pos > cardList.pos ?
                 {left: cardList.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: cardList.pos - 1, increment: 1};
@@ -629,13 +824,18 @@ class BoardStore extends BaseStore {
             // Обновим позиции списков в storage
             const cardLists = this._storage.get('card_lists');
 
+            if (data.pos !== cardList.pos) {
+                const cardListIndex = cardLists.indexOf(cardList);
+                cardLists.splice(data.pos - 1, 0, cardLists.splice(cardListIndex, 1)[0]);
+            }
+
             for (let index = bound.left; index < bound.right; index += 1) {
                 cardLists[index].pos += bound.increment;
             }
 
             // Обновим cardList:
             cardList.cardList_name = data.cardList_name;
-            cardList.pos = data.pos;
+            cardList.pos = cardLists.indexOf(cardList) + 1;
 
             // Переупорядочим списки
             cardLists.sort((lhs, rhs) => {
@@ -784,7 +984,9 @@ class BoardStore extends BaseStore {
                     data.deadline, false),
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
                 assignees: [],
+                tags: [],
                 check_lists: [],
+                access_path: payload.data.access_path,
             });
             return;
 
@@ -848,6 +1050,7 @@ class BoardStore extends BaseStore {
             deadline: card.deadline,
             deadline_check: card.deadline_check,
             errors: null,
+            tags: card.tags,
             checkLists: this._getCardById(data.clid, data.cid).check_lists.map((list) => {
                 const items = list.check_list_items.map((item) => {
                     return {...item, edit: false};
@@ -855,6 +1058,7 @@ class BoardStore extends BaseStore {
                 return {...list, check_list_items: items, edit: false};
             }),
             scroll: 0,
+            attachments: card.attachments,
         });
     }
 
@@ -927,18 +1131,19 @@ class BoardStore extends BaseStore {
         let payload;
 
         const _data = {
+            position: data.position,
             pos: data.pos,
-            cid: this._storage.get('card-popup').cid,
-            clid: this._storage.get('card-popup').clid,
+            cid: (data.cid? data.cid : this._storage.get('card-popup').cid),
+            clid: (data.clid? data.clid : this._storage.get('card-popup').clid),
             card_name: data.card_name,
             description: data.description,
-            bid: this._storage.get('card-popup').bid,
+            bid: (data.bid? data.bid : this._storage.get('card-popup').bid),
             deadline: data.deadline,
             deadline_check: data.deadline_check,
         };
 
         try {
-            payload = await Network._updateCard(_data, this._storage.get('card-popup').cid);
+            payload = await Network._updateCard(_data, _data.cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;
@@ -949,14 +1154,25 @@ class BoardStore extends BaseStore {
             this._storage.get('card-popup').visible = false;
 
             const card = this._getCardById(
-                this._storage.get('card-popup').clid,
-                this._storage.get('card-popup').cid,
+                (data.clidPrev? data.clidPrev : _data.clid),
+                _data.cid,
             );
             const bound = data.pos > card.pos ?
                 {left: card.pos, right: data.pos, increment: -1} :
                 {left: data.pos - 1, right: card.pos - 1, increment: 1};
 
-            const cards = this._getCardListById(this._storage.get('card-popup').clid).cards;
+            const cards = this._getCardListById(_data.clid).cards;
+
+            if (data.clidPrev) {
+                if (data.clidPrev !== _data.clid) {
+                    const oldCards = this._getCardListById(data.clidPrev).cards;
+                    oldCards.splice(oldCards.indexOf(card), 1);
+                    cards.splice(card.pos - 1, 0, card);
+                } else {
+                    const cardIndex = cards.indexOf(card);
+                    cards.splice(card.pos - 1, 0, cards.splice(cardIndex, 1)[0]);
+                }
+            }
 
             for (let index = bound.left; index < bound.right; index += 1) {
                 cards[index].pos += bound.increment;
@@ -967,7 +1183,8 @@ class BoardStore extends BaseStore {
 
             card.card_name = data.card_name;
             card.description = data.description;
-            card.pos = data.pos;
+            card.position = data.pos;
+            card.pos = cards.indexOf(card) + 1;
 
             card.deadline = data.deadline;
             card.deadlineStatus = validator.validateDeadline(data.deadline, data.deadline_check);
@@ -1340,6 +1557,7 @@ class BoardStore extends BaseStore {
     async _toggleCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
+        context.selectInvite = false;
         let item = this._getCheckListItemById(data.chlid, data.chliid);
 
         const newItem = {...item};
@@ -1384,6 +1602,8 @@ class BoardStore extends BaseStore {
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
+        this._setCardInvite(card.access_path);
+        context.selectInvite = false;
 
         if (!context.users.length) {
             context.users = this._storage.get('members').slice();
@@ -1395,6 +1615,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _hideAddCardAssigneePopUp() {
+        this._storage.get('add-card-member-popup').selectInvite = false;
         this._storage.get('add-card-member-popup').visible = false;
     }
 
@@ -1405,6 +1626,7 @@ class BoardStore extends BaseStore {
      */
     async _refreshCardAssigneeSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
+        context.selectInvite = false;
         context.errors = null;
         const {searchString} = data;
         context.searchString = searchString;
@@ -1452,6 +1674,7 @@ class BoardStore extends BaseStore {
     async _toggleCardAssigneeInSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
         context.errors = null;
+        context.selectInvite = false;
 
         const card = this._getCardById(this._storage.get('card-popup').clid,
                                        this._storage.get('card-popup').cid);
@@ -1503,6 +1726,7 @@ class BoardStore extends BaseStore {
      */
     _showAddBoardMemberPopUp() {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.visible = true;
         context.errors = null;
         context.searchString = null;
@@ -1516,6 +1740,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _hideAddBoardMemberPopUp() {
+        this._storage.get('add-board-member-popup').selectInvite = false;
         this._storage.get('add-board-member-popup').visible = false;
     }
 
@@ -1544,6 +1769,7 @@ class BoardStore extends BaseStore {
      */
     async _toggleBoardMemberInSearchList(data) {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.errors = null;
 
         const members = this._storage.get('members').slice();
@@ -1600,6 +1826,7 @@ class BoardStore extends BaseStore {
      */
     async _refreshBoardMemberSearchList(data) {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.errors = null;
         const {searchString} = data;
         context.searchString = searchString;
@@ -1792,6 +2019,529 @@ class BoardStore extends BaseStore {
      */
     _changeCardPopUpScroll(data) {
         this._storage.get('card-popup').scroll = data.scrollValue;
+    }
+
+    /**
+     * Загружает файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    async _uploadAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+        cardContext.errors = null;
+        if (data.file.size > BoardStoreConstants.MaxAttachmentSize) {
+            cardContext.errors = ConstantMessages.AttachmentSizeTooBig;
+            return;
+        }
+
+        const attachmentForm = new FormData();
+        attachmentForm.append('attachment', data.file);
+
+        let payload;
+
+        try {
+            payload = await Network.uploadAttachment(attachmentForm, cardContext.cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(cardContext.clid, cardContext.cid);
+            card.attachments.push(payload.data);
+            return;
+
+        default:
+            cardContext.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    async _deleteAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+
+        let payload;
+
+        try {
+            payload = await Network.deleteAttachment(data.atid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const attachment = cardContext.attachments.find((attach) => {
+                return attach.atid === data.atid;
+            });
+            cardContext.attachments.splice(cardContext.attachments.indexOf(attachment), 1);
+            return;
+
+        default:
+            cardContext.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Скачивает файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    _downloadAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+        const attachment = cardContext.attachments.find((attach) => {
+            return attach.atid === data.atid;
+        });
+        window.open(attachment.file_tech_name, `Download: ${attachment.file_pub_name}`);
+    }
+
+    /**
+     * Приглашает пользователя в доску
+     * @param {Object} data инвайт
+     * @return {Promise<void>}
+     */
+    async _openBoardInvite(data) {
+        let payload;
+
+        try {
+            payload = await Network.useBoardInvite(data.accessPath);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            Router.go(`/board/${payload.data.bid}`, true);
+            return;
+
+        default:
+            Router.go(Urls.Login, true);
+            return;
+        }
+    }
+
+    /**
+     * Приглашает пользователя в карточку
+     * @param {Object} data инвайт
+     * @return {Promise<void>}
+     */
+    async _openCardInvite(data) {
+        let payload;
+
+        try {
+            payload = await Network.useCardInvite(data.accessPath);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            Router.go(`/board/${this._storage.get('bid')}`, true);
+            return;
+
+        default:
+            Router.go(Urls.Login, true);
+            return;
+        }
+    }
+
+    /**
+     * Обновляет приглашение на доску
+     * @return {Promise<void>}
+     */
+    async _refreshBoardInvite() {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.refreshBoardInvite(this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._setBoardInvite(payload.data.access_path);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Обновляет приглашение на карточку
+     * @return {Promise<void>}
+     */
+    async _refreshCardInvite() {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.refreshCardInvite(this._storage.get('card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._setCardInvite(payload.data.access_path);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Скопировать приглашение на доску
+     */
+    async _copyBoardInvite() {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        try {
+            await navigator.clipboard.writeText(context.inviteLink);
+        } catch (error) {
+            context.errors = ConstantMessages.CantCopyToClipBoard;
+        }
+
+        context.selectInvite = true;
+    }
+
+    /**
+     * Скопировать приглашение на карточку
+     */
+    async _copyCardInvite() {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
+
+        try {
+            await navigator.clipboard.writeText(context.inviteLink);
+        } catch (error) {
+            context.errors = ConstantMessages.CantCopyToClipBoard;
+        }
+
+        context.selectInvite = true;
+    }
+
+    /**
+     * Отображает окно со списком тегов, при нажатии на кнопку тегов на доске
+     * @private
+     */
+    _showTagListPopUpBoard() {
+        const context = this._storage.get('tags-list-popup');
+        context.visible = true;
+        context.toggle_mode = false;
+        context.errors = null;
+    }
+
+    /**
+     * Отображает окно со списком тегов, при нажатии на кнопку добавить тег на карточке
+     */
+    _showTagListPopUpCard() {
+        const context = this._storage.get('tags-list-popup');
+        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
+                                              this._storage.get('card-popup').cid);
+        context.visible = true;
+        context.toggle_mode = true;
+        context.errors = null;
+        /* Отметим теги указанные для текущей карточки */
+        context.tags.forEach((tag) => {
+            tag.selected = !!currentCard.tags.find((cardTag) => {
+                return cardTag.tgid === tag.tgid;
+            });
+        });
+    }
+
+    /**
+     * Скрывает окно со списком тегов
+     */
+    _hideTagListPopUp() {
+        const context = this._storage.get('tags-list-popup');
+        context.visible = false;
+        context.toggle_mode = false;
+        context.errors = null;
+    }
+
+    /**
+     * Отображает окно редактирования тега
+     * @param {Object} data данные
+     */
+    _showTagEditPopUp(data) {
+        const context = this._storage.get('tag-popup');
+        const currentTag = this._getTagById(data.tgid);
+        context.visible = true;
+        context.errors = null;
+        context.edit = true;
+        context.tgid = data.tgid;
+        context.picked_color = currentTag.color.clrid;
+        context.tag_name = currentTag.tag_name;
+        /* Отметим текущий цвет тега */
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === currentTag.color.clrid);
+        });
+    }
+
+    /**
+     * Отображает окно создания тега
+     */
+    _showTagCreatePopUp() {
+        const context = this._storage.get('tag-popup');
+        context.visible = true;
+        context.errors = null;
+        context.edit = false;
+        context.picked_color = context.colors[Math.floor(Math.random() * (context.colors.length))].clrid;
+        context.tag_name = null;
+        /* Отметим текущий цвет тега */
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === context.picked_color);
+        });
+        console.log(context.colors);
+    }
+
+    /**
+     * Скрывает окно тега
+     */
+    _hideTagPopUp() {
+        const context = this._storage.get('tag-popup');
+        context.visible = false;
+        context.errors = null;
+        context.edit = false;
+    }
+
+    /**
+     * Создает тег
+     * @param {Object} data данные c названием тега
+     */
+    async _createTag(data) {
+        const contextTagPopUp = this._storage.get('tag-popup');
+        const contextTagListPopUp = this._storage.get('tags-list-popup');
+
+        contextTagPopUp.errors = null;
+        const validator = new Validator();
+        contextTagPopUp.errors = validator.validateTagTitle(contextTagPopUp.tag_name);
+        if (contextTagPopUp.errors) {
+            return;
+        }
+
+        let payload;
+
+        const newTagNetwork = {
+            bid: this._storage.get('bid'),
+            tag_name: contextTagPopUp.tag_name,
+            color: {
+                clrid: contextTagPopUp.picked_color,
+            },
+        };
+
+        try {
+            payload = await Network.createTag(newTagNetwork);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const color = this._getTagColorById(contextTagPopUp.picked_color);
+            const newTag = {
+                tgid: payload.data.tgid,
+                tag_name: contextTagPopUp.tag_name,
+                selected: false,
+                color: {
+                    color_name: color.color_name,
+                    clrid: color.clrid,
+                },
+            };
+            contextTagListPopUp.tags.push(newTag);
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет текущий тег
+     */
+    async _deleteTag() {
+        const contextTagPopUp = this._storage.get('tag-popup');
+        const contextTagListPopUp = this._storage.get('tags-list-popup');
+
+        let payload;
+
+        try {
+            payload = await Network.deleteTag(contextTagPopUp.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            /* Удалим из карточек */
+            this._storage.get('card_lists').forEach((cardlist) => {
+                cardlist.cards.forEach((card) => {
+                    card.tags.splice(contextTagListPopUp.tags.indexOf(
+                        this._getTagById(contextTagPopUp.tgid)), 1);
+                });
+            });
+            /* Удалим из списка тегов */
+            contextTagListPopUp.tags.splice(contextTagListPopUp.tags.indexOf(
+                this._getTagById(contextTagPopUp.tgid)), 1);
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            contextTagPopUp.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Обновляет тег
+     */
+    async _updateTag() {
+        const context = this._storage.get('tag-popup');
+
+        context.errors = null;
+        const validator = new Validator();
+        context.errors = validator.validateTagTitle(context.tag_name);
+        if (context.errors) {
+            return;
+        }
+
+        const color = this._getTagColorById(context.picked_color);
+
+        let payload;
+
+        const updatedTag = {
+            bid: this._storage.get('bid'),
+            tag_name: context.tag_name,
+            color: {
+                clrid: color.clrid,
+            },
+        };
+
+        try {
+            payload = await Network.updateTag(updatedTag, context.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const tag = this._getTagById(context.tgid);
+            tag.tag_name = context.tag_name;
+            tag.color.clrid = color.clrid;
+            tag.color.color_name = color.color_name;
+            this._hideTagPopUp();
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            context.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Переключает тег у карточки
+     * @param {Object} data данные
+     */
+    async _toggleTag(data) {
+        const context = this._storage.get('tags-list-popup');
+        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
+                                              this._storage.get('card-popup').cid);
+
+        let payload;
+
+        try {
+            payload = await Network.toggleCardTag(this._storage.get('card-popup').cid,
+                                                  data.tgid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const tagPopUp = context.tags.find((tag) => {
+                return tag.tgid === data.tgid;
+            });
+            tagPopUp.selected = !tagPopUp.selected;
+
+            if (tagPopUp.selected) {
+                currentCard.tags.push(tagPopUp);
+            } else {
+                currentCard.tags.splice(currentCard.tags.indexOf(currentCard.tags.find((tag) => {
+                    return tag.tgid === data.tgid;
+                })), 1);
+            }
+
+            return;
+
+        case HttpStatusCodes.BadRequest:
+            context.errors = ConstantMessages.UnsuccessfulRequest + ' (400)';
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Выбирает цвет для текущего, редактируемого тега
+     * @param {Object} data данные
+     */
+    _pickColor(data) {
+        const context = this._storage.get('tag-popup');
+        context.picked_color = data.clrid;
+        context.colors.forEach((color) => {
+            color.selected = (color.clrid === context.picked_color);
+        });
+    }
+
+    /**
+     * Обновляет в сторе редактируемое имя тега
+     * @param {Object} data данные c название тега
+     */
+    _editTagName(data) {
+        const context = this._storage.get('tag-popup');
+        context.tag_name = data.tag_name;
     }
 }
 
