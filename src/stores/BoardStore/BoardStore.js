@@ -1443,6 +1443,8 @@ class BoardStore extends BaseStore {
         context.users = card.assignees.map((assignee) => {
             return {...assignee, added: true};
         });
+        this._setCardInvite(card.access_path);
+        context.selectInvite = false;
 
         if (!context.users.length) {
             context.users = this._storage.get('members').slice();
@@ -1892,11 +1894,29 @@ class BoardStore extends BaseStore {
      * @return {Promise<void>}
      */
     async _openCardInvite(data) {
+        let payload;
 
+        try {
+            payload = await Network.useCardInvite(data.accessPath);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        console.log(payload);
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            Router.go(`/board/${this._storage.get('bid')}`, true);
+            return;
+
+        default:
+            Router.go(Urls.Login, true);
+            return;
+        }
     }
 
     /**
-     * Обновляет ссылку приглашение на доску
+     * Обновляет приглашение на доску
      * @return {Promise<void>}
      */
     async _refreshBoardInvite() {
@@ -1924,11 +1944,31 @@ class BoardStore extends BaseStore {
     }
 
     /**
-     * Обновляет ссылку приглашение на карточку
+     * Обновляет приглашение на карточку
      * @return {Promise<void>}
      */
     async _refreshCardInvite() {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
 
+        let payload;
+
+        try {
+            payload = await Network.refreshCardInvite(this._storage.get('card-popup').cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._setCardInvite(payload.data.access_path);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
     }
 
     /**
@@ -1950,8 +1990,17 @@ class BoardStore extends BaseStore {
     /**
      * Скопировать приглашение на карточку
      */
-    _copyCardInvite() {
+    async _copyCardInvite() {
+        const context = this._storage.get('add-card-member-popup');
+        context.errors = null;
 
+        try {
+            await navigator.clipboard.writeText(context.inviteLink);
+        } catch (error) {
+            context.errors = ConstantMessages.CantCopyToClipBoard;
+        }
+
+        context.selectInvite = true;
     }
 }
 
