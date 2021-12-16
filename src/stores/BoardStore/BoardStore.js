@@ -842,6 +842,7 @@ class BoardStore extends BaseStore {
                 deadlineDate: (new Date(data.deadline)).toLocaleDateString('ru-RU', options),
                 assignees: [],
                 check_lists: [],
+                access_path: payload.data.access_path,
             });
             return;
 
