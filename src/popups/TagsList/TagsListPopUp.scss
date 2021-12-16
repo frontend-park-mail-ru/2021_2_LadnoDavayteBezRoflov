@@ -1,0 +1,62 @@
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Constants';
+
+.tags-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    row-gap: 3px;
+
+    &__tag-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: $tags-list-tag-height;
+
+        column-gap: 5px;
+    }
+
+    &__tag {
+        height: $tags-list-tag-height;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 2px 5px 2px 5px;
+        border-radius: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+
+        &:hover {
+            box-shadow: 0 0 5px $dark-box-shadow;
+        }
+    }
+
+    &__tag_compact {
+        @extend .tags-list__tag;
+        flex-grow: 0;
+    }
+
+    &__tag-name {
+        flex-grow: 1;
+        font-size: $small-font-size;
+    }
+
+    &__edit-btn {
+        height: $tags-list-tag-height;
+        width: $tags-list-tag-height;
+        border-radius: 5px;
+        border: 2px solid $main-theme-color;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            box-shadow: 0 0 5px $dark-box-shadow;
+        }
+    }
+}

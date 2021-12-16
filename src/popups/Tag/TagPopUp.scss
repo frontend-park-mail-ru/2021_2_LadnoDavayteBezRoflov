@@ -1,0 +1,76 @@
+@import '../../styles/scss/Fonts';
+@import '../../styles/scss/Common';
+@import '../../styles/scss/Constants';
+
+.tag-colors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    &__color {
+        width: $tags-list-tag-height;
+        height: $tags-list-tag-height;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover {
+            border: 2px solid $main-theme-color;
+        }
+    }
+
+    &__green {
+        background-color: green;
+    }
+
+    &__yellow {
+        background-color: yellow;
+    }
+
+    &__orange {
+        background-color: orange;
+    }
+
+    &__red {
+        background-color: red;
+    }
+
+    &__purple {
+        background-color: purple;
+    }
+
+    &__darkblue {
+        background-color: darkblue;
+    }
+
+    &__blue {
+        background-color: blue;
+    }
+
+    &__pink {
+        background-color: pink;
+    }
+
+    &__darkolivegreen {
+        background-color: darkolivegreen;
+    }
+
+    &__grey {
+        background-color: grey;
+    }
+
+    &__default_color {
+        background: linear-gradient(to bottom right, blue, pink);
+    }
+}
+
+.tag-popup-edit-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+}
