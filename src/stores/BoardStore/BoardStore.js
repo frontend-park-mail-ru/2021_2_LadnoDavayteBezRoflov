@@ -27,8 +27,8 @@ import {
 // Stores
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
-import {AttachmentsActionTypes} from '../../actions/attachments';
-
+import {InviteActionTypes} from '../../actions/invite.js';
+import {AttachmentsActionTypes} from '../../actions/attachments.js';
 
 /**
  * Класс, реализующий хранилище доски
@@ -559,6 +559,7 @@ class BoardStore extends BaseStore {
             });
 
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
+            this._storage.set('invited_members', payload.data.invited_members || []);
             this._setBoardInvite(payload.data.access_path);
             return;
 
@@ -1730,7 +1731,7 @@ class BoardStore extends BaseStore {
         context.visible = true;
         context.errors = null;
         context.searchString = null;
-        context.users = this._storage.get('members').map((member) => {
+        context.users = this._storage.get('invited_members').map((member) => {
             return {...member, added: true};
         });
     }
@@ -1772,7 +1773,7 @@ class BoardStore extends BaseStore {
         context.selectInvite = false;
         context.errors = null;
 
-        const members = this._storage.get('members').slice();
+        const members = this._storage.get('invited_members').slice();
         // Найдем выбранного пользователя в списке членов доски
         const member = members.find((memeber) => {
             return memeber.uid === data.uid;
@@ -1832,7 +1833,7 @@ class BoardStore extends BaseStore {
         context.searchString = searchString;
 
         if (searchString.length < BoardStoreConstants.MinUserNameSearchLength) {
-            context.users = this._storage.get('members').map((member) => {
+            context.users = this._storage.get('invited_members').map((member) => {
                 return {...member, added: true};
             });
             return;
