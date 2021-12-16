@@ -97,7 +97,6 @@ export const ConstantMessages = {
     CardTitleTooLong: 'Название карточки слишком длинное',
     CardErrorOnServer: 'Не удалось создать карточку, попробуйте позднее',
     UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
-    AttachmentSizeTooBig: 'Слишком большой размер вложения',
     CantCopyToClipBoard: 'Не удалось скопировать текст',
 
     WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
@@ -105,7 +104,6 @@ export const ConstantMessages = {
 
 export const BoardStoreConstants = {
     MinUserNameSearchLength: 3,
-    MaxAttachmentSize: 1024 * 1024 * 50,
 };
 
 export const CheckLists = {

@@ -84,51 +84,6 @@ input.checklist-item__input {
     }
 }
 
-
-.attachments {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-}
-
-.attachment {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-
-    &__icon {
-    }
-
-    &__title {
-        margin-left: 5px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    &__download-btn {
-
-    }
-
-    &__delete-btn {
-
-    }
-
-    &__button {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        column-gap: 5px;
-    }
-}
-
-#attachmentInputId {
-    display: none;
-}
 .card-popup-tags {
     display: flex;
     flex-direction: row;

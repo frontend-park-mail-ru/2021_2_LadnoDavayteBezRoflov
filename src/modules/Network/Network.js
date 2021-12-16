@@ -28,7 +28,6 @@ class Network {
             team: 'api/teams',
             checklists: 'api/checkLists',
             checklistsItems: 'api/checkListItems',
-            attachments: 'api/attachments',
             tags: 'api/tags',
         };
 
@@ -708,40 +707,6 @@ class Network {
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/access/${cid}`,
-            options);
-    }
-
-    /**
-     * Метод, реализующий запрос POST /api/attachments/:cid.
-     * @param {Object} data файл аттача
-     * @param {Number} cid id карточки
-     * @return {Promise<Response>} промис запроса
-     */
-    async uploadAttachment(data, cid) {
-        const options = {
-            method: 'post',
-            body: data,
-        };
-        return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/` +
-            `${this._endpoints.attachments}/${cid}`,
-            options);
-    }
-
-    /**
-     * Метод, реализующий запрос DELETE /api/attachments/:atid.
-     * @param {Number} atid id аттача
-     * @return {Promise<Response>} промис запроса
-     */
-    async deleteAttachment(atid) {
-        const options = {
-            method: 'delete',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        };
-        return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.attachments}/${atid}`,
             options);
     }
 }

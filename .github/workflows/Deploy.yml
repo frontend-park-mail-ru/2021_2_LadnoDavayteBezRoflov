@@ -57,5 +57,4 @@ jobs:
             source: "dist/*"
             target: "/home/ubuntu/01-frontend/"
             overwrite: true
-            rm: true
             
