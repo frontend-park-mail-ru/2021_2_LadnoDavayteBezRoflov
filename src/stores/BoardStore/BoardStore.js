@@ -471,7 +471,7 @@ class BoardStore extends BaseStore {
      */
     _setCardInvite(accessPath) {
         this._storage.get('add-card-member-popup').inviteLink =
-            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.CardPath + accessPath;
+            `http://${SelfAddress.Url}` + Urls.Invite.CardPath + accessPath;
     }
 
     /**
@@ -481,7 +481,7 @@ class BoardStore extends BaseStore {
      */
     _setBoardInvite(accessPath) {
         this._storage.get('add-board-member-popup').inviteLink =
-            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.BoardPath + accessPath;
+            `http://${SelfAddress.Url}` + Urls.Invite.BoardPath + accessPath;
     }
 
     /**
