@@ -70,6 +70,7 @@ class Router {
      * (по умолчанию: false)
      */
     go(url, replaceState = false) {
+        console.log(url);
         const {urlData, view} = this.processURL(url) || {};
         if (!urlData || !view) {
             this.go(Urls.NotFound, true);

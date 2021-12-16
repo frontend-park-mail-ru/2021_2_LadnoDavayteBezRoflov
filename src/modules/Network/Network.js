@@ -653,6 +653,62 @@ class Network {
             `https://${this.BackendUrl}/${this._endpoints.tags}/${tgid}`,
             options);
     }
+
+    /**
+     * Метод, реализующий запрос PUT /api/boards/access/:accessPath.
+     * @param {String} accessPath ключ доступа
+     * @return {Promise<Response>} промис запроса
+     */
+    async useBoardInvite(accessPath) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/access/` +
+                `${accessPath}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/boards/:bid/access.
+     * @param {Number} bid id доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async refreshBoardInvite(bid) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}/access`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/card/access/tocard/:accessPath
+     * @param {String} accessPath ключ доступа
+     * @return {Promise<Response>} промис запроса
+     */
+    async useCardInvite(accessPath) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/access/tocard/` +
+            `${accessPath}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/boards/:bid/access.
+     * @param {Number} cid id карточки
+     * @return {Promise<Response>} промис запроса
+     */
+    async refreshCardInvite(cid) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/access/${cid}`,
+            options);
+    }
 }
 
 export default new Network();

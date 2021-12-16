@@ -54,3 +54,28 @@
         padding: 0 10px;
     }
 }
+
+.invite-link-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.invite-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+
+    &__link {
+        flex-grow: 1;
+    }
+
+    &__copy {
+
+    }
+
+    &__reload {
+
+    }
+
+}

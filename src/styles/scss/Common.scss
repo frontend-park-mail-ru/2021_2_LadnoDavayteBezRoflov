@@ -219,6 +219,22 @@ div#root {
         }
     }
 
+    &-copy {
+        @extend .material-icon;
+
+        &::before {
+            content: 'content_copy';
+        }
+    }
+
+    &-reload {
+        @extend .material-icon;
+
+        &::before {
+            content: 'autorenew';
+        }
+    }
+
     &-check {
         @extend .material-icon;
 
@@ -228,12 +244,12 @@ div#root {
 
     }
 
-  &-remove {
-    @extend .material-icon;
-    &::before {
-      content: 'cancel';
+    &-remove {
+        @extend .material-icon;
+        &::before {
+        content: 'cancel';
+        }
     }
-  }
 }
 
 .horizontal-line {

@@ -73,6 +73,7 @@ export default class BoardsView extends BaseView {
 
     /**
      * Метод, вызывающийся по умолчанию при открытии страницы.
+     * @private
      */
     _onShow() {
         this._setContext(new Map([
