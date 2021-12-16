@@ -177,6 +177,14 @@ div#root {
         opacity: 1.0;
     }
 
+    &-group_add {
+        @extend .material-icon;
+
+        &::before {
+            content: 'group_add';
+        }
+    }
+
     &-delete {
         @extend .material-icon;
 

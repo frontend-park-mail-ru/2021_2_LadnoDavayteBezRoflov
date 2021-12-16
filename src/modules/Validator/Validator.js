@@ -97,6 +97,21 @@ export default class Validator {
     }
 
     /**
+     * Метод, валидирующий название команды
+     * @param {String} title название на проверку
+     * @return {String | null}
+     */
+    validateTeamTitle(title) {
+        if (title.length < 1) {
+            return ConstantMessages.TeamTitleTooShort;
+        }
+        if (title.length > 60) {
+            return ConstantMessages.TeamTitleTooLong;
+        }
+        return null;
+    }
+
+    /**
      * Метод, валидирующий описание доски
      * @param {String} description описание на проверку
      * @return {String | null}

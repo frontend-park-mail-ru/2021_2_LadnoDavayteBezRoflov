@@ -1,0 +1,24 @@
+{{#with delete-dialog}}
+    {{# if visible }}
+        <div class="popup-wrapper" id="deletePopUpWrapperId">
+            <div class="popup-content popup-content_delete">
+                <form class="popup-form">
+                    <div class="popup-form__header">
+                            Удалить "{{name}}"?
+                    </div>
+                    <div class="horizontal-line"></div>
+                    {{#if errors}}
+                        <div class="error"> {{errors}}</div>
+                    {{/if}}
+                    <div class="popup-form__elements-wrapper">
+                        <div class="confirm-delete-wrapper">
+                            <button class="button button_red button_full-space button_no-overflow-hiding" id="deletePopUpConfirmBtnId">Да, удалить</button>
+                            <button class="button button_full-space button_no-overflow-hiding" id="deletePopUpRejectBtnId">Нет, отменить</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="close-button" id="deletePopUpCloseId"></div>
+            </div>
+        </div>
+    {{/if}}
+{{/with}}

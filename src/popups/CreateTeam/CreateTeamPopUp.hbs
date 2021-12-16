@@ -1,0 +1,31 @@
+{{#with team-popup}}
+    {{# if visible }}
+        <div class="popup-wrapper" id="createTeamPopUpWrapperId">
+            <div class="popup-content popup-content_create-board">
+                <form class="popup-form">
+                    <div class="popup-form__header">
+                        Создать команду
+                    </div>
+                    <div class="horizontal-line"></div>
+                    <div class="popup-form__elements-wrapper">
+                        <div>
+                            <label for="team-name" class>Название команды:</label>
+                            <input class="simple-form-element" type="text" id="createTeamPopUpNameId" name="team-name" autofocus
+                                   pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off"
+                                   {{#if edit}} value="{{team_name}}" {{/if}} required>
+                        </div>
+                        {{#if errors}}
+                            <div class="error">{{errors}}</div>
+                        {{/if}}
+                        {{# if edit }}
+                            <button class="button" id="editTeamPopUpSubmitId">Сохранить</button>
+                        {{ else }}
+                            <button class="button" id="createTeamPopUpSubmitId">Создать</button>
+                        {{/if}}
+                    </div>
+                </form>
+                <div class="close-button" id="createTeamPopUpCloseId"></div>
+            </div>
+        </div>
+    {{/if}}
+{{/with}}

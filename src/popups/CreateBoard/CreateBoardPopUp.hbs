@@ -10,17 +10,22 @@
                     <div class="popup-form__elements-wrapper">
                         <div>
                             <label for="board-name" class>Название доски:</label>
-                            <input class="simple-form-element" type="text" id="createBoardPopUpNameId" name="board-name" autofocus
-                                pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
+                            <input class="simple-form-element" type="text" id="createBoardPopUpNameId" name="board-name"
+                                   autofocus
+                                   pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required>
                         </div>
                         <div>
                             <label for="team-select">Команда:</label>
                             <select class="simple-form-element" id="createBoardPopUpTeamId" name="team-select" required>
                                 {{#each ../teams}}
-                                    {{#if (IsEqualHelper this.tid ../tid) }}
-                                        <option value="{{this.tid}}" selected>{{this.team_name}}</option>
+<!--                                Исключим "остальные доски"-->
+                                    {{#if (IsEqualHelper this.team_type 1) }}
                                     {{else}}
-                                        <option value="{{this.tid}}">{{this.team_name}}</option>
+                                        {{#if (IsEqualHelper this.tid ../tid) }}
+                                            <option value="{{this.tid}}" selected>{{this.team_name}}</option>
+                                        {{else}}
+                                            <option value="{{this.tid}}">{{this.team_name}}</option>
+                                        {{/if}}
                                     {{/if}}
                                 {{/each}}
                             </select>

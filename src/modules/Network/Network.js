@@ -744,6 +744,56 @@ class Network {
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.attachments}/${atid}`,
             options);
     }
+
+    /**
+     * Метод, реализующий запрос POST /api/teams.
+     * @param {object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async createTeam(data) {
+        const options = {
+            method: 'post',
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос DELETE /api/teams.
+     * @param {Number} tid id команды
+     * @return {Promise<Response>} промис запроса
+     */
+    async _deleteTeam(tid) {
+        const options = {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
+            options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/teams.
+     * @param {Number} tid id команды
+     * @param {Object} data полезная нагрузка запроса
+     * @return {Promise<Response>} промис запроса
+     */
+    async updateTeam(tid, data) {
+        const options = {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
+            options);
+    }
 }
 
 export default new Network();
