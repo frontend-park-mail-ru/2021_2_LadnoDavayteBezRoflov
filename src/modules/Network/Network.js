@@ -605,7 +605,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/${cid}` +
+            `https://${this.BackendUrl}/${this._endpoints.card}/${cid}` +
             `/toggletag/${tgid}`, options);
     }
 
@@ -618,7 +618,7 @@ class Network {
         const options = {
             method: 'delete',
         };
-        return this.httpRequest(`http://${this.BackendUrl}:${this.BackendPort}` +
+        return this.httpRequest(`https://${this.BackendUrl}` +
             `/${this._endpoints.tags}/${tgid}`, options);
     }
 
@@ -634,7 +634,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.tags}`,
+            `https://${this.BackendUrl}/${this._endpoints.tags}`,
             options);
     }
 
@@ -650,7 +650,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.tags}/${tgid}`,
+            `https://${this.BackendUrl}/${this._endpoints.tags}/${tgid}`,
             options);
     }
 }

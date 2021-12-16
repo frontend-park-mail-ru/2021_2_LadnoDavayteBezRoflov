@@ -15,7 +15,7 @@ const confConst = {
     FRONTEND_RELEASE: process.env.FRONTEND_RELEASE || SERVER_IP,
     FRONTEND_PORT: process.env.FRONTEND_PORT || 3001,
     DEBUG: process.env.NODE_ENV !== 'production',
-    PROTOCOL: process.env.PROTOCOL || 'http',
+    PROTOCOL: process.env.PROTOCOL || 'https',
 };
 
 const confDefs = {
