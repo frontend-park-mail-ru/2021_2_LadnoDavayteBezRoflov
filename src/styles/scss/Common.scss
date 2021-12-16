@@ -233,6 +233,8 @@ div#root {
         &::before {
             content: 'autorenew';
         }
+    }
+
     &-check {
         @extend .material-icon;
 
@@ -242,12 +244,12 @@ div#root {
 
     }
 
-  &-remove {
-    @extend .material-icon;
-    &::before {
-      content: 'cancel';
+    &-remove {
+        @extend .material-icon;
+        &::before {
+        content: 'cancel';
+        }
     }
-  }
 }
 
 .horizontal-line {
