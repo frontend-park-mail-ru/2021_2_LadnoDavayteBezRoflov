@@ -1,4 +1,4 @@
-<div class="column">
+<div class="column dragCardList" data-id="{{clid}}" draggable="true">
     <div class="column__header">
         <div class="column__title">{{cardList_name}}</div>
         <span class="material-icon-add addCardToCardList" data-id="{{clid}}"></span>
@@ -6,7 +6,7 @@
         <span class="material-icon-delete deleteCardList" data-id="{{clid}}"></span>
     </div>
     <div class="horizontal-line"></div>
-    <div class="column__content custom-scroll" data-id="{{clid}}">
+    <div class="column__content custom-scroll cardDropZone" data-id="{{clid}}">
         {{#each _cards}}
             {{{this}}}
         {{/each}}

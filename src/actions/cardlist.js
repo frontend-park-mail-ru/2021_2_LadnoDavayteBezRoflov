@@ -64,13 +64,15 @@ export const cardListActions = {
      * Обновляет список карточек
      * @param {Number} position позиция на доске
      * @param {String} title заголовок
+     * @param {Number} clid айди колонки
      */
-    updateCardList(position, title) {
+    updateCardList(position, title, clid = null) {
         Dispatcher.dispatch({
             actionName: CardListActionTypes.CARD_LIST_UPDATE_SUBMIT,
             data: {
                 cardList_name: title,
                 pos: position,
+                clid,
             },
         });
     },
