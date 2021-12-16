@@ -2009,6 +2009,13 @@ class BoardStore extends BaseStore {
         const contextTagPopUp = this._storage.get('tag-popup');
         const contextTagListPopUp = this._storage.get('tags-list-popup');
 
+        contextTagPopUp.errors = null;
+        const validator = new Validator();
+        contextTagPopUp.errors = validator.validateTagTitle(contextTagPopUp.tag_name);
+        if (contextTagPopUp.errors) {
+            return;
+        }
+
         let payload;
 
         const newTagNetwork = {
@@ -2098,14 +2105,15 @@ class BoardStore extends BaseStore {
      */
     async _updateTag() {
         const context = this._storage.get('tag-popup');
+
         context.errors = null;
-        if (context.tag_name.length === 0 || context.tag_name.length > 40) {
-            context.errors = ConstantMessages.WrongTagNameLength;
+        const validator = new Validator();
+        context.errors = validator.validateTagTitle(context.tag_name);
+        if (context.errors) {
             return;
         }
+
         const color = this._getTagColorById(context.picked_color);
-        const currentCard = this._getCardById(this._storage.get('card-popup').clid,
-                                              this._storage.get('card-popup').cid);
 
         let payload;
 
