@@ -7,6 +7,7 @@ import {CheckListActionTypes} from '../../actions/checklist';
 import {CardActionTypes} from '../../actions/card.js';
 import {BoardActionTypes} from '../../actions/board.js';
 import {CommentsActionTypes} from '../../actions/comments.js';
+import {InviteActionTypes} from '../../actions/invite';
 
 // Modules
 import Network from '../../modules/Network/Network.js';
@@ -16,12 +17,13 @@ import Validator from '../../modules/Validator/Validator';
 // Constants
 import {
     CheckLists, ConstantMessages,
-    HttpStatusCodes, Urls, BoardStoreConstants,
+    HttpStatusCodes, Urls, BoardStoreConstants, SelfAddress,
 } from '../../constants/constants.js';
 
 // Stores
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
+
 
 /**
  * Класс, реализующий хранилище доски
@@ -80,6 +82,8 @@ class BoardStore extends BaseStore {
             searchString: null,
             users: [],
             header: 'Добавить пользователя в доску',
+            inviteLink: null,
+            selectInvite: false,
         });
 
         this._storage.set('add-card-member-popup', {
@@ -88,6 +92,8 @@ class BoardStore extends BaseStore {
             searchString: null,
             users: [],
             header: 'Добавить пользователя в карточку',
+            inviteLink: null,
+            selectInvite: false,
         });
     }
 
@@ -327,10 +333,60 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        /* Invite: */
+        case InviteActionTypes.GO_BOARD_INVITE:
+            await this._openBoardInvite(action.data);
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.GO_CARD_INVITE:
+            await this._openCardInvite(action.data);
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.REFRESH_BOARD_LINK:
+            await this._refreshBoardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.REFRESH_CARD_LINK:
+            await this._refreshCardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.COPY_BOARD_LINK:
+            await this._copyBoardInvite();
+            this._emitChange();
+            break;
+
+        case InviteActionTypes.COPY_CARD_LINK:
+            await this._copyCardInvite();
+            this._emitChange();
+            break;
 
         default:
             return;
         }
+    }
+
+    /**
+     * Создает приглашение на карточку
+     * @param {String} accessPath - путь
+     * @private
+     */
+    _setCardInvite(accessPath) {
+        this._storage.get('add-card-member-popup').inviteLink =
+            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.CardPath + accessPath;
+    }
+
+    /**
+     * Создает приглашение на доску
+     * @param {String} accessPath - путь
+     * @private
+     */
+    _setBoardInvite(accessPath) {
+        this._storage.get('add-board-member-popup').inviteLink =
+            `http://${SelfAddress.Url}:${SelfAddress.Port}` + Urls.Invite.BoardPath + accessPath;
     }
 
     /**
@@ -367,6 +423,7 @@ class BoardStore extends BaseStore {
             });
 
             this._storage.set('members', payload.data.members || []); // todo payload.data.members
+            this._setBoardInvite(payload.data.access_path);
             return;
 
         case HttpStatusCodes.Unauthorized:
@@ -1341,6 +1398,7 @@ class BoardStore extends BaseStore {
     async _toggleCheckListItem(data) {
         const context = this._storage.get('card-popup');
         context.errors = null;
+        context.selectInvite = false;
         let item = this._getCheckListItemById(data.chlid, data.chliid);
 
         const newItem = {...item};
@@ -1396,6 +1454,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _hideAddCardAssigneePopUp() {
+        this._storage.get('add-card-member-popup').selectInvite = false;
         this._storage.get('add-card-member-popup').visible = false;
     }
 
@@ -1406,6 +1465,7 @@ class BoardStore extends BaseStore {
      */
     async _refreshCardAssigneeSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
+        context.selectInvite = false;
         context.errors = null;
         const {searchString} = data;
         context.searchString = searchString;
@@ -1453,6 +1513,7 @@ class BoardStore extends BaseStore {
     async _toggleCardAssigneeInSearchList(data) {
         const context = this._storage.get('add-card-member-popup');
         context.errors = null;
+        context.selectInvite = false;
 
         const card = this._getCardById(this._storage.get('card-popup').clid,
                                        this._storage.get('card-popup').cid);
@@ -1504,6 +1565,7 @@ class BoardStore extends BaseStore {
      */
     _showAddBoardMemberPopUp() {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.visible = true;
         context.errors = null;
         context.searchString = null;
@@ -1517,6 +1579,7 @@ class BoardStore extends BaseStore {
      * @private
      */
     _hideAddBoardMemberPopUp() {
+        this._storage.get('add-board-member-popup').selectInvite = false;
         this._storage.get('add-board-member-popup').visible = false;
     }
 
@@ -1545,6 +1608,7 @@ class BoardStore extends BaseStore {
      */
     async _toggleBoardMemberInSearchList(data) {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.errors = null;
 
         const members = this._storage.get('members').slice();
@@ -1601,6 +1665,7 @@ class BoardStore extends BaseStore {
      */
     async _refreshBoardMemberSearchList(data) {
         const context = this._storage.get('add-board-member-popup');
+        context.selectInvite = false;
         context.errors = null;
         const {searchString} = data;
         context.searchString = searchString;
@@ -1793,6 +1858,100 @@ class BoardStore extends BaseStore {
      */
     _changeCardPopUpScroll(data) {
         this._storage.get('card-popup').scroll = data.scrollValue;
+    }
+
+    /**
+     * Приглашает пользователя в доску
+     * @param {Object} data инвайт
+     * @return {Promise<void>}
+     */
+    async _openBoardInvite(data) {
+        let payload;
+
+        try {
+            payload = await Network.useBoardInvite(data.accessPath);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            Router.go(`/board/${payload.data.bid}`, true);
+            return;
+
+        default:
+            Router.go(Urls.Login, true);
+            return;
+        }
+    }
+
+    /**
+     * Приглашает пользователя в карточку
+     * @param {Object} data инвайт
+     * @return {Promise<void>}
+     */
+    async _openCardInvite(data) {
+
+    }
+
+    /**
+     * Обновляет ссылку приглашение на доску
+     * @return {Promise<void>}
+     */
+    async _refreshBoardInvite() {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        let payload;
+
+        try {
+            payload = await Network.refreshBoardInvite(this._storage.get('bid'));
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            this._setBoardInvite(payload.data.access_path);
+            return;
+
+        default:
+            context.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Обновляет ссылку приглашение на карточку
+     * @return {Promise<void>}
+     */
+    async _refreshCardInvite() {
+
+    }
+
+    /**
+     * Скопировать приглашение на доску
+     */
+    async _copyBoardInvite() {
+        const context = this._storage.get('add-board-member-popup');
+        context.errors = null;
+
+        try {
+            await navigator.clipboard.writeText(context.inviteLink);
+        } catch (error) {
+            context.errors = ConstantMessages.CantCopyToClipBoard;
+        }
+
+        context.selectInvite = true;
+    }
+
+    /**
+     * Скопировать приглашение на карточку
+     */
+    _copyCardInvite() {
+
     }
 }
 

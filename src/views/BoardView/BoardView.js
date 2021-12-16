@@ -34,6 +34,8 @@ import './BoardView.scss';
 
 // Шаблон
 import template from './BoardView.hbs';
+import {inviteActions} from '../../actions/invite';
+import Dispatcher from '../../modules/Dispatcher/Dispatcher';
 
 /**
  * Класс, реализующий страницу доски.
@@ -77,8 +79,19 @@ export default class BoardView extends BaseView {
      * @param {Object} urlData параметры адресной строки
      */
     _onShow(urlData) {
-        this.urlData = urlData;
-        boardsActions.getBoard(urlData.pathParams.id);
+        if (!UserStore.getContext('isAuthorized')) {
+            Router.go(Urls.Login, true);
+            return;
+        }
+
+        if ('accessPathBoard' in urlData.pathParams) {
+            inviteActions.openBoardInvite(urlData.pathParams.accessPathBoard);
+        } else if ('accessPathCard' in urlData.pathParams) {
+            inviteActions.openCardInvite(urlData.pathParams.accessPathCard);
+        } else {
+            boardsActions.getBoard(urlData.pathParams.id);
+        }
+
         this.render();
     }
 
@@ -174,11 +187,15 @@ export default class BoardView extends BaseView {
                 onInput: this._onAddCardMemberInput.bind(this),
                 onUserClick: this._onAddCardMemberUserClick.bind(this),
                 onClose: this._onAddCardMemberClose.bind(this),
+                onRefreshInvite: this._onRefreshCardInvite.bind(this),
+                onCopyInvite: this._onCopyCardInvite.bind(this),
             },
             board: {
                 onInput: this._onAddBoardMemberInput.bind(this),
                 onUserClick: this._onAddBoardMemberUserClick.bind(this),
                 onClose: this._onAddBoardMemberClose.bind(this),
+                onRefreshInvite: this._onRefreshBoardInvite.bind(this),
+                onCopyInvite: this._onCopyBoardInvite.bind(this),
             },
         };
         this._onAddBoardMemberShow = this._onAddBoardMemberShow.bind(this);
@@ -393,5 +410,45 @@ export default class BoardView extends BaseView {
             event.target.id === 'addUserPopUpWrapperId') {
             boardActions.hideAddBoardMemberPopUp();
         }
+    }
+
+    /**
+     * Callback, вызываемый при обновлении ссылки приглашение на доску
+     * @param {Event} event объект события
+     * @private
+     */
+    _onRefreshBoardInvite(event) {
+        event.preventDefault();
+        inviteActions.refreshBoardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при обновлении ссылки приглашение на карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onRefreshCardInvite(event) {
+        event.preventDefault();
+        inviteActions.refreshCardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при копировании приглашения на доску
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCopyBoardInvite(event) {
+        event.preventDefault();
+        inviteActions.copyBoardInvite();
+    }
+
+    /**
+     * Callback, вызываемый при копировании приглашения на карточку
+     * @param {Event} event объект события
+     * @private
+     */
+    _onCopyCardInvite(event) {
+        event.preventDefault();
+        inviteActions.copyCardInvite();
     }
 }

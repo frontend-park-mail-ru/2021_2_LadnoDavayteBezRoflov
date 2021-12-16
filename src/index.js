@@ -42,12 +42,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById(Html.Root);
     document.getElementById('no-connection').innerHTML = '';
 
-    const boardView = new BoardsView(root);
-    Router.register(Urls.Root, boardView);
-    Router.register(Urls.Boards, boardView);
+    const boardsView = new BoardsView(root);
+    const boardView = new BoardView(root);
+    Router.register(Urls.Root, boardsView);
+    Router.register(Urls.Boards, boardsView);
+    Router.register(Urls.Invite.Board, boardView);
+    Router.register(Urls.Invite.Card, boardView);
     Router.register(Urls.Register, new RegisterView(root));
     Router.register(Urls.Login, new LoginView(root));
-    Router.register(Urls.Board, new BoardView(root));
+    Router.register(Urls.Board, boardView);
     Router.register(Urls.Profile, new ProfileView(root));
 
     UserStore.addListener(() => {

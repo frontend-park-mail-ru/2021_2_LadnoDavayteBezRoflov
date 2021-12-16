@@ -12,6 +12,12 @@ export const Urls = {
     Card: '/card/<id>',
     Profile: '/profile',
     NotFound: '/404',
+    Invite: {
+        BoardPath: '/invite/board/',
+        Board: '/invite/board/<accessPathBoard>',
+        CardPath: '/invite/card/',
+        Card: '/invite/card/<accessPathCard>',
+    },
 };
 
 /**
@@ -91,6 +97,7 @@ export const ConstantMessages = {
     CardTitleTooLong: 'Название карточки слишком длинное',
     CardErrorOnServer: 'Не удалось создать карточку, попробуйте позднее',
     UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
+    CantCopyToClipBoard: 'Не удалось скопировать текст',
 };
 
 export const BoardStoreConstants = {

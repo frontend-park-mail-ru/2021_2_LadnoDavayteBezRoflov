@@ -25,6 +25,17 @@
                             </div>
                         {{/each}}
                     </div>
+                    {{#if inviteLink}}
+                    <div class="invite-link-wrapper">
+                        <div class="invite-link__label">Ссылка-приглашение:</div>
+                        <div class="invite-link">
+                            <input class="simple-form-element invite-link__link" type="text" id="inviteLinkInputId"
+                                   value="{{inviteLink}}" autocomplete="off" readonly>
+                            <div class="invite-link__copy material-icon-copy" id="copyLinkId"></div>
+                            <div class="invite-link__reload material-icon-reload" id="refreshLinkId"></div>
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="horizontal-line horizontal-line_aligned"></div>
             </div>

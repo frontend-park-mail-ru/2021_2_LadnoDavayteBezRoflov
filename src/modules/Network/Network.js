@@ -591,6 +591,34 @@ class Network {
             `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.comments}/${data.cmid}`,
             options);
     }
+
+    /**
+     * Метод, реализующий запрос PUT /api/boards/access/:accessPath.
+     * @param {String} accessPath ключ доступа
+     * @return {Promise<Response>} промис запроса
+     */
+    async useBoardInvite(accessPath) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/access/` +
+                `${accessPath}`, options);
+    }
+
+    /**
+     * Метод, реализующий запрос PUT /api/boards/:bid/access.
+     * @param {Number} bid id доски
+     * @return {Promise<Response>} промис запроса
+     */
+    async refreshBoardInvite(bid) {
+        const options = {
+            method: 'put',
+        };
+        return this.httpRequest(
+            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}/access`,
+            options);
+    }
 }
 
 export default new Network();

@@ -220,6 +220,22 @@ div#root {
         }
     }
 
+    &-copy {
+        @extend .material-icon;
+
+        &::before {
+            content: 'content_copy';
+        }
+    }
+
+    &-reload {
+        @extend .material-icon;
+
+        &::before {
+            content: 'autorenew';
+        }
+    }
+
   &-remove {
     @extend .material-icon;
     &::before {
