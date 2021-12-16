@@ -91,6 +91,8 @@ export const ConstantMessages = {
     CardTitleTooLong: 'Название карточки слишком длинное',
     CardErrorOnServer: 'Не удалось создать карточку, попробуйте позднее',
     UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
+
+    WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
 };
 
 export const BoardStoreConstants = {

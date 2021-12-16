@@ -11,6 +11,7 @@ import {checkListAction} from '../../actions/checklist';
 
 // Стили:
 import './CardPopUp.scss';
+import {tagsActions} from '../../actions/tags';
 
 /**
  * Класс popup окна создания и редактирования карточки
@@ -61,6 +62,8 @@ export default class CardPopUp extends BaseComponent {
                 label: document.querySelectorAll('.checklist-item__label'),
             },
             scrollZone: document.getElementById('cardPopUpScrollZoneId'),
+            tags: document.querySelectorAll('.card-popup-tag'),
+            addTagBtn: document.getElementById('addTagCardPopUpId'),
         };
     }
 
@@ -116,6 +119,12 @@ export default class CardPopUp extends BaseComponent {
         this._elements.checkListItem.label?.forEach((element) => {
             element.addEventListener('click', this._onToggleChekListItem);
         });
+
+        /* Tags */
+        this._elements.tags?.forEach((tag) => {
+            tag.addEventListener('click', this._onShowTagListPopUpCard);
+        });
+        this._elements.addTagBtn?.addEventListener('click', this._onShowTagListPopUpCard);
 
         if (!this.context.get('card-popup').edit) {
             this._elements.card_name?.focus();
@@ -174,6 +183,12 @@ export default class CardPopUp extends BaseComponent {
         this._elements.checkListItem.deleteBtn?.forEach((element) => {
             element.removeEventListener('click', this._onDeleteCheckListItem);
         });
+
+        /* Tags */
+        this._elements.tags?.forEach((tag) => {
+            tag.removeEventListener('click', this._onShowTagListPopUpCard);
+        });
+        this._elements.addTagBtn?.removeEventListener('click', this._onShowTagListPopUpCard);
     }
 
     /**
@@ -205,6 +220,9 @@ export default class CardPopUp extends BaseComponent {
         this._onEditCheckListItem = this._onEditCheckListItem.bind(this);
         this._onSaveChekListItem = this._onSaveChekListItem.bind(this);
         this._onToggleChekListItem = this._onToggleChekListItem.bind(this);
+
+        /* Tags */
+        this._onShowTagListPopUpCard = this._onShowTagListPopUpCard.bind(this);
     }
 
     /**
@@ -455,5 +473,15 @@ export default class CardPopUp extends BaseComponent {
                                            parseInt(chliid, 10),
                                            status);
         cardActions.changeScroll(this._elements.scrollZone.scrollTop);
+    }
+
+    /**
+     * CallBack на добаление тега
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onShowTagListPopUpCard(event) {
+        event.preventDefault();
+        tagsActions.showTagListPopUpCard();
     }
 }

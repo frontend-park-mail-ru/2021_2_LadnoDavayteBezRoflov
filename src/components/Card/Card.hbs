@@ -1,7 +1,7 @@
 <div class="card editCard" data-id="{{cid}}">
     <div class="card__tags-container" data-id="{{cid}}">
         {{#each tags}}
-            <div class="card-tag" data-id="{{cid}}"></div>
+            <div class="card-tag tag-colors__{{this.color.color_name}}" data-id="{{cid}}"></div>
         {{/each}}
     </div>
     <div class="card__header" data-id="{{cid}}">
