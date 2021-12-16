@@ -330,12 +330,12 @@ class BoardStore extends BaseStore {
 
         /* Attachments */
         case AttachmentsActionTypes.UPLOAD:
-            this._uploadAttachment(action.data);
+            await this._uploadAttachment(action.data);
             this._emitChange();
             break;
 
         case AttachmentsActionTypes.DELETE:
-            this._deleteAttachment(action.data);
+            await this._deleteAttachment(action.data);
             this._emitChange();
             break;
 
@@ -379,16 +379,7 @@ class BoardStore extends BaseStore {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
-                    card.attachments = [
-                        {
-                            atid: 1,
-                            file_pub_name: 'some file.png',
-                        },
-                        {
-                            atid: 2,
-                            file_pub_name: 'some file2.png',
-                        },
-                    ];
+                    card.attachments = card.attachments || [];
                 });
             });
 
@@ -1841,7 +1832,7 @@ class BoardStore extends BaseStore {
         let payload;
 
         try {
-            payload = await Network.uploadAttachment(attachmentForm);
+            payload = await Network.uploadAttachment(attachmentForm, cardContext.cid);
         } catch (error) {
             console.log('Unable to connect to backend, reason: ', error);
             return;

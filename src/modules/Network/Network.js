@@ -594,18 +594,19 @@ class Network {
     }
 
     /**
-     * Метод, реализующий запрос PUT /api/attachments.
+     * Метод, реализующий запрос POST /api/attachments/:cid.
      * @param {Object} data файл аттача
+     * @param {Number} cid id карточки
      * @return {Promise<Response>} промис запроса
      */
-    async uploadAttachment(data) {
+    async uploadAttachment(data, cid) {
         const options = {
-            method: 'put',
+            method: 'post',
             body: data,
         };
         return this.httpRequest(
             `http://${this.BackendUrl}:${this.BackendPort}/` +
-            `${this._endpoints.attachments}`,
+            `${this._endpoints.attachments}/${cid}`,
             options);
     }
 
