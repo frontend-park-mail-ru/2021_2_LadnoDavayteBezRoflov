@@ -7,6 +7,9 @@
                             Удалить "{{name}}"?
                     </div>
                     <div class="horizontal-line"></div>
+                    {{#if errors}}
+                        <div class="error"> {{errors}}</div>
+                    {{/if}}
                     <div class="popup-form__elements-wrapper">
                         <div class="confirm-delete-wrapper">
                             <button class="button button_red button_full-space button_no-overflow-hiding" id="deletePopUpConfirmBtnId">Да, удалить</button>

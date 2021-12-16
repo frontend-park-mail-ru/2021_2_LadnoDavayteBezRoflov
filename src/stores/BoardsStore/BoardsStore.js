@@ -416,7 +416,6 @@ class BoardsStore extends BaseStore {
      * @private
      */
     _showAddTeamPopUp() {
-        console.log('_showAddTeamPopUp');
         const context = this._storage.get('team-popup');
         context.visible = true;
         context.errors = null;
@@ -489,6 +488,7 @@ class BoardsStore extends BaseStore {
         context.errors = null;
         context.team_name = this._getTeamById(data.tid).team_name;
         context.edit = true;
+        context.tid = data.tid;
     }
 
     /**
@@ -509,7 +509,7 @@ class BoardsStore extends BaseStore {
         this._hideTeamPopUp();
 
         let payload;
-
+        console.log(context);
         try {
             payload = await Network.updateTeam(context.tid, {
                 team_name: data.team_name,
@@ -561,6 +561,8 @@ class BoardsStore extends BaseStore {
                 this._getTeamById(this._storage.get('delete-dialog').tid), 1);
 
         default:
+            this._showDeleteTeamPopUp({tid: this._storage.get('delete-dialog').tid});
+            this._storage.get('delete-dialog').errors = ConstantMessages.UnsuccessfulRequest;
             return;
         }
     }

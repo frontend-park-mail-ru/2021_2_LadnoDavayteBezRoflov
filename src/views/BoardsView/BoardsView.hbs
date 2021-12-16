@@ -3,7 +3,6 @@
 <div class="main-container">
     <div class="teams-container">
         <div class="boards-header">
-            <div>Ваши команды</div>
             <div class="button button_small" id="createTeamBtnId">Создать команду</div>
         </div>
         {{#each teams}}
@@ -21,7 +20,7 @@
                         {{#if (IsEqualHelper this.team_type 0)}}
                             <span class="team__member-counter">{{this.users.length}}</span>
                             <span class="material-icon-group_add invite-board" data-id="{{this.tid}}"></span>
-                            <span class="material-icon-add add-board" data-id="{{this.tid}}"></span>
+                            <span class="material-icon-add add-board-btn" data-id="{{this.tid}}"></span>
                             <span class="material-icon-delete team-delete-btn" data-id="{{this.tid}}"></span>
                         <!-- Личное пространство-->
                         {{else if (IsEqualHelper this.team_type 2)}}

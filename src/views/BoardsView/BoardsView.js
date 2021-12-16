@@ -182,7 +182,7 @@ export default class BoardsView extends BaseView {
      */
     _registerElements() {
         this._elements = {
-            addBoardBtns: document.querySelectorAll('.add-board'),
+            addBoardBtns: document.querySelectorAll('.add-board-btn'),
             inviteMembersBtns: document.querySelectorAll('.invite-board'),
             createTeamBtn: document.getElementById('createTeamBtnId'),
             deleteTeamBtns: document.querySelectorAll('.team-delete-btn'),

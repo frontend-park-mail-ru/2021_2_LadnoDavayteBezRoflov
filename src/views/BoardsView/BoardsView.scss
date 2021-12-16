@@ -125,5 +125,8 @@ $team-font-size: 25px;
 }
 
 .boards-header {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
 
 }
