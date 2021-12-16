@@ -2146,7 +2146,7 @@ class BoardStore extends BaseStore {
 
         switch (payload.status) {
         case HttpStatusCodes.Ok:
-            Router.go(`/board/${this._storage.get('bid')}`, true);
+            Router.go(`/board/${payload.data.bid}`, true);
             return;
 
         default:
