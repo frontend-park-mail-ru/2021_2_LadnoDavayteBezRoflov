@@ -98,6 +98,8 @@ export const ConstantMessages = {
     CardErrorOnServer: 'Не удалось создать карточку, попробуйте позднее',
     UnsuccessfulRequest: 'Неудачный запрос, попробуйте позднее :]',
     CantCopyToClipBoard: 'Не удалось скопировать текст',
+
+    WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
 };
 
 export const BoardStoreConstants = {
