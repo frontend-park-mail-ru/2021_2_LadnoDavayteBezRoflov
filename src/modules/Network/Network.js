@@ -665,7 +665,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/access/` +
+            `https://${this.BackendUrl}/${this._endpoints.board}/access/` +
                 `${accessPath}`, options);
     }
 
@@ -679,7 +679,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.board}/${bid}/access`,
+            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}/access`,
             options);
     }
 
@@ -693,7 +693,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/access/tocard/` +
+            `https://${this.BackendUrl}/${this._endpoints.card}/access/tocard/` +
             `${accessPath}`, options);
     }
 
@@ -707,7 +707,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.card}/access/${cid}`,
+            `https://${this.BackendUrl}/${this._endpoints.card}/access/${cid}`,
             options);
     }
 
@@ -723,7 +723,7 @@ class Network {
             body: data,
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/` +
+            `https://${this.BackendUrl}/` +
             `${this._endpoints.attachments}/${cid}`,
             options);
     }
@@ -741,7 +741,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.attachments}/${atid}`,
+            `https://${this.BackendUrl}/${this._endpoints.attachments}/${atid}`,
             options);
     }
 
@@ -756,7 +756,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}`, options);
+            `https://${this.BackendUrl}/${this._endpoints.team}`, options);
     }
 
     /**
@@ -772,7 +772,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
+            `https://${this.BackendUrl}/${this._endpoints.team}/${tid}`,
             options);
     }
 
@@ -791,7 +791,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `http://${this.BackendUrl}:${this.BackendPort}/${this._endpoints.team}/${tid}`,
+            `https://${this.BackendUrl}/${this._endpoints.team}/${tid}`,
             options);
     }
 }
