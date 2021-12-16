@@ -12,6 +12,17 @@
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="popup-form__elements-wrapper">
+                        {{#if edit }}
+                            <div>
+                                <label>Теги карточки:</label>
+                                <div class="card-popup-tags">
+                                    {{#each tags}}
+                                        <div class="tags-list__tag_compact tag-colors__{{this.color.color_name}}"><div>{{tag_name}}</div></div>
+                                    {{/each}}
+                                    <div class="button button_small add" id="addTagCardPopUpId"></div>
+                                </div>
+                            </div>
+                        {{/if}}
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
                             <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
@@ -33,19 +44,19 @@
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
                         </div>
                         {{#if edit}}
-                        <div>
-                            <label for="cardPopUpPositionId">Позиция:</label>
-                            <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
-                                    required>
-                                {{#each positionRange}}
-                                    {{#if (IsEqualHelper this ../position) }}
-                                        <option value="{{this}}" selected>#{{this}}</option>
-                                    {{else}}
-                                        <option value="{{this}}">#{{this}}</option>
-                                    {{/if}}
-                                {{/each}}
-                            </select>
-                        </div>
+                            <div>
+                                <label for="cardPopUpPositionId">Позиция:</label>
+                                <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
+                                        required>
+                                    {{#each positionRange}}
+                                        {{#if (IsEqualHelper this ../position) }}
+                                            <option value="{{this}}" selected>#{{this}}</option>
+                                        {{else}}
+                                            <option value="{{this}}">#{{this}}</option>
+                                        {{/if}}
+                                    {{/each}}
+                                </select>
+                            </div>
                         {{/if}}
                         {{# if checkLists}}
                             <span class="check-list-separator">Чек листы</span>
@@ -115,12 +126,13 @@
                         {{#if edit}}
                             <div class="comments-wrapper">
                                 <textarea class="simple-form-element" type="text" id="newCommentTextId"
-                                           name="comment" autocomplete="off"
-                                           placeholder="Добавить комментарий" required></textarea>
+                                          name="comment" autocomplete="off"
+                                          placeholder="Добавить комментарий" required></textarea>
                                 <button class="button" id="createCommentId">Добавить</button>
                                 {{#each comments}}
                                     <div class="comment" data-author="{{this.uid}}">
-                                        <img class="comment__avatar" title="{{this.user.userName}}" src="{{this.user.avatar}}"/>
+                                        <img class="comment__avatar" title="{{this.user.userName}}"
+                                             src="{{this.user.avatar}}"/>
                                         <div class="comment__content">
                                             {{#if this.edit}}
                                                 <input class="simple-form-element commentInput" type="text"

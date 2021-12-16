@@ -35,6 +35,9 @@ export default class AddUserPopUp extends BaseComponent {
             input: document.getElementById('addUserPopUpSearchInputId'),
             users: document.querySelectorAll('.search-result'),
             closeBtn: document.getElementById('addUserPopUpCloseId'),
+            inviteInput: document.getElementById('inviteLinkInputId'),
+            inviteRefreshBtn: document.getElementById('refreshLinkId'),
+            inviteCopyBtn: document.getElementById('copyLinkId'),
         };
     }
 
@@ -52,6 +55,8 @@ export default class AddUserPopUp extends BaseComponent {
         this._elements.users?.forEach((user)=>{
             user.addEventListener('click', this._callbacks.onUserClick);
         });
+        this._elements.inviteRefreshBtn?.addEventListener('click', this._callbacks.onRefreshInvite);
+        this._elements.inviteCopyBtn?.addEventListener('click', this._callbacks.onCopyInvite);
     };
 
     /**
@@ -66,6 +71,8 @@ export default class AddUserPopUp extends BaseComponent {
         this._elements.users?.forEach((user)=>{
             user.removeEventListener('click', this._callbacks.onUserClick);
         });
+        this._elements.inviteRefreshBtn?.removeEventListener('click', this._callbacks.onRefreshInvite);
+        this._elements.inviteCopyBtn?.removeEventListener('click', this._callbacks.onCopyInvite);
     }
 
     /**
@@ -73,6 +80,11 @@ export default class AddUserPopUp extends BaseComponent {
      * @private
      */
     _setUpSearchInput() {
+        if (this.context.selectInvite) {
+            this._elements.inviteInput?.focus();
+            this._elements.inviteInput?.select();
+            return;
+        }
         this._elements.input?.focus();
         this._elements.input?.setSelectionRange(this._elements.input.value.length,
                                                 this._elements.input.value.length);

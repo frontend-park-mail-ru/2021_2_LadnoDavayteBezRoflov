@@ -12,6 +12,7 @@ import {checkListAction} from '../../actions/checklist';
 // Стили:
 import './CardPopUp.scss';
 import {attachmentsActions} from '../../actions/attachments';
+import {tagsActions} from '../../actions/tags';
 
 /**
  * Класс popup окна создания и редактирования карточки
@@ -65,6 +66,8 @@ export default class CardPopUp extends BaseComponent {
             downloadAttachBtn: document.querySelectorAll('.attachment__download-btn'),
             deleteAttachBtn: document.querySelectorAll('.attachment__delete-btn'),
             scrollZone: document.getElementById('cardPopUpScrollZoneId'),
+            tags: document.querySelectorAll('.card-popup-tag'),
+            addTagBtn: document.getElementById('addTagCardPopUpId'),
         };
     }
 
@@ -120,6 +123,12 @@ export default class CardPopUp extends BaseComponent {
         this._elements.checkListItem.label?.forEach((element) => {
             element.addEventListener('click', this._onToggleChekListItem);
         });
+
+        /* Tags */
+        this._elements.tags?.forEach((tag) => {
+            tag.addEventListener('click', this._onShowTagListPopUpCard);
+        });
+        this._elements.addTagBtn?.addEventListener('click', this._onShowTagListPopUpCard);
 
         if (!this.context.get('card-popup').edit) {
             this._elements.card_name?.focus();
@@ -196,6 +205,11 @@ export default class CardPopUp extends BaseComponent {
         this._elements.deleteAttachBtn?.forEach((element) => {
             element.removeEventListener('click', this._onDeleteAttachment);
         });
+        /* Tags */
+        this._elements.tags?.forEach((tag) => {
+            tag.removeEventListener('click', this._onShowTagListPopUpCard);
+        });
+        this._elements.addTagBtn?.removeEventListener('click', this._onShowTagListPopUpCard);
     }
 
     /**
@@ -232,6 +246,8 @@ export default class CardPopUp extends BaseComponent {
         this._onDownloadAttachment = this._onDownloadAttachment.bind(this);
         this._onUploadAttachment = this._onUploadAttachment.bind(this);
         this._onDeleteAttachment = this._onDeleteAttachment.bind(this);
+        /* Tags */
+        this._onShowTagListPopUpCard = this._onShowTagListPopUpCard.bind(this);
     }
 
     /**
@@ -514,5 +530,14 @@ export default class CardPopUp extends BaseComponent {
         event.preventDefault();
         const atid = Number.parseInt(event.target.closest('div.attachment').dataset.id, 10);
         attachmentsActions.downloadAttachment(atid);
+    }
+    /**
+     * CallBack на добаление тега
+     * @param {Event} event - объект события
+     * @private
+     */
+    _onShowTagListPopUpCard(event) {
+        event.preventDefault();
+        tagsActions.showTagListPopUpCard();
     }
 }

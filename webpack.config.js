@@ -7,7 +7,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
 const DEPLOY_DIR = 'dist';
-const SERVER_IP = '95.163.213.142';
+const SERVER_IP = 'brrrello.ru';
 const confConst = {
     LOCAL_HOST: 'localhost',
     BACKEND_RELEASE: process.env.BACKEND_RELEASE || SERVER_IP,
@@ -15,7 +15,7 @@ const confConst = {
     FRONTEND_RELEASE: process.env.FRONTEND_RELEASE || SERVER_IP,
     FRONTEND_PORT: process.env.FRONTEND_PORT || 3001,
     DEBUG: process.env.NODE_ENV !== 'production',
-    PROTOCOL: process.env.PROTOCOL || 'http',
+    PROTOCOL: process.env.PROTOCOL || 'https',
 };
 
 const confDefs = {
