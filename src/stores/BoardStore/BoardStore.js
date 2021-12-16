@@ -27,6 +27,7 @@ import {
 // Stores
 import UserStore from '../UserStore/UserStore.js';
 import SettingsStore from '../SettingsStore/SettingsStore.js';
+import {AttachmentsActionTypes} from '../../actions/attachments';
 
 
 /**
@@ -354,6 +355,21 @@ class BoardStore extends BaseStore {
             this._emitChange();
             break;
 
+        /* Attachments */
+        case AttachmentsActionTypes.UPLOAD:
+            await this._uploadAttachment(action.data);
+            this._emitChange();
+            break;
+
+        case AttachmentsActionTypes.DELETE:
+            await this._deleteAttachment(action.data);
+            this._emitChange();
+            break;
+
+        case AttachmentsActionTypes.DOWNLOAD:
+            this._downloadAttachment(action.data);
+            break;
+
         /* Invite: */
         case InviteActionTypes.GO_BOARD_INVITE:
             await this._openBoardInvite(action.data);
@@ -534,6 +550,7 @@ class BoardStore extends BaseStore {
                     card.deadlineStatus = validator.validateDeadline(card.deadline, card.deadline_check);
                     card.deadlineCheck = card.deadline_check;
                     card.deadlineDate = (new Date(card.deadline)).toLocaleDateString('ru-RU', options);
+                    card.attachments = card.attachments || [];
                     // Сохраним в карточке ссылки на теже теги, что и в списке тегов
                     card.tags = card.tags.map((tag) => {
                         return this._getTagById(tag.tgid);
@@ -1034,6 +1051,7 @@ class BoardStore extends BaseStore {
                 return {...list, check_list_items: items, edit: false};
             }),
             scroll: 0,
+            attachments: card.attachments,
         });
     }
 
@@ -1982,6 +2000,87 @@ class BoardStore extends BaseStore {
      */
     _changeCardPopUpScroll(data) {
         this._storage.get('card-popup').scroll = data.scrollValue;
+    }
+
+    /**
+     * Загружает файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    async _uploadAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+        cardContext.errors = null;
+        if (data.file.size > BoardStoreConstants.MaxAttachmentSize) {
+            cardContext.errors = ConstantMessages.AttachmentSizeTooBig;
+            return;
+        }
+
+        const attachmentForm = new FormData();
+        attachmentForm.append('attachment', data.file);
+
+        let payload;
+
+        try {
+            payload = await Network.uploadAttachment(attachmentForm, cardContext.cid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const card = this._getCardById(cardContext.clid, cardContext.cid);
+            card.attachments.push(payload.data);
+            return;
+
+        default:
+            cardContext.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Удаляет файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    async _deleteAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+
+        let payload;
+
+        try {
+            payload = await Network.deleteAttachment(data.atid);
+        } catch (error) {
+            console.log('Unable to connect to backend, reason: ', error);
+            return;
+        }
+
+        switch (payload.status) {
+        case HttpStatusCodes.Ok:
+            const attachment = cardContext.attachments.find((attach) => {
+                return attach.atid === data.atid;
+            });
+            cardContext.attachments.splice(cardContext.attachments.indexOf(attachment), 1);
+            return;
+
+        default:
+            cardContext.errors = ConstantMessages.UnsuccessfulRequest;
+            return;
+        }
+    }
+
+    /**
+     * Скачивает файл вложения
+     * @param {Object} data данные
+     * @private
+     */
+    _downloadAttachment(data) {
+        const cardContext = this._storage.get('card-popup');
+        const attachment = cardContext.attachments.find((attach) => {
+            return attach.atid === data.atid;
+        });
+        window.open(attachment.file_tech_name, `Download: ${attachment.file_pub_name}`);
     }
 
     /**

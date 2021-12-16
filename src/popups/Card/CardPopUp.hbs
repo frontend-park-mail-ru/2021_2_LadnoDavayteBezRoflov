@@ -102,6 +102,21 @@
                             <div class="error">{{errors}}</div>
                         {{/if}}
                         {{#if edit }}
+                            {{#if attachments}}<span class="check-list-separator">Вложения</span>{{/if}}
+                            <div class="attachments">
+                                {{#each attachments}}
+                                <div class="attachment" data-id="{{this.atid}}">
+                                    <div class="attachment__icon material-icon-file"></div>
+                                    <div class="attachment__title"><div>{{this.file_pub_name}}</div></div>
+                                    <div class="attachment__download-btn material-icon-download"></div>
+                                    <div class="attachment__delete-btn material-icon-delete"></div>
+                                </div>
+                                {{/each}}
+                            </div>
+                            <label class="button attachment__button">
+                                <input type="file" accept="*" id="attachmentInputId"/>
+                                <i class="fa fa-cloud-upload"></i><span>Загрузить вложение</span>
+                            </label>
                             <button class="button" id="cardPopUpAddAssigneeBtnId">Участники</button>
                             <button class="button" id="cardPopUpAddCheckListBtnId">Новый чек-лист</button>
                             <button class="button" id="cardPopUpSaveBtnId">Сохранить</button>
