@@ -1,4 +1,4 @@
-import {SelfAddress, BackendAddress} from '../../constants/constants.js';
+import {HTTP} from '../../constants/constants.js';
 
 /**
  * Класс, реализующий работу с сетью.
@@ -8,10 +8,9 @@ class Network {
      * Конструктор, инициализирующий BackendUrl и порт бэкенд-сервера.
      */
     constructor() {
-        this.SelfUrl = SelfAddress.Url;
-        this.SelfPort = SelfAddress.Port;
-
-        this.BackendUrl = BackendAddress.Url;
+        this.FrontendHost =
+            `${HTTP.Scheme}://${HTTP.SelfAddress.Url}${DEBUG ? `:${HTTP.SelfAddress.Port}` : ''}`;
+        this.BackendHost = `${HTTP.Scheme}://${HTTP.BackendAddress.Url}:${HTTP.BackendAddress.Port}`;
 
         this._endpoints = {
             sessions: 'api/sessions',
@@ -36,7 +35,7 @@ class Network {
             mode: 'cors',
             credentials: 'include',
             headers: {
-                Origin: `https://${this.SelfUrl}:${this.SelfPort}`,
+                Origin: this.FrontendHost,
             },
         };
     }
@@ -66,7 +65,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.sessions}`,
+            `${this.BackendHost}/${this._endpoints.sessions}`,
             options);
     }
 
@@ -83,7 +82,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.profile}/${data.userName}`,
+            `${this.BackendHost}/${this._endpoints.profile}/${data.userName}`,
             options);
     }
 
@@ -101,7 +100,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.profile}`,
+            `${this.BackendHost}/${this._endpoints.profile}`,
             options);
     }
 
@@ -119,7 +118,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/` +
+            `${this.BackendHost}/` +
             `${this._endpoints.profile}/${data.login}`,
             options);
     }
@@ -136,7 +135,7 @@ class Network {
             body: data,
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/` +
+            `${this.BackendHost}/` +
             `${this._endpoints.profile}/${login}/upload`,
             options);
     }
@@ -155,7 +154,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.sessions}`,
+            `${this.BackendHost}/${this._endpoints.sessions}`,
             options);
     }
 
@@ -168,7 +167,7 @@ class Network {
             method: 'get',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}`,
+            `${this.BackendHost}/${this._endpoints.board}`,
             options);
     }
 
@@ -185,7 +184,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}`,
+            `${this.BackendHost}/${this._endpoints.board}/${bid}`,
             options);
     }
 
@@ -203,7 +202,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}`,
+            `${this.BackendHost}/${this._endpoints.card}`,
             options);
     }
 
@@ -222,7 +221,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/${cid}`,
+            `${this.BackendHost}/${this._endpoints.card}/${cid}`,
             options);
     }
 
@@ -239,7 +238,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/${cid}`,
+            `${this.BackendHost}/${this._endpoints.card}/${cid}`,
             options);
     }
     /**
@@ -256,7 +255,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.cardlist}`,
+            `${this.BackendHost}/${this._endpoints.cardlist}`,
             options);
     }
 
@@ -275,7 +274,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.cardlist}/${clid}`,
+            `${this.BackendHost}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 
@@ -292,7 +291,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.cardlist}/${clid}`,
+            `${this.BackendHost}/${this._endpoints.cardlist}/${clid}`,
             options);
     }
 
@@ -306,7 +305,7 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`https://${this.BackendUrl}/api/boards`,
+        return this.httpRequest(`${this.BackendHost}/api/boards`,
                                 options);
     }
 
@@ -325,8 +324,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}`,
-            options);
+            `${this.BackendHost}/${this._endpoints.board}/${bid}`, options);
     }
 
     /**
@@ -342,8 +340,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}`,
-            options);
+            `${this.BackendHost}/${this._endpoints.board}/${bid}`, options);
     }
 
     /**
@@ -358,7 +355,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.sessions}`,
+            `${this.BackendHost}/${this._endpoints.sessions}`,
             options);
     }
 
@@ -372,7 +369,7 @@ class Network {
             method: 'get',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.usersearch.card}` +
+            `${this.BackendHost}/${this._endpoints.usersearch.card}` +
             `/${cid}/${searchString}`,
             options);
     }
@@ -387,7 +384,7 @@ class Network {
             method: 'get',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.usersearch.board}` +
+            `${this.BackendHost}/${this._endpoints.usersearch.board}` +
             `/${bid}/${searchString}`,
             options);
     }
@@ -402,7 +399,7 @@ class Network {
             method: 'get',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.usersearch.team}` +
+            `${this.BackendHost}/${this._endpoints.usersearch.team}` +
             `/${tid}/${searchString}`,
             options);
     }
@@ -420,7 +417,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.team}/${tid}` +
+            `${this.BackendHost}/${this._endpoints.team}/${tid}` +
             `/toggleuser/${uid}`, options);
     }
 
@@ -437,7 +434,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}` +
+            `${this.BackendHost}/${this._endpoints.board}/${bid}` +
             `/toggleuser/${uid}`, options);
     }
 
@@ -454,7 +451,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/${cid}` +
+            `${this.BackendHost}/${this._endpoints.card}/${cid}` +
             `/toggleuser/${uid}`, options);
     }
     /**
@@ -467,7 +464,7 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
                                 `/${this._endpoints.checklists}`, options);
     }
 
@@ -480,7 +477,7 @@ class Network {
         const options = {
             method: 'delete',
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.checklists}/${chlid}`, options);
     }
 
@@ -495,7 +492,7 @@ class Network {
             method: 'put',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.checklists}/${chlid}`, options);
     }
 
@@ -509,7 +506,7 @@ class Network {
             method: 'post',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.checklistsItems}`, options);
     }
 
@@ -524,7 +521,7 @@ class Network {
             method: 'put',
             body: JSON.stringify(data),
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.checklistsItems}/${chliid}`, options);
     }
 
@@ -537,7 +534,7 @@ class Network {
         const options = {
             method: 'delete',
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.checklistsItems}/${chliid}`, options);
     }
 
@@ -553,7 +550,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.comments}`,
+            `${this.BackendHost}/${this._endpoints.comments}`,
             options);
     }
 
@@ -572,7 +569,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.comments}/${data.cmid}`,
+            `${this.BackendHost}/${this._endpoints.comments}/${data.cmid}`,
             options);
     }
 
@@ -589,7 +586,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.comments}/${data.cmid}`,
+            `${this.BackendHost}/${this._endpoints.comments}/${data.cmid}`,
             options);
     }
 
@@ -606,7 +603,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/${cid}` +
+            `${this.BackendHost}/${this._endpoints.card}/${cid}` +
             `/toggletag/${tgid}`, options);
     }
 
@@ -619,7 +616,7 @@ class Network {
         const options = {
             method: 'delete',
         };
-        return this.httpRequest(`https://${this.BackendUrl}` +
+        return this.httpRequest(`${this.BackendHost}` +
             `/${this._endpoints.tags}/${tgid}`, options);
     }
 
@@ -635,7 +632,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.tags}`,
+            `${this.BackendHost}/${this._endpoints.tags}`,
             options);
     }
 
@@ -651,7 +648,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.tags}/${tgid}`,
+            `${this.BackendHost}/${this._endpoints.tags}/${tgid}`,
             options);
     }
 
@@ -665,7 +662,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/access/` +
+            `${this.BackendHost}/${this._endpoints.board}/access/` +
                 `${accessPath}`, options);
     }
 
@@ -679,7 +676,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.board}/${bid}/access`,
+            `${this.BackendHost}/${this._endpoints.board}/${bid}/access`,
             options);
     }
 
@@ -693,7 +690,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/access/tocard/` +
+            `${this.BackendHost}/${this._endpoints.card}/access/tocard/` +
             `${accessPath}`, options);
     }
 
@@ -707,7 +704,7 @@ class Network {
             method: 'put',
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.card}/access/${cid}`,
+            `${this.BackendHost}/${this._endpoints.card}/access/${cid}`,
             options);
     }
 
@@ -723,7 +720,7 @@ class Network {
             body: data,
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/` +
+            `${this.BackendHost}/` +
             `${this._endpoints.attachments}/${cid}`,
             options);
     }
@@ -741,7 +738,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.attachments}/${atid}`,
+            `${this.BackendHost}/${this._endpoints.attachments}/${atid}`,
             options);
     }
 
@@ -756,7 +753,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.team}`, options);
+            `${this.BackendHost}/${this._endpoints.team}`, options);
     }
 
     /**
@@ -772,7 +769,7 @@ class Network {
             },
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.team}/${tid}`,
+            `${this.BackendHost}/${this._endpoints.team}/${tid}`,
             options);
     }
 
@@ -791,7 +788,7 @@ class Network {
             body: JSON.stringify(data),
         };
         return this.httpRequest(
-            `https://${this.BackendUrl}/${this._endpoints.team}/${tid}`,
+            `${this.BackendHost}/${this._endpoints.team}/${tid}`,
             options);
     }
 }

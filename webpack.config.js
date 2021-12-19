@@ -11,11 +11,13 @@ const SERVER_IP = 'brrrello.ru';
 const confConst = {
     LOCAL_HOST: 'localhost',
     BACKEND_RELEASE: process.env.BACKEND_RELEASE || SERVER_IP,
-    BACKEND_PORT: process.env.BACKEND_PORT || 8000,
+    BACKEND_PORT_RELEASE: 443,
+    BACKEND_PORT_DEBUG: 8000,
     FRONTEND_RELEASE: process.env.FRONTEND_RELEASE || SERVER_IP,
-    FRONTEND_PORT: process.env.FRONTEND_PORT || 3001,
+    FRONTEND_PORT: 3001,
     DEBUG: process.env.NODE_ENV !== 'production',
-    PROTOCOL: process.env.PROTOCOL || 'https',
+    HTTP: 'http',
+    HTTPS: 'https',
 };
 
 const confDefs = {
@@ -23,12 +25,13 @@ const confDefs = {
         confConst.LOCAL_HOST : confConst.FRONTEND_RELEASE),
     FRONTEND_PORT: confConst.FRONTEND_PORT,
     BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE),
-    BACKEND_PORT: confConst.BACKEND_PORT,
+    BACKEND_PORT: confConst.DEBUG ? confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_RELEASE,
     DEBUG: confConst.DEBUG,
+    SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
 };
 
 const devServer = {
-    port: JSON.parse(confDefs.FRONTEND_PORT),
+    port: confDefs.FRONTEND_PORT,
     hot: false,
     static: [DEPLOY_DIR],
     historyApiFallback: true, // Для работы роута на 404
@@ -82,8 +85,9 @@ const config = {
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
         new HtmlWebpackPlugin({
-            backend: `${confConst.PROTOCOL}://${JSON.parse(confDefs.BACKEND_ADDRESS)}` +
-                `:${JSON.parse(confDefs.BACKEND_PORT)}`,
+            backend: confDefs.DEBUG ?
+                `${JSON.parse(confDefs.SCHEME)}://${JSON.parse(confDefs.BACKEND_ADDRESS)}` +
+                `:${JSON.parse(confDefs.BACKEND_PORT)}` : null,
             scriptLoading: 'module',
             filename: 'index.html',
             template: 'src/index_template.html',

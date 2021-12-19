@@ -29,19 +29,18 @@ export const Html = {
 };
 
 /**
-  * Константа, содержащая в себе параметры самого себя.
+  * Константа, содержащая в себе параметры URL
   */
-export const SelfAddress = {
-    Url: FRONTEND_ADDRESS,
-    Port: FRONTEND_PORT,
-};
-
-/**
-  * Константа, содержащая в себе параметры бэкенда.
-  */
-export const BackendAddress = {
-    Url: BACKEND_ADDRESS,
-    Port: BACKEND_PORT,
+export const HTTP = {
+    SelfAddress: {
+        Url: FRONTEND_ADDRESS,
+        Port: FRONTEND_PORT,
+    },
+    BackendAddress: {
+        Url: BACKEND_ADDRESS,
+        Port: BACKEND_PORT,
+    },
+    Scheme: SCHEME,
 };
 
 /**

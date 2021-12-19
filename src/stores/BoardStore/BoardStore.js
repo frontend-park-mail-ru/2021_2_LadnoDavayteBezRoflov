@@ -18,9 +18,8 @@ import Validator from '../../modules/Validator/Validator';
 import {
     BoardStoreConstants,
     CheckLists,
-    ConstantMessages,
+    ConstantMessages, HTTP,
     HttpStatusCodes,
-    SelfAddress,
     Urls,
 } from '../../constants/constants.js';
 
@@ -471,7 +470,8 @@ class BoardStore extends BaseStore {
      */
     _setCardInvite(accessPath) {
         this._storage.get('add-card-member-popup').inviteLink =
-            `http://${SelfAddress.Url}` + Urls.Invite.CardPath + accessPath;
+            `${HTTP.Scheme}://${HTTP.SelfAddress.Url}${DEBUG ? `:${HTTP.SelfAddress.Port}` : ''}` +
+            Urls.Invite.CardPath + accessPath;
     }
 
     /**
@@ -481,7 +481,8 @@ class BoardStore extends BaseStore {
      */
     _setBoardInvite(accessPath) {
         this._storage.get('add-board-member-popup').inviteLink =
-            `http://${SelfAddress.Url}` + Urls.Invite.BoardPath + accessPath;
+            `${HTTP.Scheme}://${HTTP.SelfAddress.Url}${DEBUG ? `:${HTTP.SelfAddress.Port}` : ''}` +
+            Urls.Invite.BoardPath + accessPath;
     }
 
     /**
