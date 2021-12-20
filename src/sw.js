@@ -5,7 +5,6 @@ const STATIC_FILES_URL = (self.__WB_MANIFEST || []).map((pair) => {
 });
 
 self.addEventListener('install', async (event) => {
-    console.log('SW: Установлен');
     const cache = await caches.open(ServiceWorker.STATIC_CACHE_NAME);
     await cache.addAll(STATIC_FILES_URL);
     await caches.open(ServiceWorker.API_CACHE_NAME);
@@ -28,7 +27,7 @@ self.addEventListener('fetch', (event) => {
 
     if (url.pathname.startsWith('/api')) { // Запрос на API
         console.log('запрос на api');
-        event.respondWith(networkFirst(request));
+        event.respondWith(networkFirst(request, event.clientId));
     } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
         console.log('запрос через location');
         event.respondWith(cacheFirst(ServiceWorker.HTML_URL));
@@ -51,7 +50,7 @@ async function cacheFirst(request) {
         }
         const response = await fetch(request);
         const cache = await caches.open(ServiceWorker.STATIC_CACHE_NAME);
-        await cache.put(request, response);
+        await cache.put(request, response.clone());
         return response;
     } catch (error) {
         console.log('[SW] cacheFirst: нет сети или проблемы с кэшем');
@@ -62,39 +61,62 @@ async function cacheFirst(request) {
 /**
  *
  * @param {Request | String} request объект запроса или URL строка
+ * @param {Number} clientId id клиента
  * @return {Promise<Response>}
  */
-async function networkFirst(request) {
-    /**
-     * 1. Идем в сеть, если все ок - кэшируем ответ и отвечаем
-     * 2. Если поход не удался - проверяем запрос в кэше
-     * 2.1 Запрос найден - отдаем его с пометкой "кэш". Прослойка сети проверяет этот флаг и шлет экшен
-     * "cahed page" - рисуется плашка с предупреждением что мы оффлайн. Все заинтересованные сторы переключают логику,
-     * например, может быть выставлен флаг и для попапов (едиснтвенные "точки" редактирования) не будут выполняться обработчики.. либо надписи - "оффлан будут".
-     * 2.2 Запрос не найден - помечаем что нужно отобразить offline page.
-     *     В приложении шлем экшон "offline", а в нем редиректим на оффлан вью.
-     *     В сетевых запросах - ничего не делаем
-     *
-     */
+async function networkFirst(request, clientId) {
     const cache = await caches.open(ServiceWorker.API_CACHE_NAME);
     try {
         const response = await fetch(request);
+        const responseCopy = response.clone();
 
         /* Добавим служебный заголовок, позволяющий определить что запрос был кэширован в SW*/
-        const headers = new Headers(response.headers);
+        const headers = new Headers(responseCopy.headers);
         headers.set('X-Is-From-Service-Worker', 'true');
 
-        const responseBytes = await response.blob();
+        const responseBytes = await responseCopy.blob();
         const cachedResponse = new Response(responseBytes, {
-            status: response.status,
-            statusText: response.statusText,
+            status: responseCopy.status,
+            statusText: responseCopy.statusText,
             headers: headers,
         });
-        await cache.put(request, cachedResponse);
 
+        //todo: if method put return
+        await cache.put(request, cachedResponse);
         return response;
     } catch (error) {
+        console.log(error);
         const cachedResponse = await cache.match(request);
-        return cachedResponse; // todo no internet. Go /offline
+        if (!cachedResponse) {
+            await sendMessage(clientId,
+                              ServiceWorker.Messages.OFFLINE_NO_CACHE,
+                              request.url);
+            return undefined;
+        }
+        await sendMessage(clientId,
+                          ServiceWorker.Messages.OFFLINE_FROM_CACHE,
+                          request.url);
+        return cachedResponse;
     }
+}
+
+/**
+ * Отправляет сообщение в приложение
+ * @param {Number} clientId id клиента
+ * @param {String} messageType сообщение
+ * @param {String} url url связанный с сообщением
+ * @return {Promise<void>}
+ */
+async function sendMessage(clientId, messageType, url) {
+    const client = await clients.get(clientId);
+    if (!client) {
+        console.log('no client');
+        return;
+    }
+    console.log('Post message: ' + messageType);
+    client.postMessage({
+        messageType,
+        clientId,
+        url,
+    });
 }

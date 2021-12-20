@@ -9,7 +9,14 @@ import Network from '../../modules/Network/Network.js';
 import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
-import {ConstantMessages, HttpStatusCodes, SettingStoreConstants} from '../../constants/constants.js';
+import {
+    ConstantMessages,
+    HttpStatusCodes,
+    SettingStoreConstants,
+    Urls,
+} from '../../constants/constants.js';
+import {serviceWorkerActions, ServiceWorkerTypes} from '../../actions/serviceworker';
+import Router from '../../modules/Router/Router';
 
 /**
  * Класс, реализующий хранилище настроек.
@@ -44,6 +51,10 @@ class SettingsStore extends BaseStore {
             prevWidth: window.innerWidth,
             isMobile: window.innerWidth < SettingStoreConstants.MobileNavWidth,
         });
+        this._storage.set('offline', {
+            half: false,
+            full: false,
+        });
     }
 
     /**
@@ -74,6 +85,16 @@ class SettingsStore extends BaseStore {
 
         case SettingsActionTypes.WINDOW_RESIZED:
             this._windowResized(action.data);
+            break;
+
+        case ServiceWorkerTypes.HALF_OFFLINE:
+            this._responseFromCache();
+            this._emitChange();
+            break;
+
+        case ServiceWorkerTypes.FULL_OFFLINE:
+            this._fullOffline();
+            this._emitChange();
             break;
 
         default:
@@ -334,6 +355,22 @@ class SettingsStore extends BaseStore {
             context.isMobile = true;
             this._emitChange();
         }
+    }
+
+    /**
+     * Отображает предупреждение об offline работе
+     */
+    _responseFromCache() {
+        console.log('offline half');
+        this._storage.get('offline').half = true;
+    }
+
+    /**
+     * Отображает offline страницу
+     */
+    _fullOffline() {
+        console.log('offline full');
+        Router.go(Urls.Offline, true);
     }
 }
 

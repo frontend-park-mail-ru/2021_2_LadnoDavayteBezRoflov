@@ -22,6 +22,8 @@ import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 import {settingsActions} from './actions/settings';
+import ServiceWorkerClient from './modules/ServiceWorkerClient/ServiceWorkerClient';
+import OfflineView from './views/OfflineView/OfflineView.js';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -42,6 +44,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     Router.register(Urls.Login, new LoginView(root));
     Router.register(Urls.Board, boardView);
     Router.register(Urls.Profile, new ProfileView(root));
+    Router.register(Urls.Offline, new OfflineView(root));
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') === undefined) {
@@ -74,10 +77,10 @@ window.addEventListener('resize', (() => {
 
 
 if ('serviceWorker' in navigator) {
+    const serviceWorkerClient = new ServiceWorkerClient(navigator.serviceWorker);
     window.addEventListener('load', async () => {
         try {
-            const register = await navigator.serviceWorker.register('/sw.js');
-            console.log('Объект регистрации SW', register);
+            await navigator.serviceWorker.register('/sw.js');
         } catch (error) {
             console.log(`Ошибка при регистрации SW: ${error}`);
         }

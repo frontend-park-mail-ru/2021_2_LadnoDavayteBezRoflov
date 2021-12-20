@@ -18,6 +18,7 @@ export const Urls = {
         CardPath: '/invite/card/',
         Card: '/invite/card/<accessPathCard>',
     },
+    Offline: '/offline',
 };
 
 /**
