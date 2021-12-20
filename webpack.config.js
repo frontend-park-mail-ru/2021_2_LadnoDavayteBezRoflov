@@ -5,6 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const packageJSON = require('./package.json');
 
 const DEPLOY_DIR = 'dist';
 const SERVER_IP = 'brrrello.ru';
@@ -28,6 +30,7 @@ const confDefs = {
     BACKEND_PORT: confConst.DEBUG ? confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_RELEASE,
     DEBUG: confConst.DEBUG,
     SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
+    APP_VERSION: JSON.stringify(packageJSON.version),
 };
 
 const devServer = {
@@ -39,6 +42,7 @@ const devServer = {
 
 const config = {
     entry: './src/index.js',
+
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, DEPLOY_DIR),
@@ -81,6 +85,14 @@ const config = {
             },
         ],
     },
+    optimization: {
+        minimizer: [
+            new CssMinimizerPlugin({
+                parallel: true,
+            }),
+        ],
+        minimize: true,
+    },
     plugins: [
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
@@ -101,20 +113,17 @@ const config = {
                 },
             ],
         }),
+        new InjectManifest({
+            swSrc: './src/sw.js',
+            swDest: 'sw.js',
+            exclude: [
+                /\.m?js$/,
+            ],
+        }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
 };
-
-if (!confConst.DEBUG) {
-    config.plugins.push(new InjectManifest({
-        swSrc: './src/sw.js',
-        swDest: 'sw.js',
-        exclude: [
-            /\.m?js$/,
-        ],
-    }));
-}
 
 module.exports = config;

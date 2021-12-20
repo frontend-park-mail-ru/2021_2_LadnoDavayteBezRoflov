@@ -118,3 +118,15 @@ export const CheckLists = {
 export const SettingStoreConstants = {
     MobileNavWidth: 500,
 };
+
+export const ServiceWorker = {
+    HTML_URL: '/index.html',
+    API_PREFIX: '/api',
+    STATIC_CACHE_NAME: `static-cache-${APP_VERSION}`,
+    API_CACHE_NAME: `api-cache-${APP_VERSION}`,
+    SW_HEADER: 'X-Is-From-Service-Worker',
+    Messages: {
+        OFFLINE_FROM_CACHE: 'offline-cache', // Приложение работает в offline
+        OFFLINE_NO_CACHE: 'offline-no-cache', // Приложение offline и дальше не может работать
+    },
+};
