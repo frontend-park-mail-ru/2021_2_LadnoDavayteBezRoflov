@@ -76,6 +76,7 @@ window.addEventListener('resize', (() => {
 
 
 if ('serviceWorker' in navigator) {
+    // eslint-disable-next-line no-unused-vars
     const serviceWorkerClient = new ServiceWorkerClient(navigator.serviceWorker);
     window.addEventListener('load', async () => {
         try {

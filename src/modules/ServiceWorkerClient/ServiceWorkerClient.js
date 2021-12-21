@@ -16,10 +16,8 @@ export default class ServiceWorkerClient {
         this.sw = sw;
         navigator.serviceWorker.addEventListener('message', (event) => {
             if (!event.data) {
-                console.log('empty data in message event from sw');
                 return;
             }
-            console.log('message: ' + event.data.messageType);
             switch (event.data.messageType) {
             case ServiceWorker.Messages.OFFLINE_FROM_CACHE:
                 this._onResponseFromCache();
