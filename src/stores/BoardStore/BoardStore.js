@@ -599,6 +599,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _updateTitleAndDescription(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.get('setting-popup').errors = null;
         const validator = new Validator();
 
@@ -704,6 +707,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCardList(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.get('cardlist-popup').errors = null;
         const validator = new Validator();
 
@@ -795,6 +801,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _updateCardList(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.get('cardlist-popup').errors = null;
         const validator = new Validator();
 
@@ -946,6 +955,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCard(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
@@ -1070,6 +1082,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _updateDeadlineCheck(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const card = this._getCardById(
             data.clid,
             data.cid,
@@ -1120,6 +1135,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _updateCard(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.get('card-popup').errors = null;
         const validator = new Validator();
 
@@ -1308,6 +1326,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCheckList() {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
         context.errors = null;
 
@@ -1356,6 +1377,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _saveCheckList(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
         context.errors = null;
         const checkList = this._getCheckListById(data.chlid);
@@ -1430,6 +1454,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCheckListItem(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
         context.errors = null;
         const checkList = this._getCheckListById(data.chlid);
@@ -1479,6 +1506,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _saveCheckListItem(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
         context.errors = null;
         const item = this._getCheckListItemById(data.chlid, data.chliid);
@@ -1557,6 +1587,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _toggleCheckListItem(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
         context.errors = null;
         context.selectInvite = false;
@@ -1674,6 +1707,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _toggleCardAssigneeInSearchList(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('add-card-member-popup');
         context.errors = null;
         context.selectInvite = false;
@@ -1770,6 +1806,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _toggleBoardMemberInSearchList(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('add-board-member-popup');
         context.selectInvite = false;
         context.errors = null;
@@ -1873,6 +1912,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _createCardComment(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('card-popup');
 
         const comment = {
@@ -1937,6 +1979,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _updateCardComment(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         let payload;
 
         try {
@@ -2334,6 +2379,9 @@ class BoardStore extends BaseStore {
      * @param {Object} data данные c названием тега
      */
     async _createTag(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const contextTagPopUp = this._storage.get('tag-popup');
         const contextTagListPopUp = this._storage.get('tags-list-popup');
 
@@ -2432,6 +2480,9 @@ class BoardStore extends BaseStore {
      * Обновляет тег
      */
     async _updateTag() {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('tag-popup');
 
         context.errors = null;
@@ -2484,6 +2535,9 @@ class BoardStore extends BaseStore {
      * @param {Object} data данные
      */
     async _toggleTag(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const context = this._storage.get('tags-list-popup');
         const currentCard = this._getCardById(this._storage.get('card-popup').clid,
                                               this._storage.get('card-popup').cid);

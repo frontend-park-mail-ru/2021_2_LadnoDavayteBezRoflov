@@ -1,0 +1,31 @@
+@import '../../styles/scss/Constants';
+
+.offline {
+  &__wrapper {
+    position: fixed;
+    z-index: 2;
+    left: 20px;
+    bottom: 20px;
+    background-color: $offline-background;
+    border: 2px solid $offline-border;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    padding: 2px;
+
+    &_clickable {
+      cursor: pointer;
+    }
+
+    &_non-clickable {
+      cursor: pointer;
+    }
+  }
+
+
+  &__content {
+  }
+}

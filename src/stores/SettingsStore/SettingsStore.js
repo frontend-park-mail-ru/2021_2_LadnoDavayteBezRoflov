@@ -1,7 +1,9 @@
 import BaseStore from '../BaseStore.js';
+import Router from '../../modules/Router/Router.js';
 
 // Actions
 import {SettingsActionTypes} from '../../actions/settings.js';
+import {ServiceWorkerTypes} from '../../actions/serviceworker.js';
 import {userActions} from '../../actions/user.js';
 
 // Modules
@@ -15,8 +17,6 @@ import {
     SettingStoreConstants,
     Urls,
 } from '../../constants/constants.js';
-import {serviceWorkerActions, ServiceWorkerTypes} from '../../actions/serviceworker';
-import Router from '../../modules/Router/Router';
 
 /**
  * Класс, реализующий хранилище настроек.
@@ -52,9 +52,19 @@ class SettingsStore extends BaseStore {
             isMobile: window.innerWidth < SettingStoreConstants.MobileNavWidth,
         });
         this._storage.set('offline', {
+            visible: false,
+            open: false,
             half: false,
             full: false,
         });
+    }
+
+    /**
+     * Нахоится ли приложение offline
+     * @return {Boolean}
+     */
+    isOffline() {
+        return this._storage.get('offline').offline;
     }
 
     /**
@@ -94,6 +104,21 @@ class SettingsStore extends BaseStore {
 
         case ServiceWorkerTypes.FULL_OFFLINE:
             this._fullOffline();
+            this._emitChange();
+            break;
+
+        case ServiceWorkerTypes.SHOW_OFFLINE_MSG:
+            this._openOfflineMessage();
+            this._emitChange();
+            break;
+
+        case ServiceWorkerTypes.CLOSE_OFFLINE_MSG:
+            this._closeOfflineMessage();
+            this._emitChange();
+            break;
+
+        case ServiceWorkerTypes.HIDE_OFFLINE_MSG:
+            this._hideOfflineMessage();
             this._emitChange();
             break;
 
@@ -142,6 +167,9 @@ class SettingsStore extends BaseStore {
      * @param {FormData} data данные запроса.
      */
     async _put(data) {
+        if (this.isOffline()) {
+            return;
+        }
         const formdata = data;
 
         this._storage.set('login', data.login);
@@ -207,6 +235,9 @@ class SettingsStore extends BaseStore {
      * @param {Object} data данные запроса.
      */
     async _uploadAvatar(data) {
+        if (this.isOffline()) {
+            return;
+        }
         const validator = new Validator();
 
         if (data.avatar instanceof File) {
@@ -361,16 +392,46 @@ class SettingsStore extends BaseStore {
      * Отображает предупреждение об offline работе
      */
     _responseFromCache() {
-        console.log('offline half');
-        this._storage.get('offline').half = true;
+        const context = this._storage.get('offline');
+        context.offline = true;
+        context.visible = true;
     }
 
     /**
      * Отображает offline страницу
      */
     _fullOffline() {
-        console.log('offline full');
+        const context = this._storage.get('offline');
+        context.offline = true;
         Router.go(Urls.Offline, true);
+    }
+
+    /**
+     * Раскрыть offline сообщение
+     * @private
+     */
+    _openOfflineMessage() {
+        const context = this._storage.get('offline');
+        context.open = true;
+    }
+
+    /**
+     * Свернуть offline сообщение
+     * @private
+     */
+    _closeOfflineMessage() {
+        const context = this._storage.get('offline');
+        context.open = false;
+    }
+
+    /**
+     * Скрыть полностью offline сообщение
+     * @private
+     */
+    _hideOfflineMessage() {
+        const context = this._storage.get('offline');
+        context.offline = false;
+        context.visible = false;
     }
 }
 

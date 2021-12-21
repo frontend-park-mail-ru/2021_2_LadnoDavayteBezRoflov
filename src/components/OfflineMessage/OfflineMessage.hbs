@@ -1,0 +1,18 @@
+{{#with offline}}
+    {{# if visible }}
+        <div class="offline__wrapper"
+        {{# if open }}
+            class = "offline__wrapper offline__wrapper_non-clickable"
+        {{ else}}
+             class = "offline__wrapper offline__wrapper-clickable"
+             id="offlineMessageShowId"
+        {{/if}}
+        >
+            <div class="material-icon-warning"></div>
+            {{# if open }}
+            <div class="offline__message">Похоже у вас отсутствует соединиение с Интернетом<br>Часть функций недоступна.</div>
+            <div class="close-button" id="offlineMessageCloseId"></div>
+            {{/if}}
+        </div>
+    {{/if}}
+{{/with}}

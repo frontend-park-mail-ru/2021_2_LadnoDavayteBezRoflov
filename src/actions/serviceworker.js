@@ -9,6 +9,9 @@ import Dispatcher from '../modules/Dispatcher/Dispatcher.js';
 export const ServiceWorkerTypes = {
     HALF_OFFLINE: 'half-offline',
     FULL_OFFLINE: 'full-offline',
+    CLOSE_OFFLINE_MSG: 'close-offline',
+    SHOW_OFFLINE_MSG: 'show-offline',
+    HIDE_OFFLINE_MSG: 'hide-offline',
 };
 
 /**
@@ -21,7 +24,7 @@ export const serviceWorkerActions = {
      */
     responseFromCache() {
         Dispatcher.dispatch({
-            actionName: ServiceWorkerTypes.OFFLINE,
+            actionName: ServiceWorkerTypes.HALF_OFFLINE,
         });
     },
 
@@ -31,6 +34,33 @@ export const serviceWorkerActions = {
     fullOffline() {
         Dispatcher.dispatch({
             actionName: ServiceWorkerTypes.FULL_OFFLINE,
+        });
+    },
+
+    /**
+     * Сворачивает предупреждение об offline работе
+     */
+    onCloseOfflineMessage() {
+        Dispatcher.dispatch({
+            actionName: ServiceWorkerTypes.CLOSE_OFFLINE_MSG,
+        });
+    },
+
+    /**
+     * Разворачивает offline сообшение
+     */
+    onOpenOfflineMessage() {
+        Dispatcher.dispatch({
+            actionName: ServiceWorkerTypes.SHOW_OFFLINE_MSG,
+        });
+    },
+
+    /**
+     * Скрывает предупреждение об offline работе
+     */
+    hideOfflineMessage() {
+        Dispatcher.dispatch({
+            actionName: ServiceWorkerTypes.HIDE_OFFLINE_MSG,
         });
     },
 };

@@ -1,5 +1,4 @@
 'use strict';
-
 import {userActions} from './actions/user.js';
 
 // Stores

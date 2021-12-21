@@ -24,8 +24,13 @@ export default class ServiceWorkerClient {
             case ServiceWorker.Messages.OFFLINE_FROM_CACHE:
                 this._onResponseFromCache();
                 break;
+
             case ServiceWorker.Messages.OFFLINE_NO_CACHE:
                 this._onFullOffline();
+                break;
+
+            case ServiceWorker.Messages.ONLINE:
+                this._onOnline();
                 break;
             }
         });
@@ -46,5 +51,13 @@ export default class ServiceWorkerClient {
      */
     _onFullOffline() {
         serviceWorkerActions.fullOffline();
+    }
+
+    /**
+     * При получении запроса из сети
+     * @private
+     */
+    _onOnline() {
+        serviceWorkerActions.hideOfflineMessage();
     }
 }

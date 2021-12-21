@@ -258,6 +258,13 @@ div#root {
         content: 'cancel';
         }
     }
+
+    &-warning {
+        @extend .material-icon;
+        &::before {
+            content: 'warning';
+        }
+    }
 }
 
 .horizontal-line {

@@ -183,6 +183,9 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _create(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const validator = new Validator();
 
         const validatorStatus = validator.validateBoardTitle(data.name);
@@ -429,6 +432,9 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _submitAddTeamPopUp(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const validator = new Validator();
         const validatorStatus = validator.validateTeamTitle(data.team_name);
         this._storage.get('team-popup').errors = validatorStatus;

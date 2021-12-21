@@ -132,5 +132,6 @@ export const ServiceWorker = {
     Messages: {
         OFFLINE_FROM_CACHE: 'offline-cache', // Приложение работает в offline
         OFFLINE_NO_CACHE: 'offline-no-cache', // Приложение offline и дальше не может работать
+        ONLINE: 'online', // Приложение online
     },
 };

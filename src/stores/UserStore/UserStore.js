@@ -9,7 +9,8 @@ import Validator from '../../modules/Validator/Validator.js';
 
 // Constants
 import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
-import {settingsActions} from '../../actions/settings';
+import {settingsActions} from '../../actions/settings.js';
+// import SettingsStore from '../SettingsStore/SettingsStore.js';
 
 /**
  * Класс, реализующий хранилище пользователя
@@ -110,6 +111,9 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _register(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         this._storage.set('userRegisterData', data);
         this._validate(data, 'userRegisterData');
 
@@ -202,6 +206,9 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на выход.
      */
     async _logout() {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         let response;
 
         try {

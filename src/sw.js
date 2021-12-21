@@ -23,17 +23,13 @@ self.addEventListener('activate', async (event) => {
 
 self.addEventListener('fetch', (event) => {
     const {request} = event;
-    console.log('SW: Происходит запрос на сервер: ' + request.url);
     const url = new URL(request.url);
 
     if (url.pathname.startsWith('/api')) { // Запрос на API
-        console.log('запрос на api');
         event.respondWith(networkFirst(request, event.clientId));
     } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
-        console.log('запрос через location');
         event.respondWith(cacheFirst(ServiceWorker.CacheUrls.HTML_URL));
     } else { // Запрос за статикой
-        console.log('запрос за статикой');
         event.respondWith(cacheFirst(request));
     }
 });
@@ -51,16 +47,12 @@ async function cacheFirst(request) {
         }
         const response = await fetch(request);
         const cache = await caches.open(ServiceWorker.STATIC_CACHE_NAME);
-        console.log('Cached: ' + request.url);
         await cache.put(request, response.clone());
         return response;
     } catch (error) {
-        console.log('request ended with error: ' + request);
         if (request.url.endsWith('webp')) {
             return await caches.match(ServiceWorker.CacheUrls.NO_INTERNET_IMG_URL);
         }
-        console.log('[SW] cacheFirst: нет сети или проблемы с кэшем');
-        // todo попробовать отдать offline, если запрашивали с location
     }
 }
 
@@ -72,7 +64,6 @@ async function cacheFirst(request) {
  */
 async function networkFirst(request, clientId) {
     if (request.method !== 'GET') {
-        console.log('не кэшируем не GET');
         return await fetch(request);
     }
 
@@ -80,6 +71,9 @@ async function networkFirst(request, clientId) {
     try {
         const response = await fetch(request);
         const responseCopy = response.clone();
+        await sendMessage(clientId,
+                          ServiceWorker.Messages.ONLINE,
+                          request.url);
 
         /* Добавим служебный заголовок, позволяющий определить что запрос был кэширован в SW*/
         const headers = new Headers(responseCopy.headers);
@@ -91,12 +85,10 @@ async function networkFirst(request, clientId) {
             statusText: responseCopy.statusText,
             headers: headers,
         });
-
-        //todo: if method put return
         await cache.put(request, cachedResponse);
+
         return response;
     } catch (error) {
-        console.log(error);
         const cachedResponse = await cache.match(request);
         if (!cachedResponse) {
             await sendMessage(clientId,
@@ -121,10 +113,8 @@ async function networkFirst(request, clientId) {
 async function sendMessage(clientId, messageType, url) {
     const client = await clients.get(clientId);
     if (!client) {
-        console.log('no client');
         return;
     }
-    console.log('Post message: ' + messageType);
     client.postMessage({
         messageType,
         clientId,
