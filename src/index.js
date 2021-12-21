@@ -23,6 +23,7 @@ import ProfileView from './views/ProfileView/ProfileView.js';
 import {settingsActions} from './actions/settings';
 import ServiceWorkerClient from './modules/ServiceWorkerClient/ServiceWorkerClient';
 import OfflineView from './views/OfflineView/OfflineView.js';
+import NotFoundView from './views/NotFoundView/NotFoundView';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -35,6 +36,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const boardsView = new BoardsView(root);
     const boardView = new BoardView(root);
+    Router.registerNotFound(new NotFoundView(root));
     Router.register(Urls.Root, boardsView);
     Router.register(Urls.Boards, boardsView);
     Router.register(Urls.Invite.Board, boardView);

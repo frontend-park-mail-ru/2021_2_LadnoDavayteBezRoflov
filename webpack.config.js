@@ -12,7 +12,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 /**
- * Высчитывает hash файла
+ * Высчитывает hash от содержимого файла
  * @param {String} filePath путь до файла
  * @return {String}
  */
@@ -47,7 +47,7 @@ const confDefs = {
     DEBUG: confConst.DEBUG,
     SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
     APP_VERSION: JSON.stringify(packageJSON.version),
-    SW_FILE_NAME: JSON.stringify(`sw.${getFileHash('./src/sw.js')}.js`),
+    SW_FILE_NAME: JSON.stringify(`sw.${confConst.DEBUG ? '' : getFileHash('./src/sw.js')}.js`),
 };
 
 const devServer = {

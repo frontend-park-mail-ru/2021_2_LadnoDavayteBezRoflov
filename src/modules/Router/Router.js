@@ -1,7 +1,5 @@
 import {Html, Urls} from '../../constants/constants.js';
 
-import NotFoundView from '../../views/NotFoundView/NotFoundView.js';
-
 import BaseView from '../../views/BaseView.js';
 
 /**
@@ -116,12 +114,13 @@ class Router {
 
     /**
      * Регестрирует view по умолчанию для неизвестных url
+     * @param {NotFoundView} notFoundView объект view 404
      */
-    registerNotFound() {
+    registerNotFound(notFoundView) {
         if (!this.isTemplateValid(Urls.NotFound)) {
             throw new Error(`Шаблон ${Urls.NotFound} для NotFoundview не валидный`);
         }
-        this.register(Urls.NotFound, new NotFoundView(document.getElementById(Html.Root)));
+        this.register(Urls.NotFound, notFoundView);
     }
 
     /**
