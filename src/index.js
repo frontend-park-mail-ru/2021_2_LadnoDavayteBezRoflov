@@ -80,7 +80,7 @@ if ('serviceWorker' in navigator) {
     const serviceWorkerClient = new ServiceWorkerClient(navigator.serviceWorker);
     window.addEventListener('load', async () => {
         try {
-            await navigator.serviceWorker.register('/sw.js');
+            await navigator.serviceWorker.register(`/${SW_FILE_NAME}`);
         } catch (error) {
             console.log(`Ошибка при регистрации SW: ${error}`);
         }

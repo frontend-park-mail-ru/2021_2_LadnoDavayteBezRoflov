@@ -8,6 +8,22 @@ const {DefinePlugin} = require('webpack');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const packageJSON = require('./package.json');
 
+const crypto = require('crypto');
+const fs = require('fs');
+
+/**
+ * Высчитывает hash файла
+ * @param {String} filePath путь до файла
+ * @return {String}
+ */
+function getFileHash(filePath) {
+    const fileBuffer = fs.readFileSync(filePath);
+    const hashSum = crypto.createHash('sha256');
+    hashSum.update(fileBuffer);
+    return hashSum.digest('hex');
+}
+
+
 const DEPLOY_DIR = 'dist';
 const SERVER_IP = 'brrrello.ru';
 const confConst = {
@@ -31,6 +47,7 @@ const confDefs = {
     DEBUG: confConst.DEBUG,
     SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
     APP_VERSION: JSON.stringify(packageJSON.version),
+    SW_FILE_NAME: JSON.stringify(`sw.${getFileHash('./src/sw.js')}.js`),
 };
 
 const devServer = {
@@ -99,7 +116,7 @@ const config = {
         new HtmlWebpackPlugin({
             backend: confDefs.DEBUG ?
                 `${JSON.parse(confDefs.SCHEME)}://${JSON.parse(confDefs.BACKEND_ADDRESS)}` +
-                `:${JSON.parse(confDefs.BACKEND_PORT)}` : null,
+                `:${confDefs.BACKEND_PORT}` : null,
             scriptLoading: 'module',
             filename: 'index.html',
             template: 'src/index_template.html',
@@ -115,7 +132,7 @@ const config = {
         }),
         new InjectManifest({
             swSrc: './src/sw.js',
-            swDest: 'sw.js',
+            swDest: JSON.parse(confDefs.SW_FILE_NAME),
             exclude: [
                 /\.m?js$/,
             ],
