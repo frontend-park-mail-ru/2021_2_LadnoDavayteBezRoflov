@@ -10,7 +10,7 @@ import Validator from '../../modules/Validator/Validator.js';
 // Constants
 import {ConstantMessages, HttpStatusCodes} from '../../constants/constants.js';
 import {settingsActions} from '../../actions/settings.js';
-// import SettingsStore from '../SettingsStore/SettingsStore.js';
+import SettingsStore from '../SettingsStore/SettingsStore.js';
 
 /**
  * Класс, реализующий хранилище пользователя
