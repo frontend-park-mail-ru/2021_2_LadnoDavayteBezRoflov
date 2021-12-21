@@ -2074,6 +2074,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _uploadAttachment(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const cardContext = this._storage.get('card-popup');
         cardContext.errors = null;
         if (data.file.size > BoardStoreConstants.MaxAttachmentSize) {
@@ -2111,6 +2114,9 @@ class BoardStore extends BaseStore {
      * @private
      */
     async _deleteAttachment(data) {
+        if (SettingsStore.isOffline()) {
+            return;
+        }
         const cardContext = this._storage.get('card-popup');
 
         let payload;

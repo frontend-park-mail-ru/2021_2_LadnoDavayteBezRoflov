@@ -260,7 +260,14 @@ div#root {
     }
 
     &-warning {
-        @extend .material-icon;
+        @extend .material-icons;
+        cursor: pointer;
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 0.8;
+        }
+
         &::before {
             content: 'warning';
         }
@@ -333,8 +340,8 @@ div#root {
     }
 
     &-file {
-        @extend .material-icon;
-
+        @extend .material-icons;
+        opacity: 0.3;
         &::before {
             content: 'description';
         }

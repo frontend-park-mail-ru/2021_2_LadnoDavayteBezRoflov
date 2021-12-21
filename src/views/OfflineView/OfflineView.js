@@ -19,6 +19,7 @@ export default class OfflineView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]);
         super(context, template, parent);
 
@@ -42,6 +43,7 @@ export default class OfflineView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]));
 
         this.render();
@@ -56,6 +58,7 @@ export default class OfflineView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]));
     }
 }

@@ -27,7 +27,7 @@ const confDefs = {
         confConst.LOCAL_HOST : confConst.FRONTEND_RELEASE),
     FRONTEND_PORT: confConst.FRONTEND_PORT,
     BACKEND_ADDRESS: JSON.stringify(confConst.DEBUG ? confConst.LOCAL_HOST : confConst.BACKEND_RELEASE),
-    BACKEND_PORT: confConst.DEBUG ? confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_RELEASE,
+    BACKEND_PORT: confConst.DEBUG ? confConst.BACKEND_PORT_DEBUG : confConst.BACKEND_PORT_RELEASE,
     DEBUG: confConst.DEBUG,
     SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
     APP_VERSION: JSON.stringify(packageJSON.version),

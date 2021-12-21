@@ -64,7 +64,11 @@ async function cacheFirst(request) {
  */
 async function networkFirst(request, clientId) {
     if (request.method !== 'GET') {
-        return await fetch(request);
+        try {
+            return await fetch(request);
+        } catch (error) {
+            return undefined;
+        }
     }
 
     const cache = await caches.open(ServiceWorker.API_CACHE_NAME);
