@@ -404,7 +404,7 @@ class SettingsStore extends BaseStore {
         const context = this._storage.get('offline');
         context.offline = true;
         context.visible = true;
-        Router.go(Urls.Offline, false);
+        Router.go(Urls.Offline, true);
     }
 
     /**
