@@ -121,7 +121,10 @@ export const SettingStoreConstants = {
 };
 
 export const ServiceWorker = {
-    HTML_URL: '/index.html',
+    CacheUrls: {
+        HTML_URL: '/index.html',
+        NO_INTERNET_IMG_URL: '/assets/no-internet-icon.webp',
+    },
     API_PREFIX: '/api',
     STATIC_CACHE_NAME: `static-cache-${APP_VERSION}`,
     API_CACHE_NAME: `api-cache-${APP_VERSION}`,

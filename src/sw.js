@@ -5,18 +5,19 @@ const STATIC_FILES_URL = (self.__WB_MANIFEST || []).map((pair) => {
 });
 
 self.addEventListener('install', async (event) => {
+    await caches.open(ServiceWorker.API_CACHE_NAME);
     const cache = await caches.open(ServiceWorker.STATIC_CACHE_NAME);
     await cache.addAll(STATIC_FILES_URL);
-    await caches.open(ServiceWorker.API_CACHE_NAME);
 });
 
 self.addEventListener('activate', async (event) => {
     /* Удалим устаревшии версии кэша: */
     const cacheNames = await caches.keys();
     await Promise.all(
-        cacheNames.filter((name) =>
-            name !== ServiceWorker.STATIC_CACHE_NAME ||
-            name !== ServiceWorker.API_CACHE_NAME).map((name) => caches.delete(name)),
+        cacheNames
+            .filter((name) => name !== ServiceWorker.STATIC_CACHE_NAME)
+            .filter((name) => name !== ServiceWorker.API_CACHE_NAME)
+            .map((name) => caches.delete(name)),
     );
 });
 
@@ -30,7 +31,7 @@ self.addEventListener('fetch', (event) => {
         event.respondWith(networkFirst(request, event.clientId));
     } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
         console.log('запрос через location');
-        event.respondWith(cacheFirst(ServiceWorker.HTML_URL));
+        event.respondWith(cacheFirst(ServiceWorker.CacheUrls.HTML_URL));
     } else { // Запрос за статикой
         console.log('запрос за статикой');
         event.respondWith(cacheFirst(request));
@@ -38,7 +39,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 /**
- * CacheFirst
+ * CacheFirst - кэширование
  * @param {Request | String} request объект запроса или URL строка
  * @return {Promise<Response<any, Record<string, any>, number>>} фыв
  */
@@ -50,21 +51,31 @@ async function cacheFirst(request) {
         }
         const response = await fetch(request);
         const cache = await caches.open(ServiceWorker.STATIC_CACHE_NAME);
+        console.log('Cached: ' + request.url);
         await cache.put(request, response.clone());
         return response;
     } catch (error) {
+        console.log('request ended with error: ' + request);
+        if (request.url.endsWith('webp')) {
+            return await caches.match(ServiceWorker.CacheUrls.NO_INTERNET_IMG_URL);
+        }
         console.log('[SW] cacheFirst: нет сети или проблемы с кэшем');
         // todo попробовать отдать offline, если запрашивали с location
     }
 }
 
 /**
- *
+ * NetworkFirst - кэширование запросов на API
  * @param {Request | String} request объект запроса или URL строка
  * @param {Number} clientId id клиента
  * @return {Promise<Response>}
  */
 async function networkFirst(request, clientId) {
+    if (request.method !== 'GET') {
+        console.log('не кэшируем не GET');
+        return await fetch(request);
+    }
+
     const cache = await caches.open(ServiceWorker.API_CACHE_NAME);
     try {
         const response = await fetch(request);
