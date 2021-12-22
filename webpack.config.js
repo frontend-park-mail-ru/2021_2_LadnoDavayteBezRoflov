@@ -105,7 +105,7 @@ const config = {
     },
     optimization: {
         minimizer: [
-            new TerserPlugin(),
+            confConst.DEBUG ? undefined : new TerserPlugin(),
             new CssMinimizerPlugin({
                 parallel: true,
             }),
