@@ -252,11 +252,15 @@ class SettingsStore extends BaseStore {
             }
         }
 
-        this._storage.set('avatar', this.__setAvatar(data.avatar));
+        const avatar = this.__setAvatar(data.avatar);
 
-        const formdata = new FormData();
+        if (avatar) {
+          this._storage.set('avatar', avatar);
 
-        formdata.append('avatar', data.avatar);
+          const formdata = new FormData();
+  
+          formdata.append('avatar', data.avatar);
+        }
 
         let payload;
 
