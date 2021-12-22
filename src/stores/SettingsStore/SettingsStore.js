@@ -255,11 +255,11 @@ class SettingsStore extends BaseStore {
         const avatar = this.__setAvatar(data.avatar);
 
         if (avatar) {
-          this._storage.set('avatar', avatar);
+            this._storage.set('avatar', avatar);
 
-          const formdata = new FormData();
-  
-          formdata.append('avatar', data.avatar);
+            const formdata = new FormData();
+
+            formdata.append('avatar', data.avatar);
         }
 
         let payload;
