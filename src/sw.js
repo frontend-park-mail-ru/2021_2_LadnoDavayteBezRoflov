@@ -26,9 +26,10 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(request.url);
 
     if (url.pathname.startsWith('/api')) { // Запрос на API
-        event.respondWith(networkFirst(request, event.clientId));
+        event.respondWith(networkFirst(request, event.clientId, ServiceWorker.API_CACHE_NAME));
     } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
-        event.respondWith(cacheFirst(ServiceWorker.CacheUrls.HTML_URL));
+        /* Всегда пытаемся получить свежую страницу с новыми бандлами */
+        event.respondWith(networkFirst(request, event.clientId, ServiceWorker.STATIC_CACHE_NAME));
     } else { // Запрос за статикой
         event.respondWith(cacheFirst(request));
     }
@@ -60,9 +61,10 @@ async function cacheFirst(request) {
  * NetworkFirst - кэширование запросов на API
  * @param {Request | String} request объект запроса или URL строка
  * @param {Number} clientId id клиента
+ * @param {String} cacheName имя кэша
  * @return {Promise<Response>}
  */
-async function networkFirst(request, clientId) {
+async function networkFirst(request, clientId, cacheName) {
     if (request.method !== 'GET') {
         try {
             return await fetch(request);
@@ -71,13 +73,13 @@ async function networkFirst(request, clientId) {
         }
     }
 
-    const cache = await caches.open(ServiceWorker.API_CACHE_NAME);
+    const cache = await caches.open(cacheName);
     try {
         const response = await fetch(request);
         const responseCopy = response.clone();
         await sendMessage(clientId,
                           ServiceWorker.Messages.ONLINE,
-                          request.url);
+                          request?.url);
 
         /* Добавим служебный заголовок, позволяющий определить что запрос был кэширован в SW*/
         const headers = new Headers(responseCopy.headers);
@@ -97,12 +99,12 @@ async function networkFirst(request, clientId) {
         if (!cachedResponse) {
             await sendMessage(clientId,
                               ServiceWorker.Messages.OFFLINE_NO_CACHE,
-                              request.url);
+                              request?.url);
             return undefined;
         }
         await sendMessage(clientId,
                           ServiceWorker.Messages.OFFLINE_FROM_CACHE,
-                          request.url);
+                          request?.url);
         return cachedResponse;
     }
 }

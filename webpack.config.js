@@ -105,7 +105,6 @@ const config = {
     },
     optimization: {
         minimizer: [
-            confConst.DEBUG ? undefined : new TerserPlugin(),
             new CssMinimizerPlugin({
                 parallel: true,
             }),
@@ -144,5 +143,9 @@ const config = {
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
 };
+
+if (!confConst.DEBUG) {
+    config.optimization.minimizer.push(new TerserPlugin());
+}
 
 module.exports = config;

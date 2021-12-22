@@ -123,6 +123,7 @@ export const SettingStoreConstants = {
 export const ServiceWorker = {
     CacheUrls: {
         HTML_URL: '/index.html',
+        OFFLINE_URL: '/offline',
         NO_INTERNET_IMG_URL: '/assets/no-internet-icon.webp',
     },
     API_PREFIX: '/api',
