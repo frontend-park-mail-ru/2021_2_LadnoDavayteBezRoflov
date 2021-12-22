@@ -18,6 +18,7 @@ export const Urls = {
         CardPath: '/invite/card/',
         Card: '/invite/card/<accessPathCard>',
     },
+    Offline: '/offline',
 };
 
 /**
@@ -29,19 +30,18 @@ export const Html = {
 };
 
 /**
-  * Константа, содержащая в себе параметры самого себя.
+  * Константа, содержащая в себе параметры URL
   */
-export const SelfAddress = {
-    Url: FRONTEND_ADDRESS,
-    Port: FRONTEND_PORT,
-};
-
-/**
-  * Константа, содержащая в себе параметры бэкенда.
-  */
-export const BackendAddress = {
-    Url: BACKEND_ADDRESS,
-    Port: BACKEND_PORT,
+export const HTTP = {
+    SelfAddress: {
+        Url: FRONTEND_ADDRESS,
+        Port: FRONTEND_PORT,
+    },
+    BackendAddress: {
+        Url: BACKEND_ADDRESS,
+        Port: BACKEND_PORT,
+    },
+    Scheme: SCHEME,
 };
 
 /**
@@ -118,4 +118,20 @@ export const CheckLists = {
 
 export const SettingStoreConstants = {
     MobileNavWidth: 500,
+};
+
+export const ServiceWorker = {
+    CacheUrls: {
+        HTML_URL: '/index.html',
+        NO_INTERNET_IMG_URL: '/assets/no-internet-icon.webp',
+    },
+    API_PREFIX: '/api',
+    STATIC_CACHE_NAME: `static-cache-${APP_VERSION}`,
+    API_CACHE_NAME: `api-cache-${APP_VERSION}`,
+    SW_HEADER: 'X-Is-From-Service-Worker',
+    Messages: {
+        OFFLINE_FROM_CACHE: 'offline-cache', // Приложение работает в offline
+        OFFLINE_NO_CACHE: 'offline-no-cache', // Приложение offline и дальше не может работать
+        ONLINE: 'online', // Приложение online
+    },
 };

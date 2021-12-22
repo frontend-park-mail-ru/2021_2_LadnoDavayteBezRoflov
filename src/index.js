@@ -1,5 +1,4 @@
 'use strict';
-
 import {userActions} from './actions/user.js';
 
 // Stores
@@ -22,16 +21,9 @@ import BoardsView from './views/BoardsView/BoardsView.js';
 import BoardView from './views/BoardView/BoardView.js';
 import ProfileView from './views/ProfileView/ProfileView.js';
 import {settingsActions} from './actions/settings';
-
-if ('serviceWorker' in navigator && !DEBUG) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then((registration) => {
-            console.log('SW registered with scope ', registration.scope);
-        }).catch((registrationError) => {
-            console.log('SW registration failed: ', registrationError);
-        });
-    });
-}
+import ServiceWorkerClient from './modules/ServiceWorkerClient/ServiceWorkerClient';
+import OfflineView from './views/OfflineView/OfflineView.js';
+import NotFoundView from './views/NotFoundView/NotFoundView';
 
 if (UserStore.getContext('isAuthorized') === undefined) {
     userActions.fetchUser();
@@ -44,6 +36,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const boardsView = new BoardsView(root);
     const boardView = new BoardView(root);
+    Router.registerNotFound(new NotFoundView(root));
     Router.register(Urls.Root, boardsView);
     Router.register(Urls.Boards, boardsView);
     Router.register(Urls.Invite.Board, boardView);
@@ -52,6 +45,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     Router.register(Urls.Login, new LoginView(root));
     Router.register(Urls.Board, boardView);
     Router.register(Urls.Profile, new ProfileView(root));
+    Router.register(Urls.Offline, new OfflineView(root));
 
     UserStore.addListener(() => {
         if (UserStore.getContext('isAuthorized') === undefined) {
@@ -81,3 +75,16 @@ window.addEventListener('resize', (() => {
         }
     };
 })(), false);
+
+
+if ('serviceWorker' in navigator) {
+    // eslint-disable-next-line no-unused-vars
+    const serviceWorkerClient = new ServiceWorkerClient(navigator.serviceWorker);
+    window.addEventListener('load', async () => {
+        try {
+            await navigator.serviceWorker.register(`/${SW_FILE_NAME}`);
+        } catch (error) {
+            console.log(`Ошибка при регистрации SW: ${error}`);
+        }
+    });
+}

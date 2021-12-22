@@ -29,6 +29,7 @@ export default class LoginView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]);
         super(context, template, parent);
 
@@ -52,6 +53,7 @@ export default class LoginView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]));
         this.render();
         this._isActive = true;
@@ -66,6 +68,7 @@ export default class LoginView extends BaseView {
             ...UserStore.getContext(),
             ['avatar', SettingsStore.getContext('avatar')],
             ['navbar', SettingsStore.getContext('navbar')],
+            ['offline', SettingsStore.getContext('offline')],
         ]));
 
         if (!this._isActive) {

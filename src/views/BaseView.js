@@ -4,6 +4,7 @@ import BaseComponent from '../components/BaseComponent.js';
 // Компоненты по умолчанию
 import NavbarComponent from '../components/Navbar/Navbar.js';
 import FooterComponent from '../components/Footer/Footer.js';
+import OfflineMessage from '../components/OfflineMessage/OfflineMessage.js';
 
 
 /**
@@ -22,6 +23,7 @@ export default class BaseView extends BaseComponent {
 
         this.addComponent('Navbar', new NavbarComponent(context));
         this.addComponent('Footer', new FooterComponent(context));
+        this.addComponent('OfflineMessage', new OfflineMessage(context));
 
         this._isActive = false;
     }
