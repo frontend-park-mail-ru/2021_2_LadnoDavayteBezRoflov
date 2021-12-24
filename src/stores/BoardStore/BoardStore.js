@@ -1996,7 +1996,7 @@ class BoardStore extends BaseStore {
             this._storage.get('card-popup').errors = ConstantMessages.OfflineMessage;
             return;
         }
-        this._storage.get('card-popup').errors = null
+        this._storage.get('card-popup').errors = null;
 
         let payload;
 
