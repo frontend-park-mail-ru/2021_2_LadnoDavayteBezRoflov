@@ -131,13 +131,6 @@ const config = {
                 },
             ],
         }),
-        new InjectManifest({
-            swSrc: './src/sw.js',
-            swDest: JSON.parse(confDefs.SW_FILE_NAME),
-            exclude: [
-                /\.m?js$/,
-            ],
-        }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
@@ -146,6 +139,13 @@ const config = {
 
 if (!confConst.DEBUG) {
     config.optimization.minimizer.push(new TerserPlugin());
+    config.plugins.push(new InjectManifest({
+        swSrc: './src/sw.js',
+        swDest: JSON.parse(confDefs.SW_FILE_NAME),
+        exclude: [
+            /\.m?js$/,
+        ],
+    }));
 }
 
 module.exports = config;
