@@ -2119,6 +2119,10 @@ class BoardStore extends BaseStore {
             card.attachments.push(payload.data);
             return;
 
+        case HttpStatusCodes.TooLarge:
+            cardContext.errors = ConstantMessages.TooLargeMessage;
+            return;
+
         default:
             cardContext.errors = ConstantMessages.UnsuccessfulRequest;
             return;

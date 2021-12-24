@@ -27,8 +27,8 @@ self.addEventListener('fetch', (event) => {
 
     if (url.pathname.startsWith('/api')) { // Запрос на API
         event.respondWith(networkFirst(request, event.clientId, ServiceWorker.API_CACHE_NAME));
-    } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
-        if (event.request.url.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
+    } else if (request.mode === 'navigate') { // Переход по URL в адресной строке
+        if (request.url.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
             event.respondWith(fetchAttachment(request));
         }
         /* Всегда пытаемся получить свежую страницу с новыми бандлами */
@@ -138,6 +138,8 @@ async function fetchAttachment(request) {
             statusText: responseCopy.statusText,
             headers: headers,
         });
+
+        console.log('возвращаю attchment');
 
         return responseCopy;
     } catch (error) {

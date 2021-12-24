@@ -55,6 +55,7 @@ export const HttpStatusCodes = {
     Unauthorized: 401,
     InternalServerError: 500,
     Forbidden: 403,
+    TooLarge: 413,
 };
 
 /**
@@ -106,6 +107,7 @@ export const ConstantMessages = {
     WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
 
     OfflineMessage: 'Операция не удалась - отсутствует соединение с Интернетом',
+    TooLargeMessage: 'Файл фложения слишком большой',
 };
 
 export const BoardStoreConstants = {
