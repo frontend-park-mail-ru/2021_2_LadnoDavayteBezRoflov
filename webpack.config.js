@@ -6,7 +6,6 @@ const {InjectManifest} = require('workbox-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const packageJSON = require('./package.json');
 
 const crypto = require('crypto');
@@ -48,7 +47,7 @@ const confDefs = {
     DEBUG: confConst.DEBUG,
     SCHEME: JSON.stringify(confConst.DEBUG ? confConst.HTTP : confConst.HTTPS),
     APP_VERSION: JSON.stringify(packageJSON.version),
-    SW_FILE_NAME: JSON.stringify(`sw.${confConst.DEBUG ? '' : getFileHash('./src/sw.js')}.js`),
+    SW_FILE_NAME: JSON.stringify(`sw.${confConst.DEBUG ? '' : getFileHash('./src/sw.ts')}.js`),
 };
 
 const devServer = {
@@ -59,7 +58,7 @@ const devServer = {
 };
 
 const config = {
-    entry: './src/index.js',
+    entry: './src/index.ts',
 
     output: {
         publicPath: '/',
@@ -68,6 +67,16 @@ const config = {
     },
     module: {
         rules: [
+            {
+                test: /\.ts$/,
+                exclude: path.resolve(__dirname, 'node_modules/'),
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-typescript'],
+                    },
+                },
+            },
             {
                 test: /\.m?js$/,
                 exclude: path.resolve(__dirname, 'node_modules/'),
@@ -132,20 +141,19 @@ const config = {
             ],
         }),
         new InjectManifest({
-            swSrc: './src/sw.js',
+            swSrc: './src/sw.ts',
             swDest: JSON.parse(confDefs.SW_FILE_NAME),
             exclude: [
-                /\.m?js$/,
+                /\.m?js$/, /\.ts$/,
             ],
         }),
     ],
     mode: confConst.DEBUG ? 'development' : 'production',
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
+    resolve: {
+        extensions: ['.ts', '.js'],
+    },
 };
-
-if (!confConst.DEBUG) {
-    config.optimization.minimizer.push(new TerserPlugin());
-}
 
 module.exports = config;

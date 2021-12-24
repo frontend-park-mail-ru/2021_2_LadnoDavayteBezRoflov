@@ -122,11 +122,11 @@ $team-font-size: 25px;
 
 .team__member-counter {
     font-size: $small-font-size;
+    vertical-align: super;
 }
 
 .boards-header {
     display: flex;
     flex-direction: row;
     align-items: start;
-
 }
