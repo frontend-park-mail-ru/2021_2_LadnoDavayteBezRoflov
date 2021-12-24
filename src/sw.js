@@ -1,4 +1,14 @@
+/* eslint-disable quote-props */
 import {ServiceWorker} from './constants/constants';
+const cyrillicMap = {'Ё': 'YO', 'Й': 'I', 'Ц': 'TS', 'У': 'U', 'К': 'K', 'Е': 'E', 'Н': 'N',
+                     'Г': 'G', 'Ш': 'SH', 'Щ': 'SCH', 'З': 'Z', 'Х': 'H', 'Ъ': '\'', 'ё': 'yo',
+                     'й': 'i', 'ц': 'ts', 'у': 'u', 'к': 'k', 'е': 'e', 'н': 'n', 'г': 'g', 'ш': 'sh',
+                     'щ': 'sch', 'з': 'z', 'х': 'h', 'ъ': '\'', 'Ф': 'F', 'Ы': 'I', 'В': 'V', 'А': 'a',
+                     'П': 'P', 'Р': 'R', 'О': 'O', 'Л': 'L', 'Д': 'D', 'Ж': 'ZH', 'Э': 'E', 'ф': 'f',
+                     'ы': 'i', 'в': 'v', 'а': 'a', 'п': 'p', 'р': 'r', 'о': 'o', 'л': 'l', 'д': 'd',
+                     'ж': 'zh', 'э': 'e', 'Я': 'Ya', 'Ч': 'CH', 'С': 'S', 'М': 'M', 'И': 'I', 'Т': 'T',
+                     'Ь': '\'', 'Б': 'B', 'Ю': 'YU', 'я': 'ya', 'ч': 'ch', 'с': 's', 'м': 'm', 'и': 'i',
+                     'т': 't', 'ь': '\'', 'б': 'b', 'ю': 'yu'};
 
 const STATIC_FILES_URL = (self.__WB_MANIFEST || []).map((pair) => {
     return pair.url;
@@ -124,7 +134,7 @@ async function networkFirst(request, clientId, cacheName) {
 async function fetchAttachment(request) {
     const url = new URL(request.url);
     url.pathname = url.pathname.replace(ServiceWorker.ATTACHMENT_PREFIX, '');
-    const fileName = url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM);
+    const fileName = cyrillic2ascii(url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM));
     url.searchParams.delete(ServiceWorker.ATTACH_NAME_PARAM);
     try {
         console.log('url to fetch attach: ' + url.toString());
@@ -166,4 +176,15 @@ async function sendMessage(clientId, messageType, url) {
         clientId,
         url,
     });
+}
+
+/**
+ * Функция замещает кириллические символы на латинские. Т.к. HTTP не пропускает Non-ASCII
+ * @param {String} word строка на проверку
+ * @return {*}
+ */
+function cyrillic2ascii(word) {
+    return word.split('').map(function(char) {
+        return cyrillicMap[char] || char;
+    }).join('');
 }
