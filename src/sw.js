@@ -30,6 +30,7 @@ self.addEventListener('fetch', (event) => {
     } else if (request.mode === 'navigate') { // Переход по URL в адресной строке
         if (url.pathname.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
             event.respondWith(fetchAttachment(request));
+            return;
         }
         /* Всегда пытаемся получить свежую страницу с новыми бандлами */
         event.respondWith(networkFirst(request, event.clientId, ServiceWorker.STATIC_CACHE_NAME));
@@ -126,6 +127,7 @@ async function fetchAttachment(request) {
     const fileName = url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM);
     url.searchParams.delete(ServiceWorker.ATTACH_NAME_PARAM);
     try {
+        console.log('url to fetch attach: ' + url.toString());
         const response = await fetch(url.toString());
 
         /* Добавим служебный заголовок, указывающий что контент нужно скачать */
