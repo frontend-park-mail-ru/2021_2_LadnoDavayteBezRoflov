@@ -1005,6 +1005,7 @@ class BoardStore extends BaseStore {
                 tags: [],
                 check_lists: [],
                 access_path: payload.data.access_path,
+                attachments: [],
             });
             return;
 
