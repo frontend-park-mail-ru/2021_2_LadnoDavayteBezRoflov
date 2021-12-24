@@ -28,6 +28,9 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.startsWith('/api')) { // Запрос на API
         event.respondWith(networkFirst(request, event.clientId, ServiceWorker.API_CACHE_NAME));
     } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
+        if (event.request.url.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
+            event.respondWith(fetchAttachment(request));
+        }
         /* Всегда пытаемся получить свежую страницу с новыми бандлами */
         event.respondWith(networkFirst(request, event.clientId, ServiceWorker.STATIC_CACHE_NAME));
     } else { // Запрос за статикой
@@ -106,6 +109,36 @@ async function networkFirst(request, clientId, cacheName) {
                           ServiceWorker.Messages.OFFLINE_FROM_CACHE,
                           request?.url);
         return cachedResponse;
+    }
+}
+
+/**
+ * Извлекает аттач, заменяет URL при запросе, добавляет хедер Content-Disposition в ответе
+ * @param  {Request} request - request
+ * @return {Promise<Response>}
+ */
+async function fetchAttachment(request) {
+    const url = new URL(request.url);
+    url.pathname.replace(ServiceWorker.ATTACHMENT_PREFIX, '');
+    try {
+        const response = await fetch(request);
+        const responseCopy = response.clone();
+
+        /* Добавим служебный заголовок, указывающий что контент нужно скачать */
+        const headers = new Headers(responseCopy.headers);
+        headers.set('Content-Disposition', `attachment; filename="${url.pathname}"`);
+
+        const responseBytes = await responseCopy.blob();
+        const cachedResponse = new Response(responseBytes, {
+            status: responseCopy.status,
+            statusText: responseCopy.statusText,
+            headers: headers,
+        });
+        await cache.put(request, cachedResponse);
+
+        return response;
+    } catch (error) {
+        console.log('не удалость загрузить вложение: ' + request.url);
     }
 }
 

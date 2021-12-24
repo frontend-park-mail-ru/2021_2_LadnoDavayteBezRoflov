@@ -19,7 +19,7 @@ import {
     BoardStoreConstants,
     CheckLists,
     ConstantMessages, HTTP,
-    HttpStatusCodes,
+    HttpStatusCodes, ServiceWorker,
     Urls,
 } from '../../constants/constants.js';
 
@@ -2152,7 +2152,9 @@ class BoardStore extends BaseStore {
         const attachment = cardContext.attachments.find((attach) => {
             return attach.atid === data.atid;
         });
-        window.open(attachment.file_tech_name, `Download: ${attachment.file_pub_name}`);
+        console.log('attachment.file_tech_name' + attachment.file_tech_name);
+        window.open(ServiceWorker.ATTACHMENT_PREFIX + '/' + attachment.file_tech_name,
+                    `Download: ${attachment.file_pub_name}`);
     }
 
     /**
