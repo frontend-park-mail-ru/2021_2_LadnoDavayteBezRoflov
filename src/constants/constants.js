@@ -104,6 +104,8 @@ export const ConstantMessages = {
     CantCopyToClipBoard: 'Не удалось скопировать текст',
 
     WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
+
+    OfflineMessage: 'Операция не удалась - отсутствует соединение с Интернетом',
 };
 
 export const BoardStoreConstants = {

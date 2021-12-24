@@ -132,6 +132,7 @@ class SettingsStore extends BaseStore {
      * @param {Object} data данные запроса.
      */
     async _get(data) {
+        this._storage.set('errors', null);
         if (!data.userName) {
             return;
         }
@@ -168,8 +169,10 @@ class SettingsStore extends BaseStore {
      */
     async _put(data) {
         if (this.isOffline()) {
+            this._storage.set('errors', ConstantMessages.OfflineMessage);
             return;
         }
+        this._storage.set('errors', null);
         const formdata = data;
 
         this._storage.set('login', data.login);
@@ -236,8 +239,10 @@ class SettingsStore extends BaseStore {
      */
     async _uploadAvatar(data) {
         if (this.isOffline()) {
+            this._storage.set('errors', ConstantMessages.OfflineMessage);
             return;
         }
+        this._storage.set('errors', null);
         const validator = new Validator();
 
         if (data.avatar instanceof File) {

@@ -184,6 +184,7 @@ class BoardsStore extends BaseStore {
      */
     async _create(data) {
         if (SettingsStore.isOffline()) {
+            this._storage.get('create-popup').errors = ConstantMessages.OfflineMessage;
             return;
         }
         const validator = new Validator();
@@ -294,6 +295,10 @@ class BoardsStore extends BaseStore {
      */
     async _refreshTeamMemberSearchList(data) {
         const context = this._storage.get('add-team-member-popup');
+        if (SettingsStore.isOffline()) {
+            context.errors = ConstantMessages.OfflineMessage;
+            return;
+        }
         context.errors = null;
         const {searchString} = data;
         context.searchString = searchString;
@@ -340,6 +345,10 @@ class BoardsStore extends BaseStore {
      */
     async _toggleTeamMemberInSearchList(data) {
         const context = this._storage.get('add-team-member-popup');
+        if (SettingsStore.isOffline()) {
+            context.errors = ConstantMessages.OfflineMessage;
+            return;
+        }
         context.errors = null;
 
         const teams = this._storage.get('teams');
@@ -433,6 +442,7 @@ class BoardsStore extends BaseStore {
      */
     async _submitAddTeamPopUp(data) {
         if (SettingsStore.isOffline()) {
+            this._storage.get('team-popup').errors = ConstantMessages.OfflineMessage;
             return;
         }
         const validator = new Validator();
@@ -504,7 +514,10 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _submitEditTeamPopUp(data) {
-        console.log('submit');
+        if (SettingsStore.isOffline()) {
+            this._storage.get('team-popup').errors = ConstantMessages.OfflineMessage;
+            return;
+        }
         const context = this._storage.get('team-popup');
         const validator = new Validator();
         const validatorStatus = validator.validateTeamTitle(data.team_name);
@@ -515,7 +528,6 @@ class BoardsStore extends BaseStore {
         this._hideTeamPopUp();
 
         let payload;
-        console.log(context);
         try {
             payload = await Network.updateTeam(context.tid, {
                 team_name: data.team_name,
@@ -547,6 +559,11 @@ class BoardsStore extends BaseStore {
      * @private
      */
     async _deleteTeam(data) {
+        if (SettingsStore.isOffline()) {
+            this._storage.get('delete-dialog').errors = ConstantMessages.OfflineMessage;
+            return;
+        }
+        this._storage.get('delete-dialog').errors = null;
         this._hideDeleteTeamPopUp();
         if (!data.confirm) {
             return;
@@ -565,6 +582,7 @@ class BoardsStore extends BaseStore {
         case HttpStatusCodes.Ok:
             this._storage.get('teams').splice(
                 this._getTeamById(this._storage.get('delete-dialog').tid), 1);
+            break;
 
         default:
             this._showDeleteTeamPopUp({tid: this._storage.get('delete-dialog').tid});
@@ -583,6 +601,7 @@ class BoardsStore extends BaseStore {
             visible: true,
             tid: data.tid,
             name: this._getTeamById(data.tid).team_name,
+            errors: null,
         });
     }
 

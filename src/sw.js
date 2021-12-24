@@ -72,6 +72,9 @@ async function networkFirst(request, clientId, cacheName) {
         try {
             return await fetch(request);
         } catch (error) {
+            await sendMessage(clientId,
+                              ServiceWorker.Messages.OFFLINE_NO_CACHE,
+                              request?.url);
             return undefined;
         }
     }
