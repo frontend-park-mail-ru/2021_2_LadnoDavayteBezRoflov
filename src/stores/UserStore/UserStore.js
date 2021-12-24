@@ -163,7 +163,7 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
-        if (this.isOffline()) {
+        if (SettingsStore.isOffline()) {
             this._storage.set('errors', ConstantMessages.OfflineMessage);
             return;
         }
