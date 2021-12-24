@@ -26,9 +26,14 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(request.url);
 
     if (url.pathname.startsWith('/api')) { // Запрос на API
-        event.respondWith(networkFirst(request, event.clientId));
-    } else if (event.request.mode === 'navigate') { // Переход по URL в адресной строке
-        event.respondWith(cacheFirst(ServiceWorker.CacheUrls.HTML_URL));
+        event.respondWith(networkFirst(request, event.clientId, ServiceWorker.API_CACHE_NAME));
+    } else if (request.mode === 'navigate') { // Переход по URL в адресной строке
+        if (url.pathname.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
+            event.respondWith(fetchAttachment(request));
+            return;
+        }
+        /* Всегда пытаемся получить свежую страницу с новыми бандлами */
+        event.respondWith(networkFirst(request, event.clientId, ServiceWorker.STATIC_CACHE_NAME));
     } else { // Запрос за статикой
         event.respondWith(cacheFirst(request));
     }
@@ -60,24 +65,28 @@ async function cacheFirst(request) {
  * NetworkFirst - кэширование запросов на API
  * @param {Request | String} request объект запроса или URL строка
  * @param {Number} clientId id клиента
+ * @param {String} cacheName имя кэша
  * @return {Promise<Response>}
  */
-async function networkFirst(request, clientId) {
+async function networkFirst(request, clientId, cacheName) {
     if (request.method !== 'GET') {
         try {
             return await fetch(request);
         } catch (error) {
+            await sendMessage(clientId,
+                              ServiceWorker.Messages.OFFLINE_NO_CACHE,
+                              request?.url);
             return undefined;
         }
     }
 
-    const cache = await caches.open(ServiceWorker.API_CACHE_NAME);
+    const cache = await caches.open(cacheName);
     try {
         const response = await fetch(request);
         const responseCopy = response.clone();
         await sendMessage(clientId,
                           ServiceWorker.Messages.ONLINE,
-                          request.url);
+                          request?.url);
 
         /* Добавим служебный заголовок, позволяющий определить что запрос был кэширован в SW*/
         const headers = new Headers(responseCopy.headers);
@@ -97,13 +106,46 @@ async function networkFirst(request, clientId) {
         if (!cachedResponse) {
             await sendMessage(clientId,
                               ServiceWorker.Messages.OFFLINE_NO_CACHE,
-                              request.url);
+                              request?.url);
             return undefined;
         }
         await sendMessage(clientId,
                           ServiceWorker.Messages.OFFLINE_FROM_CACHE,
-                          request.url);
+                          request?.url);
         return cachedResponse;
+    }
+}
+
+/**
+ * Извлекает аттач, заменяет URL при запросе, добавляет хедер Content-Disposition в ответе
+ * @param  {Request} request - request
+ * @return {Promise<Response>}
+ */
+async function fetchAttachment(request) {
+    const url = new URL(request.url);
+    url.pathname = url.pathname.replace(ServiceWorker.ATTACHMENT_PREFIX, '');
+    const fileName = url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM);
+    url.searchParams.delete(ServiceWorker.ATTACH_NAME_PARAM);
+    try {
+        console.log('url to fetch attach: ' + url.toString());
+        const response = await fetch(url.toString());
+
+        /* Добавим служебный заголовок, указывающий что контент нужно скачать */
+        const headers = new Headers(response.headers);
+        headers.set('Content-Disposition', `attachment; filename="${fileName}"`);
+
+        const responseBytes = await response.blob();
+        const responseCopy = new Response(responseBytes, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: headers,
+        });
+
+        console.log('возвращаю attchment');
+
+        return responseCopy;
+    } catch (error) {
+        console.log('не удалость загрузить вложение: ' + url + ' ' + error);
     }
 }
 

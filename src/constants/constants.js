@@ -55,6 +55,7 @@ export const HttpStatusCodes = {
     Unauthorized: 401,
     InternalServerError: 500,
     Forbidden: 403,
+    TooLarge: 413,
 };
 
 /**
@@ -104,6 +105,9 @@ export const ConstantMessages = {
     CantCopyToClipBoard: 'Не удалось скопировать текст',
 
     WrongTagNameLength: 'Введите имя тега длиной от 1 до 40 символов',
+
+    OfflineMessage: 'Операция не удалась - отсутствует соединение с Интернетом',
+    TooLargeMessage: 'Файл фложения слишком большой',
 };
 
 export const BoardStoreConstants = {
@@ -123,11 +127,14 @@ export const SettingStoreConstants = {
 export const ServiceWorker = {
     CacheUrls: {
         HTML_URL: '/index.html',
+        OFFLINE_URL: '/offline',
         NO_INTERNET_IMG_URL: '/assets/no-internet-icon.webp',
     },
     API_PREFIX: '/api',
     STATIC_CACHE_NAME: `static-cache-${APP_VERSION}`,
     API_CACHE_NAME: `api-cache-${APP_VERSION}`,
+    ATTACHMENT_PREFIX: '/attach',
+    ATTACH_NAME_PARAM: 'file_name',
     SW_HEADER: 'X-Is-From-Service-Worker',
     Messages: {
         OFFLINE_FROM_CACHE: 'offline-cache', // Приложение работает в offline

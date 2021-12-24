@@ -6,6 +6,7 @@ const {InjectManifest} = require('workbox-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const packageJSON = require('./package.json');
 
 const crypto = require('crypto');
@@ -142,5 +143,9 @@ const config = {
     devtool: confConst.DEBUG ? 'source-map' : undefined,
     devServer: confConst.DEBUG ? devServer : devServer,
 };
+
+if (!confConst.DEBUG) {
+    config.optimization.minimizer.push(new TerserPlugin());
+}
 
 module.exports = config;

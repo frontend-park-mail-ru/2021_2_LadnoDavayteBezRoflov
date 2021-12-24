@@ -79,6 +79,7 @@ class UserStore extends BaseStore {
      * Метод, реализующий реакцию на инициализацию.
      */
     async _fetchUser() {
+        this._storage.set('errors', null);
         let response;
 
         try {
@@ -112,8 +113,10 @@ class UserStore extends BaseStore {
      */
     async _register(data) {
         if (SettingsStore.isOffline()) {
+            this._storage.set('errors', ConstantMessages.OfflineMessage);
             return;
         }
+        this._storage.set('errors', null);
         this._storage.set('userRegisterData', data);
         this._validate(data, 'userRegisterData');
 
@@ -160,6 +163,11 @@ class UserStore extends BaseStore {
      * @param {Object} data данные для входа
      */
     async _login(data) {
+        if (SettingsStore.isOffline()) {
+            this._storage.set('errors', ConstantMessages.OfflineMessage);
+            return;
+        }
+        this._storage.set('errors', null);
         this._storage.set('userLoginData', data);
 
         this._validate(data, 'userLoginData');
@@ -207,8 +215,10 @@ class UserStore extends BaseStore {
      */
     async _logout() {
         if (SettingsStore.isOffline()) {
+            this._storage.set('errors', ConstantMessages.OfflineMessage);
             return;
         }
+        this._storage.set('errors', null);
         let response;
 
         try {
