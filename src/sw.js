@@ -28,7 +28,7 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.startsWith('/api')) { // Запрос на API
         event.respondWith(networkFirst(request, event.clientId, ServiceWorker.API_CACHE_NAME));
     } else if (request.mode === 'navigate') { // Переход по URL в адресной строке
-        if (request.url.pathname.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
+        if (url.pathname.startsWith(ServiceWorker.ATTACHMENT_PREFIX)) {
             event.respondWith(fetchAttachment(request));
         }
         /* Всегда пытаемся получить свежую страницу с новыми бандлами */
