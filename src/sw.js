@@ -136,8 +136,8 @@ async function fetchAttachment(request) {
 
         const responseBytes = await response.blob();
         const responseCopy = new Response(responseBytes, {
-            status: responseCopy.status,
-            statusText: responseCopy.statusText,
+            status: response.status,
+            statusText: response.statusText,
             headers: headers,
         });
 
@@ -145,7 +145,7 @@ async function fetchAttachment(request) {
 
         return responseCopy;
     } catch (error) {
-        console.log('не удалость загрузить вложение: ' + request.url);
+        console.log('не удалость загрузить вложение: ' + url + ' ' + error);
     }
 }
 
