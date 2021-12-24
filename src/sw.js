@@ -119,24 +119,24 @@ async function networkFirst(request, clientId, cacheName) {
  */
 async function fetchAttachment(request) {
     const url = new URL(request.url);
-    url.pathname.replace(ServiceWorker.ATTACHMENT_PREFIX, '');
+    url.pathname = url.pathname.replace(ServiceWorker.ATTACHMENT_PREFIX, '');
+    const fileName = url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM);
+    url.searchParams.delete(ServiceWorker.ATTACH_NAME_PARAM);
     try {
-        const response = await fetch(request);
-        const responseCopy = response.clone();
+        const response = await fetch(url.toString());
 
         /* Добавим служебный заголовок, указывающий что контент нужно скачать */
-        const headers = new Headers(responseCopy.headers);
-        headers.set('Content-Disposition', `attachment; filename="${url.pathname}"`);
+        const headers = new Headers(response.headers);
+        headers.set('Content-Disposition', `attachment; filename="${fileName}"`);
 
-        const responseBytes = await responseCopy.blob();
-        const cachedResponse = new Response(responseBytes, {
+        const responseBytes = await response.blob();
+        const responseCopy = new Response(responseBytes, {
             status: responseCopy.status,
             statusText: responseCopy.statusText,
             headers: headers,
         });
-        await cache.put(request, cachedResponse);
 
-        return response;
+        return responseCopy;
     } catch (error) {
         console.log('не удалость загрузить вложение: ' + request.url);
     }

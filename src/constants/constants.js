@@ -130,6 +130,7 @@ export const ServiceWorker = {
     STATIC_CACHE_NAME: `static-cache-${APP_VERSION}`,
     API_CACHE_NAME: `api-cache-${APP_VERSION}`,
     ATTACHMENT_PREFIX: '/attach',
+    ATTACH_NAME_PARAM: 'file_name',
     SW_HEADER: 'X-Is-From-Service-Worker',
     Messages: {
         OFFLINE_FROM_CACHE: 'offline-cache', // Приложение работает в offline
