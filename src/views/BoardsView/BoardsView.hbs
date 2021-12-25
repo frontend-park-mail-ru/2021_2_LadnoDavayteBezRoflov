@@ -7,7 +7,6 @@
         </div>
         {{#each teams}}
             <div class="team">
-
                 <div class="team__header">
                     <div>
                         <span class="team__team-name">{{this.team_name}}</span>
@@ -32,14 +31,24 @@
                 </div>
                 <div class="horizontal-line"></div>
                 <div class="team__card-wrapper">
-                    <div class="team__card-holder">
-                        {{#each this.boards}}
-                            <a href="/board/{{this.bid}}" class="bord-card">
-                                <div class="bord-card__header">{{this.board_name}}</div>
-                                <div class="bord-card__description">{{this.description}}</div>
-                            </a>
-                        {{/each}}
-                    </div>
+                    {{#if this.boards}}
+                        <div class="team__card-holder">
+                            {{#each this.boards}}
+                                <a href="/board/{{this.bid}}" class="bord-card">
+                                    <div class="bord-card__header">{{this.board_name}}</div>
+                                    <div class="bord-card__description">{{this.description}}</div>
+                                </a>
+                            {{/each}}
+                        </div>
+                    {{else}}
+                        <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link" data-id="{{this.tid}}">Создайте</a>
+                            {{#if (IsEqualHelper this.team_type 2)}}
+                                Ваш первый проект в личном пространстве.
+                            {{else}}
+                                первый проект команды "{{this.team_name}}"
+                            {{/if}}
+                        </div>
+                    {{/if}}
                 </div>
             </div>
         {{/each}}

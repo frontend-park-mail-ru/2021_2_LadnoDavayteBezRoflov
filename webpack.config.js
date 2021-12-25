@@ -112,7 +112,6 @@ const config = {
         minimize: true,
     },
     plugins: [
-        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({filename: `style${confConst.DEBUG ? '' : '.[contenthash]'}.css`}),
         new HtmlWebpackPlugin({
             backend: confDefs.DEBUG ?

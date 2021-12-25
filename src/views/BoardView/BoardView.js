@@ -152,6 +152,7 @@ export default class BoardView extends BaseView {
         this._elements = {
             showSettingBtn: document.getElementById('showBoardSettingPopUpId'),
             showCreateCLBtn: document.getElementById('showCreateCardListPopUpId'),
+            showCreateCLLink: document.getElementById('showCreateCardListPopUpLinkId'),
             addMembersBtn: document.getElementById('showAddBoardMemberPopUpId'),
             showTagsBtn: document.getElementById('showTagsBoardPopUpId'),
             cardLists: {
@@ -222,6 +223,7 @@ export default class BoardView extends BaseView {
         super.addEventListeners();
         this._elements.showSettingBtn?.addEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.addEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.showCreateCLLink?.addEventListener('click', this._onShowCreateCLPopUp);
         this._elements.addMembersBtn?.addEventListener('click', this._onAddBoardMemberShow);
         this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
             addCardBtn.addEventListener('click', this._onAddCardToCardList);
@@ -271,6 +273,7 @@ export default class BoardView extends BaseView {
         super.removeEventListeners();
         this._elements.showSettingBtn?.removeEventListener('click', this._onShowSettingPopUp);
         this._elements.showCreateCLBtn?.removeEventListener('click', this._onShowCreateCLPopUp);
+        this._elements.showCreateCLLink?.removeEventListener('click', this._onShowCreateCLPopUp);
         this._elements.addMembersBtn?.removeEventListener('click', this._onAddBoardMemberShow);
         this._elements.cardLists.addCardBtns.forEach((addCardBtn)=>{
             addCardBtn.removeEventListener('click', this._onAddCardToCardList);
@@ -323,9 +326,12 @@ export default class BoardView extends BaseView {
 
     /**
      * Callback, срабатывающий при нажатии на кнопку "Добавить список"
+     * @param {Event} event объект события
      * @private
      */
-    _onShowCreateCLPopUp() {
+    _onShowCreateCLPopUp(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
         cardListActions.showCreateCardListPopUp();
     }
 

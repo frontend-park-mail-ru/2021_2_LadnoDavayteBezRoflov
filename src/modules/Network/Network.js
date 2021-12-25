@@ -47,6 +47,7 @@ class Network {
      * @return {Promise<Response>} промис запроса
      */
     httpRequest(URL, options) {
+        console.log('httpRequest: ' + URL);
         return fetch(URL, {...this._defaultOptions, ...options})
             .then((response) => response.json()
                 .then((data) => ({status: response.status, data: data})),

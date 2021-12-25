@@ -1158,7 +1158,6 @@ class BoardStore extends BaseStore {
 
         const _data = {
             position: data.position,
-            pos: data.pos,
             cid: (data.cid? data.cid : this._storage.get('card-popup').cid),
             clid: (data.clid? data.clid : this._storage.get('card-popup').clid),
             card_name: data.card_name,

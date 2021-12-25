@@ -101,7 +101,7 @@ export default class ProfileView extends BaseView {
     addEventListeners() {
         super.addEventListeners();
         document.getElementById('profile')?.addEventListener('submit', this.formUpdate);
-        document.getElementById('avatar')?.addEventListener('change', this.onAvatarChange);
+        document.getElementById('avatarId')?.addEventListener('change', this.onAvatarChange);
     }
 
     /**
@@ -110,7 +110,7 @@ export default class ProfileView extends BaseView {
     removeEventListeners() {
         super.removeEventListeners();
         document.getElementById('profile')?.removeEventListener('submit', this.formUpdate);
-        document.getElementById('avatar')?.removeEventListener('change', this.onAvatarChange);
+        document.getElementById('avatarId')?.removeEventListener('change', this.onAvatarChange);
     }
 
     /**
@@ -122,7 +122,7 @@ export default class ProfileView extends BaseView {
         const data = {
             login: document.getElementById('login').value,
             email: document.getElementById('email').value,
-            avatar: document.getElementById('avatar').value,
+            avatar: document.getElementById('avatarId').value,
             password: document.getElementById('password').value,
             passwordRepeat: document.getElementById('passwordRepeat').value,
             old_password: document.getElementById('oldPassword').value,

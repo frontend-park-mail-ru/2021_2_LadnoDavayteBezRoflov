@@ -17,7 +17,9 @@
                                 <label>Теги карточки:</label>
                                 <div class="card-popup-tags">
                                     {{#each tags}}
-                                        <div class="tags-list__tag_compact tag-colors__{{this.color.color_name}}"><div>{{tag_name}}</div></div>
+                                        <div class="tags-list__tag_compact tag-colors__{{this.color.color_name}}">
+                                            <div>{{tag_name}}</div>
+                                        </div>
                                     {{/each}}
                                     <div class="button button_small add" id="addTagCardPopUpId"></div>
                                 </div>
@@ -25,13 +27,14 @@
                         {{/if}}
                         <div>
                             <label for="cardPopUpTitleId" class>Название карточки:</label>
-                            <input class="simple-form-element" type="text" id="cardPopUpTitleId" name="card-name"
+                            <input class="simple-form-element text-17px" type="text" id="cardPopUpTitleId"
+                                   name="card-name"
                                    autofocus pattern="^[a-zA-Z\d]{1,40}$" autocomplete="off" required
                                 {{#if edit}} value="{{card_name}}" {{/if}}>
                         </div>
                         <div>
                             <label for="cardPopUpDescriptionId" class>Описание карточки:</label>
-                            <textarea class="simple-form-element" type="text" id="cardPopUpDescriptionId"
+                            <textarea class="simple-form-element text-17px" type="text" id="cardPopUpDescriptionId"
                                       name="card-description" autofocus pattern="^[a-zA-Z\d]{1,40}$" rows="4"
                                       autocomplete="off" required>{{#if edit}}{{description}}{{/if}}</textarea>
                         </div>
@@ -43,21 +46,6 @@
                                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required
                                 {{#if edit}} value="{{deadline}}" {{/if}}>
                         </div>
-                        {{#if edit}}
-                            <div>
-                                <label for="cardPopUpPositionId">Позиция:</label>
-                                <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
-                                        required>
-                                    {{#each positionRange}}
-                                        {{#if (IsEqualHelper this ../position) }}
-                                            <option value="{{this}}" selected>#{{this}}</option>
-                                        {{else}}
-                                            <option value="{{this}}">#{{this}}</option>
-                                        {{/if}}
-                                    {{/each}}
-                                </select>
-                            </div>
-                        {{/if}}
                         {{# if checkLists}}
                             <span class="check-list-separator">Чек листы</span>
                         {{/if}}
@@ -80,7 +68,7 @@
                                     {{#each this.check_list_items }}
                                         <div class="checklist-item" data-id="{{this.chliid}}">
                                         <label class="checklist-item__label">
-                                            <input type="checkbox" {{#if this.status}}checked{{/if}}>
+                                            <input type="checkbox" class="checkbox-custom" {{#if this.status}}checked{{/if}}>
                                             {{#if this.edit}}
                                             </label>
                                                 <input class="simple-form-element checklist-item__input" type="text"
@@ -105,12 +93,14 @@
                             {{#if attachments}}<span class="check-list-separator">Вложения</span>{{/if}}
                             <div class="attachments">
                                 {{#each attachments}}
-                                <div class="attachment" data-id="{{this.atid}}">
-                                    <div class="attachment__icon material-icon-file"></div>
-                                    <div class="attachment__title"><div>{{this.file_pub_name}}</div></div>
-                                    <div class="attachment__download-btn material-icon-download"></div>
-                                    <div class="attachment__delete-btn material-icon-delete"></div>
-                                </div>
+                                    <div class="attachment" data-id="{{this.atid}}">
+                                        <div class="attachment__icon material-icon-file"></div>
+                                        <div class="attachment__title">
+                                            <div>{{this.file_pub_name}}</div>
+                                        </div>
+                                        <div class="attachment__download-btn material-icon-download"></div>
+                                        <div class="attachment__delete-btn material-icon-delete"></div>
+                                    </div>
                                 {{/each}}
                             </div>
                             <label class="button attachment__button">
@@ -125,10 +115,13 @@
                         {{/if}}
                         {{#if edit}}
                             <div class="comments-wrapper">
-                                <textarea class="simple-form-element" type="text" id="newCommentTextId"
+                                <textarea class="simple-form-element" type="text"
+                                          id="newCommentTextId"
                                           name="comment" autocomplete="off"
-                                          placeholder="Добавить комментарий" required></textarea>
+                                          placeholder="Добавить комментарий"
+                                          required></textarea>
                                 <button class="button" id="createCommentId">Добавить</button>
+
                                 {{#each comments}}
                                     <div class="comment" data-author="{{this.uid}}">
                                         <img class="comment__avatar" title="{{this.user.userName}}"

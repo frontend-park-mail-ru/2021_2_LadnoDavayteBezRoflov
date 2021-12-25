@@ -16,6 +16,12 @@ $scrollbar-width: 1600px;
     gap: 20px;
     overflow-x: auto;
     overflow-y: hidden;
+
+    &__centered-text {
+        @extend .columns;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .column {
@@ -25,6 +31,7 @@ $scrollbar-width: 1600px;
     max-height: $max-height-politic;
     background: $primary-bg-color;
     box-shadow: 0 0 2px $main-theme-color;
+    min-width: 160px;
 
     &__header {
         display: flex;
