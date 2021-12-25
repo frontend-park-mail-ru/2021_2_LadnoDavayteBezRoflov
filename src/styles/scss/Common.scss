@@ -58,6 +58,42 @@ div#root {
         box-shadow: 0 0 10px 2px $default-box-shadow-color;
         outline: none;
     }
+
+    &_comment {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+.comment-input {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    justify-content: space-between;
+
+    &.button {
+        max-height: 30px;
+    }
+
+    &__wrapper {
+        flex-grow: 1;
+        font: inherit;
+        background-color: $secondary-bg-color;
+        border-bottom: 4px solid $tertiary-bg-color;
+        cursor: text;
+        min-height: 17px;
+        max-width: available;
+
+        &:focus {
+            box-shadow: 0 0 10px 2px $default-box-shadow-color;
+            outline: none;
+        }
+    }
+    &__span {
+        font-size: 17px;
+        outline: none;
+    }
 }
 
 /* контейнер для ошибок */

@@ -3,11 +3,11 @@
 <div class="view__wrapper">
     <form id="register" name="register" novalidate autocomplete="off" method="post">
         <div class="view__container">
-            <h1 class="view__caption">Регистрация</h1>
+            <h1 class="view__caption">Р1егистрация</h1>
             <p class="view__text">Пожалуйста, заполните эту форму,</br>чтобы зарегистрироваться.</p>
 
             <div class="view__input-wrapper">
-                <input class="view__input-input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userRegisterData.login}}" required>
+                <input class="view__input-input" type="text" placeholder=" " autocomplete="off" id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{userRegisterData.login}}" required>
                 <label class="view__input-caption">Логин</label>
                 <span class="view__input-bar"></span>
             </div>
@@ -16,7 +16,7 @@
             {{/if}}
 
             <div class="view__input-wrapper">
-                <input class="view__input-input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{userRegisterData.email}}" required>
+                <input class="view__input-input" type="email" placeholder=" " autocomplete="off" id="email" name="email" pattern="^.*[@]+.*$" value="{{userRegisterData.email}}" required>
                 <label class="view__input-caption">Почта</label>
                 <span class="view__input-bar"></span>
             </div>
@@ -25,7 +25,7 @@
             {{/if}}
 
             <div class="view__input-wrapper">
-                <input class="view__input-input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.password}}" required>
+                <input class="view__input-input" type="password" placeholder=" " autocomplete="off" id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.password}}" required>
                 <label class="view__input-caption">Пароль</label>
                 <span class="view__input-bar"></span>
             </div>
@@ -34,7 +34,7 @@
             {{/if}}
 
             <div class="view__input-wrapper">
-                <input class="view__input-input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.passwordRepeat}}" required>
+                <input class="view__input-input" type="password" placeholder=" " autocomplete="off" id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{userRegisterData.passwordRepeat}}" required>
                 <label class="view__input-caption">Подтверждение пароля</label>
                 <span class="view__input-bar"></span>
             </div>
