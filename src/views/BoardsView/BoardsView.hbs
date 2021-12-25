@@ -41,7 +41,7 @@
                             {{/each}}
                         </div>
                     {{else}}
-                        <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link">Создайте</a>
+                        <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link" data-id="{{this.tid}}">Создайте</a>
                             {{#if (IsEqualHelper this.team_type 2)}}
                                 Ваш первый проект в личном пространстве.
                             {{else}}
