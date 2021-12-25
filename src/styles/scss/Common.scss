@@ -168,6 +168,28 @@ div#root {
     }
 }
 
+.underline-link {
+    text-decoration: underline $main-theme-color__focus;
+    &:link{
+        color: rgb(6,69,173);
+        text-decoration: underline;
+
+    }
+
+    &:visited {
+        color: rgb(11,0,128)
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: rgb(51, 45, 112);
+    }
+
+    &:active {
+        color: rgb(250,167,0)
+    }
+}
+
 .material-icon {
     @extend .material-icons;
     opacity: 0.3;

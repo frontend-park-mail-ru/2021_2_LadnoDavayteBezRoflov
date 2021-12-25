@@ -27,6 +27,7 @@ $profile_avatar_width: 200px;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        max-width: 325px
     }
 
     &__column-right {
@@ -34,7 +35,7 @@ $profile_avatar_width: 200px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        max-width: 300px
+        max-width: 325px
     }
 
     &__user-picture {
@@ -48,6 +49,10 @@ $profile_avatar_width: 200px;
 
     #avatarId {
         display: none;  // Для сокрытия стадартного приглашения выбора файла
+    }
+
+    .error-sized {
+        width: $profile_avatar_width;
     }
 
     &__button {

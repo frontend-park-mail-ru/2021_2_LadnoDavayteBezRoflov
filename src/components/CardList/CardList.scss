@@ -16,6 +16,12 @@ $scrollbar-width: 1600px;
     gap: 20px;
     overflow-x: auto;
     overflow-y: hidden;
+
+    &__centered-text {
+        @extend .columns;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .column {

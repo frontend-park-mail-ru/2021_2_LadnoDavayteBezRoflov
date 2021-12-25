@@ -42,11 +42,11 @@
                             {{/each}}
                         </div>
                     {{else}}
-                        <div class="team__no-team">Похоже досок пока нет.<br><a class="add-board-btn message-link team__invitation">Создайте</a>
+                        <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link">Создайте</a>
                             {{#if (IsEqualHelper this.team_type 2)}}
                                 Ваш первый проект в личном пространстве.
                             {{else}}
-                                первый проект в команде "{{this.team_name}}"
+                                первый проект команды "{{this.team_name}}"
                             {{/if}}
                         </div>
                     {{/if}}

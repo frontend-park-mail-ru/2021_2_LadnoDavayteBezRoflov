@@ -17,7 +17,11 @@
         <div class="vertical-line"></div>
         <div class="button button_small" id="showTagsBoardPopUpId">Теги</div>
     </div>
-    <div class="columns custom-scroll cardListDropZone">
+    <div class="{{#if _cardlists}}columns custom-scroll cardListDropZone{{else}}columns__centered-text{{/if}} ">
+        {{#if _cardlists }}{{else}}
+        <div class="spaced-text">Доски пока пустая. Начните с <a class="underline-link" id="showCreateCardListPopUpLinkId">создания</a> колонок задач.
+        </div>
+        {{/if}}
         {{#each _cardlists}}
             {{{this}}}
         {{/each}}

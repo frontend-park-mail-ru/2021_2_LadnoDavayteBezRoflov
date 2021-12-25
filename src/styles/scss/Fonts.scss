@@ -1,4 +1,5 @@
 @import 'Font-awesome.min';
+@import 'Constants';
 
 @font-face {
     font-family: 'Montserrat';
@@ -54,4 +55,12 @@
     -moz-osx-font-smoothing: grayscale;
     /* Support for IE. */
     font-feature-settings: 'liga';
+}
+
+.spaced-text {
+    text-align: center;
+    margin: 10px 20px;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: $black-alpha-07;
 }
