@@ -89,6 +89,13 @@ $team-font-size: 25px;
     &__team-name {
         font-size: $team-font-size;
     }
+
+    &__centred {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .material-icons-colored {
@@ -122,11 +129,18 @@ $team-font-size: 25px;
 
 .team__member-counter {
     font-size: $small-font-size;
+    vertical-align: super;
 }
 
 .boards-header {
     display: flex;
     flex-direction: row;
     align-items: start;
+}
 
+.team-btns-aling {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
