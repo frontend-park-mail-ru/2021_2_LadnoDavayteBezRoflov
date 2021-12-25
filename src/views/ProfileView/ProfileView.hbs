@@ -4,23 +4,22 @@
     <form id="profile" name="profile" novalidate autocomplete="off" method="post">
         <div class="profile-box">
             <div class="profile-box__column-left">
-                <div class="profile-container">
-                    <img class="profile-box__user-picture" src="{{avatar}}" alt="User Picture" id="avatar-img">
-                    <input type="file" name="avatar" id="avatar" class="profile-box__user-avatar" accept="image/*" value="{{avatar}}">
-                    <label for="avatar" class="profile-box__upload-button">
-                        <span class="profile-box__upload-icon-wrapper"><img class="profile-box__upload-icon" src="assets/icons/upload.webp" alt="Выбрать файл" width="25"></span>
-                        <span class="profile-box__upload-button-text">Выберите файл</span>
-                    </label>
-                    {{#if validation.avatar}}
+                <img class="profile-box__user-picture" src="{{avatar}}" alt="User Picture" id="avatar-img">
+                <label class="button profile-box__button">
+                    <input type="file" accept="image/*" id="avatarId" value="{{avatar}}"/>
+                    <i class="fa fa-cloud-upload"></i><span>Загрузить аватар</span>
+                </label>
+
+                {{#if validation.avatar}}
                     <div class="error error_margin" id="avatar-validation-box">{{validation.avatar}}</div>
-                    {{/if}}
-                </div>
+                {{/if}}
             </div>
 
             <div class="profile-box__column-right">
                 <div class="view__container">
                     <div class="view__input-wrapper">
-                        <input class="view__input-input" type="text" placeholder=" " id="login" name="login" autofocus pattern="^[a-zA-Z\d]{3,20}$" value="{{login}}" required>
+                        <input class="view__input-input" type="text" placeholder=" " id="login" name="login" autofocus
+                               pattern="^[a-zA-Z\d]{3,20}$" value="{{login}}" required>
                         <label class="view__input-caption">Логин</label>
                         <span class="view__input-bar"></span>
                     </div>
@@ -29,7 +28,8 @@
                     {{/if}}
 
                     <div class="view__input-wrapper">
-                        <input class="view__input-input" type="email" placeholder=" " id="email" name="email" pattern="^.*[@]+.*$" value="{{email}}" required>
+                        <input class="view__input-input" type="email" placeholder=" " id="email" name="email"
+                               pattern="^.*[@]+.*$" value="{{email}}" required>
                         <label class="view__input-caption">Почта</label>
                         <span class="view__input-bar"></span>
                     </div>
@@ -38,7 +38,8 @@
                     {{/if}}
 
                     <div class="view__input-wrapper">
-                        <input class="view__input-input" type="password" placeholder=" " id="password" name="password" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{password}}">
+                        <input class="view__input-input" type="password" placeholder=" " id="password" name="password"
+                               pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{password}}">
                         <label class="view__input-caption">Новый пароль</label>
                         <span class="view__input-bar"></span>
                     </div>
@@ -47,7 +48,9 @@
                     {{/if}}
 
                     <div class="view__input-wrapper">
-                        <input class="view__input-input" type="password" placeholder=" " id="passwordRepeat" name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{passwordRepeat}}">
+                        <input class="view__input-input" type="password" placeholder=" " id="passwordRepeat"
+                               name="passwordRepeat" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$"
+                               value="{{passwordRepeat}}">
                         <label class="view__input-caption">Повторите пароль</label>
                         <span class="view__input-bar"></span>
                     </div>
@@ -56,7 +59,9 @@
                     {{/if}}
 
                     <div class="view__input-wrapper">
-                        <input class="view__input-input" type="password" placeholder=" " id="oldPassword" name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{oldPassword}}" required>
+                        <input class="view__input-input" type="password" placeholder=" " id="oldPassword"
+                               name="oldPassword" pattern="^[a-zA-Z]+[a-zA-Z\d@_$]{6,25}$" value="{{oldPassword}}"
+                               required>
                         <label class="view__input-caption">Старый пароль</label>
                         <span class="view__input-bar"></span>
                     </div>
@@ -64,7 +69,7 @@
                         <div class="error error_margin">{{validation.oldPassword}}</div>
                     {{/if}}
 
-                    <button class="button">Обновить</button>
+                    <button class="button profile-box__save-btn">Сохранить</button>
                 </div>
             </div>
         </div>

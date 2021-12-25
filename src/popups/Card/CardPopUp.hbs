@@ -17,7 +17,7 @@
                                 <label>Теги карточки:</label>
                                 <div class="card-popup-tags">
                                     {{#each tags}}
-                                        <div class="tags-list__tag_compact tag-colors__{{this.color.color_name}}"><div>{{tag_name}}</div></div>
+                                        <div class="tags-list__tag_compact tag-colors_примеры_{{this.color.color_name}}"><div>{{tag_name}}</div></div>
                                     {{/each}}
                                     <div class="button button_small add" id="addTagCardPopUpId"></div>
                                 </div>
@@ -46,8 +46,8 @@
                         {{#if edit}}
                             <div>
                                 <label for="cardPopUpPositionId">Позиция:</label>
-                                <select class="simple-form-element" id="cardPopUpPositionId" name="position-select"
-                                        required>
+                                <select class="simple-form-element" id="cardPopUpPositionId"
+                                        name="position-select" required>
                                     {{#each positionRange}}
                                         {{#if (IsEqualHelper this ../position) }}
                                             <option value="{{this}}" selected>#{{this}}</option>

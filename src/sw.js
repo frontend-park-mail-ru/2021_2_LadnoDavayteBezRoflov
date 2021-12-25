@@ -137,7 +137,6 @@ async function fetchAttachment(request) {
     const fileName = cyrillic2ascii(url.searchParams.get(ServiceWorker.ATTACH_NAME_PARAM));
     url.searchParams.delete(ServiceWorker.ATTACH_NAME_PARAM);
     try {
-        console.log('url to fetch attach: ' + url.toString());
         const response = await fetch(url.toString());
 
         /* Добавим служебный заголовок, указывающий что контент нужно скачать */
@@ -150,8 +149,6 @@ async function fetchAttachment(request) {
             statusText: response.statusText,
             headers: headers,
         });
-
-        console.log('возвращаю attchment');
 
         return responseCopy;
     } catch (error) {

@@ -70,6 +70,37 @@ $team-font-size: 25px;
         padding-top: 5px;
     }
 
+    &__no-team {
+        text-align: center;
+        margin: 10px 20px;
+        font-size: 15px;
+        letter-spacing: 3px;
+        color: $black-alpha-07;
+    }
+
+    &__invitation {
+        text-decoration: underline $main-theme-color;
+        &:link{
+            color: rgb(6,69,173);
+            text-decoration: underline;
+
+        }
+
+        &:visited {
+            color: rgb(11,0,128)
+        }
+
+        &:hover {
+            cursor: pointer;
+            color: rgb(11,0,128);
+        }
+
+        &:active {
+            color: rgb(250,167,0)
+        }
+
+    }
+
     &__card-holder {
         display: flex;
         flex-direction: row;
