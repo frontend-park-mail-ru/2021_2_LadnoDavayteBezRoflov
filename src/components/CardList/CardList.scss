@@ -2,6 +2,7 @@
 @import '../../styles/scss/Fonts';
 
 $scrollbar-width: 1600px;
+$card-width: 270px;
 
 /* Стили списков карточек: */
 .columns {
@@ -31,7 +32,7 @@ $scrollbar-width: 1600px;
     max-height: $max-height-politic;
     background: $primary-bg-color;
     box-shadow: 0 0 2px $main-theme-color;
-    min-width: 160px;
+    min-width: $card-width;
 
     &__header {
         display: flex;
