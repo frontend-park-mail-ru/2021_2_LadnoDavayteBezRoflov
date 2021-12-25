@@ -14,10 +14,10 @@
                             <span class="material-icon-edit team-edit-btn" data-id="{{this.tid}}"></span>
                         {{/if}}
                     </div>
-                    <div>
+                    <div class="team-btns-aling">
                         <!-- Обычная команда-->
                         {{#if (IsEqualHelper this.team_type 0)}}
-                            <span class="team__member-counter">{{this.users.length}}</span>
+                            <div class="team-btns-aling"><span class="team__member-counter">{{this.users.length}}</span></div>
                             <span class="material-icon-group_add invite-board" data-id="{{this.tid}}"></span>
                             <span class="material-icon-add add-board-btn" data-id="{{this.tid}}"></span>
                             <span class="material-icon-delete team-delete-btn" data-id="{{this.tid}}"></span>
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="horizontal-line"></div>
-                <div class="team__card-wrapper">
+                <div class="{{#if this.boards}}team__card-wrapper{{else}}team__centred{{/if}}">
                     {{#if this.boards}}
                         <div class="team__card-holder">
                             {{#each this.boards}}
@@ -41,12 +41,14 @@
                             {{/each}}
                         </div>
                     {{else}}
-                        <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link" data-id="{{this.tid}}">Создайте</a>
-                            {{#if (IsEqualHelper this.team_type 2)}}
-                                Ваш первый проект в личном пространстве.
-                            {{else}}
-                                первый проект команды "{{this.team_name}}"
-                            {{/if}}
+                        <div class="team__centred">
+                            <div class="spaced-text">Похоже досок пока нет.<br><a class="add-board-btn underline-link" data-id="{{this.tid}}">Создайте</a>
+                                {{#if (IsEqualHelper this.team_type 2)}}
+                                    Ваш первый проект в личном пространстве.
+                                {{else}}
+                                    первый проект команды "{{this.team_name}}"
+                                {{/if}}
+                            </div>
                         </div>
                     {{/if}}
                 </div>
